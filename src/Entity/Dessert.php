@@ -15,32 +15,32 @@ class Dessert
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nomDessert;
+    private ?string $nomDessert;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $imageDessert;
+    private ?string $imageDessert;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $ingredientDessert;
+    private ?string $ingredientDessert;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $commentaireDessert;
+    private ?string $commentaireDessert;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $dispoDessert;
+    private ?bool $dispoDessert;
 
     public function getId(): ?int
     {

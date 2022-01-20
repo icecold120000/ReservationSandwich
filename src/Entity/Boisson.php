@@ -15,22 +15,22 @@ class Boisson
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nomBoisson;
+    private ?string $nomBoisson;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $imageBoisson;
+    private ?string $imageBoisson;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $dispoBoisson;
+    private ?bool $dispoBoisson;
 
     public function getId(): ?int
     {

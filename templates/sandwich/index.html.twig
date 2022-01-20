@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sandwich index{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Sandwich index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NomSandwich</th>
+                <th>ImageSandwich</th>
+                <th>IngredientSandwich</th>
+                <th>CommentaireSandwich</th>
+                <th>DisponibleSandwich</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for sandwich in sandwiches %}
+            <tr>
+                <td>{{ sandwich.id }}</td>
+                <td>{{ sandwich.nomSandwich }}</td>
+                <td>{{ sandwich.imageSandwich }}</td>
+                <td>{{ sandwich.ingredientSandwich }}</td>
+                <td>{{ sandwich.commentaireSandwich }}</td>
+                <td>{{ sandwich.disponibleSandwich ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('sandwich_show', {'id': sandwich.id}) }}">show</a>
+                    <a href="{{ path('sandwich_edit', {'id': sandwich.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('sandwich_new') }}">Create new</a>
+{% endblock %}

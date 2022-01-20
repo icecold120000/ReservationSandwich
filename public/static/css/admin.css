@@ -1,0 +1,129 @@
+/*Général*/
+#btnRetour{
+    margin: 0 0 0 15px;
+}
+
+#btnSuppr, #btnRetourSuppr{
+    padding: 10px;
+    font-size: 20px;
+}
+
+/*Espace d'administration*/
+
+.tableAdmin{
+    margin: 30px 0;
+    border: solid black;
+}
+
+.tableAdmin span{
+    display: block;
+}
+
+.tableAdmin button a{
+    font-size: 30px;
+}
+
+.tableAdmin th, .tableAdmin td{
+    border: solid black;
+    font-size: 17px;
+    padding: 0.25rem;
+    vertical-align: unset!important;
+}
+
+.tableAdmin p{
+    font-size: 25px;
+    margin-bottom: 0;
+}
+
+i.far.fa-edit, i.fas.fa-trash{
+    font-size: 15px;
+    padding: 10px;
+}
+
+table img{
+    width: 80px;
+    height: 80px;
+}
+
+table a.btn.btn-info{
+    margin: 12px 0;
+    font-size: 15px;
+}
+
+#btnAdmin0{
+    padding: 15px 100px;
+}
+
+#btnAdmin1{
+    padding: 15px 105px;
+}
+
+#btnAdmin2{
+    padding: 15px 107px;
+}
+
+#btnAdmin3{
+    padding: 15px 94px;
+}
+
+#btnAdmin4{
+    padding: 15px 98px;
+}
+
+#btnAdmin5{
+    padding: 15px 113px;
+}
+
+#btnAdmin6{
+    padding: 15px 114px;
+}
+
+#btnAdmin7{
+    padding: 15px 100px;
+}
+
+#btnAdmin8{
+    padding: 15px 101px;
+}
+
+#warning{
+    color: red;
+    border: solid;
+    position: relative;
+}
+
+#warning p{
+    font-size: 35px;
+}
+
+/*Formulaire d'ajout et de modification des entités*/
+
+.flash-success{
+    font-size: 25px;
+    color: green;
+}
+
+.formEntité div.container-fluid{
+    display: inline-block;
+    position: relative;
+    right: 20%;
+}
+
+.formEntité form{
+    display: flex;
+    flex-direction: column;
+}
+
+.formEntité input{
+    width: 50%;
+    height: 30px;
+    font-size: 15px;
+}
+
+.formEntité div.fileInput input{
+    width: unset;
+}
+
+.formEntité select{
+    font-size: 20px;
+}

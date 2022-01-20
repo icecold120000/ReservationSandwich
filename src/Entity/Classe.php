@@ -15,12 +15,17 @@ class Classe
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $libelleClasse;
+    private ?string $libelleClasse;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private ?string $codeClasse;
 
     public function getId(): ?int
     {
@@ -35,6 +40,18 @@ class Classe
     public function setLibelleClasse(string $libelleClasse): self
     {
         $this->libelleClasse = $libelleClasse;
+
+        return $this;
+    }
+
+    public function getCodeClasse(): ?string
+    {
+        return $this->codeClasse;
+    }
+
+    public function setCodeClasse(string $codeClasse): self
+    {
+        $this->codeClasse = $codeClasse;
 
         return $this;
     }

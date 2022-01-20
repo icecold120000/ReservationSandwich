@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Sandwich{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Edit Sandwich</h1>
+
+    {{ include('sandwich/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('sandwich_index') }}">back to list</a>
+
+    {{ include('sandwich/_delete_form.html.twig') }}
+{% endblock %}

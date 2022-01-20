@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dessert index{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Dessert index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NomDessert</th>
+                <th>ImageDessert</th>
+                <th>IngredientDessert</th>
+                <th>CommentaireDessert</th>
+                <th>DispoDessert</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for dessert in desserts %}
+            <tr>
+                <td>{{ dessert.id }}</td>
+                <td>{{ dessert.nomDessert }}</td>
+                <td>{{ dessert.imageDessert }}</td>
+                <td>{{ dessert.ingredientDessert }}</td>
+                <td>{{ dessert.commentaireDessert }}</td>
+                <td>{{ dessert.dispoDessert ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('dessert_show', {'id': dessert.id}) }}">show</a>
+                    <a href="{{ path('dessert_edit', {'id': dessert.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('dessert_new') }}">Create new</a>
+{% endblock %}

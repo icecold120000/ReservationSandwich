@@ -4,3 +4,257 @@
     padding: 0;
     text-align: center;
 }
+
+li {
+    list-style: none;
+}
+
+form{
+    font-size: 30px;
+    padding: 30px;
+}
+
+label{
+    font-size: 15px;
+    margin: 0;
+}
+
+a button, a button:hover{
+    text-decoration: none;
+    color: white;
+}
+
+form div{
+    padding-bottom: 10px;
+}
+
+.help-text{
+    font-size: 13px;
+    margin: 0;
+    font-style: italic;
+}
+
+#part1{
+    float: left;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0;
+}
+
+#part2{
+    width: 45%;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start
+}
+footer a, nav a, a.btn  {
+    color: white;
+    text-decoration: none;
+}
+
+#btnAjout, #btnRetour, .btn.btn-success{
+    padding: 10px;
+    font-size: 15px;
+}
+
+.dropdown-toggle::after{
+    bottom: 5px;
+    margin: 0;
+    position: relative;
+}
+
+#connexion a:hover{
+    text-decoration: none;
+}
+
+#connexion p{
+    bottom: 5px;
+    display: inline;
+    margin: 0 5px;
+    position: relative;
+}
+
+#connexion i{
+    font-size: 30px;
+}
+
+li#dropdownNav {
+    margin-left: 2rem;
+}
+
+#dropdownProfile li:hover{
+    color: white;
+    background-color: gainsboro;
+}
+
+#dropdownProfile li a, #dropdownNav li a{
+    color: black;
+    font-size: 15px;
+}
+
+/*Barre de navigation*/
+
+nav p , nav ul {
+    margin: 0;
+}
+
+.nav-link {
+    color: white!important;
+    margin: 0 1.5em;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
+#connexion i{
+    font-size: 30px;
+}
+
+nav#mainNav {
+    padding: 8px;
+    background-color: #1E2B47;
+}
+
+#mainNav div.container-fluid{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: unset;
+}
+
+.navbar .navbar-item{
+    color: white;
+}
+
+.navbar-brand img{
+    height: 60px;
+}
+
+/** Footer  **/
+
+footer{
+    background-color: #1E2B47;
+    color: white;
+    list-style: none;
+    margin-top: 10%;
+    text-align: -webkit-center;
+}
+
+footer i{
+    font-size: 26px;
+}
+
+.coordonnees, .contact, .access, .networks {
+    display: inline-table;
+    padding: 35px;
+}
+
+.coordonnees p, .contact p, .access p{
+    text-align: left;
+    font-size: 15px;
+    margin: 0;
+}
+
+.coordonnees h3, .contact h3, .access h3, .networks h3{
+    text-align: left;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/*Page d'accueil */
+
+#menuImg {
+    height: 300px;
+    width: 75%;
+    margin-bottom: 3em;
+}
+
+#fileInputUser input{
+    font-size: 15px;
+}
+
+/*formulaire de connexion*/
+
+h6{
+    font-size: 15px;
+    margin-bottom: 40px;
+}
+
+#login, #login div#part1, #login div#part2{
+    display: inline-block;
+}
+
+#formConnexion {
+    padding: 0;
+}
+
+#formConnexion input{
+    height: 25px;
+}
+
+#formConnexion label, #formRegister label{
+    float: left;
+}
+
+#btnConnexion{
+    margin-top: 15px;
+}
+
+p#login{
+    display: block;
+    bottom: 0;
+}
+
+#btnRegister{
+    background-color: dimgrey;
+    color: #fff;
+    border-radius: 7px;
+    border-style: none;
+    padding: 10px;
+    font-size: 15px;
+}
+
+#login #part1 a.btn.btn-info{
+    padding: 10px;
+    font-size: 15px;
+    margin: 15px 0 0 15px;
+}
+
+label span{
+    color: red;
+}
+
+.erreur{
+    color: red;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.erreur li{
+    list-style: none;
+    position: relative;
+}
+
+/*formulaire d'inscription*/
+
+#formRegister #divInput, #formResetMdp #divInput{
+    font-size: 15px;
+    width: 80%;
+}
+
+#formRegister input, #formResetMdp input{
+    width: 85%;
+}
+
+#formRegister input
+{
+    display: flex;
+}
+
+.row{
+    justify-content: center;
+}

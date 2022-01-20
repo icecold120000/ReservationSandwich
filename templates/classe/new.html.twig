@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Classe{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Create new Classe</h1>
+
+    {{ include('classe/_form.html.twig') }}
+
+    <a href="{{ path('classe_index') }}">back to list</a>
+{% endblock %}

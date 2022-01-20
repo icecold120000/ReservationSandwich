@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Sandwich{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Create new Sandwich</h1>
+
+    {{ include('sandwich/_form.html.twig') }}
+
+    <a href="{{ path('sandwich_index') }}">back to list</a>
+{% endblock %}

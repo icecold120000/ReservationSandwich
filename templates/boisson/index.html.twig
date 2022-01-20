@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste de boisson{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Liste de boisson</h1>
+    <div>
+        <a href="{{ path('boisson_new') }}"
+           class="btn btn-primary" id="btnAjout">
+            Ajouter une nouvelle boisson
+        </a>
+        <a href="{{ path('espace_admin') }}"
+           class="btn btn-secondary" id="btnRetour">
+            Retourner à l'espace administration
+        </a>
+    </div>
+
+    <div>
+        {{ knp_pagination_render(boissons) }}
+    </div>
+    <table class="table tableAdmin">
+        <thead>
+            <tr>
+                <th>Photo</th>
+                <th>Nom</th>
+                <th>Disponibilité</th>
+                <th>Éditer</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for boisson in boissons %}
+            <tr>
+                <td>
+                    {% if boisson.imageBoisson %}
+                        <img src="{{ asset('uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="photo d'une boisson">
+                    {% else %}
+                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                    {% endif %}
+                </td>
+                <td>{{ boisson.nomBoisson }}</td>
+                <td>{{ boisson.dispoBoisson ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('boisson_edit',
+                        {'id': boisson.id}) }}" class="btn btn-primary">
+                        <i class="far fa-edit"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('boisson_delete_view',
+                        {'id': boisson.id}) }}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5" class="erreur">Aucune donnée n'a été trouvée !</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        {{ knp_pagination_render(boissons) }}
+    </div>
+{% endblock %}

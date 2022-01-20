@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Dessert{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Edit Dessert</h1>
+
+    {{ include('dessert/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('dessert_index') }}">back to list</a>
+
+    {{ include('dessert/_delete_form.html.twig') }}
+{% endblock %}

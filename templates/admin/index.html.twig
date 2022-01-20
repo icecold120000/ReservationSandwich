@@ -1,0 +1,108 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace administration{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <main>
+        <div>
+            <h1>Bienvenue dans l'espace d'administration</h1>
+        </div>
+        <div>
+            <p>Vous pouvez gérer ici les diverses fonctionnalités du site.</p>
+        </div>
+
+        <div>
+            <p>Voici la liste des fonctionnalités liées aux commandes :</p>
+            <table class="table tableAdmin">
+                <thead>
+                <tr>
+                    <th scope="col">Nom de la fonctionnalité</th>
+                    <th scope="col">Lien pour gérer la fonctionnalité</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Les sandwichs</td>
+                        <td>
+                            <a href="{{path('sandwich_index')}}"
+                               class="btn btn-info" id="btnAdmin0">
+                                Gestion des sandwichs
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les boissons</td>
+                        <td>
+                            <a href="{{path('boisson_index')}}"
+                               class="btn btn-info" id="btnAdmin1">
+                                Gestion des boissons
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les desserts</td>
+                        <td>
+                            <a href="{{path('dessert_index')}}"
+                               class="btn btn-info" id="btnAdmin2">
+                                Gestion des desserts
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les commandes</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-info" id="btnAdmin3">
+                                Gestion des commandes
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les professeurs</td>
+                        <td>
+                            <a href="#" class="btn btn-info" id="btnAdmin4">
+                                Gestion des professeurs
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les classes</td>
+                        <td>
+                            <a href="{{path('classe_index')}}"
+                               class="btn btn-info" id="btnAdmin5">
+                                Gestion des classes
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les élèves</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-info" id="btnAdmin6">
+                                Gestion des élèves
+                            </a>
+                    </tr>
+                    <tr>
+                        <td>Les utilisateurs</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-info" id="btnAdmin7">
+                                Gestion des utilisateurs
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Les limitations</td>
+                        <td>
+                            <a href="#"
+                               class="btn btn-info" id="btnAdmin8">
+                                Gestion des limitations
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}

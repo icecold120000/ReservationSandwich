@@ -15,32 +15,32 @@ class Sandwich
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nomSandwich;
+    private ?string $nomSandwich;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $imageSandwich;
+    private ?string $imageSandwich;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $ingredientSandwich;
+    private ?string $ingredientSandwich;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $commentaireSandwich;
+    private ?string $commentaireSandwich;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $disponibleSandwich;
+    private ?bool $disponibleSandwich;
 
     public function getId(): ?int
     {
