@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Boisson;
 use App\Form\BoissonType;
+use App\Form\FilterOrSearch\FilterBoissonType;
 use App\Repository\BoissonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
@@ -22,12 +23,22 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class BoissonController extends AbstractController
 {
     /**
-     * @Route("/", name="boisson_index", methods={"GET"})
+     * @Route("/", name="boisson_index", methods={"GET","POST"})
      */
-    public function index(BoissonRepository $boissonRepository, Request $request, PaginatorInterface $paginator): Response
+    public function index(BoissonRepository $boissonRepo,
+                          Request $request, PaginatorInterface $paginator): Response
     {
-        $boissons = $boissonRepository->findAll();
+        $boissons = $boissonRepo->findAll();
 
+        $form = $this->createForm(FilterBoissonType::class);
+        $filter = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+                $boissons = $boissonRepo->filter(
+                    $filter->get('ordre')->getData(),
+                    $filter->get('dispo')->getData()
+                );
+        }
 
         $boissons = $paginator->paginate(
             $boissons,
@@ -37,6 +48,7 @@ class BoissonController extends AbstractController
 
         return $this->render('boisson/index.html.twig', [
             'boissons' => $boissons,
+            'form' => $form->createView(),
         ]);
     }
 

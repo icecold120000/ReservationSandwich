@@ -1,38 +1,96 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Classe index{% endblock %}
+{% block title %}Liste des classes{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
 
 {% block body %}
-    <h1>Classe index</h1>
-    {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
-    <table class="table">
+    <h1>Liste des classes</h1>
+    <div>
+        {% if is_granted('ROLE_ADMIN')%}
+            <a href="{{ path('classe_new') }}"
+             class="btn btn-info" id="btnAjout">
+                Ajouter une nouvelle classe
+            </a>
+            <a href="{{ path('espace_admin') }}"
+             class="btn btn-secondary" id="btnRetour">
+                Retourner à la liste des fonctionnalités
+            </a>
+        {% elseif is_granted('ROLE_ADULTE')%}
+            <a href="{{ path('profile_adulte') }}"
+             class="btn btn-secondary" id="btnRetour">
+                Retourner à la liste des fonctionnalités
+            </a>
+        {% endif %}
+    </div>
+    <div>
+        {{form_start(form)}}
+        <div id="filtre">
+            <div class="selectFiltre">
+                <span>{{form_label(form.ordreAlphabet)}}</span>
+                {{form_widget(form.ordreAlphabet)}}
+                <button type="submit" class="btn btn-info" >
+                    Afficher
+                </button>
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+    <div>
+        {{ knp_pagination_render(classes) }}
+    </div>
+    <table class="table tableAdmin">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>LibelleClasse</th>
-                <th>CodeClasse</th>
-                <th>actions</th>
+                <th>Code de la classe</th>
+                <th>Libellé de la classe</th>
+                <th>Détail</th>
+                {% if is_granted('ROLE_ADMIN')%}
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
         {% for classe in classes %}
             <tr>
-                <td>{{ classe.id }}</td>
-                <td>{{ classe.libelleClasse }}</td>
-                <td>{{ classe.codeClasse }}</td>
+                <td>{{classe.codeClasse}}</td>
+                <td>{{classe.libelleClasse}}</td>
                 <td>
-                    <a href="{{ path('classe_show', {'id': classe.id}) }}">show</a>
-                    <a href="{{ path('classe_edit', {'id': classe.id}) }}">edit</a>
+                    <a href="{{ path('classe_show',
+                     {'id': classe.id}) }}" class="btn btn-info">
+                        Voir détail
+                    </a>
                 </td>
+                {% if is_granted('ROLE_ADMIN')%}
+                    <td>
+                        <a href="{{ path('classe_edit',
+                         {'id': classe.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('classe_delete_view',
+                         {'id': classe.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
+            {% if is_granted('ROLE_ADMIN')%}
+                <tr>
+                    <td colspan="4">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% endif %}
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('classe_new') }}">Create new</a>
+    <div>
+        {{ knp_pagination_render(classes) }}
+    </div>
 {% endblock %}

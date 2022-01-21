@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use App\Entity\Classe;
 use App\Form\ClasseType;
+use App\Form\FilterOrSearch\OrderEleveType;
+use App\Form\FilterOrSearch\OrderType;
 use App\Repository\ClasseRepository;
+use App\Repository\EleveRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @Route("/classe")
@@ -17,17 +21,40 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClasseController extends AbstractController
 {
     /**
-     * @Route("/", name="classe_index", methods={"GET"})
+     * @Route("/", name="classe_index", methods={"GET","POST"})
      */
-    public function index(ClasseRepository $classeRepository): Response
+    public function index(ClasseRepository $classeRepos,
+                          PaginatorInterface $paginator, Request $request): Response
     {
+
+        $classes = $classeRepos->findAllOrderByAlphabetCroissant();
+
+        $form = $this->createForm(OrderType::class);
+        $change = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($change->get('ordreAlphabet')->getData() == 1) {
+                $classes = $classeRepos->findAllOrderByAlphabetCroissant();
+            }
+            elseif ($change->get('ordreAlphabet')->getData() == 0){
+                $classes = $classeRepos->findAllOrderByAlphabetDecroissant();
+            }
+        }
+
+        $classes = $paginator->paginate(
+            $classes,
+            $request->query->getInt('page',1),
+            10
+        );
+
         return $this->render('classe/index.html.twig', [
-            'classes' => $classeRepository->findAll(),
+            'classes' => $classes,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/new", name="classe_new", methods={"GET", "POST"})
+     * @Route("/new", name="classe_new", methods={"GET","POST"})
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -39,27 +66,49 @@ class ClasseController extends AbstractController
             $entityManager->persist($classe);
             $entityManager->flush();
 
-            return $this->redirectToRoute('classe_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'SuccessClasse',
+                'La classe a été sauvegardée !'
+            );
+
+            return $this->redirectToRoute('classe_new');
         }
 
-        return $this->renderForm('classe/new.html.twig', [
+        return $this->render('classe/new.html.twig', [
             'classe' => $classe,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="classe_show", methods={"GET"})
+     * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
      */
-    public function show(Classe $classe): Response
+    public function show(Classe $classe,Request $request, EleveRepository $eleveRepo): Response
     {
+
+        $eleves = $classe->getEleves();
+
+        $form = $this->createForm(OrderEleveType::class);
+
+        $search = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $eleveRepo->orderByEleve(
+                $search->get('ordreNom')->getData(),
+                $search->get('ordrePrenom')->getData()
+            );
+
+        }
+
         return $this->render('classe/show.html.twig', [
+            'eleves' => $eleves,
             'classe' => $classe,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="classe_edit", methods={"GET", "POST"})
+     * @Route("/{id}/edit", name="classe_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Classe $classe, EntityManagerInterface $entityManager): Response
     {
@@ -69,25 +118,57 @@ class ClasseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('classe_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'SuccessClasse',
+                'La classe a été modifiée !'
+            );
+
+            return $this->redirectToRoute('classe_edit', array('id' => $classe->getId()));
         }
 
-        return $this->renderForm('classe/edit.html.twig', [
+        return $this->render('classe/edit.html.twig', [
             'classe' => $classe,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="classe_delete", methods={"POST"})
+     * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET"})
      */
-    public function delete(Request $request, Classe $classe, EntityManagerInterface $entityManager): Response
+    public function delete_view(Classe $classe): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$classe->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($classe);
-            $entityManager->flush();
+        return $this->render('classe/delete_view.html.twig', [
+            'classe' => $classe,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}", name="classe_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Classe $classe, EleveRepository $eleveRepo,
+                           EntityManagerInterface $entityManager): Response
+    {
+
+        $eleveRelated = $eleveRepo->findByClasse($classe->getId());
+
+        if($eleveRelated){
+            $this->addFlash(
+                'deleteDangerClasse',
+                'Erreur, impossible de supprimer cette classe.
+                Veuillez vérifier que tous les élèves appartenant à celle-ci soient changés.'
+            );
+            return $this->redirectToRoute('classe_delete_view',
+                array('id' => $classe->getId()));
+        }
+        else{
+            if ($this->isCsrfTokenValid('delete'.$classe->getId(),
+                $request->request->get('_token'))) {
+                $entityManager->remove($classe);
+                $entityManager->flush();
+            }
         }
 
-        return $this->redirectToRoute('classe_index', [], Response::HTTP_SEE_OTHER);
+
+        return $this->redirectToRoute('classe_index');
     }
 }

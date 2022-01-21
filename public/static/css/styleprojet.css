@@ -60,6 +60,25 @@ footer a, nav a, a.btn  {
     font-size: 15px;
 }
 
+.flash-success{
+    font-size: 25px;
+    color: green;
+}
+/*Barre de navigation*/
+
+nav p , nav ul {
+    margin: 0;
+}
+
+.nav-link {
+    color: white!important;
+    margin: 0 0.5em;
+}
+
+.navbar-nav {
+    flex-direction: row;
+}
+
 .dropdown-toggle::after{
     bottom: 5px;
     margin: 0;
@@ -93,25 +112,6 @@ li#dropdownNav {
 #dropdownProfile li a, #dropdownNav li a{
     color: black;
     font-size: 15px;
-}
-
-/*Barre de navigation*/
-
-nav p , nav ul {
-    margin: 0;
-}
-
-.nav-link {
-    color: white!important;
-    margin: 0 1.5em;
-}
-
-.navbar-nav {
-    flex-direction: row;
-}
-
-#connexion i{
-    font-size: 30px;
 }
 
 nav#mainNav {
@@ -257,4 +257,86 @@ label span{
 
 .row{
     justify-content: center;
+}
+/*Responsive de la barre de navigation*/
+@media screen and (max-width: 990px) {
+    /*Navbar*/
+    div#dropdownProfile ul.dropdown-menu {
+        position: unset;
+    }
+
+    .navbar-nav {
+        flex-direction: column;
+    }
+}
+/*Responsive pour les téléphones */
+@media screen and (max-device-width: 700px) {
+    /*Général*/
+    h1{
+        font-size: 4em;
+    }
+
+    h2{
+        font-size: 3em;
+    }
+
+    h3{
+        font-size: 2.5em
+    }
+
+    #btnAjout, #btnRetour, .btn.btn-success {
+        padding: 30px;
+        font-size: 3.5em;
+        margin-bottom: 1em;
+    }
+
+    /*Navbar*/
+    nav#mainNav{
+        padding: 2em;
+        flex-direction: column;
+    }
+
+    .navbar-brand img {
+        height: 150px;
+    }
+
+    button.navbar-toggler {
+        font-size: 5em;
+    }
+
+    .nav-link, #connexion i, #dropdownProfile li a, p{
+        font-size: 2em;
+    }
+
+    /*Page d'accueil*/
+    #menuImg {
+        height: 40em;
+        width: unset;
+        margin-bottom: 3em;
+    }
+
+    #fileInputUser input {
+        font-size: 1.5em;
+        margin: 1em 0;
+    }
+
+    /* Footer */
+    footer i{
+        font-size: 2.5em;
+    }
+
+    .coordonnees, .contact, .access, .networks {
+        display: unset;
+    }
+
+    .coordonnees p, .contact p, .access p{
+        text-align: unset;
+        font-size: 2em;
+    }
+
+    .coordonnees h3, .contact h3, .access h3, .networks h3{
+        text-align: unset;
+        font-size: 2em;
+    }
+
 }

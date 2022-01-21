@@ -1,14 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Classe{% endblock %}
+{% block title %}Modifier une classe{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
+
 {% block body %}
-    <h1>Edit Classe</h1>
+    <main>
+        <h1>Modifier une classe</h1>
 
-    {{ include('classe/_form.html.twig', {'button_label': 'Update'}) }}
+        {% for message in app.flashes('SuccessClasse') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
 
-    <a href="{{ path('classe_index') }}">back to list</a>
-
-    {{ include('classe/_delete_form.html.twig') }}
+        <div>
+            <div class="container-fluid formEntité">
+                {{ include('classe/_form.html.twig') }}
+            </div>
+        </div>
+        <div class="row">
+            <div id="divAjout">
+                <button type="submit"
+                 class="btn btn-success" form="formClasse">
+                    Modifier la classe
+                </button>
+            </div>
+            <div>
+                <a href="{{ path('classe_index') }}"
+                 class="btn btn-secondary" id="btnRetour">
+                    Revenir à la liste
+                </a>
+            </div>
+        </div>
+    </main>    
 {% endblock %}

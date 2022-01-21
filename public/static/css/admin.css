@@ -8,6 +8,13 @@
     font-size: 20px;
 }
 
+ul.pagination{
+    margin-top: 20px;
+    position: relative;
+    justify-content: center;
+    font-size: 15px;
+}
+
 /*Espace d'administration*/
 
 .tableAdmin{
@@ -96,12 +103,38 @@ table a.btn.btn-info{
     font-size: 35px;
 }
 
-/*Formulaire d'ajout et de modification des entités*/
+/*Filtre des pages de gestions et listes*/
 
-.flash-success{
-    font-size: 25px;
-    color: green;
+#filtre{
+    display: flex;
+    justify-content: center
 }
+
+#filtre span{
+    font-size: 20px;
+}
+
+#filtre select, #filtre input{
+    height: 30px;
+    font-size: 15px;
+}
+
+#filtre button{
+    padding: 5px 10px;
+    font-size: 15px;
+}
+
+#filtre div{
+    margin: 0 10px 0 0;
+    float: left;
+}
+
+#filtre #left p{
+    font-size: 30px;
+    margin: 8px 0 0 0;
+}
+
+/*Formulaire d'ajout et de modification des entités*/
 
 .formEntité div.container-fluid{
     display: inline-block;
@@ -126,4 +159,15 @@ table a.btn.btn-info{
 
 .formEntité select{
     font-size: 20px;
+}
+
+/*Responsive pour les téléphones */
+@media screen and (max-device-width: 700px) {
+    .tableAdmin th, .tableAdmin td {
+        font-size: 2em;
+    }
+
+    table a.btn.btn-info{
+        font-size: 1.5em;
+    }
 }

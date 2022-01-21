@@ -19,6 +19,23 @@ class ClasseRepository extends ServiceEntityRepository
         parent::__construct($registry, Classe::class);
     }
 
+    /**
+     * @return Classe[]
+     */
+    public function findAllOrderByAlphabetCroissant(): array
+    {
+        return $this->findBy(array(), array('libelleClasse' => 'ASC'));
+    }
+
+    /**
+     * @return Classe[]
+     */
+    public function findAllOrderByAlphabetDecroissant(): array
+    {
+        return $this->findBy(array(), array('libelleClasse' => 'DESC'));
+    }
+
+
     // /**
     //  * @return Classe[] Returns an array of Classe objects
     //  */
@@ -47,4 +64,5 @@ class ClasseRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

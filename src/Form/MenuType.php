@@ -17,17 +17,15 @@ class MenuType extends AbstractType
             ->add('fileSubmit', FileType::class, [
                 'mapped' => false,
                 'required' => true,
-                'help' => 'Type de fichier supporté : .pdf,.png,.jpg ou .jpeg.',
+                'help' => 'Type de fichier supporté : .png, .jpg ou .jpeg.',
                 'constraints' => [
                     new File([
                         'maxSize' => '8192k',
                         'mimeTypes' => [
-                            'application/pdf',
-                            'application/x-pdf',
                             'image/png',
                             'image/jpeg',
                         ],
-                        'mimeTypesMessage' => 'Veuillez sélectionner un fichier .pdf,.png,.jpg ou .jpeg !',
+                        'mimeTypesMessage' => 'Veuillez sélectionner un fichier .png,.jpg ou .jpeg !',
                         'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de {{limit}} !',
                     ]),
                     new NotNull([

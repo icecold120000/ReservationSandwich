@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MenuAccueil;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,20 @@ class MenuAccueilRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MenuAccueil::class);
+    }
+
+    /**
+     * @return MenuAccueil
+     * @throws NonUniqueResultException
+     */
+    public function findCurrentOne($id): ?MenuAccueil
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     // /**

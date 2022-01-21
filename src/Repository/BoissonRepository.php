@@ -19,6 +19,20 @@ class BoissonRepository extends ServiceEntityRepository
         parent::__construct($registry, Boisson::class);
     }
 
+     /**
+      * @return Boisson[] Returns an array of Boisson objects
+      */
+    public function filter(int $dispo = null , string $order = 'ASC'): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.dispoBoisson = :val')
+            ->setParameter('val', $dispo)
+            ->orderBy('b.id', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Boisson[] Returns an array of Boisson objects
     //  */

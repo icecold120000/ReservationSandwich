@@ -1,31 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Classe{% endblock %}
+{% block title %}{{ classe.libelleClasse }}{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
-{% block body %}
-    <h1>Classe</h1>
 
-    <table class="table">
+{% block body %}
+    <h1>Liste des élèves des {{classe.libelleClasse}}</h1>
+    <div>
+        <a href="{{ path('classe_index') }}"
+         class="btn btn-secondary" id="btnRetour">
+            Retourner à la liste
+        </a>
+    </div>
+    <div >
+        <div id="filtre">
+            {{form_start(form)}}
+                <div class="selectFiltre">
+                    <span>{{form_label(form.ordrePrenom)}}</span>
+                    {{form_widget(form.ordrePrenom)}}
+                    <span>{{form_label(form.ordreNom)}}</span>
+                    {{form_widget(form.ordreNom)}}
+                    <button type="submit" class="btn btn-info">
+                        Afficher
+                    </button>
+                </div>
+            {{form_end(form)}}
+        </div>
+    </div>
+    <table class="table tableAdmin">
+        <thead>
+            <tr>
+                <th>Nom de l'élève</th>
+                <th>Prénom de l'élève</th>
+            </tr>
+        </thead>
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ classe.id }}</td>
-            </tr>
-            <tr>
-                <th>LibelleClasse</th>
-                <td>{{ classe.libelleClasse }}</td>
-            </tr>
-            <tr>
-                <th>CodeClasse</th>
-                <td>{{ classe.codeClasse }}</td>
-            </tr>
+            {% for eleve in eleves%}
+                <tr>
+                    <td>{{ eleve.nomEleve }}</td>
+                    <td>{{ eleve.prenomEleve }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="erreur">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% endfor%}
         </tbody>
     </table>
 
-    <a href="{{ path('classe_index') }}">back to list</a>
-
-    <a href="{{ path('classe_edit', {'id': classe.id}) }}">edit</a>
-
-    {{ include('classe/_delete_form.html.twig') }}
 {% endblock %}

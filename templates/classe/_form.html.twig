@@ -1,4 +1,20 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+	{{form_start(form)}}
+		{{form_label(form.libelle)}}
+        <div id="divInput">
+            {{form_widget(form.libelle)}}
+        </div>
+        {% if form_errors(form.libelle) %}
+            <div class="erreur">
+                {{form_errors(form.libelle)}}
+            </div>
+        {% endif %}
+        {{form_label(form.codeClasse)}}
+        <div id="divInput">
+            {{form_widget(form.codeClasse)}}
+        </div>
+        {% if form_errors(form.codeClasse) %}
+            <div class="erreur">
+                {{form_errors(form.codeClasse)}}
+            </div>
+        {% endif %}
+    {{form_end(form)}}
