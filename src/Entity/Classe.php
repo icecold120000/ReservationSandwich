@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\ClasseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -76,22 +75,22 @@ class Classe
         return $this->eleves;
     }
 
-    public function addElefe(Eleve $elefe): self
+    public function addEleve(Eleve $eleve): self
     {
-        if (!$this->eleves->contains($elefe)) {
-            $this->eleves[] = $elefe;
-            $elefe->setClasseEleve($this);
+        if (!$this->eleves->contains($eleve)) {
+            $this->eleves[] = $eleve;
+            $eleve->setClasseEleve($this);
         }
 
         return $this;
     }
 
-    public function removeElefe(Eleve $elefe): self
+    public function removeEleve(Eleve $eleve): self
     {
-        if ($this->eleves->removeElement($elefe)) {
+        if ($this->eleves->removeElement($eleve)) {
             // set the owning side to null (unless already changed)
-            if ($elefe->getClasseEleve() === $this) {
-                $elefe->setClasseEleve(null);
+            if ($eleve->getClasseEleve() === $this) {
+                $eleve->setClasseEleve(null);
             }
         }
 

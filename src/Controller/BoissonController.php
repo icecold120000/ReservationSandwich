@@ -138,7 +138,7 @@ class BoissonController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('boisson_directory').$oldImgBoisson);
+                unlink($this->getParameter('boisson_directory').'/'.$oldImgBoisson);
                 $boisson->setImageBoisson($newFilename);
 
             }
@@ -174,7 +174,7 @@ class BoissonController extends AbstractController
     public function delete(Request $request, Boisson $boisson, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$boisson->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('boisson_directory').$boisson->getImageBoisson());
+            unlink($this->getParameter('boisson_directory').'/'.$boisson->getImageBoisson());
             $entityManager->remove($boisson);
             $entityManager->flush();
         }

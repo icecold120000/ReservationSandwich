@@ -40,7 +40,7 @@ class Sandwich
     /**
      * @ORM\Column(type="boolean")
      */
-    private ?bool $disponibleSandwich;
+    private ?bool $dispoSandwich;
 
     public function getId(): ?int
     {
@@ -95,14 +95,14 @@ class Sandwich
         return $this;
     }
 
-    public function getDisponibleSandwich(): ?bool
+    public function getDispoSandwich(): ?bool
     {
-        return $this->disponibleSandwich;
+        return $this->dispoSandwich;
     }
 
-    public function setDisponibleSandwich(bool $disponibleSandwich): self
+    public function setDispoSandwich(bool $dispoSandwich): self
     {
-        $this->disponibleSandwich = $disponibleSandwich;
+        $this->dispoSandwich = $dispoSandwich;
 
         return $this;
     }

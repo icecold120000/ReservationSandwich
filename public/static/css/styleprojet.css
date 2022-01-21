@@ -59,6 +59,16 @@ footer a, nav a, a.btn  {
     text-decoration: none;
 }
 
+#warning{
+    color: red;
+    border: solid;
+    position: relative;
+}
+
+#warning p{
+    font-size: 35px;
+}
+
 #btnAjout, #btnRetour, .btn.btn-success{
     padding: 10px;
     font-size: 15px;
@@ -245,6 +255,11 @@ label span{
 
 /*formulaire d'inscription*/
 
+#formRegister form{
+    display: flex;
+    justify-content: center;
+}
+
 #formRegister #divInput, #formResetMdp #divInput{
     font-size: 15px;
     width: 80%;
@@ -257,6 +272,27 @@ label span{
 #formRegister input
 {
     display: flex;
+}
+
+section#formRegister div.container-fluid, section#formResetMdp div.container-fluid {
+    display: inline-block;
+}
+
+#formRegister input#registration_form_plainPassword_first{
+    margin-bottom: 10px;
+}
+
+#formRegister ul{
+    display: inline-block;
+}
+
+#formRegister ul li{
+    position: relative;
+    right: 5%;
+}
+
+#formRegister .help-text{
+    text-align: left;
 }
 
 .row{

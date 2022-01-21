@@ -24,15 +24,19 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                        <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">Accueil</a>
                     </li>
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Vos Commandes</a>
-                        </li>
                         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
                             <li class="nav-item">
+                                <a class="nav-link" href="#">Les Commandes</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="{{ path('espace_admin') }}">Espace Administration</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Vos Commandes</a>
                             </li>
                         {% endif %}
                     {% endif %}
@@ -45,7 +49,6 @@
                                 <a class="nav-link dropdown-toggle" href="#" role="link" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user-circle"></i><p> Mon Profil</p>
                                 </a>
-
                                 <ul class="dropdown-menu" aria-labelledby="accesProfile">
                                     <li>
                                         {% if is_granted('ROLE_ADMIN')%}
@@ -79,7 +82,6 @@
                     </li>
                 </ul>
             </div>
-
         </nav>
         {% block body %}{% endblock %}
         <footer>

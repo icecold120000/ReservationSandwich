@@ -1,44 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sandwich index{% endblock %}
+{% block title %}Liste de sandwichs{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Sandwich index</h1>
+    <h1>Liste de sandwichs</h1>
+    <div>
+        <a href="{{ path('sandwich_new') }}"
+           class="btn btn-primary" id="btnAjout">
+            Ajouter un nouveau sandwich
+        </a>
+        <a href="{{ path('espace_admin') }}"
+           class="btn btn-secondary" id="btnRetour">
+            Retourner à l'espace administration
+        </a>
+    </div>
+    <div>
+        {{form_start(form)}}
+        <div id="filtre" class="filtre form-row align-items-end">
+            <div class="selectFiltre">
+                <span>{{form_label(form.ordre)}}</span>
+                {{form_widget(form.ordre)}}
+                <span>{{form_label(form.dispo)}}</span>
+                {{form_widget(form.dispo)}}
 
-    <table class="table">
+                <button type="submit" class="btn btn-info" >
+                    Afficher
+                </button>
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+    <div>
+        {{ knp_pagination_render(sandwiches) }}
+    </div>
+    <table class="table tableAdmin">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>NomSandwich</th>
-                <th>ImageSandwich</th>
-                <th>IngredientSandwich</th>
-                <th>CommentaireSandwich</th>
-                <th>DisponibleSandwich</th>
-                <th>actions</th>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Liste d'ingrédients</th>
+                <th>Liste de commentaire</th>
+                <th>Disponibilité</th>
+                <th>Éditer</th>
+                <th>Supprimer</th>
             </tr>
         </thead>
         <tbody>
         {% for sandwich in sandwiches %}
             <tr>
-                <td>{{ sandwich.id }}</td>
-                <td>{{ sandwich.nomSandwich }}</td>
-                <td>{{ sandwich.imageSandwich }}</td>
-                <td>{{ sandwich.ingredientSandwich }}</td>
-                <td>{{ sandwich.commentaireSandwich }}</td>
-                <td>{{ sandwich.disponibleSandwich ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('sandwich_show', {'id': sandwich.id}) }}">show</a>
-                    <a href="{{ path('sandwich_edit', {'id': sandwich.id}) }}">edit</a>
+                    {% if sandwich.imageSandwich %}
+                        <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" alt="photo d'un sandwich">
+                    {% else %}
+                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                    {% endif %}
+                </td>
+                <td>{{ sandwich.nomSandwich }}</td>
+                <td>{{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description'}}</td>
+                <td>{{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire'}}</td>
+                <td>{{ sandwich.dispoSandwich ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('sandwich_edit',
+                        {'id': sandwich.id}) }}" class="btn btn-primary">
+                        <i class="far fa-edit"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('sandwich_delete_view',
+                        {'id': sandwich.id}) }}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7" class="erreur">Aucune donnée n'a été trouvée !</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('sandwich_new') }}">Create new</a>
+    <div>
+        {{ knp_pagination_render(sandwiches) }}
+    </div>
 {% endblock %}

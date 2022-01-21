@@ -20,22 +20,22 @@ class Eleve
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nomEleve;
+    private ?string $nomEleve;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $prenomEleve;
+    private ?string $prenomEleve;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateNaissance;
+    private ?\DateTime $dateNaissance;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $archiveEleve;
+    private ?bool $archiveEleve;
 
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="eleves")
@@ -76,7 +76,7 @@ class Eleve
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(\DateTimeInterface $dateNaissance): self
+    public function setDateNaissance(\DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 

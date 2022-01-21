@@ -19,6 +19,22 @@ class SandwichRepository extends ServiceEntityRepository
         parent::__construct($registry, Sandwich::class);
     }
 
+    /**
+     * @param int|null $dispo
+     * @param string $order
+     * @return Sandwich[] Returns an array of sandwich objects
+     */
+    public function filter(int $dispo = null , string $order = 'ASC'): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.dispoSandwich = :val')
+            ->setParameter('val', $dispo)
+            ->orderBy('d.nomSandwich', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Sandwich[] Returns an array of Sandwich objects
     //  */

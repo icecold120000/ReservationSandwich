@@ -74,7 +74,7 @@ table a.btn.btn-info{
 }
 
 #btnAdmin4{
-    padding: 15px 98px;
+    padding: 15px 111px;
 }
 
 #btnAdmin5{
@@ -192,7 +192,6 @@ table a.btn.btn-info{
 .formEntité2 label, .formEntité2 .help-text{
     text-align: left;
 }
-
 
 /* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {

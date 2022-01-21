@@ -1,4 +1,52 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+    {{form_start(form)}}
+        <div id="part1">
+            {{form_label(form.nomSandwich)}}
+            <div class="divInput">
+                {{form_widget(form.nomSandwich)}}
+            </div>
+            {% if form_errors(form.nomSandwich) %}
+                <div class="erreur">
+                    {{form_errors(form.nomSandwich)}}
+                </div>
+            {% endif %}
+            {{form_label(form.imageSandwich)}}
+            {{form_help(form.imageSandwich)}}
+            <div class="divInput fileInput">
+                {{form_widget(form.imageSandwich)}}
+            </div>
+            {% if form_errors(form.imageSandwich) %}
+                <div class="erreur">
+                    {{form_errors(form.imageSandwich)}}
+                </div>
+            {% endif %}
+            {{form_label(form.dispoSandwich)}}
+            <div class="divInput">
+                {{form_widget(form.dispoSandwich)}}
+            </div>
+            {% if form_errors(form.dispoSandwich) %}
+                <div class="erreur">
+                    {{form_errors(form.dispoSandwich)}}
+                </div>
+            {% endif %}
+        </div>
+        <div id="part2">
+            {{form_label(form.ingredientSandwich)}}
+            <div class="divInput">
+                {{form_widget(form.ingredientSandwich)}}
+            </div>
+            {% if form_errors(form.ingredientSandwich) %}
+                <div class="erreur">
+                    {{form_errors(form.ingredientSandwich)}}
+                </div>
+            {% endif %}
+            {{form_label(form.commentaireSandwich)}}
+            <div class="divInput">
+                {{form_widget(form.commentaireSandwich)}}
+            </div>
+            {% if form_errors(form.commentaireSandwich) %}
+                <div class="erreur">
+                    {{form_errors(form.commentaireSandwich)}}
+                </div>
+            {% endif %}
+        </div>
+    {{form_end(form)}}

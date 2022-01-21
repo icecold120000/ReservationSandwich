@@ -137,7 +137,7 @@ class DessertController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('dessert_directory').$oldDessert);
+                unlink($this->getParameter('dessert_directory').'/'.$oldDessert);
                 $dessert->setImageDessert($newFilename);
             }
 
@@ -167,18 +167,17 @@ class DessertController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/{id}", name="dessert_delete", methods={"POST"})
      */
     public function delete(Request $request, Dessert $dessert, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$dessert->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('dessert_directory').$dessert->getImageDessert());
+            unlink($this->getParameter('dessert_directory').'/'.$dessert->getImageDessert());
             $entityManager->remove($dessert);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('dessert_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('dessert_index');
     }
 }
