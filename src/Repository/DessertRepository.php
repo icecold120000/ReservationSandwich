@@ -19,6 +19,22 @@ class DessertRepository extends ServiceEntityRepository
         parent::__construct($registry, Dessert::class);
     }
 
+    /**
+     * @param int|null $dispo
+     * @param string $order
+     * @return Dessert[] Returns an array of Dessert objects
+     */
+    public function filter(int $dispo = null , string $order = 'ASC'): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.dispoDessert = :val')
+            ->setParameter('val', $dispo)
+            ->orderBy('d.nomDessert', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return Dessert[] Returns an array of Dessert objects
     //  */

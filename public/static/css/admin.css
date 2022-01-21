@@ -161,7 +161,40 @@ table a.btn.btn-info{
     font-size: 20px;
 }
 
-/*Responsive pour les téléphones */
+.formEntité2 form{
+    display: flex;
+    justify-content: center;
+}
+
+.formEntité2 #part1 {
+    align-items: unset;
+}
+
+.formEntité2 .erreur li{
+    right: 1%;
+    text-align: left;
+    font-size: 15px;
+}
+
+.formEntité2 input{
+    width: 80%;
+    position: relative;
+    right: 10%;
+    height: 30px;
+    font-size: 15px;
+}
+
+.formEntité2 select{
+    font-size: 20px;
+    display: flex;
+}
+
+.formEntité2 label, .formEntité2 .help-text{
+    text-align: left;
+}
+
+
+/* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {
     .tableAdmin th, .tableAdmin td {
         font-size: 2em;

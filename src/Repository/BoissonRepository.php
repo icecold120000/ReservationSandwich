@@ -27,7 +27,7 @@ class BoissonRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->andWhere('b.dispoBoisson = :val')
             ->setParameter('val', $dispo)
-            ->orderBy('b.id', $order)
+            ->orderBy('b.nomBoisson', $order)
             ->getQuery()
             ->getResult()
             ;

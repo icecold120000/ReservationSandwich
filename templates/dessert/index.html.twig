@@ -1,44 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dessert index{% endblock %}
+{% block title %}Liste des desserts{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Dessert index</h1>
+    <h1>Liste des desserts</h1>
+    <div>
+        <a href="{{ path('dessert_new') }}"
+           class="btn btn-primary" id="btnAjout">
+            Ajouter un nouveau dessert
+        </a>
+        <a href="{{ path('espace_admin') }}"
+           class="btn btn-secondary" id="btnRetour">
+            Retourner à l'espace administration
+        </a>
+    </div>
+    <div>
+        {{form_start(form)}}
+        <div id="filtre" class="filtre form-row align-items-end">
+            <div class="selectFiltre">
+                <span>{{form_label(form.ordre)}}</span>
+                {{form_widget(form.ordre)}}
+                <span>{{form_label(form.dispo)}}</span>
+                {{form_widget(form.dispo)}}
 
-    <table class="table">
+                <button type="submit" class="btn btn-info" >
+                    Afficher
+                </button>
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+    <div>
+        {{ knp_pagination_render(desserts) }}
+    </div>
+    <table class="table tableAdmin">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>NomDessert</th>
-                <th>ImageDessert</th>
-                <th>IngredientDessert</th>
-                <th>CommentaireDessert</th>
-                <th>DispoDessert</th>
-                <th>actions</th>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Liste d'ingrédients</th>
+                <th>Liste de commentaires</th>
+                <th>Disponibilité</th>
+                <th>Éditer</th>
+                <th>Supprimer</th>
             </tr>
         </thead>
         <tbody>
         {% for dessert in desserts %}
             <tr>
-                <td>{{ dessert.id }}</td>
-                <td>{{ dessert.nomDessert }}</td>
-                <td>{{ dessert.imageDessert }}</td>
-                <td>{{ dessert.ingredientDessert }}</td>
-                <td>{{ dessert.commentaireDessert }}</td>
-                <td>{{ dessert.dispoDessert ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('dessert_show', {'id': dessert.id}) }}">show</a>
-                    <a href="{{ path('dessert_edit', {'id': dessert.id}) }}">edit</a>
+                    {% if dessert.imageDessert %}
+                        <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
+                    {% else %}
+                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                    {% endif %}
+                </td>
+                <td>{{ dessert.nomDessert }}</td>
+                <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description' }}</td>
+                <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire'}}</td>
+                <td>{{ dessert.dispoDessert ? 'Oui' : 'Non' }}</td>
+                <td>
+                    <a href="{{ path('dessert_edit',
+                        {'id': dessert.id}) }}" class="btn btn-primary">
+                        <i class="far fa-edit"></i>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('dessert_delete_view',
+                        {'id': dessert.id}) }}" class="btn btn-danger">
+                        <i class="fas fa-trash"></i>
+                    </a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('dessert_new') }}">Create new</a>
+    <div>
+        {{ knp_pagination_render(desserts) }}
+    </div>
 {% endblock %}

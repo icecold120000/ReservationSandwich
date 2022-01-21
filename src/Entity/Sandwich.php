@@ -28,12 +28,12 @@ class Sandwich
     private ?string $imageSandwich;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $ingredientSandwich;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $commentaireSandwich;
 

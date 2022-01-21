@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Boisson;
 use App\Form\BoissonType;
-use App\Form\FilterOrSearch\FilterBoissonType;
+use App\Form\FilterOrSearch\FilterMenuType;
 use App\Repository\BoissonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
@@ -30,7 +30,7 @@ class BoissonController extends AbstractController
     {
         $boissons = $boissonRepo->findAll();
 
-        $form = $this->createForm(FilterBoissonType::class);
+        $form = $this->createForm(FilterMenuType::class);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -138,7 +138,7 @@ class BoissonController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($oldImgBoisson);
+                unlink($this->getParameter('boisson_directory').$oldImgBoisson);
                 $boisson->setImageBoisson($newFilename);
 
             }
@@ -174,7 +174,7 @@ class BoissonController extends AbstractController
     public function delete(Request $request, Boisson $boisson, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$boisson->getId(), $request->request->get('_token'))) {
-            unlink($boisson->getImageBoisson());
+            unlink($this->getParameter('boisson_directory').$boisson->getImageBoisson());
             $entityManager->remove($boisson);
             $entityManager->flush();
         }

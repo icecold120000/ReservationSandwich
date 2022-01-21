@@ -6,6 +6,12 @@
 parameters:
     menu_directory: '%kernel.project_dir%/public/uploads/menu'
     boisson_directory: '%kernel.project_dir%/public/uploads/imgBoisson'
+    dessert_directory: '%kernel.project_dir%/public/uploads/imgDessert'
+    photoeleve_directory: '%kernel.project_dir%/public/uploads/photoFile'
+    sandwich_directory: '%kernel.project_dir%/public/uploads/imgSandwich'
+    elevefile_directory: '%kernel.project_dir%/public/uploads/eleveFile'
+    adulte_directory: '%kernel.project_dir%/public/uploads/profFile'
+
 services:
     # default configuration for services in *this* file
     _defaults:
