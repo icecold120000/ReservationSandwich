@@ -46,7 +46,7 @@ class SandwichController extends AbstractController
             10
         );
 
-        return $this->render('sandwich/admin.html.twig', [
+        return $this->render('sandwich/index.html.twig', [
             'sandwiches' => $sandwiches,
             'form' => $form->createView(),
         ]);

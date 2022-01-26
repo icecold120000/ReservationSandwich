@@ -47,7 +47,7 @@ class ClasseController extends AbstractController
             10
         );
 
-        return $this->render('classe/admin.html.twig', [
+        return $this->render('classe/index.html.twig', [
             'classes' => $classes,
             'form' => $form->createView(),
         ]);

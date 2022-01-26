@@ -45,7 +45,7 @@ class DessertController extends AbstractController
             10
         );
 
-        return $this->render('dessert/admin.html.twig', [
+        return $this->render('dessert/index.html.twig', [
             'desserts' => $desserts,
             'form' => $form->createView(),
         ]);

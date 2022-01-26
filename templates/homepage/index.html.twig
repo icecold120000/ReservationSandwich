@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil{% endblock %}
+
+{% block body %}
+    <h1>Bienvenu</h1>
+    <h2>Présentation du site :</h2>
+    <p>
+        Le paragraphe enchaîne ensuite les informations d’appui (raisons, preuves, explications) en les reliant par des transitions. Cet enchaînement est la base de la construction d’un argument.
+        Les transitions sont des phrases, des parties de phrase, des expressions, des mots de liaison et des signes de ponctuation. Vous les utiliser pour lier des objets ou des idées dans le temps ou dans l’espace, pour établir des liens logiques, pour indiquer le rapport entre les idées (cause, conséquence, explication, illustration, ressemblance, opposition, alternative, extension).
+    </p>
+
+    <div>
+        <h3>Voici le menu de la semaine : </h3>
+
+        {% if menu.fileName %}
+            <img id="menuImg" src="{{ asset('uploads/menu/' ~ menu.fileName) }}" alt="Menu de la semaine">
+        {% else %}
+            <img id="menuImg" src="{{ asset('static/images/placeholder.png') }}" alt="Placeholder menu de la semaine">
+        {% endif %}
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
+        {% for message in app.flashes('SuccessMenu') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            {{form_start(form)}}
+                {{ form_help(form.fileSubmit) }}
+                <div id="fileInputUser">
+                    {{form_widget(form.fileSubmit)}}
+                </div>
+                {% if form_errors(form.fileSubmit)%}
+                    <div class="erreur">
+                        {{form_errors(form.fileSubmit)}}
+                    </div>
+                {% endif %}
+            {{form_end(form)}}
+        </div>
+        <div>
+            <button class="btn btn-success" form="menuForm">
+                Changer le menu
+            </button>
+        </div>
+    {% endif %}
+
+{% endblock %}
