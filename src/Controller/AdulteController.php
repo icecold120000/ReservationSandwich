@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Adulte;
 use App\Form\AdulteType;
+use App\Form\FilterOrSearch\FilterAdulteType;
 use App\Repository\AdulteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +19,34 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdulteController extends AbstractController
 {
     /**
-     * @Route("/", name="adulte_index", methods={"GET"})
+     * @Route("/", name="adulte_index", methods={"GET","POST"})
      */
-    public function index(AdulteRepository $adulteRepository): Response
+    public function index(AdulteRepository $adulteRepo,
+                          Request $request, PaginatorInterface $paginator): Response
     {
+        $adultes = $adulteRepo->findByArchive(false);
+
+        $form = $this->createForm(FilterAdulteType::class);
+
+        $filter = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $adultes = $adulteRepo->filter(
+                $filter->get('ordreNom')->getData(),
+                $filter->get('ordrePrenom')->getData(),
+                $filter->get('archiveAdulte')->getData()
+            );
+        }
+
+        $adultes = $paginator->paginate(
+            $adultes,
+            $request->query->getInt('page',1),
+            20
+        );
+
         return $this->render('adulte/index.html.twig', [
-            'adultes' => $adulteRepository->findAll(),
+            'adultes' => $adultes,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -38,8 +62,11 @@ class AdulteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($adulte);
             $entityManager->flush();
-
-            return $this->redirectToRoute('adulte_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'SuccessAdulte',
+                'L\'adulte a été sauvegardé !'
+            );
+            return $this->redirectToRoute('adulte_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adulte/new.html.twig', [
@@ -68,13 +95,26 @@ class AdulteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('adulte_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash(
+                'SuccessAdulte',
+                'L\'adulte a été modifié !'
+            );
+            return $this->redirectToRoute('adulte_edit', ['id' => $adulte->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('adulte/edit.html.twig', [
             'adulte' => $adulte,
             'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/delete_view", name="adulte_delete_view", methods={"GET"})
+     */
+    public function delete_view(Adulte $adulte): Response
+    {
+        return $this->render('adulte/delete_view.html.twig', [
+            'adulte' => $adulte,
         ]);
     }
 

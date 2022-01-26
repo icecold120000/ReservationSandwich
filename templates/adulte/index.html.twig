@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des adultes{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Liste des adultes</h1>
+    <div>
+        <a href="{{ path('adulte_new') }}"
+           class="btn btn-primary" id="btnAjout">
+            Ajouter un nouvel adulte
+        </a>
+        <a href="{{ path('espace_admin') }}"
+           class="btn btn-secondary" id="btnRetour">
+            Retourner à l'espace administration
+        </a>
+    </div>
+    <div>
+        {{form_start(form)}}
+        <div id="filtre" class="filtre form-row align-items-end">
+            <div class="selectFiltre">
+                <span>{{form_label(form.ordrePrenom)}}</span>
+                {{form_widget(form.ordrePrenom)}}
+                <span>{{form_label(form.ordreNom)}}</span>
+                {{form_widget(form.ordreNom)}}
+                <span>{{form_label(form.archiveAdulte)}}</span>
+                {{form_widget(form.archiveAdulte)}}
+                <button type="submit" class="btn btn-info" >
+                    Afficher
+                </button>
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+    <div>
+        {{ knp_pagination_render(adultes) }}
+    </div>
+    <table class="table tableAdmin">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Date de naissance</th>
+                <th>Archivé</th>
+                <th>Éditer</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for adulte in adultes %}
+                <tr>
+                    <td>{{ adulte.nomAdulte }}</td>
+                    <td>{{ adulte.prenomAdulte }}</td>
+                    <td>{{ adulte.dateNaissance ? adulte.dateNaissance|date('d/m/Y') : '' }}</td>
+                    <td>{{ adulte.archiveAdulte ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('adulte_edit',
+                            {'id': adulte.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('adulte_delete_view',
+                            {'id': adulte.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        {{ knp_pagination_render(adultes) }}
+    </div>
+{% endblock %}

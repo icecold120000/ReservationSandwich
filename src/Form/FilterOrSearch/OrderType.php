@@ -15,11 +15,11 @@ class OrderType extends AbstractType
              ->add('ordreAlphabet', ChoiceType::class, [
                 'label' => 'Ordre',
                 'choices' => [
-                    'Croissant' => '1',
-                    'Décroissant' => '0',
+                    'Croissant' => 'ASC',
+                    'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-                'empty_data' => '1',
+                'empty_data' => 'ASC',
             ])
         ;
     }

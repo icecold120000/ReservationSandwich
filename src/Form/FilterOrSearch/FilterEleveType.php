@@ -41,8 +41,8 @@ class FilterEleveType extends AbstractType
             ->add('archiveEleve', ChoiceType::class, [
                 'label' => 'Archivés',
                 'choices' => [
-                    'Non Archivés' => '0',
-                    'Archivés' => 1,
+                    'Non Archivés' => false,
+                    'Archivés' => true,
                 ],
                 'required' => false,
                 'placeholder' => 'Tous',

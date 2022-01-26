@@ -19,9 +19,53 @@ class AdulteRepository extends ServiceEntityRepository
         parent::__construct($registry, Adulte::class);
     }
 
-    // /**
-    //  * @return Adulte[] Returns an array of Adulte objects
-    //  */
+    /**
+     * @return Adulte[] Returns an array of Adulte objects
+     */
+    public function findByArchive($value): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.archiveAdulte = :val')
+            ->setParameter('val', $value)
+            ->orderBy('a.prenomAdulte', 'ASC')
+            ->addGroupBy('a.nomAdulte')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Adulte[] Returns an array of Adulte objects
+     */
+    public function filter($ordreNom = null, $ordrePrenom = null, $archive = null) : array
+    {
+        $query = $this->createQueryBuilder('a');
+        if ($ordreNom != null && $ordrePrenom != null) {
+            $query->addOrderBy('a.nomAdulte',$ordreNom)
+                ->addOrderBy('a.prenomAdulte', $ordrePrenom);
+        }
+        elseif ($ordreNom == null && $ordrePrenom != null) {
+            $query->orderBy('a.prenomAdulte', $ordrePrenom);
+        }
+        elseif ($ordrePrenom == null && $ordreNom != null) {
+            $query->orderBy('a.nomAdulte', $ordreNom);
+        }
+        else {
+            $this->findByArchive(false);
+        }
+
+        if ($archive != null) {
+            $query->andWhere('a.archiveAdulte = :archive')
+                ->setParameter('archive', $archive);
+        }
+        else {
+            $this->findByArchive(false);
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
+
     /*
     public function findByExampleField($value)
     {

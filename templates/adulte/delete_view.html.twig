@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suppression d'un adulte{% endblock %}
+{% block body %}
+    <main>
+        <h1>Suppression d'un adulte</h1>
+
+        <h2>Cliquez sur le bouton Supprimer pour supprimer l'adulte choisi : {{adulte.prenomAdulte}} {{adulte.nomAdulte}}</h2>
+
+        <div id="warning">
+            <p><i class="fas fa-exclamation-triangle"></i> Attention : le compte de l'adulte sera aussi supprimé.</p>
+        </div>
+
+        {{ include('adulte/_delete_form.html.twig') }}
+
+        <div>
+            <a href="{{ path('adulte_index') }}">
+                <button class="btn btn-secondary" id="btnRetourSuppr">
+                    Revenir à la liste
+                </button>
+            </a>
+        </div>
+    </main>
+{% endblock %}
