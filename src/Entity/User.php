@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isVerified;
+    private ?bool $isVerified;
 
     public function getId(): ?int
     {
@@ -208,7 +208,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getIsVerified(): ?bool
+    public function isVerified(): ?bool
     {
         return $this->isVerified;
     }

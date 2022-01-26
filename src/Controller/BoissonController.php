@@ -46,7 +46,7 @@ class BoissonController extends AbstractController
             10
         );
 
-        return $this->render('boisson/index.html.twig', [
+        return $this->render('boisson/admin.html.twig', [
             'boissons' => $boissons,
             'form' => $form->createView(),
         ]);

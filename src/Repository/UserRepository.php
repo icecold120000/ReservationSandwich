@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,6 +36,65 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmail($email): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :val')
+            ->setParameter('val', $email)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEmailAndDate($email, $date): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.email = :val')
+            ->andWhere('u.dateNaissance = :val2')
+            ->setParameters(array('val' => $email, 'val2' => $date),
+                array("string","\DateTime"))
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findByNomPrenomAndBirthday($nom, $prenom, $birthday): array
+    {
+        $query = $this->createQueryBuilder('u');
+        $query->andWhere('u.nomUser = :val')
+            ->andWhere('u.prenomUser = :val2')
+            ->setParameters(array('val' => $nom, 'val2' => $prenom),
+                array("string","string"));
+        if($birthday != null){
+            $query->andWhere('u.dateNaissance = :birthday')
+                ->setParameter('birthday', $birthday);
+        }
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByToken($tokenHash): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.tokenHash = :val')
+            ->setParameter('val', $tokenHash)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     // /**
     //  * @return User[] Returns an array of User objects

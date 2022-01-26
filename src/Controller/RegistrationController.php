@@ -16,7 +16,9 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request,
+                             UserPasswordHasherInterface $userPasswordHasher,
+                             EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -30,12 +32,23 @@ class RegistrationController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setTokenHash(md5($user->getId().$user->getEmail()));
 
             $entityManager->persist($user);
             $entityManager->flush();
-            // do anything else you need here, like send an email
+
 
             return $this->redirectToRoute('homepage');
+        }
+        else
+        {
+            $this->addFlash(
+                'failedInscription',
+                'Votre demande d\'inscription a été refusée.
+                    Vous n\'êtes pas reconnu en tant qu\'élève de l\'établissement.
+                    Merci de vérifier que vos données
+                     (nom, prénom et date de naissance) correspondent à celles données à l\'établissement.'
+            );
         }
 
         return $this->render('registration/register.html.twig', [

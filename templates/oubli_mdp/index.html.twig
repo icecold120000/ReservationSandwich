@@ -1,20 +1,49 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello OubliMdpController!{% endblock %}
+{% block title %}Oubli de mot de passe{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main>
+        <h1>Oubli de mot de passe</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/pham_/BTSannee2/ReservationSandwich/src/Controller/OubliMdpController.php'|file_link(0) }}">src/Controller/OubliMdpController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/pham_/BTSannee2/ReservationSandwich/templates/oubli_mdp/index.html.twig'|file_link(0) }}">templates/oubli_mdp/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <h2>Veuillez saisir votre email pour envoyer une demande de réinitialisation de votre mot de passe.</h2>
+        {% for message in app.flashes('SuccessOubli') %}
+            <div class="flash-success">
+                {{  message|replace({".":".</br>"})|raw }}
+            </div>
+        {% endfor %}
+        {% if error %}
+            <div class="erreur">
+                {{ error }}
+            </div>
+        {% endif %}
+        <div class="container-fluid formEntité">
+            {{ form_start(form) }}
+            <div>
+                {{form_label(form.emailFirst)}}
+                <div>
+                    {{form_widget(form.emailFirst)}}
+                </div>
+                {{form_label(form.dateAnniversaire)}}
+                {{form_help(form.dateAnniversaire)}}
+                <div>
+                    {{form_widget(form.dateAnniversaire)}}
+                </div>
+            </div>
+            {{form_end(form) }}
+        </div>
+        <div class="row">
+            <div id="divAjout">
+                <button type="submit" class="btn btn-success" form="formOubliMdp">
+                    Envoyer votre demande
+                </button>
+            </div>
+            <div>
+                <a href="{{ path('app_login') }}"
+                   id="btnRetour" class="btn btn-secondary">
+                    Revenir au formulaire de connexion
+                </a>
+            </div>
+        </div>
+    </main>
 {% endblock %}
