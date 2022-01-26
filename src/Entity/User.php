@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -70,6 +72,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="boolean")
      */
     private ?bool $isVerified;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Adulte::class, mappedBy="compteAdulte")
+     */
+    private $adultes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="compteEleve")
+     */
+    private $eleves;
+
+    public function __construct()
+    {
+        $this->adultes = new ArrayCollection();
+        $this->eleves = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -216,6 +234,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Adulte[]
+     */
+    public function getAdultes(): Collection
+    {
+        return $this->adultes;
+    }
+
+    public function addAdulte(Adulte $adulte): self
+    {
+        if (!$this->adultes->contains($adulte)) {
+            $this->adultes[] = $adulte;
+            $adulte->setCompteAdulte($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdulte(Adulte $adulte): self
+    {
+        if ($this->adultes->removeElement($adulte)) {
+            // set the owning side to null (unless already changed)
+            if ($adulte->getCompteAdulte() === $this) {
+                $adulte->setCompteAdulte(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Eleve[]
+     */
+    public function getEleves(): Collection
+    {
+        return $this->eleves;
+    }
+
+    public function addEleve(Eleve $eleve): self
+    {
+        if (!$this->eleves->contains($eleve)) {
+            $this->eleves[] = $eleve;
+            $eleve->setCompteEleve($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEleve(Eleve $eleve): self
+    {
+        if ($this->eleves->removeElement($eleve)) {
+            // set the owning side to null (unless already changed)
+            if ($eleve->getCompteEleve() === $this) {
+                $eleve->setCompteEleve(null);
+            }
+        }
 
         return $this;
     }

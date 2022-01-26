@@ -1,0 +1,22 @@
+{% apply inline_css(source('@styles/email.css')) %}
+<html lang="fr">
+    <body>
+        <img src="{{ email.image('@images/mailHeader.jpg') }}" alt="Header">
+        <p>Bonjour <span>{{user.prenomUser}} {{user.nomUser}}</span>,</p>
+        <p>Veuillez accéder au formulaire pour modifier votre mot de passe en cliquant sur le bouton ci-dessous.</p>
+        <a href="{{ url('oubli_mdp_reset',{'userTokenHash': user.tokenHash}) }}" id="aBtn">
+            <button class="btn btnSuccess">
+                Accéder au formulaire de réinitialisation du mot de passe
+            </button>
+        </a>
+        <p>Cordialement, </p>
+        <footer>
+            <div>
+                <span>----------------------------------------------------------</span>
+            </div>
+            <div><a href="mailto:patrice.rigault@lyceestvincent.net"><img src="{{ email.image('@images/signature.png') }}" alt="Signature"></a></div>
+            <div><p>Nous visiter sur <a href="https://www.lycee-stvincent.fr/" target="_blank">https://www.lycee.stvincent.fr/</a></p></div>
+        </footer>    
+    </body>
+</html>
+{% endapply %}

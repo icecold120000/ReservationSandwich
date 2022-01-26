@@ -36,7 +36,11 @@ class RegistrationController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
-
+            $this->addFlash(
+                'successInscription',
+                'Votre inscription a été validé.
+                 Vous pouvez vous connecter en revenant sur la page de connexion.'
+            );
 
             return $this->redirectToRoute('homepage');
         }

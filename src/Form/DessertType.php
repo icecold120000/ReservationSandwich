@@ -50,7 +50,8 @@ class DessertType extends AbstractType
                 'required' => false,
             ])
             ->add('commentaireDessert', TextareaType::class,[
-                'label' => 'Liste d\'ingrédients du dessert',
+                'label' => 'Commentaire sur le dessert',
+                'help' => 'Spéficié des allergies ou le groupe d\'individus.',
                 'required' => false,
             ])
             ->add('dispoDessert',ChoiceType::class, [

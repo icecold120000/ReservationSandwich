@@ -52,24 +52,24 @@
                                 <ul class="dropdown-menu" aria-labelledby="accesProfile">
                                     <li>
                                         {% if is_granted('ROLE_ADMIN')%}
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{path('profile_admin')}}">
                                                 Voir profil
                                             </a>
                                         {% elseif is_granted('ROLE_ELEVE')%}
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{path('profile_eleve')}}">
                                                 Voir profil
                                             </a>
                                         {% elseif is_granted('ROLE_ADULTE')%}
-                                            <a class="dropdown-item" href="#">
+                                            <a class="dropdown-item" href="{{path('profile_adulte')}}">
                                                 Voir profil
                                             </a>
-                                        {% elseif is_granted('ROLE_USER')%}
-                                            <a class="dropdown-item" href="#">
+                                        {% elseif is_granted('ROLE_CUISINE')%}
+                                            <a class="dropdown-item" href="{{path('profile_cuisine')}}">
                                                 Voir profil
                                             </a>
                                         {% endif %}
                                     </li>
-                                    <li><a class="dropdown-item" href="#">Éditer votre profil</a></li>
+                                    <li><a class="dropdown-item" href="{{path('profile_edit',{'id': app.user.id})}}">Éditer votre profil</a></li>
                                     <li><a class="dropdown-item" href="{{path('app_logout')}}" >Se déconnecter</a></li>
                                 </ul>
                             </div>

@@ -37,6 +37,7 @@
         "symfony/proxy-manager-bridge": "5.4.*",
         "symfony/runtime": "5.4.*",
         "symfony/security-bundle": "5.4.*",
+        "symfony/sendgrid-mailer": "5.4.*",
         "symfony/serializer": "5.4.*",
         "symfony/string": "5.4.*",
         "symfony/translation": "5.4.*",
@@ -44,6 +45,7 @@
         "symfony/validator": "5.4.*",
         "symfony/web-link": "5.4.*",
         "symfony/yaml": "5.4.*",
+        "twig/cssinliner-extra": "^3.3",
         "twig/extra-bundle": "^3.3",
         "twig/string-extra": "^3.3",
         "twig/twig": "^2.12|^3.0"

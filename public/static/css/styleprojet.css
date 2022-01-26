@@ -298,6 +298,94 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
 .row{
     justify-content: center;
 }
+
+/*CSS pour tout les formulaires de l'application*/
+
+.formEntité div.container-fluid{
+    display: inline-block;
+    position: relative;
+    right: 20%;
+}
+
+.formEntité form{
+    display: flex;
+    flex-direction: column;
+}
+
+.formEntité input{
+    width: 50%;
+    height: 30px;
+    font-size: 15px;
+}
+
+.formEntité div.fileInput input{
+    width: unset;
+}
+
+.formEntité select{
+    font-size: 20px;
+}
+
+.formEntité2 form{
+    display: flex;
+    justify-content: center;
+}
+
+.formEntité2 #part1 {
+    align-items: unset;
+}
+
+.formEntité2 .erreur li{
+    right: 1%;
+    text-align: left;
+    font-size: 15px;
+}
+
+.formEntité2 input{
+    width: 80%;
+    position: relative;
+    right: 10%;
+    height: 30px;
+    font-size: 15px;
+}
+
+.formEntité2 select{
+    font-size: 20px;
+    display: flex;
+}
+
+.formEntité2 label, .formEntité2 .help-text{
+    display: flex;
+}
+
+/*Formulaire de réinitialisation de mot de passe */
+#formResetMdp form{
+    align-items: center;
+}
+
+/*Page de profil*/
+
+#profilHeader{
+    margin: 5% 0 3% 10%;
+}
+
+#profilHeader h1{
+    font-size: 40px;
+}
+
+#profilHeader p, #infoProfil p{
+    font-size: 20px;
+}
+
+#profilHeader h1,#profilHeader p{
+    text-align: left;
+}
+
+#typeUser{
+    font-weight: bold;
+    font-style: italic;
+}
+
 /*Responsive de la barre de navigation*/
 @media screen and (max-width: 990px) {
     /*Navbar*/

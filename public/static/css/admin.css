@@ -134,65 +134,6 @@ table a.btn.btn-info{
     margin: 8px 0 0 0;
 }
 
-/*Formulaire d'ajout et de modification des entités*/
-
-.formEntité div.container-fluid{
-    display: inline-block;
-    position: relative;
-    right: 20%;
-}
-
-.formEntité form{
-    display: flex;
-    flex-direction: column;
-}
-
-.formEntité input{
-    width: 50%;
-    height: 30px;
-    font-size: 15px;
-}
-
-.formEntité div.fileInput input{
-    width: unset;
-}
-
-.formEntité select{
-    font-size: 20px;
-}
-
-.formEntité2 form{
-    display: flex;
-    justify-content: center;
-}
-
-.formEntité2 #part1 {
-    align-items: unset;
-}
-
-.formEntité2 .erreur li{
-    right: 1%;
-    text-align: left;
-    font-size: 15px;
-}
-
-.formEntité2 input{
-    width: 80%;
-    position: relative;
-    right: 10%;
-    height: 30px;
-    font-size: 15px;
-}
-
-.formEntité2 select{
-    font-size: 20px;
-    display: flex;
-}
-
-.formEntité2 label, .formEntité2 .help-text{
-    text-align: left;
-}
-
 /* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {
     .tableAdmin th, .tableAdmin td {

@@ -57,7 +57,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.email = :val')
-            ->andWhere('u.dateNaissance = :val2')
+            ->andWhere('u.dateNaissanceUser = :val2')
             ->setParameters(array('val' => $email, 'val2' => $date),
                 array("string","\DateTime"))
             ->getQuery()
@@ -76,7 +76,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameters(array('val' => $nom, 'val2' => $prenom),
                 array("string","string"));
         if($birthday != null){
-            $query->andWhere('u.dateNaissance = :birthday')
+            $query->andWhere('u.dateNaissanceUser = :birthday')
                 ->setParameter('birthday', $birthday);
         }
         return $query->getQuery()->getResult();

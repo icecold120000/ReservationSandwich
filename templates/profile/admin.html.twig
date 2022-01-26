@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Profile{% endblock %}
+
+{% block body %}
+    <main>
+        <div id="profilHeader">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                <h1>Bienvenue {{app.user.getPrenomUser}} {{app.user.getNomUser}}.</h1>
+            {% endif %}
+
+            <p>Vous êtes enregistré en tant <span id="typeUser">qu'admin</span> sur cette plateforme.</p>
+        </div>
+
+        <div id="infoProfil">
+            <p>Cliquez sur le bouton ci-dessous pour accéder l'espace d'administration</p>
+        </div>
+
+        <div>
+            <a href="{{path('espace_admin')}}" class="btn btn-info" id="btnProfilAdmin">
+                Accéder à l'espace administration
+            </a>
+        </div>
+    </main>
+{% endblock %}

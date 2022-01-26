@@ -20,22 +20,27 @@ class Adulte
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $nomAdulte;
+    private ?string $nomAdulte;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $prenomAdulte;
+    private ?string $prenomAdulte;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateNaissance;
+    private ?\DateTime $dateNaissance;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $archiveAdulte;
+    private ?bool $archiveAdulte;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adultes")
+     */
+    private $compteAdulte;
 
     public function getId(): ?int
     {
@@ -66,12 +71,12 @@ class Adulte
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getDateNaissance(): ?\DateTime
     {
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(\DateTimeInterface $dateNaissance): self
+    public function setDateNaissance(\DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 
@@ -86,6 +91,18 @@ class Adulte
     public function setArchiveAdulte(bool $archiveAdulte): self
     {
         $this->archiveAdulte = $archiveAdulte;
+
+        return $this;
+    }
+
+    public function getCompteAdulte(): ?User
+    {
+        return $this->compteAdulte;
+    }
+
+    public function setCompteAdulte(?User $compteAdulte): self
+    {
+        $this->compteAdulte = $compteAdulte;
 
         return $this;
     }

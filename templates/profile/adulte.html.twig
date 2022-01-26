@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Profile{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <main>
+        <div id="profilHeader">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                <h1>Bienvenue {{app.user.getPrenomUser}} {{app.user.getNomUser}}.</h1>
+            {% endif %}
+            <p>Vous êtes enregistré en tant <span id="typeUser">qu'adulte</span> sur cette plateforme.</p>
+        </div>
+        <div>
+            <h2>Vos accès :</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Nom de la fonctionnalité</th>
+                        <th scope="col">Lien pour gérer la fonctionnalité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Éditer votre profil</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces1"
+                               href="{{path('profile_edit',{'id': app.user.id})}}">
+                                Éditer votre profil
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Commande individuelle</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces2"
+                               href="#">
+                                Faire vos commandes individuelles
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Commande groupée</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces3"
+                               href="#">
+                                Faire vos commandes groupées
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Votre liste de commandes</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces3"
+                               href="#">
+                                Voir la liste de commandes
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}

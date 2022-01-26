@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Profile{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <main>
+        <div id="profilHeader">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                <h1>Bienvenue {{app.user.getPrenomUser}} {{app.user.getNomUser}}.</h1>
+            {% endif %}
+            <p>Vous êtes enregistré en tant <span id="typeUser">qu'élève</span> sur cette plateforme.</p>
+            <p>Ma Classe :
+                {% if app.user.getEleves %}
+                    {% for eleve in app.user.getEleve|filter(nomEleve => app.user.getNomUser,
+                        prenomEleve => app.user.getPrenomEleve,dateNaissanceUser => app.user.getDateNaissanceUser)%}
+                        {{ eleve.classe.libelleClasse }}
+                    {% endfor %}
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            <h2>Vos accès :</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Nom de la fonctionnalité</th>
+                        <th scope="col">Lien pour gérer la fonctionnalité</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Éditer votre profil</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces1"
+                               href="{{path('profile_edit',{'id': app.user.id})}}">
+                                Éditer votre profil
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Votre liste de commandes</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces3"
+                               href="#">
+                                Voir la liste de commandes
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Gestion des boissons</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces2"
+                               href="#">
+                                Gestion des boissons
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Gestion des sandwichs</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces3"
+                               href="#">
+                                Gestions des sandwich
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Gestion des desserts</td>
+                        <td>
+                            <a class="btn btn-info" id="btnProfilAcces2"
+                               href="#">
+                                Gestion des desserts
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}

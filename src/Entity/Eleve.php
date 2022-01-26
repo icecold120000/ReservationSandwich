@@ -42,6 +42,16 @@ class Eleve
      */
     private $classeEleve;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="eleves")
+     */
+    private $compteEleve;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $photoEleve;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +113,30 @@ class Eleve
     public function setClasseEleve(?Classe $classeEleve): self
     {
         $this->classeEleve = $classeEleve;
+
+        return $this;
+    }
+
+    public function getCompteEleve(): ?User
+    {
+        return $this->compteEleve;
+    }
+
+    public function setCompteEleve(?User $compteEleve): self
+    {
+        $this->compteEleve = $compteEleve;
+
+        return $this;
+    }
+
+    public function getPhotoEleve(): ?string
+    {
+        return $this->photoEleve;
+    }
+
+    public function setPhotoEleve(?string $photoEleve): self
+    {
+        $this->photoEleve = $photoEleve;
 
         return $this;
     }
