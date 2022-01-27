@@ -23,7 +23,7 @@ label{
     margin: 0;
 }
 
-a button, a button:hover{
+a, a:hover{
     text-decoration: none;
     color: white;
 }

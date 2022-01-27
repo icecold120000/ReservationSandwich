@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Classe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -35,7 +36,31 @@ class ClasseRepository extends ServiceEntityRepository
         return $this->findBy(array(), array('libelleClasse' => 'DESC'));
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByLibelle($value): ?Classe
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.libelleClasse = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByCode($value): ?Classe
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.codeClasse = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
     // /**
     //  * @return Classe[] Returns an array of Classe objects
     //  */

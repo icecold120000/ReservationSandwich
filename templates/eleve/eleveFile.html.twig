@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une liste des élèves{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+
+	<h1>Ajouter une liste des élèves</h1>
+
+
+	<h2>Veuillez sélectionner un fichier contenant une liste des élèves</h2>
+
+	{% for message in app.flashes('SuccessFileSubmit') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+	{{form_start(form)}}
+		<div>
+			<label>Liste des élèves (en XLSX) :</label>
+			{{ form_help(form.fileSubmit) }}
+		</div>
+		<div id="fileInputUser">
+			{{form_widget(form.fileSubmit)}}
+		</div>
+		{% if form_errors(form.fileSubmit) %}
+			<div class="erreur">
+				{{form_errors(form.fileSubmit)}}
+			</div>
+		{% endif %}
+	{{form_end(form)}}
+	<div class="row">
+		<div id="divAjout">
+			<button type="submit" class="btn btn-success" form="formFichier">
+				Envoyer votre liste d'élèves
+			</button>
+			<a href="{{ path('eleve_index') }}"
+			   id="btnRetour" class="btn btn-secondary">
+				Revenir à la liste
+			</a>
+		</div>
+	</div>
+
+{% endblock %}

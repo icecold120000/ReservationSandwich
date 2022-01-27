@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Eleve;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,21 @@ class EleveRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Eleve::class);
+    }
+
+    /**
+     * @return Eleve[] Returns an array of Eleve objects
+     */
+    public function findByArchive($value): array
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.archiveEleve = :val')
+            ->setParameter('val', $value)
+            ->orderBy('e.nomEleve','ASC')
+            ->addOrderBy('e.prenomEleve', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 
     /**
@@ -48,8 +64,8 @@ class EleveRepository extends ServiceEntityRepository
     public function findAllWithClasse(): array
     {
         return $this->createQueryBuilder('el')
-            ->leftJoin('el.classe', 'cl')
-            ->andWhere('cl.libelle != :val')
+            ->leftJoin('el.classeEleve', 'cl')
+            ->andWhere('cl.libelleClasse != :val')
             ->setParameter('val', "Quitter l'établissement")
             ->getQuery()
             ->getResult()
@@ -59,14 +75,36 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function findByClasse(?int $intClasse, $ordreNom = null, $ordrePrenom = null): array
+    public function findByClasse($nom = null, $classe = null, $archive = null,
+                                 $ordreNom = null, $ordrePrenom = null): array
     {
-        $query = $this->createQueryBuilder('el')
-            ->andWhere('el.classe = :val')
-            ->setParameter('val', $intClasse)
-        ;
+        $query = $this->createQueryBuilder('el');
+        if($nom != null){
+            $query->andWhere('el.nomEleve LIKE :nom OR el.prenomEleve LIKE :nom
+                OR el.id LIKE :nom')
+                ->setParameter('nom', $nom);
+        }
+        else{
+            $this->findAllWithClasse();
+        }
+        if($classe != null){
+            $query->leftJoin('el.classeEleve', 'cl');
+            $query->andWhere('cl.id = :id')
+                ->setParameter('id', $classe);
+        }
+        else{
+            $this->findAllWithClasse();
+        }
+        if ($archive != null) {
+            $query->andWhere('el.archiveEleve = :archive')
+                ->setParameter('archive',$archive)
+            ;
+        }
+        else {
+            $this->findAllWithClasse();
+        }
         if ($ordreNom != null && $ordrePrenom != null) {
-            $query->addOrderBy('el.nomEleve',$ordreNom)
+            $query->addOrderBy('el.nomEleve', $ordreNom)
                 ->addOrderBy('el.prenomEleve', $ordrePrenom);
         }
         elseif ($ordreNom == null && $ordrePrenom != null) {
@@ -78,9 +116,30 @@ class EleveRepository extends ServiceEntityRepository
         else {
             $this->findAllWithClasse();
         }
-
         return $query->getQuery()->getResult();
     }
+
+    /**
+     * @param $nom
+     * @param $prenom
+     * @param null $birthday
+     * @return Eleve|null
+     * @throws NonUniqueResultException
+     */
+    public function findByNomPrenomDateNaissance($nom, $prenom, $birthday = null): ?Eleve
+    {
+        $query = $this->createQueryBuilder('e');
+        $query->andWhere('e.nomEleve = :val')
+            ->andWhere('e.prenomEleve = :val2')
+            ->setParameters(array('val' => $nom, 'val2' => $prenom));
+        if($birthday != null){
+            $query->andWhere('e.dateNaissance = :birthday')
+                ->setParameter('birthday', $birthday);
+        }
+
+        return $query->getQuery()->getOneOrNullResult();
+    }
+
 
     // /**
     //  * @return Eleve[] Returns an array of Eleve objects

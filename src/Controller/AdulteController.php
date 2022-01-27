@@ -10,7 +10,6 @@ use App\Form\FichierType;
 use App\Form\FilterOrSearch\FilterAdulteType;
 use App\Repository\AdulteRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

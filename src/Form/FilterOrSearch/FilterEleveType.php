@@ -5,6 +5,7 @@ namespace App\Form\FilterOrSearch;
 use App\Entity\Classe;
 use App\Repository\ClasseRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,6 +16,10 @@ class FilterEleveType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('nom', TextType::class,[
+                'label' => 'Rechercher un élève',
+                'required' => false,
+            ])
             ->add('classe', EntityType::class,[
                 'label' => 'Classe',
                 'class' => Classe::class,
@@ -22,21 +27,12 @@ class FilterEleveType extends AbstractType
                     return $er->createQueryBuilder('cl')
                         ->orderBy('cl.id');
                 },
-                'choice_label' => 'libelle',
+                'choice_label' => 'codeClasse',
                 'choice_value' => function (?Classe $classe) {
                     return $classe ? $classe->getId() : '';
                 },
                 'required' => false,
                 'placeholder' => 'Toutes',
-            ])
-            ->add('genreEleve', ChoiceType::class, [
-                'label' => 'Sexe',
-                'choices' => [
-                    'Garçon' => 'M',
-                    'Fille' => 'F',
-                ],
-                'required' => false,
-                'placeholder' => 'Tous',
             ])
             ->add('archiveEleve', ChoiceType::class, [
                 'label' => 'Archivés',
@@ -63,15 +59,6 @@ class FilterEleveType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('compteExistant', ChoiceType::class, [
-                'label' => 'Compte Existant',
-                'choices' => [
-                    'Oui' => 'Not Null',
-                    'Non' => 'Null',
-                ],
-                'required' => false,
-                'placeholder' => 'Tout',
-            ])            
         ;
     }
 

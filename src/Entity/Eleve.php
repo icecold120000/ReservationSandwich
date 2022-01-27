@@ -52,6 +52,11 @@ class Eleve
      */
     private ?string $photoEleve;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $nbRepas;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class Eleve
     public function setPhotoEleve(?string $photoEleve): self
     {
         $this->photoEleve = $photoEleve;
+
+        return $this;
+    }
+
+    public function getNbRepas(): ?int
+    {
+        return $this->nbRepas;
+    }
+
+    public function setNbRepas(?int $nbRepas): self
+    {
+        $this->nbRepas = $nbRepas;
 
         return $this;
     }

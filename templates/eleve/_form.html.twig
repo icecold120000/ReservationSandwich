@@ -1,0 +1,65 @@
+    {{form_start(form)}}
+        <div id="part1">
+            {% if form_errors(form.nomEleve) %}
+                <div class="erreur">
+                    {{ form_errors(form.nomEleve) }}
+                </div>
+            {% endif %}
+            {{form_label(form.nomEleve)}}
+            <div>
+                {{ form_widget(form.nomEleve) }}
+            </div>
+            {%if form_errors(form.prenomEleve) %}
+                <div class="erreur">
+                    {{ form_errors(form.prenomEleve) }}
+                </div>
+            {% endif %}
+            {{ form_label(form.prenomEleve) }}
+            <div>
+                {{ form_widget(form.prenomEleve) }}
+            </div>
+            {%if form_errors(form.photoEleve) %}
+                <div class="erreur">
+                    {{ form_errors(form.photoEleve) }}
+                </div>
+            {% endif %}
+            {{ form_label(form.photoEleve) }}
+            {{ form_help(form.photoEleve) }}
+            <div id="inputFile">
+                {{ form_widget(form.photoEleve) }}
+            </div>
+        </div>
+        <div id="part2">
+            {%if form_errors(form.dateNaissance) %}
+                <div class="erreur">
+                    {{ form_errors(form.dateNaissance) }}
+                </div>
+            {% endif %}
+            {{ form_label(form.dateNaissance) }}
+            {{ form_help(form.dateNaissance) }}
+            <div>
+                {{ form_widget(form.dateNaissance) }}
+            </div>
+            {%if form_errors(form.classeEleve)%}
+                <div class="erreur">
+                    {{ form_errors(form.classeEleve) }}
+                </div>
+            {% endif %}
+            {{form_label(form.classeEleve)}}
+            <div id="selectClasse">
+                {{ form_widget(form.classeEleve) }}
+            </div>
+
+            {%if form_errors(form.archiveEleve) %}
+                <div class="erreur">
+                    {{ form_errors(form.archiveEleve) }}
+                </div>
+            {% endif %}
+            {{ form_label(form.archiveEleve) }}
+            <div id="selectClasse">
+                {{ form_widget(form.archiveEleve) }}
+            </div>
+        </div>
+    {{form_end(form)}}
+
+
