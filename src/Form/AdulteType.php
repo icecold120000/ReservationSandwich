@@ -28,7 +28,7 @@ class AdulteType extends AbstractType
                 'html5' => false,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
-                'required' => true,
+                'required' => false,
                 'help' => ' format : JJ/MM/AAAA'
             ])
             ->add('archiveAdulte', ChoiceType::class, [

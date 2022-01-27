@@ -6,14 +6,24 @@
 {% block body %}
     <h1>Liste des adultes</h1>
     <div>
-        <a href="{{ path('adulte_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter un nouvel adulte
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
+        <div>
+            <div>
+                <a href="{{ path('adulte_new') }}"
+                   class="btn btn-primary" id="btnAjout">
+                    Ajouter un nouvel adulte
+                </a>
+                <a href="{{ path('adulte_file') }}"
+                   class="btn btn-info" id="btnAjout">
+                    Ajouter une liste d'adultes
+                </a>
+            </div>
+            <div id="divRetour">
+                <a href="{{ path('espace_admin') }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Retourner à la liste des fonctionnalités
+                </a>
+            </div>
+        </div>
     </div>
     <div>
         {{form_start(form)}}
@@ -49,9 +59,15 @@
         <tbody>
             {% for adulte in adultes %}
                 <tr>
-                    <td>{{ adulte.nomAdulte }}</td>
                     <td>{{ adulte.prenomAdulte }}</td>
-                    <td>{{ adulte.dateNaissance ? adulte.dateNaissance|date('d/m/Y') : '' }}</td>
+                    <td>{{ adulte.nomAdulte }}</td>
+                    <td>
+                        {% if adulte.dateNaissance %}
+                            {{ adulte.dateNaissance ? adulte.dateNaissance|date('d/m/Y') : '' }}
+                        {% else %}
+                            Aucune date donnée
+                        {% endif %}
+                    </td>
                     <td>{{ adulte.archiveAdulte ? 'Oui' : 'Non' }}</td>
                     <td>
                         <a href="{{ path('adulte_edit',

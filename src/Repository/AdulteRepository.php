@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Adulte;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -65,7 +66,41 @@ class AdulteRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * @param $nom
+     * @param $prenom
+     * @param null $birthday
+     * @return Adulte|null
+     * @throws NonUniqueResultException
+     */
+    public function findByNomPrenomDateNaissance($nom, $prenom, $birthday = null): ?Adulte
+    {
+        $query = $this->createQueryBuilder('a');
+        $query->andWhere('a.nomAdulte = :val')
+            ->andWhere('a.prenomAdulte = :val2')
+            ->setParameters(array('val' => $nom, 'val2' => $prenom),
+                array("string","string"));
+        if($birthday != null){
+            $query->andWhere('a.dateNaissance = :birthday')
+                ->setParameter('birthday', $birthday);
+        }
 
+        return $query->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByNomPrenom($nom, $prenom): ?Adulte
+    {
+        $query = $this->createQueryBuilder('a');
+        $query->andWhere('a.nomAdulte = :val')
+            ->andWhere('a.prenomAdulte = :val2')
+            ->setParameters(array('val' => $nom, 'val2' => $prenom),
+                array("string","string"));
+
+        return $query->getQuery()->getOneOrNullResult();
+    }
     /*
     public function findByExampleField($value)
     {
@@ -91,4 +126,5 @@ class AdulteRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

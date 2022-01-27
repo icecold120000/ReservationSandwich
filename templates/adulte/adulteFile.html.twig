@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter une liste d'utilisateur{% endblock %}
+
+{% block body %}
+	<main>
+		<h1>Ajouter une liste d'utilisateur</h1>
+
+		<h2>Veuillez selectionner un fichier contenant une liste d'utilisateur</h2>
+
+		{% for message in app.flashes('SuccessFileSubmit') %}
+	        <div class="flash-success">
+	            {{ message }}
+	        </div>
+	    {% endfor %}
+
+		{{form_start(form)}}
+			<div>
+				<label>Liste des utilisateurs (en XLSX) :</label>
+			</div>
+			<div id="fileInputUser">
+				{{form_widget(form.fileSubmit)}}
+			</div>
+			{% if form_errors(form.fileSubmit) %}
+				<div class="erreur">
+					{{form_errors(form.fileSubmit)}}
+				</div>
+			{% endif %}
+		{{form_end(form)}}
+        <div class="row">
+          <div id="divAjout">
+              <button type="submit" class="btn btn-success" form="formFichier">
+                  Envoyer votre liste d'adultes
+              </button>
+              <a href="{{ path('adulte_index') }}"
+               id="btnRetour" class="btn btn-secondary">
+                  Revenir à la liste
+              </a>
+          </div>
+        </div>
+	</main>
+{% endblock %}

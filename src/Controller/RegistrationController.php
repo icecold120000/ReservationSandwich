@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('homepage');
         }
-        else
+        elseif($form->isSubmitted() && !$form->isValid())
         {
             $this->addFlash(
                 'failedInscription',

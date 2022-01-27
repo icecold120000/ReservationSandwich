@@ -10,7 +10,7 @@ parameters:
     photoeleve_directory: '%kernel.project_dir%/public/uploads/photoFile'
     sandwich_directory: '%kernel.project_dir%/public/uploads/imgSandwich'
     elevefile_directory: '%kernel.project_dir%/public/uploads/eleveFile'
-    adulte_directory: '%kernel.project_dir%/public/uploads/profFile'
+    adultefile_directory: '%kernel.project_dir%/public/uploads/adulteFile'
 
 services:
     # default configuration for services in *this* file

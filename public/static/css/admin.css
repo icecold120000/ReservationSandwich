@@ -15,6 +15,10 @@ ul.pagination{
     font-size: 15px;
 }
 
+#divRetour{
+    margin-top: 20px;
+}
+
 /*Espace d'administration*/
 
 .tableAdmin{

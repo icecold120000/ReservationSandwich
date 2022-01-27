@@ -222,6 +222,10 @@ p#login{
     bottom: 0;
 }
 
+input#rememberMe {
+    height: unset;
+}
+
 #btnRegister{
     background-color: dimgrey;
     color: #fff;
@@ -356,6 +360,16 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
 
 .formEntité2 label, .formEntité2 .help-text{
     display: flex;
+}
+
+div.divInput ,#formUserProfile .divInput{
+    width: 100%;
+}
+
+form textarea {
+    font-size: 20px;
+    height: 150px;
+    width: 100%;
 }
 
 /*Formulaire de réinitialisation de mot de passe */
