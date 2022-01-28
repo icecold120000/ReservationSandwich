@@ -264,7 +264,7 @@ label span{
     justify-content: center;
 }
 
-#formRegister #divInput, #formResetMdp #divInput{
+#formRegister .divInput, #formResetMdp .divInput{
     font-size: 15px;
     width: 80%;
 }

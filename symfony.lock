@@ -2,6 +2,9 @@
     "ang3/php-excel-encoder": {
         "version": "v2.0.1"
     },
+    "buzzingpixel/twig-switch": {
+        "version": "1.0.2"
+    },
     "composer/package-versions-deprecated": {
         "version": "1.11.99.4"
     },

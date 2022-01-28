@@ -15,7 +15,7 @@
             {{ form_start(form) }}
                 <div id="part1">
                     {{form_label(form.prenomUser)}}
-                    <div id="divInput">
+                    <div class="divInput">
                         {{form_widget(form.prenomUser)}}
                     </div>
                     {% if form_errors(form.prenomUser) %}
@@ -24,7 +24,7 @@
                         </div>
                     {% endif %}
                     {{form_label(form.nomUser)}}
-                    <div id="divInput">
+                    <div class="divInput">
                         {{form_widget(form.nomUser)}}
                     </div>
                     {% if form_errors(form.nomUser) %}
@@ -33,7 +33,7 @@
                         </div>
                     {% endif %}
                     {{form_label(form.email)}}
-                    <div id="divInput">
+                    <div class="divInput">
                         {{form_widget(form.email)}}
                     </div>
                     {% if form_errors(form.email) %}
@@ -43,7 +43,7 @@
                     {% endif %}
                 </div>
                 <div id="part2">
-                    <div id="divInput">
+                    <div class="divInput">
                         {{form_help(form.plainPassword)}}
                         {{form_widget(form.plainPassword)}}
                     </div>

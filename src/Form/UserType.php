@@ -2,39 +2,45 @@
 
 namespace App\Form;
 
+use App\Entity\Adulte;
 use App\Entity\User;
+use App\Entity\Eleve;
+use App\Repository\AdulteRepository;
+use App\Repository\EleveRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', EmailType::class, [
-                'label' => 'l\'email de l\'utilisateur',
+            ->add('email', TextType::class,[
+                'label' => 'E-mail de l\'utilisateur',
                 'required' => true,
             ])
             ->add('roles', CollectionType::class, [
                 'label' => 'Rôle de l\'utilisateur',
                 'entry_type'   => ChoiceType::class,
                 'entry_options'  => [
-                    'choices'  => [
+                    'choices' => [
+                        'Utilisateur'=> '[]',
                         'Admin' => User::ROLE_ADMIN,
-                        'Eleve' => User::ROLE_ELEVE,
+                        'Élève' => User::ROLE_ELEVE,
+                        'Cuisine' => User::ROLE_CUISINE,
                         'Adulte' => User::ROLE_ADULTES,
-                        'Cuisinier' => User::ROLE_CUISINE,
-                        'Utilisateur' => User::ROLE_USER,
                     ],
                     'required' => false,
-                    'placeholder' => 'Veuillez choisir un fonction de l\'utilisateur',
+                    'placeholder' => 'Veuillez choisir un role',
+                    'attr' => ['onChange' => 'update()'],
+                    'label_attr' => ['onChange' => 'update()'],
                 ],
             ])
             ->add('password', PasswordType::class,[
@@ -51,29 +57,56 @@ class UserType extends AbstractType
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Date de naissance de l\'utilisateur',
+                'help' => 'Format : JJ/MM/AAAA.',
+                'mapped' => false,
                 'html5' => false,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
-                'required' => true,
-                'help' => ' format : JJ/MM/AAAA'
+                'required' => false,
+                'invalid_message' => 'Votre saisie n\'est pas une date !',
             ])
             ->add('isVerified', ChoiceType::class, [
-                'label' => 'Compte vérifié',
+                'label' => 'Utilisateur vérifié',
                 'choices' => [
+                    'Non' => 0,
                     'Oui' => 1,
-                    'Non' => '0',
                 ],
-                'required' => true,
-                'empty_data' => 1,
+                'empty_data' => '0',
+                'required' => false,
+            ])
+            ->add('eleve', EntityType::class,[
+                'label' => 'Compte auquel l\'utilisateur est rattaché',
+                'mapped' => false,
+                'class' => Eleve::class,
+                'query_builder' => function (EleveRepository $er) {
+                    return $er->createQueryBuilder('el');
+                },
+                'choice_label' => function (?Eleve $eleve) {
+                    return $eleve ? $eleve->getPrenomEleve().' '. $eleve->getNomEleve() : '';
+                },
+                'required' => false,
+                'placeholder' => 'Veuillez choisir un élève',
+            ])
+            ->add('adulte', EntityType::class,[
+                'mapped' => false,
+                'class' => Adulte::class,
+                'query_builder' => function (AdulteRepository $er) {
+                    return $er->createQueryBuilder('ad');
+                },
+                'choice_label' => function (?Adulte $adulte) {
+                    return $adulte ? $adulte->getPrenomAdulte().' '. $adulte->getNomAdulte() : '';
+                },
+                'required' => false,
+                'placeholder' => 'Veuillez choisir un adulte',
             ])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'attr' => ['id' =>'userForm'],
+            'attr' => ['id' => 'userForm']
         ]);
     }
 }

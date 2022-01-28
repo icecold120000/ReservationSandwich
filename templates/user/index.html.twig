@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <main id="userIndex">
+        <h1>Liste des utilisateurs</h1>
+        <div>
+            <a href="{{ path('user_new') }}"
+             class="btn btn-primary" id="btnAjout">
+                Ajouter un nouvel utilisateur
+            </a>
+            <a href="{{ path('user_file') }}"
+             class="btn btn-info" id="btnAjout">
+                Ajouter une liste d'utilisateur
+            </a>
+        </div>
+        <div id="divRetour">
+            <a href="{{ path('espace_admin') }}"
+             class="btn btn-secondary" id="btnRetour">
+                Retourner à la liste des fonctionnalités
+            </a>
+        </div>
+        <div id="formFilter">
+            <div id="filtre">
+                {{form_start(form)}}
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.roleUser)}} </span>
+                        {{form_widget(form.roleUser)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.userVerifie)}}</span>
+                        {{form_widget(form.userVerifie)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.ordrePrenom)}}</span>
+                        {{form_widget(form.ordrePrenom)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.ordreNom)}}</span>
+                        {{form_widget(form.ordreNom)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info">
+                            Afficher
+                        </button>
+                    </div>
+                {{form_end(form)}}
+            </div>
+        </div>
+        <div>
+            {% if users|length == 0 %}
+                <h2>Aucun utilisateur n'a été trouvé</h2>
+            {% elseif users|length == 1 %}
+                <h2>{{users|length }} utilisateur trouvé</h2>
+            {% elseif users|length > 1 and users|length < 30 %}
+                <h2>{{users|length }} utilisateurs trouvés</h2>
+            {% else %}
+                <h2>{{usersTotal|length }} utilisateurs trouvés</h2>
+            {% endif %}
+        </div>
+        <div>
+            {{ knp_pagination_render(users) }}
+        </div>
+        <table class="table tableAdmin">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Fonction</th>
+                    <th>Utilisateur vérifié</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.nomUser }}</td>
+                    <td>{{ user.prenomUser }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% switch user.roles|json_encode %}
+                            {% case '["ROLE_ADMIN","ROLE_USER"]' %}
+                                Admin
+                            {% case '["ROLE_CUISINE","ROLE_USER"]' %}
+                                Cuisinier
+                            {% case '["ROLE_ELEVE","ROLE_USER"]' %}
+                                Élève
+                            {% case '["ROLE_ADULTES","ROLE_USER"]' %}
+                                Adulte
+                            {% default %}
+                                Utilisateur
+                        {% endswitch %}
+                    </td>
+                    <td>
+                        {% if user.isVerified == 1 or user.isVerified == true %}
+                            Oui
+                        {% else %}
+                            Non
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ path('user_edit',
+                        {'id': user.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' %}
+                            <a href="{{ path('user_delete_view', {'id': user.id}) }}"
+                             class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        {% else %}
+                            Cet utilisateur ne peut pas être supprimé !
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ knp_pagination_render(users) }}
+        </div>
+    </main>
+{% endblock %}

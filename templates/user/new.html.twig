@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un nouvel utilisateur{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <main>
+        <h1>Ajouter un nouvel utilisateur</h1>
+
+        {% for message in app.flashes('SuccessUser') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('FailedUser') %}
+            <div class="erreur">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <div class="container-fluid formEntité2" id="formUser">
+                {{ include('user/_form.html.twig') }}
+            </div>
+        </div>
+        <div class="row">
+          <div id="divAjout">
+              <button type="submit" class="btn btn-success" form="userForm">
+                  Enregistrer votre utilisateur
+              </button>
+              <a href="{{ path('user_index') }}"
+               id="btnRetour" class="btn btn-secondary">
+                  Revenir à la liste
+              </a>
+          </div>
+        </div>
+    </main>
+{% endblock %}

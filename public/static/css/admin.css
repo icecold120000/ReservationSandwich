@@ -165,6 +165,27 @@ div#filtreEleve.filtre label{
     font-size: 20px;
 }
 
+/*Les Formulaires d'ajout et de modification des utilisateurs*/
+
+#formUser.formEntité2 div#user_roles label, #formUser select#user_roles_1,
+#formUser select#user_roles_2{
+    display: none;
+}
+
+#formUser.formEntité2 div#part2 div:first-child, div#user_roles div{
+    padding-bottom: 0;
+}
+
+#formUser.formEntité2 div#part2 div:first-child{
+    display: contents;
+}
+
+#formUser.formEntité2 ul li,
+#formResetMdp ul li,#formRegister ul li, #formUserProfile ul li{
+    font-size: 15px;
+    font-weight: bold;
+    color: red;
+}
 
 /* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {

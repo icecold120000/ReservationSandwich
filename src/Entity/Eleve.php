@@ -15,7 +15,7 @@ class Eleve
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -55,7 +55,7 @@ class Eleve
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbRepas;
+    private ?int $nbRepas;
 
     public function getId(): ?int
     {

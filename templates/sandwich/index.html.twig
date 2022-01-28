@@ -34,52 +34,54 @@
     <div>
         {{ knp_pagination_render(sandwiches) }}
     </div>
-    <table class="table tableAdmin">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Nom</th>
-                <th>Liste d'ingrédients</th>
-                <th>Liste de commentaire</th>
-                <th>Disponibilité</th>
-                <th>Éditer</th>
-                <th>Supprimer</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sandwich in sandwiches %}
-            <tr>
-                <td>
-                    {% if sandwich.imageSandwich %}
-                        <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" alt="photo d'un sandwich">
-                    {% else %}
-                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
-                    {% endif %}
-                </td>
-                <td>{{ sandwich.nomSandwich }}</td>
-                <td>{{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description'}}</td>
-                <td>{{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire'}}</td>
-                <td>{{ sandwich.dispoSandwich ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('sandwich_edit',
-                        {'id': sandwich.id}) }}" class="btn btn-primary">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('sandwich_delete_view',
-                        {'id': sandwich.id}) }}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7" class="erreur">Aucune donnée n'a été trouvée !</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive-lg">
+        <table class="table table-lg tableAdmin">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Nom</th>
+                    <th>Liste d'ingrédients</th>
+                    <th>Liste de commentaire</th>
+                    <th>Disponibilité</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for sandwich in sandwiches %}
+                <tr>
+                    <td>
+                        {% if sandwich.imageSandwich %}
+                            <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" alt="photo d'un sandwich">
+                        {% else %}
+                            <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                        {% endif %}
+                    </td>
+                    <td>{{ sandwich.nomSandwich }}</td>
+                    <td>{{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description'}}</td>
+                    <td>{{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire'}}</td>
+                    <td>{{ sandwich.dispoSandwich ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('sandwich_edit',
+                            {'id': sandwich.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('sandwich_delete_view',
+                            {'id': sandwich.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="erreur">Aucune donnée n'a été trouvée !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div>
         {{ knp_pagination_render(sandwiches) }}
     </div>

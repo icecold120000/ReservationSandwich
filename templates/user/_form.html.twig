@@ -1,0 +1,103 @@
+{{ form_start(form) }}
+    <div id="part1">
+        {{form_label(form.prenomUser)}}
+        <div class="divInput">
+            {{form_widget(form.prenomUser)}}
+        </div>
+        {% if form_errors(form.prenomUser) %}
+            <div class="erreur">
+        	   {{form_errors(form.prenomUser)}}
+            </div>
+                {% endif %}
+        {{form_label(form.nomUser)}}
+        <div class="divInput">
+            {{form_widget(form.nomUser)}}
+        </div>
+        {% if form_errors(form.nomUser) %}
+            <div class="erreur">
+                {{form_errors(form.nomUser)}}
+            </div>
+        {% endif %}
+        {{form_label(form.email)}}
+        <div class="divInput">
+            {{form_widget(form.email)}}
+        </div>
+        {% if form_errors(form.email) %}
+            <div class="erreur">
+        	   {{form_errors(form.email)}}
+            </div>
+        {% endif %}
+        {{form_label(form.password)}}
+        <div class="divInput">
+            {{form_widget(form.password)}}
+        </div>
+        {% if form_errors(form.password) %}
+            <div class="erreur">
+                {{form_errors(form.password)}}
+            </div>
+        {% endif %}
+    </div>
+    <div id="part2">
+       {{form_label(form.dateNaissanceUser)}}
+        <div class="divInput">
+            {{form_widget(form.dateNaissanceUser)}}
+        </div>
+        {% if form_errors(form.dateNaissanceUser) %}
+            <div class="erreur">
+                {{form_errors(form.dateNaissanceUser)}}
+            </div>
+        {% endif %}
+        {{form_label(form.roles)}}
+        <div>
+            {{form_widget(form.roles)}}
+        </div>
+        {% if form_errors(form.roles) %}
+            <div class="erreur">
+                {{form_errors(form.roles)}}
+            </div>
+        {% endif %}
+        <script type="text/javascript">
+            function update() {
+                const select = document.getElementById('user_roles_0');
+                const option = select.options[select.selectedIndex];
+
+                const selected = option.text;
+
+                const toDisable1 = document.getElementById("user_eleve");
+                toDisable1.hidden = selected !== "Élève";
+
+                const toDisable2 = document.getElementById("user_adulte");
+                toDisable2.hidden = selected !== "Adulte";
+                update();
+            }
+
+        </script>
+        {{form_label(form.isVerified)}}
+        <div>
+            {{form_widget(form.isVerified)}}
+        </div>
+        {% if form_errors(form.isVerified) %}
+            <div class="erreur">
+                {{form_errors(form.isVerified)}}
+            </div>
+        {% endif %}
+        {{form_label(form.eleve)}}
+        <div>
+            {{form_widget(form.eleve)}}
+        </div>
+        {% if form_errors(form.eleve) %}
+            <div class="erreur">
+                {{form_errors(form.eleve)}}
+            </div>
+        {% endif %}
+        <div>
+            {{form_widget(form.adulte)}}
+        </div>
+        {% if form_errors(form.adulte) %}
+            <div class="erreur">
+                {{form_errors(form.adulte)}}
+            </div>
+        {% endif %}
+
+    </div>
+{{ form_end(form) }}

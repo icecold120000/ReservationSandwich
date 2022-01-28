@@ -38,6 +38,42 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * @return User[]
+     */
+    public function search($roleUser = null, $userVerifie = null, $ordreNom = null, $ordrePrenom = null): array
+    {
+        $query = $this->createQueryBuilder('u');
+        if($roleUser != null){
+            $query->andWhere('u.roles like :role')
+                ->setParameter('role','%'.$roleUser.'%');
+        }
+        else{
+            $this->findAll();
+        }
+        if($userVerifie != null){
+            $query->andWhere('u.isVerified = :userVerifie')
+                ->setParameter('userVerifie', $userVerifie);
+        }
+        else{
+            $this->findAll();
+        }
+        if ($ordreNom != null && $ordrePrenom != null) {
+            $query->addOrderBy('u.nomUser', $ordreNom)
+                ->addOrderBy('u.prenomUser', $ordrePrenom);
+        }
+        elseif ($ordreNom == null && $ordrePrenom != null) {
+            $query->orderBy('u.prenomUser', $ordrePrenom);
+        }
+        elseif ($ordrePrenom == null && $ordreNom != null) {
+            $query->orderBy('u.nomUser', $ordreNom);
+        }
+        else {
+            $this->findAll();
+        }
+        return $query->getQuery()->getResult();
+    }
+
+    /**
      * @throws NonUniqueResultException
      */
     public function findOneByEmail($email): ?User

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f61f6343c57506f83158fd936347b61e",
+    "content-hash": "814f60f7a4e9740c8447958412936d01",
     "packages": [
         {
             "name": "ang3/php-excel-encoder",
@@ -54,6 +54,55 @@
                 "source": "https://github.com/Ang3/php-excel-encoder/tree/v2.0.1"
             },
             "time": "2021-12-16T10:55:18+00:00"
+        },
+        {
+            "name": "buzzingpixel/twig-switch",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/buzzingpixel/twig-switch.git",
+                "reference": "f8e45f0ca0b68c1614733e02d163b22668be914a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/buzzingpixel/twig-switch/zipball/f8e45f0ca0b68c1614733e02d163b22668be914a",
+                "reference": "f8e45f0ca0b68c1614733e02d163b22668be914a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "twig/twig": "^2.7|^3.0"
+            },
+            "require-dev": {
+                "phpmd/phpmd": "^2.6",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "type": "library",
+            "extra": {
+                "twigExtensions": [
+                    "buzzingpixel\\twigswitch\\SwitchTwigExtension"
+                ]
+            },
+            "autoload": {
+                "psr-4": {
+                    "buzzingpixel\\twigswitch\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "TJ Draper",
+                    "email": "tj@buzzingpixel.com",
+                    "homepage": "https://buzzingpixel.com"
+                }
+            ],
+            "description": "Provides a {% switch %} tag for Twig switch case statements",
+            "support": {
+                "issues": "https://github.com/buzzingpixel/twig-switch/issues",
+                "source": "https://github.com/buzzingpixel/twig-switch/tree/1.0.2"
+            },
+            "time": "2020-06-21T00:42:23+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
