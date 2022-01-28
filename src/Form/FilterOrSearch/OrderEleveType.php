@@ -19,7 +19,6 @@ class OrderEleveType extends AbstractType
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-                'empty_data' => 'ASC',
             ])
             ->add('ordrePrenom', ChoiceType::class, [
                 'label' => 'Ordre par prénom',
@@ -28,7 +27,6 @@ class OrderEleveType extends AbstractType
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-                'empty_data' => 'ASC',
             ])
         ;
     }

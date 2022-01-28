@@ -93,7 +93,7 @@ class ClasseController extends AbstractController
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $eleveRepo->orderByEleve(
+            $eleves = $eleveRepo->orderByEleve(
                 $search->get('ordreNom')->getData(),
                 $search->get('ordrePrenom')->getData()
             );

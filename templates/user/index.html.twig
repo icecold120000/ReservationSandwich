@@ -66,8 +66,7 @@
         <table class="table tableAdmin">
             <thead>
                 <tr>
-                    <th>Nom</th>
-                    <th>Prénom</th>
+                    <th>Prénom et Nom</th>
                     <th>Email</th>
                     <th>Fonction</th>
                     <th>Utilisateur vérifié</th>
@@ -78,9 +77,8 @@
             <tbody>
             {% for user in users %}
                 <tr>
-                    <td>{{ user.nomUser }}</td>
-                    <td>{{ user.prenomUser }}</td>
-                    <td>{{ user.email }}</td>
+                    <td>{{ user.prenomUser }} <span>{{ user.nomUser }}</span></td>
+                    <td>{{ user.email|replace({"@":"<br/>@"})| raw }}</td>
                     <td>
                         {% switch user.roles|json_encode %}
                             {% case '["ROLE_ADMIN","ROLE_USER"]' %}

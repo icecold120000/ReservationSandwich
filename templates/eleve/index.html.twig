@@ -62,8 +62,7 @@
         <thead>
             <tr>
                 <th>Photo</th>
-                <th>Prénom</th>
-                <th>Nom</th>
+                <th>Prénom et Nom</th>
                 <th>Date de naissance</th>
                 <th>Éditer</th>
                 <th>Supprimer</th>
@@ -79,8 +78,7 @@
                         <img alt="Photo placeholder de l'élève" src="{{ asset('public/static/images/avatar.jpg') }}">
                     {% endif %}
                 </td>
-                <td>{{ eleve.prenomEleve }}</td>
-                <td>{{ eleve.nomEleve }}</td>
+                <td>{{ eleve.prenomEleve }} <span>{{ eleve.nomEleve }}</span></td>
                 <td>{{ eleve.dateNaissance ? eleve.dateNaissance|date('d/m/Y') : '' }}</td>
                 <td>
                     <a href="{{ path('eleve_edit',

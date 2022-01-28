@@ -39,7 +39,6 @@ form div{
 }
 
 #part1{
-    float: left;
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -49,7 +48,6 @@ form div{
 
 #part2{
     width: 45%;
-    float: right;
     display: flex;
     flex-direction: column;
     align-items: flex-start
@@ -426,12 +424,6 @@ form textarea {
         font-size: 2.5em
     }
 
-    #btnAjout, #btnRetour, .btn.btn-success {
-        padding: 30px;
-        font-size: 3.5em;
-        margin-bottom: 1em;
-    }
-
     /*Navbar*/
     nav#mainNav{
         padding: 2em;
@@ -457,9 +449,10 @@ form textarea {
         margin-bottom: 3em;
     }
 
-    #fileInputUser input {
+    #fileInputUser input{
         font-size: 1.5em;
         margin: 1em 0;
+        border: unset;
     }
 
     /* Footer */
@@ -481,4 +474,62 @@ form textarea {
         font-size: 2em;
     }
 
+    /*Formulaire*/
+    form div {
+        padding-bottom: 1.5em;
+    }
+
+    form textarea {
+        width: 100%;
+        font-size: 2em;
+        height: 5em;
+    }
+
+    #btnAjout, #btnRetour, .btn.btn-success {
+        padding: 30px;
+        font-size: 3.5em;
+        margin-bottom: 1em;
+    }
+
+    label {
+        font-size: 2em;
+    }
+
+    .help-text{
+        font-size: 1.5em;
+    }
+
+    #part1 , #part2 {
+        width: 100%;
+    }
+
+    #part2 {
+        align-items: center;
+    }
+
+    div.divInput {
+        display: flex;
+        justify-content: center;
+    }
+
+    div.fileInput input{
+        border: unset;
+    }
+
+    div.divInput input, textarea {
+        border: solid;
+    }
+
+    /*Formulaire d'ajout et de modification des adultes*/
+
+    #btnAdulte {
+        margin: 0;
+    }
+
+    /*Formulaire d'ajout et de modification des utilisateurs*/
+    #formUser #user_eleve, #formUser #user_adulte{
+        width: 80%;
+        left: 10%;
+        position: relative;
+    }
 }

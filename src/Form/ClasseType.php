@@ -13,7 +13,7 @@ class ClasseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('libelle', TextType::class,[
+            ->add('libelleClasse', TextType::class,[
                 'label' => 'Libellé de la classe',
                 'required' => true,
             ])
