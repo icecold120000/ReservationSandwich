@@ -19,14 +19,19 @@
         {{form_start(form)}}
         <div id="filtre" class="filtre form-row align-items-end">
             <div class="selectFiltre">
-                <span>{{form_label(form.ordre)}}</span>
-                {{form_widget(form.ordre)}}
-                <span>{{form_label(form.dispo)}}</span>
-                {{form_widget(form.dispo)}}
-
-                <button type="submit" class="btn btn-info" >
-                    Afficher
-                </button>
+                <div>
+                    <span>{{form_label(form.ordre)}}</span>
+                    {{form_widget(form.ordre)}}
+                </div>
+                <div>
+                    <span>{{form_label(form.dispo)}}</span>
+                    {{form_widget(form.dispo)}}
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-info" >
+                        Afficher
+                    </button>
+                </div>
             </div>
         </div>
         {{form_end(form)}}

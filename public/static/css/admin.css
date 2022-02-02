@@ -218,10 +218,21 @@ div#filtreEleve.filtre label{
         font-size: 3em;
     }
 
+    #btnRetour {
+        margin: 0 0 1em 0;
+    }
+
     /*Filtre*/
     #filtre{
         display: flex;
-        justify-content: center
+        justify-content: center;
+        padding-bottom: 0;
+    }
+
+    .selectFiltre {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     #filtre select, #filtre input{
@@ -237,14 +248,14 @@ div#filtreEleve.filtre label{
     }
 
     #filtre div{
-        margin: 0 1em 0 0;
+        margin: 0 0 1em 0;
+        padding: 0;
     }
 
     #filtre #left p{
         font-size: 30px;
         margin: 8px 0 0 0;
     }
-
 
     /*Filtre de gestion des élèves*/
 
@@ -289,5 +300,27 @@ div#filtreEleve.filtre label{
         justify-content: center;
     }
 
+    #warning p {
+        font-size: 4em;
+    }
+
+    #btnSuppr, #btnRetourSuppr {
+        padding: 1em;
+        font-size: 2em;
+        margin-top: 1em;
+    }
+
+    /*Formulaire d'ajout et de modification des adultes*/
+
+    #btnAdulte {
+        margin: 0;
+    }
+
+    /*Formulaire d'ajout et de modification des utilisateurs*/
+    #formUser #user_eleve, #formUser #user_adulte{
+        width: 80%;
+        left: 10%;
+        position: relative;
+    }
 
 }

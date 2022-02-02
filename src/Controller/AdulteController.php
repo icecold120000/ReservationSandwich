@@ -51,6 +51,7 @@ class AdulteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $adultes = $adulteRepo->filter(
+                $filter->get('nomAdulte')->getData(),
                 $filter->get('ordreNom')->getData(),
                 $filter->get('ordrePrenom')->getData(),
                 $filter->get('archiveAdulte')->getData()

@@ -4,6 +4,7 @@ namespace App\Form\FilterOrSearch;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,6 +13,10 @@ class FilterAdulteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('nomAdulte', TextType::class,[
+                'label' => 'Rechercher un adulte',
+                'required' => false,
+            ])
             ->add('ordreNom', ChoiceType::class, [
                 'label' => 'Ordre par nom',
                 'choices' => [

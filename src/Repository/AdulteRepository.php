@@ -38,9 +38,18 @@ class AdulteRepository extends ServiceEntityRepository
     /**
      * @return Adulte[] Returns an array of Adulte objects
      */
-    public function filter($ordreNom = null, $ordrePrenom = null, $archive = null) : array
+    public function filter($nom = null ,$ordreNom = null, $ordrePrenom = null, $archive = null) : array
     {
         $query = $this->createQueryBuilder('a');
+        if($nom != null){
+            $query->andWhere('a.nomAdulte LIKE :nom OR a.prenomAdulte LIKE :nom
+                OR a.id LIKE :nom')
+                ->setParameter('nom', '%'.$nom.'%');
+        }
+        else {
+            $this->findByArchive(false);
+        }
+
         if ($ordreNom != null && $ordrePrenom != null) {
             $query->addOrderBy('a.nomAdulte',$ordreNom)
                 ->addOrderBy('a.prenomAdulte', $ordrePrenom);
@@ -54,7 +63,6 @@ class AdulteRepository extends ServiceEntityRepository
         else {
             $this->findByArchive(false);
         }
-
         if ($archive != null) {
             $query->andWhere('a.archiveAdulte = :archive')
                 ->setParameter('archive', $archive);

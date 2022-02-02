@@ -19,14 +19,19 @@
         {{form_start(form)}}
         <div id="filtre" class="filtre form-row align-items-end">
             <div class="selectFiltre">
-                <span>{{form_label(form.ordre)}}</span>
-                {{form_widget(form.ordre)}}
-                <span>{{form_label(form.dispo)}}</span>
-                {{form_widget(form.dispo)}}
-
-                <button type="submit" class="btn btn-info" >
-                    Afficher
-                </button>
+                <div>
+                    <span>{{form_label(form.ordre)}}</span>
+                    {{form_widget(form.ordre)}}
+                </div>
+                <div>
+                    <span>{{form_label(form.dispo)}}</span>
+                    {{form_widget(form.dispo)}}
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-info" >
+                        Afficher
+                    </button>
+                </div>
             </div>
         </div>
         {{form_end(form)}}
@@ -34,52 +39,54 @@
     <div>
         {{ knp_pagination_render(desserts) }}
     </div>
-    <table class="table tableAdmin">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Nom</th>
-                <th>Liste d'ingrédients</th>
-                <th>Liste de commentaires</th>
-                <th>Disponibilité</th>
-                <th>Éditer</th>
-                <th>Supprimer</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for dessert in desserts %}
-            <tr>
-                <td>
-                    {% if dessert.imageDessert %}
-                        <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
-                    {% else %}
-                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
-                    {% endif %}
-                </td>
-                <td>{{ dessert.nomDessert }}</td>
-                <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description' }}</td>
-                <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire'}}</td>
-                <td>{{ dessert.dispoDessert ? 'Oui' : 'Non' }}</td>
-                <td>
-                    <a href="{{ path('dessert_edit',
-                        {'id': dessert.id}) }}" class="btn btn-primary">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('dessert_delete_view',
-                        {'id': dessert.id}) }}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive-lg">
+        <table class="table table-lg tableAdmin">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Liste d'ingrédients</th>
+                    <th>Liste de commentaires</th>
+                    <th>Disponibilité</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for dessert in desserts %}
+                <tr>
+                    <td>
+                        {% if dessert.imageDessert %}
+                            <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
+                        {% else %}
+                            <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                        {% endif %}
+                    </td>
+                    <td>{{ dessert.nomDessert }}</td>
+                    <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description' }}</td>
+                    <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire'}}</td>
+                    <td>{{ dessert.dispoDessert ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('dessert_edit',
+                            {'id': dessert.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('dessert_delete_view',
+                            {'id': dessert.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div>
         {{ knp_pagination_render(desserts) }}
     </div>

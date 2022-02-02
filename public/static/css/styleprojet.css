@@ -103,14 +103,13 @@ nav p , nav ul {
 }
 
 #connexion p{
-    bottom: 5px;
     display: inline;
     margin: 0 5px;
     position: relative;
 }
 
 #connexion i{
-    font-size: 30px;
+    font-size: 25px;
 }
 
 .fa-user-circle:before {
@@ -188,6 +187,25 @@ footer i{
     height: 400px;
     width: 85%;
     margin-bottom: 3em;
+}
+
+#menuImgModal {
+    height: 600px;
+    width: 100%;
+}
+
+#btnModal {
+    font-size: 15px;
+    padding: 20px;
+}
+
+.btn-close {
+    font-size: 15px;
+}
+
+.modal-footer button {
+    font-size: 15px;
+    padding: 20px;
 }
 
 #fileInputUser input{
@@ -429,6 +447,14 @@ form textarea {
         font-size: 2.5em
     }
 
+    form {
+        padding: 0;
+    }
+
+    .flash-success , .erreur{
+        font-size: 4em;
+    }
+
     /*Navbar*/
     nav#mainNav{
         padding: 2em;
@@ -457,6 +483,7 @@ form textarea {
 
     .fa-user-circle:before {
         display: inline;
+        margin-right: 20px;
     }
 
     /*Page d'accueil*/
@@ -469,6 +496,25 @@ form textarea {
         font-size: 1.5em;
         margin: 1em 0;
         border: unset;
+    }
+
+    #btnModal {
+        font-size: 2.5em;
+        padding: 30px;
+    }
+
+    #menuImgModal {
+        height: 46em;
+        width: 100%;
+    }
+
+    .btn-close {
+        font-size: 2.5em;
+    }
+
+    .modal-footer button {
+        font-size: 1.5em;
+        padding: 30px;
     }
 
     /* Footer */
@@ -503,7 +549,7 @@ form textarea {
 
     #btnAjout, #btnRetour, .btn.btn-success {
         padding: 30px;
-        font-size: 3.5em;
+        font-size: 2.5em;
         margin-bottom: 1em;
     }
 
@@ -531,10 +577,12 @@ form textarea {
 
     div.fileInput input{
         border: unset;
+        font-size: 1em;
     }
 
     div.divInput input, textarea {
         border: solid;
+        font-size: 1em;
     }
 
     /*Formulaire de connexion*/
@@ -544,8 +592,9 @@ form textarea {
         margin-bottom: 40px;
     }
 
-    #formConnexion input{
+    #formConnexion input, #formRegister input, #formResetMdp input{
         height: 4em;
+        font-size: 1em;
     }
 
     #login #part1 a.btn.btn-info{
@@ -560,6 +609,7 @@ form textarea {
     input#rememberMe {
         height: 40px;
         transform: scale(3.5);
+        margin-right: 20px;
     }
 
     #btnRegister{
@@ -594,16 +644,12 @@ form textarea {
         flex-direction: column;
     }
 
-    /*Formulaire d'ajout et de modification des adultes*/
+    /*Formulaire d'oubli de mot de passe*/
 
-    #btnAdulte {
-        margin: 0;
-    }
-
-    /*Formulaire d'ajout et de modification des utilisateurs*/
-    #formUser #user_eleve, #formUser #user_adulte{
+    .formEntité input{
         width: 80%;
-        left: 10%;
-        position: relative;
+        height: unset;
+        font-size: 2em;
     }
+
 }

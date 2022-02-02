@@ -82,7 +82,7 @@ class EleveRepository extends ServiceEntityRepository
         if($nom != null){
             $query->andWhere('el.nomEleve LIKE :nom OR el.prenomEleve LIKE :nom
                 OR el.id LIKE :nom')
-                ->setParameter('nom', $nom);
+                ->setParameter('nom', '%'.$nom.'%');
         }
         else{
             $this->findAllWithClasse();

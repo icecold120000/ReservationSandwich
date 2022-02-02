@@ -27,11 +27,15 @@
         {{form_start(form)}}
         <div id="filtre">
             <div class="selectFiltre">
-                <span>{{form_label(form.ordreAlphabet)}}</span>
-                {{form_widget(form.ordreAlphabet)}}
-                <button type="submit" class="btn btn-info" >
-                    Afficher
-                </button>
+                <div>
+                    <span>{{form_label(form.ordreAlphabet)}}</span>
+                    {{form_widget(form.ordreAlphabet)}}
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-info" >
+                        Afficher
+                    </button>
+                </div>
             </div>
         </div>
         {{form_end(form)}}
