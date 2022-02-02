@@ -2,6 +2,7 @@
 *{
     margin: 0;
     padding: 0;
+    font-family: Arial, serif;
     text-align: center;
 }
 
@@ -112,6 +113,11 @@ nav p , nav ul {
     font-size: 30px;
 }
 
+.fa-user-circle:before {
+    display: flex;
+    justify-content: center;
+}
+
 li#dropdownNav {
     margin-left: 2rem;
 }
@@ -179,8 +185,8 @@ footer i{
 /*Page d'accueil */
 
 #menuImg {
-    height: 300px;
-    width: 75%;
+    height: 400px;
+    width: 85%;
     margin-bottom: 3em;
 }
 
@@ -211,10 +217,6 @@ h6{
     float: left;
 }
 
-#btnConnexion{
-    margin-top: 15px;
-}
-
 p#login{
     display: block;
     bottom: 0;
@@ -227,7 +229,7 @@ input#rememberMe {
 #btnRegister{
     background-color: dimgrey;
     color: #fff;
-    border-radius: 7px;
+    border-radius: 20px;
     border-style: none;
     padding: 10px;
     font-size: 15px;
@@ -236,7 +238,10 @@ input#rememberMe {
 #login #part1 a.btn.btn-info{
     padding: 10px;
     font-size: 15px;
-    margin: 15px 0 0 15px;
+}
+
+#loginSubmit {
+    margin-top: 20px;
 }
 
 label span{
@@ -438,14 +443,25 @@ form textarea {
         font-size: 5em;
     }
 
-    .nav-link, #connexion i, #dropdownProfile li a, p{
+    .nav-item,.nav-link, p{
         font-size: 2em;
+    }
+
+    #dropdownProfile li a {
+        font-size: 3em;
+    }
+
+    #connexion i {
+        font-size: 5rem;
+    }
+
+    .fa-user-circle:before {
+        display: inline;
     }
 
     /*Page d'accueil*/
     #menuImg {
         height: 40em;
-        width: unset;
         margin-bottom: 3em;
     }
 
@@ -501,10 +517,11 @@ form textarea {
 
     #part1 , #part2 {
         width: 100%;
+        align-items: center;
     }
 
-    #part2 {
-        align-items: center;
+    #part2 div {
+        padding: 0;
     }
 
     div.divInput {
@@ -518,6 +535,63 @@ form textarea {
 
     div.divInput input, textarea {
         border: solid;
+    }
+
+    /*Formulaire de connexion*/
+
+    h6{
+        font-size: 2em;
+        margin-bottom: 40px;
+    }
+
+    #formConnexion input{
+        height: 4em;
+    }
+
+    #login #part1 a.btn.btn-info{
+        padding: 30px;
+        font-size: 3.5em;
+    }
+
+    #formConnexion label, #formRegister label{
+        float: unset;
+    }
+
+    input#rememberMe {
+        height: 40px;
+        transform: scale(3.5);
+    }
+
+    #btnRegister{
+        padding: 30px;
+        font-size: 2.5em;
+    }
+
+    /*Formulaire d'inscription*/
+    section#formRegister div.container-fluid, section#formResetMdp div.container-fluid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #formRegister form {
+        flex-direction: column;
+    }
+
+    #formRegister .help-text {
+        display: flex;
+        justify-content: center;
+        text-align: unset;
+    }
+
+    #formRegister input, #formResetMdp input {
+        width: 100%;
+    }
+
+    #formRegister .divInput, #formResetMdp .divInput {
+        font-size: unset;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
     /*Formulaire d'ajout et de modification des adultes*/

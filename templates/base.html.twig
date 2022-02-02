@@ -46,7 +46,7 @@
                         {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
                             <div class="dropdown" id="dropdownProfile">
                                 <a class="nav-link dropdown-toggle" href="#" role="link" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user-circle"></i><p> Mon Profil</p>
+                                    <i class="fas fa-user-circle"> Mon Profil</i>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="accesProfile">
                                     <li>
@@ -74,8 +74,7 @@
                             </div>
                         {% else %}
                             <a href="{{path('app_login')}}">
-                                <i class="fas fa-user-circle"></i>
-                                <p id="login">Se connecter</p>
+                                <i class="fas fa-user-circle">Se connecter</i>
                             </a>
                         {% endif %}
                     </li>

@@ -32,10 +32,10 @@
                     <input type="hidden" name="_csrf_token"
                            value="{{ csrf_token('authenticate') }}">
                 </form>
-                <div class="row" >
+                <div class="row" id="loginSubmit" >
                     <div>
                         <button type="submit" form="formConnexion"
-                                class="btn btn-success" id="btnConnexion">
+                                class="btn btn-success">
                             Se connecter
                         </button>
                         <a class="btn btn-info" href="{{path('oubli_mdp')}}">
