@@ -32,10 +32,11 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
-                $form->get('prenomUser')->getData(), new \DateTime($form->get('dateNaissanceUser')->getData()));
+                $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
+
 
             $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
-                $form->get('prenomUser')->getData(), new \DateTime($form->get('dateNaissanceUser')->getData()));
+                $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
 
             if ($eleveFound != false || $adulteFound != false){
                 // encode the plain password
@@ -45,17 +46,27 @@ class RegistrationController extends AbstractController
                         $form->get('plainPassword')->getData()
                     )
                 );
-                $user->setTokenHash(md5($user->getId().$user->getEmail()));
+                $user->setTokenHash(md5($user->getNomUser().$user->getEmail()));
+                $user->setIsVerified(true);
+
+                if ($eleveFound) {
+                    $user->setRoles([User::ROLE_ELEVE]);
+                }
+                elseif ($adulteFound) {
+                    $user->setRoles([User::ROLE_ADULTES]);
+                }
+                else {
+                    $user->setRoles([User::ROLE_USER]);
+                }
 
                 $entityManager->persist($user);
                 $entityManager->flush();
                 $this->addFlash(
                     'successInscription',
-                    'Votre inscription a été validé.
-                 Vous pouvez vous connecter en revenant sur la page de connexion.'
+                    'Votre inscription a été validé. Vous pouvez vous connecter.'
                 );
 
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('app_login');
             } else
             {
                 $this->addFlash(
