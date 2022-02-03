@@ -173,10 +173,10 @@ class AdulteController extends AbstractController
                                 $rowData['Prénom']);
                         }
 
-                        /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
+                        /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
                         if (in_array($adulteRelated, $adulteNonArchives)) {
 
-                            /*Enlève dans le tableau des non archivé les élèves
+                            /*Enlève dans le tableau des non archivé les adultes
                              qui sont dans le fichier excel*/
                             if (($key = array_search($adulteRelated, $adulteNonArchives)) !== false) {
                                 unset($adulteNonArchives[$key]);

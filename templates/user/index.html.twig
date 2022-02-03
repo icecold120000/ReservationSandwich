@@ -26,25 +26,25 @@
             <div id="filtre">
                 {{form_start(form)}}
                     <div class="selectFiltre">
-                        <span>{{form_label(form.roleUser)}} </span>
-                        {{form_widget(form.roleUser)}}
-                    </div>
-                    <div class="selectFiltre">
-                        <span>{{form_label(form.userVerifie)}}</span>
-                        {{form_widget(form.userVerifie)}}
-                    </div>
-                    <div class="selectFiltre">
-                        <span>{{form_label(form.ordrePrenom)}}</span>
-                        {{form_widget(form.ordrePrenom)}}
-                    </div>
-                    <div class="selectFiltre">
-                        <span>{{form_label(form.ordreNom)}}</span>
-                        {{form_widget(form.ordreNom)}}
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-info">
-                            Afficher
-                        </button>
+                        <div>
+                            <span>{{form_label(form.roleUser)}} </span>
+                            {{form_widget(form.roleUser)}}
+                            <span>{{form_label(form.userVerifie)}}</span>
+                            {{form_widget(form.userVerifie)}}
+                        </div>
+                        <div>
+                            <span>{{form_label(form.ordrePrenom)}}</span>
+                            {{form_widget(form.ordrePrenom)}}
+                        </div>
+                        <div>
+                            <span>{{form_label(form.ordreNom)}}</span>
+                            {{form_widget(form.ordreNom)}}
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-info">
+                                Afficher
+                            </button>
+                        </div>
                     </div>
                 {{form_end(form)}}
             </div>

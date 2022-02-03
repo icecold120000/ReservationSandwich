@@ -97,7 +97,8 @@ class UserController extends AbstractController
                         EntityManagerInterface $entityManager): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user,
+            array('row_attr' => array('route' => $request->get('_route'))));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -330,7 +331,8 @@ class UserController extends AbstractController
                          UserPasswordHasherInterface $userPasswordHasher,
                          EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user,
+            array('row_attr' => array('route' => $request->get('_route'))));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

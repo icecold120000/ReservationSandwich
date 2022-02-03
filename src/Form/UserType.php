@@ -21,31 +21,37 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['row_attr']['route'] == "user_new") {
+            $required = true;
+        }
+        else{
+            $required = false;
+        }
         $builder
             ->add('email', TextType::class,[
                 'label' => 'E-mail de l\'utilisateur',
                 'required' => true,
             ])
             ->add('roles', CollectionType::class, [
-                'label' => 'Rôle de l\'utilisateur',
+                'label' => 'Fonction de l\'utilisateur',
                 'entry_type'   => ChoiceType::class,
                 'entry_options'  => [
                     'choices' => [
                         'Utilisateur'=> '[]',
                         'Admin' => User::ROLE_ADMIN,
                         'Élève' => User::ROLE_ELEVE,
-                        'Cuisine' => User::ROLE_CUISINE,
+                        'Cuisinier' => User::ROLE_CUISINE,
                         'Adulte' => User::ROLE_ADULTES,
                     ],
                     'required' => false,
-                    'placeholder' => 'Veuillez choisir un role',
+                    'placeholder' => 'Veuillez choisir une fonction',
                     'attr' => ['onChange' => 'update()'],
                     'label_attr' => ['onChange' => 'update()'],
                 ],
             ])
             ->add('password', PasswordType::class,[
                 'label' => 'Mot de passe de l\'utilisateur',
-                'required' => false,
+                'required' => $required,
             ])
             ->add('nomUser', TextType::class,[
                 'label' => 'Nom de l\'utilisateur',

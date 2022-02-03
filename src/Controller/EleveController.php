@@ -27,6 +27,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Ang3\Component\Serializer\Encoder\ExcelEncoder;
 use Knp\Component\Pager\PaginatorInterface;
+use function PHPUnit\Framework\fileExists;
 
 /**
  * @property EntityManagerInterface $entityManager
@@ -65,8 +66,9 @@ class EleveController extends AbstractController
         $eleves = $paginator->paginate(
             $eleves,
             $request->query->getInt('page',1),
-            50
+            40
         );
+
         
         return $this->render('eleve/index.html.twig', [
             'eleves' => $eleves,
@@ -178,7 +180,7 @@ class EleveController extends AbstractController
         /* Parcours le tableau donné par le fichier Excel*/
 
         while($eleveCount < sizeof($this->getDataFromFile($fileName))){
-            /*Pour chaque Eleve*/
+            /*Pour chaque élève*/
 
             foreach($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un élève*/
@@ -194,6 +196,16 @@ class EleveController extends AbstractController
                             $rowData['Prénom'],
                             new DateTime($rowData['Date de naissance'])
                         );
+
+                        /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
+                        if (in_array($eleveExcel, $elevesNonArchives)) {
+
+                            /*Enlève dans le tableau des non archivé les élèves
+                             qui sont dans le fichier excel*/
+                            if (($key = array_search($eleveExcel, $elevesNonArchives)) !== false) {
+                                unset($elevesNonArchives[$key]);
+                            }
+                        }
 
                         /* Si l'élève est trouvé et doit être modifié*/
                         if($eleveExcel !== Null)
@@ -282,7 +294,6 @@ class EleveController extends AbstractController
                         }
 
                         $fileNamePhoto = $rowData['Nom'].' '.$rowData['Prénom'].'.jpg';
-
                         $eleveExcel->setPhotoEleve($fileNamePhoto);
 
                         $this->entityManager->persist($eleveExcel);
@@ -298,9 +309,12 @@ class EleveController extends AbstractController
             $eleve
                 ->setArchiveEleve(true)
                 ->setClasseEleve($this->classeRepo
-                    ->findOneByLibelle("Quitter l'établissement"));
-
+                    ->findOneByLibelle("Quitter l'établissement"))
+            ;
+            $inscription = $this->inscritCantRepo->findOneBy(['eleve' => $eleve]);
+            $inscription->setArchiveInscription(true);
             $this->entityManager->persist($eleve);
+            $this->entityManager->persist($inscription);
         }
         $this->entityManager->flush();
     }
