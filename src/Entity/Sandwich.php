@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SandwichRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,16 @@ class Sandwich
      * @ORM\Column(type="boolean")
      */
     private ?bool $dispoSandwich;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="sandwichChoisi")
+     */
+    private $commandeIndividuelles;
+
+    public function __construct()
+    {
+        $this->commandeIndividuelles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +115,36 @@ class Sandwich
     public function setDispoSandwich(bool $dispoSandwich): self
     {
         $this->dispoSandwich = $dispoSandwich;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeIndividuelle[]
+     */
+    public function getCommandeIndividuelles(): Collection
+    {
+        return $this->commandeIndividuelles;
+    }
+
+    public function addCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if (!$this->commandeIndividuelles->contains($commandeIndividuelle)) {
+            $this->commandeIndividuelles[] = $commandeIndividuelle;
+            $commandeIndividuelle->setSandwichChoisi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if ($this->commandeIndividuelles->removeElement($commandeIndividuelle)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeIndividuelle->getSandwichChoisi() === $this) {
+                $commandeIndividuelle->setSandwichChoisi(null);
+            }
+        }
 
         return $this;
     }

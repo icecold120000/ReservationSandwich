@@ -83,6 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $eleves;
 
+
     public function __construct()
     {
         $this->adultes = new ArrayCollection();

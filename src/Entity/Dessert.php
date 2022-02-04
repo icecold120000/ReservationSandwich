@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DessertRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,6 +43,16 @@ class Dessert
      * @ORM\Column(type="boolean")
      */
     private ?bool $dispoDessert;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="dessertChoisi")
+     */
+    private $commandeIndividuelles;
+
+    public function __construct()
+    {
+        $this->commandeIndividuelles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -103,6 +115,36 @@ class Dessert
     public function setDispoDessert(bool $dispoDessert): self
     {
         $this->dispoDessert = $dispoDessert;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeIndividuelle[]
+     */
+    public function getCommandeIndividuelles(): Collection
+    {
+        return $this->commandeIndividuelles;
+    }
+
+    public function addCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if (!$this->commandeIndividuelles->contains($commandeIndividuelle)) {
+            $this->commandeIndividuelles[] = $commandeIndividuelle;
+            $commandeIndividuelle->setDessertChoisi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if ($this->commandeIndividuelles->removeElement($commandeIndividuelle)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeIndividuelle->getDessertChoisi() === $this) {
+                $commandeIndividuelle->setDessertChoisi(null);
+            }
+        }
 
         return $this;
     }

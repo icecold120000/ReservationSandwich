@@ -38,8 +38,44 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/admin, roles: ROLE_ADMIN }
+         - { path: ^/sandwich, roles: ROLE_ADMIN }
+         - { path: ^/sandwich/new, roles: ROLE_ADMIN }
+         - { path: ^/sandwich/edit, roles: ROLE_ADMIN }
+         - { path: ^/sandwich/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/boisson, roles: ROLE_ADMIN }
+         - { path: ^/boisson/new, roles: ROLE_ADMIN }
+         - { path: ^/boisson/edit, roles: ROLE_ADMIN }
+         - { path: ^/boisson/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/dessert, roles: ROLE_ADMIN }
+         - { path: ^/dessert/new, roles: ROLE_ADMIN }
+         - { path: ^/dessert/edit, roles: ROLE_ADMIN }
+         - { path: ^/dessert/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/inscription/cantine, roles: ROLE_ADMIN }
+         - { path: ^/adulte, roles: ROLE_ADMIN }
+         - { path: ^/adulte/new, roles: ROLE_ADMIN }
+         - { path: ^/adulte/edit, roles: ROLE_ADMIN }
+         - { path: ^/adulte/file, roles: ROLE_ADMIN }
+         - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/classe, roles: ROLE_ADMIN }
+         - { path: ^/classe/new, roles: ROLE_ADMIN }
+         - { path: ^/classe/edit, roles: ROLE_ADMIN }
+         - { path: ^/classe/show, roles: ROLE_ADMIN }
+         - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/eleve, roles: ROLE_ADMIN }
+         - { path: ^/eleve/new, roles: ROLE_ADMIN }
+         - { path: ^/eleve/edit, roles: ROLE_ADMIN }
+         - { path: ^/eleve/file, roles: ROLE_ADMIN }
+         - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/user, roles: ROLE_ADMIN }
+         - { path: ^/user/new, roles: ROLE_ADMIN }
+         - { path: ^/user/edit, roles: ROLE_ADMIN }
+         - { path: ^/user/delete_view, roles: ROLE_ADMIN }
+         - { path: ^/user/file, roles: ROLE_ADMIN }
+         - { path: ^/profile/admin, roles: ROLE_ADMIN }
+         - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
+         - { path: ^/profile/adulte, roles: ROLE_ADULTES}
+         - { path: ^/profile/eleve, roles: ROLE_ELEVE }
 
 when@test:
     security:

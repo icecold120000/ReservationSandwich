@@ -63,22 +63,22 @@
                 </button>
                 {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
                     {% if is_granted('ROLE_ADMIN')%}
-                        <a href="{{ path('profile_admin') }}" 
+                        <a href="{{ path('profile_admin',{'userTokenHash': app.user.tokenHash}) }}"
                         class="btn btn-secondary" id="btnRetour">
                             Revenir sur votre page de profil
                         </a>
                     {% elseif is_granted('ROLE_ELEVE')%}
-                        <a href="{{ path('profile_eleve') }}" 
+                        <a href="{{ path('profile_eleve',{'userTokenHash': app.user.tokenHash}) }}"
                         class="btn btn-secondary" id="btnRetour">
                             Revenir sur votre page de profil
                         </a>
                     {% elseif is_granted('ROLE_ADULTE')%}
-                        <a href="{{ path('profile_adulte') }}"
+                        <a href="{{ path('profile_adulte',{'userTokenHash': app.user.tokenHash}) }}"
                         class="btn btn-secondary" id="btnRetour">
                             Revenir sur votre page de profil
                         </a>
                     {% elseif is_granted('ROLE_CUISINE')%}
-                        <a href="{{ path('profile_cuisine') }}"
+                        <a href="{{ path('profile_cuisine',{'userTokenHash': app.user.tokenHash}) }}"
                         class="btn btn-secondary" id="btnRetour">
                             Revenir sur votre page de profil
                         </a>

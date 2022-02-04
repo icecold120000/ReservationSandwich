@@ -195,6 +195,56 @@ div#filtreEleve.filtre label{
     color: red;
 }
 
+/*Page de profil*/
+
+#profilHeader{
+    margin: 5% 0 3% 10%;
+}
+
+#profilHeader p, #infoProfil p{
+    font-size: 20px;
+}
+
+#profilHeader h1,#profilHeader p{
+    text-align: left;
+}
+
+#typeUser{
+    font-weight: bold;
+    font-style: italic;
+}
+
+#btnProfilAcces1 {
+    padding: 15px 100px;
+}
+
+#btnProfilAcces2 {
+    padding: 15px 40px;
+}
+
+#btnProfilAcces3 {
+    padding: 15px 50px;
+}
+
+#btnProfilAcces4 {
+    padding: 15px 56px;
+}
+
+
+/*Profil d'un élève*/
+
+.fa-times, .fa-check {
+    font-size: 2em;
+}
+
+.fa-times {
+    color: red;
+}
+
+.fa-check {
+    color: green;
+}
+
 /* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {
 
@@ -258,6 +308,7 @@ div#filtreEleve.filtre label{
     #filtre div{
         margin: 0 0 1em 0;
         padding: 0;
+        float: unset;
     }
 
     #filtre #left p{
@@ -316,6 +367,12 @@ div#filtreEleve.filtre label{
         padding: 1em;
         font-size: 2em;
         margin-top: 1em;
+    }
+
+    /*Page de profil*/
+
+    #profilHeader p {
+        font-size: 2em;
     }
 
     /*Formulaire d'ajout et de modification des adultes*/

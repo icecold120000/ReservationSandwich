@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Dessert;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,6 +31,19 @@ class DessertRepository extends ServiceEntityRepository
             ->andWhere('d.dispoDessert = :val')
             ->setParameter('val', $dispo)
             ->orderBy('d.nomDessert', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Dessert[] Returns an array of Dessert objects
+     */
+    public function findByDispo($value): array
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.dispoDessert = :val')
+            ->setParameter('val', $value)
             ->getQuery()
             ->getResult()
             ;

@@ -4,100 +4,102 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste des adultes</h1>
-    <div>
+    <main>
+        <h1>Liste des adultes</h1>
         <div>
             <div>
-                <a href="{{ path('adulte_new') }}"
-                   class="btn btn-primary" id="btnAjout">
-                    Ajouter un nouvel adulte
-                </a>
-                <a href="{{ path('adulte_file') }}"
-                   class="btn btn-info" id="btnAjout">
-                    Ajouter une liste d'adultes
-                </a>
-            </div>
-            <div id="divRetour">
-                <a href="{{ path('espace_admin') }}"
-                   class="btn btn-secondary" id="btnRetour">
-                    Retourner à la liste des fonctionnalités
-                </a>
-            </div>
-        </div>
-    </div>
-    <div>
-        {{form_start(form)}}
-        <div id="filtre" class="filtre form-row align-items-end">
-            <div class="selectFiltre">
                 <div>
-                    <span>{{ form_label(form.nomAdulte)}}</span>
-                    {{form_widget(form.nomAdulte)}}
+                    <a href="{{ path('adulte_new') }}"
+                       class="btn btn-primary" id="btnAjout">
+                        Ajouter un nouvel adulte
+                    </a>
+                    <a href="{{ path('adulte_file') }}"
+                       class="btn btn-info" id="btnAjout">
+                        Ajouter une liste d'adultes
+                    </a>
                 </div>
-                <div>
-                    <span>{{form_label(form.ordrePrenom)}}</span>
-                    {{form_widget(form.ordrePrenom)}}
-                </div>
-                <div>
-                    <span>{{form_label(form.ordreNom)}}</span>
-                    {{form_widget(form.ordreNom)}}
-                    <span>{{form_label(form.archiveAdulte)}}</span>
-                    {{form_widget(form.archiveAdulte)}}
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-info" >
-                        Afficher
-                    </button>
+                <div id="divRetour">
+                    <a href="{{ path('espace_admin') }}"
+                       class="btn btn-secondary" id="btnRetour">
+                        Retourner à la liste des fonctionnalités
+                    </a>
                 </div>
             </div>
         </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(adultes) }}
-    </div>
-    <table class="table tableAdmin">
-        <thead>
-            <tr>
-                <th>Prénom et Nom</th>
-                <th>Date de naissance</th>
-                <th>Archivé</th>
-                <th>Éditer</th>
-                <th>Supprimer</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for adulte in adultes %}
+        <div>
+            {{form_start(form)}}
+            <div id="filtre" class="filtre form-row align-items-end">
+                <div class="selectFiltre">
+                    <div>
+                        <span>{{ form_label(form.nomAdulte)}}</span>
+                        {{form_widget(form.nomAdulte)}}
+                    </div>
+                    <div>
+                        <span>{{form_label(form.ordrePrenom)}}</span>
+                        {{form_widget(form.ordrePrenom)}}
+                    </div>
+                    <div>
+                        <span>{{form_label(form.ordreNom)}}</span>
+                        {{form_widget(form.ordreNom)}}
+                        <span>{{form_label(form.archiveAdulte)}}</span>
+                        {{form_widget(form.archiveAdulte)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info" >
+                            Afficher
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{form_end(form)}}
+        </div>
+        <div>
+            {{ knp_pagination_render(adultes) }}
+        </div>
+        <table class="table tableAdmin">
+            <thead>
                 <tr>
-                    <td>{{ adulte.prenomAdulte }} <span>{{ adulte.nomAdulte }}</span></td>
-                    <td>
-                        {% if adulte.dateNaissance %}
-                            {{ adulte.dateNaissance ? adulte.dateNaissance|date('d/m/Y') : '' }}
-                        {% else %}
-                            Aucune date donnée
-                        {% endif %}
-                    </td>
-                    <td>{{ adulte.archiveAdulte ? 'Oui' : 'Non' }}</td>
-                    <td>
-                        <a href="{{ path('adulte_edit',
-                            {'id': adulte.id}) }}" class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ path('adulte_delete_view',
-                            {'id': adulte.id}) }}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
+                    <th>Prénom et Nom</th>
+                    <th>Date de naissance</th>
+                    <th>Archivé</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        {{ knp_pagination_render(adultes) }}
-    </div>
+            </thead>
+            <tbody>
+                {% for adulte in adultes %}
+                    <tr>
+                        <td>{{ adulte.prenomAdulte }} <span>{{ adulte.nomAdulte }}</span></td>
+                        <td>
+                            {% if adulte.dateNaissance %}
+                                {{ adulte.dateNaissance ? adulte.dateNaissance|date('d/m/Y') : '' }}
+                            {% else %}
+                                Aucune date donnée
+                            {% endif %}
+                        </td>
+                        <td>{{ adulte.archiveAdulte ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            <a href="{{ path('adulte_edit',
+                                {'id': adulte.id}) }}" class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('adulte_delete_view',
+                                {'id': adulte.id}) }}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ knp_pagination_render(adultes) }}
+        </div>
+    </main>
 {% endblock %}

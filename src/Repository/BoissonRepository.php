@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Boisson;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,6 +29,19 @@ class BoissonRepository extends ServiceEntityRepository
             ->andWhere('b.dispoBoisson = :val')
             ->setParameter('val', $dispo)
             ->orderBy('b.nomBoisson', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Boisson[] Returns an array of Boisson objects
+     */
+    public function findByDispo($value): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.dispoBoisson = :val')
+            ->setParameter('val', $value)
             ->getQuery()
             ->getResult()
             ;

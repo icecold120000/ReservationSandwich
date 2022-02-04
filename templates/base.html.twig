@@ -51,19 +51,19 @@
                                 <ul class="dropdown-menu" aria-labelledby="accesProfile">
                                     <li>
                                         {% if is_granted('ROLE_ADMIN')%}
-                                            <a class="dropdown-item" href="{{path('profile_admin')}}">
+                                            <a class="dropdown-item" href="{{path('profile_admin',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
                                         {% elseif is_granted('ROLE_ELEVE')%}
-                                            <a class="dropdown-item" href="{{path('profile_eleve')}}">
+                                            <a class="dropdown-item" href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
                                         {% elseif is_granted('ROLE_ADULTE')%}
-                                            <a class="dropdown-item" href="{{path('profile_adulte')}}">
+                                            <a class="dropdown-item" href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
                                         {% elseif is_granted('ROLE_CUISINE')%}
-                                            <a class="dropdown-item" href="{{path('profile_cuisine')}}">
+                                            <a class="dropdown-item" href="{{path('profile_cuisine',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
                                         {% endif %}
@@ -104,8 +104,28 @@
                 <li>
                     <p><a href="{{path('homepage')}}">Accueil</a></p>
                     <p><a href="">Vos Commandes</a></p>
-                    <p><a href="">Votre profile</a></p>
-                    <p><a href="">Éditer votre profile</a></p>
+                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                        <p>
+                            {% if is_granted('ROLE_ADMIN')%}
+                                <a href="{{path('profile_admin',{'userTokenHash': app.user.tokenHash})}}">
+                                    Votre profil
+                                </a>
+                            {% elseif is_granted('ROLE_ELEVE')%}
+                                <a href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
+                                    Votre profil
+                                </a>
+                            {% elseif is_granted('ROLE_ADULTE')%}
+                                <a href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
+                                    Votre profil
+                                </a>
+                            {% elseif is_granted('ROLE_CUISINE')%}
+                                <a href="{{path('profile_cuisine',{'userTokenHash': app.user.tokenHash})}}">
+                                    Votre profil
+                                </a>
+                            {% endif %}
+                        </p>
+                        <p><a href="{{path('profile_edit',{'id': app.user.id})}}">Éditer votre profil</a></p>
+                    {% endif %}
                 </li>
             </div>
             <div class="networks">

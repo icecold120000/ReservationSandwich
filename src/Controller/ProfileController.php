@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ProfileType;
+use App\Repository\EleveRepository;
+use App\Repository\InscriptionCantineRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -54,7 +58,8 @@ class ProfileController extends AbstractController
         ]);
     }
     /**
-     * @Route("/profile/admin", name="profile_admin")
+     * @Route("/profile/admin/{userTokenHash}", name="profile_admin")
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      */
     public function admin(): Response
     {
@@ -64,17 +69,27 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/profile/eleve", name="profile_eleve")
+     * @Route("/profile/eleve/{userTokenHash}", name="profile_eleve")
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * @throws NonUniqueResultException
      */
-    public function eleve(): Response
+    public function eleve(EleveRepository $eleveRepository, User $user,
+                          InscriptionCantineRepository $cantineRepository): Response
     {
-        return $this->render('profile/eleve.html.twig', [
+        $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($user->getNomUser(),
+            $user->getPrenomUser(),$user->getDateNaissanceUser());
 
+        $inscrit = $cantineRepository->findOneByEleve($eleveFound->getId());
+
+        return $this->render('profile/eleve.html.twig', [
+            'eleve' => $eleveFound,
+            'inscritCantine' => $inscrit,
         ]);
     }
 
     /**
-     * @Route("/profile/cuisine", name="profile_cuisine")
+     * @Route("/profile/cuisine/{userTokenHash}", name="profile_cuisine")
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      */
     public function cuisine(): Response
     {
@@ -84,7 +99,8 @@ class ProfileController extends AbstractController
     }
 
     /**
-     * @Route("/profile/adulte", name="profile_adulte")
+     * @Route("/profile/adulte/{userTokenHash}", name="profile_adulte")
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      */
     public function adulte(): Response
     {

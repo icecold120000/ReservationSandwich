@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Sandwich;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -30,6 +31,19 @@ class SandwichRepository extends ServiceEntityRepository
             ->andWhere('d.dispoSandwich = :val')
             ->setParameter('val', $dispo)
             ->orderBy('d.nomSandwich', $order)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Sandwich[] Returns an array of sandwich objects
+     */
+    public function findByDispo($value): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dispoSandwich = :val')
+            ->setParameter('val', $value)
             ->getQuery()
             ->getResult()
             ;
