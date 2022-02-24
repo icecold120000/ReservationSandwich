@@ -83,11 +83,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $eleves;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="commandeur")
+     */
+    private $commandeIndividuelles;
+
 
     public function __construct()
     {
         $this->adultes = new ArrayCollection();
         $this->eleves = new ArrayCollection();
+        $this->commandeIndividuelles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -295,6 +301,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($eleve->getCompteEleve() === $this) {
                 $eleve->setCompteEleve(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeIndividuelle[]
+     */
+    public function getCommandeIndividuelles(): Collection
+    {
+        return $this->commandeIndividuelles;
+    }
+
+    public function addCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if (!$this->commandeIndividuelles->contains($commandeIndividuelle)) {
+            $this->commandeIndividuelles[] = $commandeIndividuelle;
+            $commandeIndividuelle->setCommandeur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeIndividuelle(CommandeIndividuelle $commandeIndividuelle): self
+    {
+        if ($this->commandeIndividuelles->removeElement($commandeIndividuelle)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeIndividuelle->getCommandeur() === $this) {
+                $commandeIndividuelle->setCommandeur(null);
             }
         }
 

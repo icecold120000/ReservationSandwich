@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suppression d'une commande{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block body %}
+    <main>
+        <h1>Suppression d'une commande</h1>
+
+        <h2>Cliquez sur le bouton Supprimer pour supprimer la commande choisie : </h2>
+        <table class="table tableAdmin">
+            <thead>
+            <tr>
+                <th>Date de Livraison</th>
+                <th>Sandwich choisi</th>
+                <th>Boisson choisie</th>
+                <th>Dessert choisi</th>
+                <th>Chips</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y H:i') : '' }}</td>
+                    <td>{{ commande.sandwichChoisi.nomSandwich }}</td>
+                    <td>{{ commande.boissonChoisie.nomBoisson }}</td>
+                    <td>{{ commande.dessertChoisi.nomDessert }}</td>
+                    <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {{ include('commande_individuelle/_delete_form.html.twig') }}
+
+        <div>
+            <a href="{{ path('commande_individuelle_index') }}">
+                <button class="btn btn-secondary" id="btnRetourSuppr">
+                    Revenir à la liste
+                </button>
+            </a>
+        </div>
+    </main>
+{% endblock %}

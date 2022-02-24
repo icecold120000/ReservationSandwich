@@ -398,9 +398,26 @@ form textarea {
     align-items: center;
 }
 
-/*Commande*/
-#sandwichCarousel img, #boissonCarousel img, #dessertCarousel img {
+/*Listes des commandes*/
+
+.tableAdmin span{
+    display: block;
+}
+
+/*Formulaire de Commandes*/
+
+#commande_individuelle_sandwichChoisi, #commande_individuelle_dessertChoisi,
+#commande_individuelle_boissonChoisie {
+    display: none;
+}
+
+#sandwichCarousel img, #dessertCarousel img {
     height: 200px;
+    width: 80%;
+}
+
+#boissonCarousel img {
+    height: 300px;
     width: 80%;
 }
 
@@ -546,7 +563,7 @@ div#preciserRaison {
 
     form textarea {
         width: 100%;
-        font-size: 2em;
+        font-size: 3em;
         height: 5em;
     }
 
@@ -585,7 +602,36 @@ div#preciserRaison {
 
     div.divInput input, textarea {
         border: solid;
-        font-size: 1em;
+        font-size: 2em;
+    }
+
+    #divAjout {
+        display: flex;
+        flex-direction: column;
+        font-size: 2em;
+    }
+
+    .formEntité2 form {
+        flex-direction: column;
+        align-items: center;
+    }
+    .formEntité2 label, .formEntité2 .help-text {
+        display: flex;
+        justify-content: center;
+    }
+
+    .formEntité2 input, .formEntité input{
+        width: 100%;
+        height: 2em;
+        font-size: 2em;
+        text-align: left;
+        right: unset;
+        position: unset;
+    }
+
+    .formEntité2 select, .formEntité select {
+        font-size: 3em;
+        justify-content: center;
     }
 
     /*Formulaire de connexion*/
@@ -647,12 +693,28 @@ div#preciserRaison {
         flex-direction: column;
     }
 
-    /*Formulaire d'oubli de mot de passe*/
+    /*Formulaire de commande individuelle */
 
-    .formEntité input{
-        width: 80%;
-        height: unset;
-        font-size: 2em;
+    #commandeFormInd p {
+        font-size: 1.5em;
+    }
+
+    #commandeFormInd label {
+        font-size: 2.5em;
+    }
+
+    #sandwichCarousel img, #dessertCarousel img {
+        width: 100%;
+        height: 400px;
+    }
+
+    #boissonCarousel img {
+        width: 100%;
+        height: 700px;
+    }
+
+    .carousel-inner input {
+        height: 125px;
     }
 
 }

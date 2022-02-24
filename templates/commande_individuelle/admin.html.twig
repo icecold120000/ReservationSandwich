@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des commandes à venir{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Liste des commandes à venir</h1>
+    <div>
+        <div>
+            <a href="#"
+               class="btn btn-primary" id="btnAjout">
+                Exportation en PDF
+            </a>
+            <a href="#"
+               class="btn btn-info" id="btnAjout">
+                Exportation en Excel
+            </a>
+            <a href="#"
+               class="btn btn-dark" id="btnAjout">
+                Impression
+            </a>
+        </div>
+        <div id="divRetour">
+            <a href="#"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à la liste des fonctionnalités
+            </a>
+        </div>
+    </div>
+    <div id="formFilter">
+        <div id="filtre">
+            {{form_start(form)}}
+            <div class="selectFiltre">
+                <span>{{form_label(form.nom)}} </span>
+                {{form_widget(form.nom)}}
+            </div>
+            <div class="selectFiltre">
+                <span>{{form_label(form.date)}}</span>
+                {{form_widget(form.date)}}
+            </div>
+            <div class="selectFiltre">
+                <span>{{form_label(form.cloture)}}</span>
+                {{form_widget(form.cloture)}}
+            </div>
+            <div>
+                <button type="submit" class="btn btn-info">
+                    Afficher
+                </button>
+            </div>
+            {{form_end(form)}}
+        </div>
+    </div>
+    <div>
+        {{ knp_pagination_render(commandes_ind) }}
+    </div>
+    <table class="table tableAdmin">
+        <thead>
+            <tr>
+                <th>Date de Livraison</th>
+                <th>Prénom et Nom</th>
+                <th>Classe</th>
+                <th>Commande</th>
+                <th>Chips</th>
+                <th>Éditer</th>
+                <th>Supprimer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes_ind %}
+                <tr>
+                    <td>
+                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                    </td>
+                    <td>{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
+                    <td>
+                        {% if commande.commandeur.eleves %}
+                            {% for eleve in commande.commandeur.eleves %}
+                                {{ eleve.classeEleve.codeClasse }}
+                            {% else %}
+                                Adulte
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span>{{ commande.sandwichChoisi.nomSandwich }}</span>
+                        <span>{{ commande.boissonChoisie.nomBoisson }}</span>
+                        <span>{{ commande.dessertChoisi.nomDessert }}</span>
+                    </td>
+                    <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
+                    <td>
+                        <a href="{{ path('commande_individuelle_edit',
+                            {'id': commande.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('commande_individuelle_delete_view',
+                            {'id': commande.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="erreur">Aucune commande n'a été trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        {{ knp_pagination_render(commandes_ind) }}
+    </div>
+{% endblock %}

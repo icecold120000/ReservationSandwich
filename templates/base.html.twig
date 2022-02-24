@@ -29,7 +29,11 @@
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Les Commandes</a>
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
+                                    <a class="nav-link" href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
+                                {% else %}
+                                    <a class="nav-link" href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
+                                {% endif %}
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ path('espace_admin') }}">Espace Administration</a>
@@ -95,7 +99,6 @@
                 <li>
                     <p>Tel : 03.44.53.96.40</p>
                     <p>Fax : 03.44.53.58.96</p>
-                    <p>Email : <a href="">à déterminer</a></p>
                     <p>Web : <a href="https://www.lycee-stvincent.fr/" target="_blank">https://www.lycee-stvincent.fr/</a></p>
                 </li>
             </div>
@@ -103,7 +106,13 @@
                 <h3>Accès rapide</h3>
                 <li>
                     <p><a href="{{path('homepage')}}">Accueil</a></p>
-                    <p><a href="">Vos Commandes</a></p>
+                    <p>
+                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
+                            <a href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
+                        {% else %}
+                            <a href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
+                        {% endif %}
+                    </p>
                     {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
                         <p>
                             {% if is_granted('ROLE_ADMIN')%}

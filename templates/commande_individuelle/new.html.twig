@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande individuelle{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+
+{% block body %}
+    <h1>Faire une commande individuelle</h1>
+
+    {% for message in app.flashes('SuccessComInd') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div>
+        <div class="container-fluid formEntité2" id="commandeFormInd">
+           {{ include('commande_individuelle/_form.html.twig') }}
+        </div>
+    </div>
+    <div class="row">
+        <div id="divAjout">
+            <button type="submit"
+                    class="btn btn-success" form="formCommandeInd">
+                Enregistrer votre commande
+            </button>
+            <a href="{{ path('commande_individuelle_index') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Revenir à la liste
+            </a>
+        </div>
+    </div>
+{% endblock %}
