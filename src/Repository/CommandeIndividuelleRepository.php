@@ -45,16 +45,56 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
      */
     public function exportationCommande($date): array
     {
-        $query = $this->createQueryBuilder('c');
-        if ($date == new \DateTime('now')) {
-            $query->andWhere('ci.dateHeureLivraison Like :date')
-                ->setParameter('date', '%' . $date . '%')
-                ->orderBy('ci.dateHeureLivraison', 'ASC');
-        } else {
-            $query->andWhere('ci.dateHeureLivraison Between :dateNow and :dateThen')
-                ->setParameters(array('dateNow' => new \DateTime('now'), 'dateThen' => $date))
-                ->orderBy('ci.dateHeureLivraison', 'ASC');
-        }
+        $query = $this->createQueryBuilder('ci');
+        $query->andWhere('ci.dateHeureLivraison Like :date')
+            ->setParameter('date', '%' . $date . '%')
+            ->orderBy('ci.dateHeureLivraison', 'ASC')
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
+     */
+    public function findBySandwich($sandwich): array
+    {
+        $query = $this->createQueryBuilder('ci');
+        $query
+            ->leftJoin('ci.sandwichChoisi','sw')
+            ->andWhere('sw.id = :sandwich')
+            ->setParameter('sandwich', $sandwich)
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
+     */
+    public function findByBoisson($boisson): array
+    {
+        $query = $this->createQueryBuilder('ci');
+        $query
+            ->leftJoin('ci.boissonChoisie','bo')
+            ->andWhere('bo.id = :boisson')
+            ->setParameter('boisson', $boisson)
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
+     */
+    public function findByDessert($dessert): array
+    {
+        $query = $this->createQueryBuilder('ci');
+        $query
+            ->leftJoin('ci.dessertChoisi','de')
+            ->andWhere('de.id = :dessert')
+            ->setParameter('dessert', $dessert)
+        ;
 
         return $query->getQuery()->getResult();
     }

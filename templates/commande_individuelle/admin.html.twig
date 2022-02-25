@@ -1,5 +1,4 @@
-{% extends 'base.html.twig' %}
-
+{% extends 'base.html.twig'%}
 {% block title %}Liste des commandes à venir{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
@@ -7,20 +6,31 @@
     <h1>Liste des commandes à venir</h1>
     <div>
         <div>
-            <a href="#"
-               class="btn btn-primary" id="btnAjout">
-                Exportation en PDF
-            </a>
-            <a href="#"
-               class="btn btn-info" id="btnAjout">
-                Exportation en Excel
-            </a>
-            <a href="#"
-               class="btn btn-dark" id="btnAjout">
-                Impression
-            </a>
-        </div>
-        <div id="divRetour">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf">
+                Exportation
+            </button>
+            <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="formExportLabel">Exportation PDF</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Choisir les modalités de votre export</h1>
+                            {{ form_start(exportForm) }}
+                            {{ form_end(exportForm) }}
+                            <button type="submit"
+                                    class="btn btn-success" form="formExport">
+                                Démarré votre export
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <a href="#"
                class="btn btn-secondary" id="btnRetour">
                 Retourner à la liste des fonctionnalités
@@ -112,4 +122,22 @@
     <div>
         {{ knp_pagination_render(commandes_ind) }}
     </div>
+    <script>
+        function myFunction() {
+            const x = document.getElementById("selectExport").value;
+            let toEnable;
+            let toDisable;
+            if (x === "Séparé") {
+                toEnable = document.getElementById("exportComSepare");
+                toEnable.style.display = "unset";
+                toDisable = document.getElementById("exportComRegroupe")
+                toDisable.style.display = "none";
+            } else {
+                toEnable = document.getElementById("exportComRegroupe")
+                toEnable.style.display = "unset";
+                toDisable = document.getElementById("exportComSepare");
+                toDisable.style.display = "none";
+            }
+        }
+    </script>
 {% endblock %}

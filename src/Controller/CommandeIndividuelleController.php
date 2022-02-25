@@ -2,22 +2,23 @@
 
 namespace App\Controller;
 
+use Ang3\Component\Serializer\Encoder\ExcelEncoder;
 use App\Entity\CommandeIndividuelle;
 use App\Form\CommandeIndividuelleType;
 use App\Form\FilterOrSearch\FilterAdminCommandeType;
-use App\Form\FilterOrSearch\FilterIndexFilterType;
+use App\Form\FilterOrSearch\FilterExportationType;
+use App\Form\FilterOrSearch\FilterIndexCommandeType;
 use App\Repository\BoissonRepository;
 use App\Repository\CommandeIndividuelleRepository;
 use App\Repository\DessertRepository;
 use App\Repository\SandwichRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Egulias\EmailValidator\Validation\Exception\EmptyValidationList;
 use Knp\Component\Pager\PaginatorInterface;
+use PhpOffice\PhpSpreadsheet\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Dompdf\Dompdf as Dompdf;
 use Dompdf\Options as OptionsPdf;
 
@@ -26,6 +27,20 @@ use Dompdf\Options as OptionsPdf;
  */
 class CommandeIndividuelleController extends AbstractController
 {
+    private SandwichRepository $sandwichRepo;
+    private BoissonRepository $boissonRepo;
+    private DessertRepository $dessertRepo;
+    private CommandeIndividuelleRepository $comIndRepo;
+
+    public function __construct(SandwichRepository $sandwichRepo,
+                                BoissonRepository $boissonRepo, DessertRepository $dessertRepo,
+                                CommandeIndividuelleRepository $comIndRepo) {
+        $this->sandwichRepo = $sandwichRepo;
+        $this->boissonRepo = $boissonRepo;
+        $this->dessertRepo = $dessertRepo;
+        $this->comIndRepo = $comIndRepo;
+    }
+
     /**
      * @Route("/", name="commande_individuelle_index", methods={"GET","POST"})
      */
@@ -34,7 +49,7 @@ class CommandeIndividuelleController extends AbstractController
     {
         $commandes = $comIndRepo->findIndexAllNonCloture($this->getUser());
 
-        $form = $this->createForm(FilterIndexFilterType::class);
+        $form = $this->createForm(FilterIndexCommandeType::class);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,12 +73,82 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/admin", name="commande_individuelle_admin", methods={"GET","POST"})
+     * @throws Exception
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface $paginator, Request $request): Response
     {
 
         $commandes = $comIndRepo->findAllNonCloture();
+
+        $export = $this->createForm(FilterExportationType::class);
+        $exportReq = $export->handleRequest($request);
+
+        if ($export->isSubmitted() && $export->isValid()) {
+
+            $dateChoisi = $exportReq->get('dateExport')->getData();
+
+            $commandesExport = $comIndRepo
+                ->exportationCommande($dateChoisi->format("y-m-d"));
+            $modalite = $exportReq->get('modaliteCommande')->getData();
+
+            $methode = $exportReq->get('methodeExport')->getData();
+            if ($methode == "PDF") {
+                CommandeIndividuelleController::pdfDownload($commandesExport,$modalite,$dateChoisi);
+            }
+            elseif ($methode == "Excel") {
+                $sandwichDispo = $this->sandwichRepo->findByDispo(true);
+                $boissonDispo = $this->boissonRepo->findByDispo(true);
+                $dessertDispo = $this->dessertRepo->findByDispo(true);
+
+                $nbChips = 0;
+                foreach ($commandesExport as $commande) {
+                    if ($commande->getPrendreChips() == true) {
+                        $nbChips++;
+                    }
+                }
+
+                $encoder = new ExcelEncoder($defaultContext = []);
+                // Test data
+                $data = [
+                    // Array by sheet
+                    'Feuille 1' => [
+                        // Array by rows
+                        [
+                            'Nom du produit',
+                            'Nombre de produit',
+                        ],
+                        [
+                            'Nom du produit ' => 'Sandwich 1',
+                            'Nombre de produit' => 'Nombre de Sandwich 1',
+                        ],
+                        [
+                            'Nom du produit',
+                            'Nombre de produit',
+                        ],
+                        [
+                            'Nom du produit',
+                            'Nombre de produit',
+                        ],
+                        [
+                            'Nom du produit' => 'Chips',
+                            'Nombre de produit' => $nbChips,
+                        ],
+                    ]
+                ];
+
+                // Encode data with specific format
+                $xls = $encoder->encode($data, ExcelEncoder::XLSX);
+
+                // Put the content in a file with format extension for example
+                file_put_contents('my_excel_file.xlsx', $xls);
+
+            }
+            else {
+                /*TODO*/
+            }
+
+        }
 
         $form = $this->createForm(FilterAdminCommandeType::class);
 
@@ -86,13 +171,14 @@ class CommandeIndividuelleController extends AbstractController
         return $this->render('commande_individuelle/admin.html.twig', [
             'commandes_ind' => $commandes,
             'form' => $form->createView(),
+            'exportForm' => $export->createView(),
         ]);
     }
 
     /**
-     * @Route("/commande/pdf/", name="commande_pdf", methods={"GET","POST"})
+     * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
      */
-    public function pdfDownload(CommandeIndividuelleRepository $comIndRepo): Response
+    public function pdfDownload($commandes, $modalite, $dateChoisi): Response
     {
         // Défini les options du pdf
         $optionsPdf = new OptionsPdf();
@@ -103,7 +189,6 @@ class CommandeIndividuelleController extends AbstractController
 
         // Instancie Dompdf
         $dompdf = new Dompdf($optionsPdf);
-
         // Créer le context http du pdf
         $context = stream_context_create([
             'ssl' => [
@@ -117,20 +202,32 @@ class CommandeIndividuelleController extends AbstractController
         $dompdf->setHttpContext($context);
 
         // Génère le pdf et le rendu html à partir du TWIG
-        $html = $this->renderView('commande_individuelle/commande_pdf.html.twig',[
-            'commande' => $comIndRepo->exportationCommande(new \DateTime('now')),
-        ]);
+        if ($modalite == "Séparé") {
+            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+            ]);
+        }
+        else {
+            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
+                'boissonDispo' => $this->boissonRepo->findByDispo(true),
+                'dessertDispo' => $this->dessertRepo->findByDispo(true),
+            ]);
+        }
+
 
         // Génère l'affichage du pdf dans un onglet
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4','Portrait');
+        $dompdf->setPaper('A4','portrait');
         $dompdf->render();
 
-        $date = new \DateTime('now');
-        $date = $date->format('d_m_y');
+        $date = $dateChoisi->format('d-m-Y');
 
         // Nomme le fichier PDF
-        $fichier = 'Commande'.$date.'.pdf';
+        $fichier = 'Commande_'.$modalite.'_'.$date.'.pdf';
 
         // Télécharge le pdf et l'ouvre dans un onglet
         $dompdf->stream($fichier, [

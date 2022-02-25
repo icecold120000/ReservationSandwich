@@ -12,6 +12,7 @@ parameters:
     elevefile_directory: '%kernel.project_dir%/public/uploads/eleveFile'
     adultefile_directory: '%kernel.project_dir%/public/uploads/adulteFile'
     cantineFile_directory: '%kernel.project_dir%/public/uploads/cantineFile'
+    excelFile_directory: '%kernel.project_dir%/public/uploads/excelFile'
 
 services:
     # default configuration for services in *this* file

@@ -1,0 +1,78 @@
+{% extends 'base_pdf.html.twig'%}
+
+{% block title %}PDF du {{ dateChoisi|date('d/m/Y') }}{% endblock %}
+{% block body %}
+    <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
+    <table style="border: solid; width: 100%">
+        <thead>
+            <tr>
+                <th style="text-align: center;border: solid">Nom du produit</th>
+                <th style="text-align: center;border: solid">Nombre de produits commandés</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sandwich in sandwichDispo %}
+                <tr>
+                    <td style="text-align: center;border: solid">
+                        {{ sandwich.nomSandwich }}
+                    </td>
+                    <td style="text-align: center;border: solid">
+                        {% set nbSandwich = 0 %}
+                        {% for commande in commandes %}
+                            {% if commande.sandwichChoisi.id == sandwich.id %}
+                                {% set nbSandwich = nbSandwich + 1 %}
+                            {% endif %}
+                        {% endfor%}
+                        {{ nbSandwich }}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for boisson in boissonDispo %}
+                <tr>
+                    <td style="text-align: center;border: solid">
+                        {{ boisson.nomBoisson }}
+                    </td>
+                    <td style="text-align: center;border: solid">
+                        {% set nbBoisson = 0 %}
+                        {% for commande in commandes %}
+                            {% if commande.boissonChoisie.id == boisson.id %}
+                                {% set nbBoisson = nbBoisson + 1 %}
+                            {% endif %}
+                        {% endfor%}
+                        {{ nbBoisson }}
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for dessert in dessertDispo %}
+                <tr>
+                    <td style="text-align: center;border: solid">
+                        {{ dessert.nomDessert }}
+                    </td>
+                    <td style="text-align: center;border: solid">
+                        {% set nbDessert = 0 %}
+                        {% for commande in commandes %}
+                            {% if commande.dessertChoisi.id == dessert.id %}
+                                {% set nbDessert = nbDessert + 1 %}
+                            {% endif %}
+                        {% endfor%}
+                        {{ nbDessert }}
+                    </td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td style="text-align: center;border: solid">
+                    Chips
+                </td>
+                <td style="text-align: center;border: solid">
+                    {% set nbChips = 0 %}
+                    {% for commande in commandes %}
+                        {% if commande.prendreChips == 1 %}
+                            {% set nbChips = nbChips + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    {{ nbChips }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}
