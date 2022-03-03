@@ -7,13 +7,13 @@
     <div>
         <div>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf">
-                Exportation
+                Choisir votre mode d'exportation
             </button>
             <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="formExportLabel">Exportation PDF</h5>
+                            <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
             </div>
-            <a href="#"
+            <a href="{{ path('espace_admin') }}"
                class="btn btn-secondary" id="btnRetour">
                 Retourner à la liste des fonctionnalités
             </a>

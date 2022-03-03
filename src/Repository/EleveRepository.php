@@ -140,6 +140,20 @@ class EleveRepository extends ServiceEntityRepository
         return $query->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @return Eleve
+     */
+    public function findOneByCompte($value): ?Eleve
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.compteEleve = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
 
     // /**
     //  * @return Eleve[] Returns an array of Eleve objects

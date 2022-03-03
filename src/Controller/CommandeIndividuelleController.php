@@ -4,18 +4,25 @@ namespace App\Controller;
 
 use Ang3\Component\Serializer\Encoder\ExcelEncoder;
 use App\Entity\CommandeIndividuelle;
+use App\Entity\DesactivationCommande;
+use App\Entity\User;
 use App\Form\CommandeIndividuelleType;
 use App\Form\FilterOrSearch\FilterAdminCommandeType;
 use App\Form\FilterOrSearch\FilterExportationType;
 use App\Form\FilterOrSearch\FilterIndexCommandeType;
 use App\Repository\BoissonRepository;
 use App\Repository\CommandeIndividuelleRepository;
+use App\Repository\DesactivationCommandeRepository;
 use App\Repository\DessertRepository;
+use App\Repository\EleveRepository;
 use App\Repository\SandwichRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,14 +38,17 @@ class CommandeIndividuelleController extends AbstractController
     private BoissonRepository $boissonRepo;
     private DessertRepository $dessertRepo;
     private CommandeIndividuelleRepository $comIndRepo;
+    private EleveRepository $eleveRepo;
 
     public function __construct(SandwichRepository $sandwichRepo,
                                 BoissonRepository $boissonRepo, DessertRepository $dessertRepo,
-                                CommandeIndividuelleRepository $comIndRepo) {
+                                CommandeIndividuelleRepository $comIndRepo,
+                                EleveRepository $eleveRepo) {
         $this->sandwichRepo = $sandwichRepo;
         $this->boissonRepo = $boissonRepo;
         $this->dessertRepo = $dessertRepo;
         $this->comIndRepo = $comIndRepo;
+        $this->eleveRepo = $eleveRepo;
     }
 
     /**
@@ -72,8 +82,38 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * @Route("/desactivation/{desactiveId}", name="commande_ind_desactive", methods={"GET","POST"})
+     * @Entity("desactivationCommande", expr="repository.find(desactiveId)")
+     */
+    public function deactivation(DesactivationCommande $desactiveId, EntityManagerInterface $manager): RedirectResponse
+    {
+
+        if ($desactiveId->getIsDeactivated() === false) {
+            $desactiveId->setIsDeactivated(true);
+            $this->addFlash(
+                'SuccessDeactivation',
+                'La page de réservation a été déactivé !'
+            );
+        }
+        elseif ($desactiveId->getIsDeactivated() === true) {
+            $desactiveId->setIsDeactivated(false);
+            $this->addFlash(
+                'SuccessDeactivation',
+                'La page de réservation a été réactivé !'
+            );
+        }
+
+        $manager->persist($desactiveId);
+        $manager->flush();
+
+
+        return $this->redirectToRoute('espace_admin', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
      * @Route("/admin", name="commande_individuelle_admin", methods={"GET","POST"})
      * @throws Exception
+     * @throws NonUniqueResultException
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface $paginator, Request $request): Response
@@ -87,65 +127,170 @@ class CommandeIndividuelleController extends AbstractController
         if ($export->isSubmitted() && $export->isValid()) {
 
             $dateChoisi = $exportReq->get('dateExport')->getData();
+            $dateChoisi = $dateChoisi->format('y-m-d');
 
             $commandesExport = $comIndRepo
-                ->exportationCommande($dateChoisi->format("y-m-d"));
+                ->exportationCommande($dateChoisi);
             $modalite = $exportReq->get('modaliteCommande')->getData();
 
             $methode = $exportReq->get('methodeExport')->getData();
             if ($methode == "PDF") {
-                CommandeIndividuelleController::pdfDownload($commandesExport,$modalite,$dateChoisi);
+                CommandeIndividuelleController::pdfDownload($commandesExport,$modalite,$exportReq->get('dateExport')->getData());
             }
             elseif ($methode == "Excel") {
-                $sandwichDispo = $this->sandwichRepo->findByDispo(true);
-                $boissonDispo = $this->boissonRepo->findByDispo(true);
-                $dessertDispo = $this->dessertRepo->findByDispo(true);
 
-                $nbChips = 0;
-                foreach ($commandesExport as $commande) {
-                    if ($commande->getPrendreChips() == true) {
-                        $nbChips++;
+                if ($modalite == "Séparé") {
+                    $commandeRow = [];
+                    foreach ($commandesExport as $commande) {
+
+                        if (in_array(User::ROLE_ELEVE,$commande->getCommandeur()->getRoles()) ) {
+                            $eleve = $this->eleveRepo->findOneByCompte($commande->getCommandeur()->getId());
+                            $classe = $eleve->getClasseEleve()->getCodeClasse();
+                        }
+                        else {
+                            $classe = "Adulte";
+                        }
+
+                        if ($commande->getPrendreChips() == true) {
+                            $chips = "Oui";
+                        }
+                        else {
+                            $chips = "Non";
+                        }
+                        $commandeRow[] = [
+                            'Date et heure de Livraison' => $commande->getDateHeureLivraison()->format('d/m/y h:i'),
+                            'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser().', '.$commande->getCommandeur()->getNomUser(),
+                            'Classe' => $classe,
+                            'Commande' => $commande->getSandwichChoisi()->getNomSandwich().', '.$commande->getBoissonChoisie()->getNomBoisson().', '.$commande->getDessertChoisi()->getNomDessert(),
+                            'Chips' => $chips,
+                        ];
                     }
+
+                    $encoder = new ExcelEncoder($defaultContext = []);
+
+                    // Test data
+                    $data = [
+                        // Array by sheet
+                        'Feuille 1' => $commandeRow
+                    ];
+
+                    // Encode data with specific format
+                    $xls = $encoder->encode($data, ExcelEncoder::XLSX);
+                    $dateChoisi = $exportReq->get('dateExport')->getData();
+
+                    // Put the content in a file with format extension for example
+                    file_put_contents('commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
+                    $filename = 'commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx';
+                    // Déplace le fichier dans le dossier Uploads
+                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+
+                    //Permet le téléchargement du fichier
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header("Cache-Control: no-cache, must-revalidate");
+                    header("Expires: 0");
+                    header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+                    header('Content-Length: ' . filesize($filename));
+                    header('Pragma: public');
+                    readfile($filename);
+                } elseif ($modalite == "Regroupé") {
+                    $sandwichDispo = $this->sandwichRepo->findByDispo(true);
+                    $boissonDispo = $this->boissonRepo->findByDispo(true);
+                    $dessertDispo = $this->dessertRepo->findByDispo(true);
+                    $nomSandwich =[];
+                    $nbSandwich =[];
+                    $nomBoisson = [];
+                    $nbBoisson = [];
+                    $nomDessert = [];
+                    $nbDessert = [];
+                    $nbChips = 0;
+
+                    foreach ($sandwichDispo as $sandwich) {
+                        $nomSandwich[] = $sandwich->getNomSandwich();
+                        $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(),$dateChoisi));
+                    }
+
+                    foreach ($boissonDispo as $boisson) {
+                        $nomBoisson[] = $boisson->getNomBoisson();
+                        $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(),$dateChoisi));
+                    }
+
+                    foreach ($dessertDispo as $dessert) {
+                        $nomDessert[] = $dessert->getNomDessert();
+                        $nbDessert[] = count($comIndRepo->findByBoisson($dessert->getId(),$dateChoisi));
+                    }
+                    $dataRowSandwich = [];
+                    for ($i = 0 ; $i < count($nomSandwich);$i++) {
+                        $dataRowSandwich[$i] = [
+                            'Nom de produit' => $nomSandwich[$i],
+                            'Nombre de produit' => $nbSandwich[$i],
+                        ];
+                    }
+
+                    $dataRowBoisson = [];
+                    for ($i = 0 ; $i < count($nomBoisson);$i++) {
+                        $dataRowBoisson[$i] = [
+                            'Nom de produit' => $nomBoisson[$i],
+                            'Nombre de produit' => $nbBoisson[$i],
+                        ];
+                    }
+
+                    $dataRowDessert = [];
+                    for ($i = 0 ; $i < count($nomDessert);$i++) {
+                        $dataRowDessert[$i] = [
+                            'Nom de produit' => $nomDessert[$i],
+                            'Nombre de produit' => $nbDessert[$i],
+                        ];
+                    }
+
+                    foreach ($commandesExport as $commande) {
+                        if ($commande->getPrendreChips() == true) {
+                            $nbChips++;
+                        }
+                    }
+
+                    $dataRow = array_merge(
+                        $dataRowSandwich,
+                        $dataRowBoisson,
+                        $dataRowDessert,
+                        [
+                            [
+                                'Nom du produit' => 'Chips',
+                                'Nombre de produit' => $nbChips,
+                            ]
+                        ]
+                    );
+
+
+                    $encoder = new ExcelEncoder($defaultContext = []);
+
+                    // Test data
+                    $data = [
+                        // Array by sheet
+                        'Feuille 1' => $dataRow
+                    ];
+
+                    // Encode data with specific format
+                    $xls = $encoder->encode($data, ExcelEncoder::XLSX);
+                    $dateChoisi = $exportReq->get('dateExport')->getData();
+
+
+                    // Put the content in a file with format extension for example
+                    file_put_contents('commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
+                    $filename = 'commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx';
+                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+                    header('Content-Description: File Transfer');
+                    header('Content-Type: application/octet-stream');
+                    header("Cache-Control: no-cache, must-revalidate");
+                    header("Expires: 0");
+                    header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+                    header('Content-Length: ' . filesize($filename));
+                    header('Pragma: public');
+                    readfile($filename);
                 }
-
-                $encoder = new ExcelEncoder($defaultContext = []);
-                // Test data
-                $data = [
-                    // Array by sheet
-                    'Feuille 1' => [
-                        // Array by rows
-                        [
-                            'Nom du produit',
-                            'Nombre de produit',
-                        ],
-                        [
-                            'Nom du produit ' => 'Sandwich 1',
-                            'Nombre de produit' => 'Nombre de Sandwich 1',
-                        ],
-                        [
-                            'Nom du produit',
-                            'Nombre de produit',
-                        ],
-                        [
-                            'Nom du produit',
-                            'Nombre de produit',
-                        ],
-                        [
-                            'Nom du produit' => 'Chips',
-                            'Nombre de produit' => $nbChips,
-                        ],
-                    ]
-                ];
-
-                // Encode data with specific format
-                $xls = $encoder->encode($data, ExcelEncoder::XLSX);
-
-                // Put the content in a file with format extension for example
-                file_put_contents('my_excel_file.xlsx', $xls);
-
             }
-            else {
-                /*TODO*/
+            elseif ($methode == "Impression"){
+                CommandeIndividuelleController::printPreview($commandesExport,$modalite,$exportReq->get('dateExport')->getData());
             }
 
         }
@@ -176,6 +321,29 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * @Route("/preview", name="commande_impression", methods={"GET","POST"})
+     */
+    public function printPreview($commandes, $modalite, $dateChoisi): Response
+    {
+        if ($modalite == "Séparé") {
+            return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+            ]);
+        }
+        elseif ($modalite == "Regroupé") {
+            return $this->render('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
+                'boissonDispo' => $this->boissonRepo->findByDispo(true),
+                'dessertDispo' => $this->dessertRepo->findByDispo(true),
+            ]);
+        }
+        return new Response();
+    }
+
+    /**
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
      */
     public function pdfDownload($commandes, $modalite, $dateChoisi): Response
@@ -201,6 +369,7 @@ class CommandeIndividuelleController extends AbstractController
         // Donne le context http au pdf
         $dompdf->setHttpContext($context);
 
+
         // Génère le pdf et le rendu html à partir du TWIG
         if ($modalite == "Séparé") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
@@ -208,7 +377,7 @@ class CommandeIndividuelleController extends AbstractController
                 'dateChoisi' => $dateChoisi,
             ]);
         }
-        else {
+        elseif ($modalite == "Regroupé") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
                 'commandes' => $commandes,
                 'dateChoisi' => $dateChoisi,
@@ -217,7 +386,6 @@ class CommandeIndividuelleController extends AbstractController
                 'dessertDispo' => $this->dessertRepo->findByDispo(true),
             ]);
         }
-
 
         // Génère l'affichage du pdf dans un onglet
         $dompdf->loadHtml($html);
@@ -229,13 +397,15 @@ class CommandeIndividuelleController extends AbstractController
         // Nomme le fichier PDF
         $fichier = 'Commande_'.$modalite.'_'.$date.'.pdf';
 
-        // Télécharge le pdf et l'ouvre dans un onglet
+        // Télécharge le pdf
         $dompdf->stream($fichier, [
             'Attachment' => true
         ]);
 
+
         // Retourne le résultat
         return new Response();
+
     }
 
     /**
@@ -243,8 +413,10 @@ class CommandeIndividuelleController extends AbstractController
      */
     public function new(Request $request, EntityManagerInterface $entityManager,
                         SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
-                        DessertRepository $dessertRepo): Response
+                        DessertRepository $dessertRepo,
+                        DesactivationCommandeRepository $deactiveRepo): Response
     {
+        $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
@@ -269,13 +441,29 @@ class CommandeIndividuelleController extends AbstractController
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('commande_individuelle/new.html.twig', [
-            'commande_individuelle' => $commandeIndividuelle,
-            'form' => $form,
-            'sandwichs' => $sandwichs,
-            'boissons' => $boissons,
-            'desserts' => $desserts,
-        ]);
+
+        if ($deactive->getIsDeactivated() === true) {
+            return $this->redirectToRoute('deactivate_commande');
+        }
+        else {
+            return $this->renderForm('commande_individuelle/new.html.twig', [
+                'commande_individuelle' => $commandeIndividuelle,
+                'form' => $form,
+                'sandwichs' => $sandwichs,
+                'boissons' => $boissons,
+                'desserts' => $desserts,
+            ]);
+        }
+    }
+
+    /**
+     * @Route("/desactive", name="deactivate_commande",methods={"GET"})
+     */
+    public function deactivated(): Response
+    {
+        return $this->render(
+            'commande_individuelle/deactive.html.twig'
+        );
     }
 
     /**

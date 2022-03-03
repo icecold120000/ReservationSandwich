@@ -46,7 +46,8 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     public function exportationCommande($date): array
     {
         $query = $this->createQueryBuilder('ci');
-        $query->andWhere('ci.dateHeureLivraison Like :date')
+        $query
+            ->andWhere('ci.dateHeureLivraison Like :date')
             ->setParameter('date', '%' . $date . '%')
             ->orderBy('ci.dateHeureLivraison', 'ASC')
         ;
@@ -57,13 +58,14 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
-    public function findBySandwich($sandwich): array
+    public function findBySandwich($sandwich, $date): array
     {
         $query = $this->createQueryBuilder('ci');
         $query
             ->leftJoin('ci.sandwichChoisi','sw')
             ->andWhere('sw.id = :sandwich')
-            ->setParameter('sandwich', $sandwich)
+            ->andWhere('ci.dateHeureLivraison Like :date')
+            ->setParameters(['sandwich'=> $sandwich, 'date' => '%' . $date . '%'])
         ;
 
         return $query->getQuery()->getResult();
@@ -72,13 +74,14 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
-    public function findByBoisson($boisson): array
+    public function findByBoisson($boisson, $date): array
     {
         $query = $this->createQueryBuilder('ci');
         $query
             ->leftJoin('ci.boissonChoisie','bo')
             ->andWhere('bo.id = :boisson')
-            ->setParameter('boisson', $boisson)
+            ->andWhere('ci.dateHeureLivraison Like :date')
+            ->setParameters(['boisson'=> $boisson, 'date' => '%' . $date . '%'])
         ;
 
         return $query->getQuery()->getResult();
@@ -87,13 +90,14 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
-    public function findByDessert($dessert): array
+    public function findByDessert($dessert, $date): array
     {
         $query = $this->createQueryBuilder('ci');
         $query
             ->leftJoin('ci.dessertChoisi','de')
             ->andWhere('de.id = :dessert')
-            ->setParameter('dessert', $dessert)
+            ->andWhere('ci.dateHeureLivraison Like :date')
+            ->setParameters(['dessert'=> $dessert, 'date' => '%' . $date . '%'])
         ;
 
         return $query->getQuery()->getResult();

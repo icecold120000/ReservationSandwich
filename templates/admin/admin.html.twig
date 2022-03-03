@@ -7,6 +7,20 @@
     <main>
         <div>
             <h1>Bienvenue dans l'espace d'administration</h1>
+            {% for message in app.flashes('SuccessDeactivation') %}
+                <div class="flash-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% if desactivation.isDeactivated == false %}
+                <form method="post" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}" onsubmit="return confirm('Voulez-vous vraiment désactivé les page de réservation ?');">
+                    <button class="btn btn-danger" id="btnSuppr">Désactivation des pages de réservations</button>
+                </form>
+            {% else %}
+                <form method="post" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}" onsubmit="return confirm('Voulez-vous vraiment réactivé les page de réservation ?');">
+                    <button class="btn btn-success" id="btnSuppr">Réactivation des pages de réservations</button>
+                </form>
+            {% endif %}
         </div>
         <div>
             <p>Vous pouvez gérer ici les diverses fonctionnalités du site.</p>

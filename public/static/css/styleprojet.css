@@ -212,6 +212,12 @@ footer i{
     font-size: 15px;
 }
 
+/*Page d'erreur ou désactivation*/
+
+img#errorPage {
+    margin-top: 1em;
+}
+
 /*formulaire de connexion*/
 
 h6{
@@ -537,6 +543,10 @@ div#preciserRaison {
         padding: 30px;
     }
 
+    img#errorPage {
+        height: 15em;
+    }
+
     /* Footer */
     footer i{
         font-size: 2.5em;
@@ -548,12 +558,12 @@ div#preciserRaison {
 
     .coordonnees p, .contact p, .access p{
         text-align: unset;
-        font-size: 2em;
+        font-size: 3em;
     }
 
     .coordonnees h3, .contact h3, .access h3, .networks h3{
         text-align: unset;
-        font-size: 2em;
+        font-size: 3em;
     }
 
     /*Formulaire*/
