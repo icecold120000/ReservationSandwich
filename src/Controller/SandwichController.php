@@ -59,8 +59,7 @@ class SandwichController extends AbstractController
                         SluggerInterface $slugger): Response
     {
         $sandwich = new Sandwich();
-        $form = $this->createForm(SandwichType::class, $sandwich,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(SandwichType::class, $sandwich);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -111,8 +110,7 @@ class SandwichController extends AbstractController
                          SluggerInterface $slugger): Response
     {
         $oldSandwich = $sandwich->getImageSandwich();
-        $form = $this->createForm(SandwichType::class, $sandwich,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(SandwichType::class, $sandwich,['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

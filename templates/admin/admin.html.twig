@@ -55,15 +55,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Les inscriptions <span>à la cantine</span></td>
-                        <td>
-                            <a href="{{ path('inscription_cantine_index') }}"
-                               class="btn btn-info" id="btnAdmin9">
-                                Gestion des inscriptions <span>à la cantine</span>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
                         <td>Les desserts</td>
                         <td>
                             <a href="{{path('dessert_index')}}"
@@ -73,9 +64,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <td>Les inscriptions <span>à la cantine</span></td>
+                        <td>
+                            <a href="{{ path('inscription_cantine_index') }}"
+                               class="btn btn-info" id="btnAdmin9">
+                                Gestion des inscriptions <span>à la cantine</span>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Les commandes</td>
                         <td>
-                            <a href="#"
+                            <a href="{{ path('commande_individuelle_admin') }}"
                                class="btn btn-info" id="btnAdmin3">
                                 Gestion des commandes
                             </a>
@@ -98,29 +98,31 @@
                             </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Les élèves</td>
-                        <td>
-                            <a href="{{ path('eleve_index') }}"
-                               class="btn btn-info" id="btnAdmin6">
-                                Gestion des élèves
-                            </a>
-                    </tr>
+                    {% if is_granted('ROLE_ADMIN')%}
+                        <tr>
+                            <td>Les élèves</td>
+                            <td>
+                                <a href="{{ path('eleve_index') }}"
+                                   class="btn btn-info" id="btnAdmin6">
+                                    Gestion des élèves
+                                </a>
+                        </tr>
+                        <tr>
+                            <td>Les limitations</td>
+                            <td>
+                                <a href="{{path('limite_index')}}"
+                                   class="btn btn-info" id="btnAdmin8">
+                                    Gestion des limitations
+                                </a>
+                            </td>
+                        </tr>
+                    {% endif %}
                     <tr>
                         <td>Les utilisateurs</td>
                         <td>
                             <a href="{{ path('user_index') }}"
                                class="btn btn-info" id="btnAdmin7">
                                 Gestion des utilisateurs
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Les limitations</td>
-                        <td>
-                            <a href="#"
-                               class="btn btn-info" id="btnAdmin8">
-                                Gestion des limitations
                             </a>
                         </td>
                     </tr>

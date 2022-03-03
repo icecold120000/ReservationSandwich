@@ -121,7 +121,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
-    public function filterIndex($user, $date = null): array
+    public function filterIndex($user, $date = null, $cloture = false): array
     {
         $query = $this->createQueryBuilder('ci');
         if ($date != null) {
@@ -141,6 +141,16 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                 ->setParameters(array('val' => new \DateTime('now'),'val2' => $user))
                 ->orderBy('ci.dateHeureLivraison', 'ASC')
             ;
+        }
+
+        if ($cloture == false) {
+            $query->andWhere('ci.dateHeureLivraison > :date')
+                ->setParameter('date',  new \DateTime('now'))
+                ->orderBy('ci.dateHeureLivraison', 'ASC')
+            ;
+        }
+        else {
+            return $this->findAll();
         }
         return $query->getQuery()->getResult();
     }

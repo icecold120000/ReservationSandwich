@@ -59,8 +59,7 @@ class BoissonController extends AbstractController
                         SluggerInterface $slugger): Response
     {
         $boisson = new Boisson();
-        $form = $this->createForm(BoissonType::class, $boisson,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(BoissonType::class, $boisson);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,8 +112,7 @@ class BoissonController extends AbstractController
                          SluggerInterface $slugger): Response
     {
         $oldImgBoisson = $boisson->getImageBoisson();
-        $form = $this->createForm(BoissonType::class, $boisson,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(BoissonType::class, $boisson,['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

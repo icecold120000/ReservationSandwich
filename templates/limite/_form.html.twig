@@ -1,0 +1,43 @@
+{{form_start(form)}}
+    <div id="part1">
+        {% if form_errors(form.libelleLimite) %}
+            <div class="erreur">
+                {{ form_errors(form.libelleLimite) }}
+            </div>
+        {% endif %}
+        {{form_label(form.libelleLimite)}}
+        <div>
+            {{ form_widget(form.libelleLimite) }}
+        </div>
+        {%if form_errors(form.is_active) %}
+            <div class="erreur">
+                {{ form_errors(form.is_active) }}
+            </div>
+        {% endif %}
+        {{ form_label(form.is_active) }}
+        <div>
+            {{ form_widget(form.is_active) }}
+        </div>
+    </div>
+    <div id="part2">
+        {%if form_errors(form.nbLimite) %}
+            <div class="erreur">
+                {{ form_errors(form.nbLimite) }}
+            </div>
+        {% endif %}
+        {{ form_label(form.nbLimite) }}
+        {{ form_help(form.nbLimite) }}
+        <div>
+            {{ form_widget(form.nbLimite) }}
+        </div>
+        {%if form_errors(form.heureLimite)%}
+            <div class="erreur">
+                {{ form_errors(form.heureLimite) }}
+            </div>
+        {% endif %}
+        {{form_label(form.heureLimite)}}
+        <div id="selectClasse">
+            {{ form_widget(form.heureLimite) }}
+        </div>
+    </div>
+{{form_end(form)}}

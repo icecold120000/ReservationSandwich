@@ -103,8 +103,6 @@ class AdulteController extends AbstractController
                 }
                 $adulteFile->setFileName($newFilename);
             }
-            // updates the 'brochureFilename' property to store the CSV or XLSX file name
-            // instead of its contents
 
 
             $entityManager->persist($adulteFile);

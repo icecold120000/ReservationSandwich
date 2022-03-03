@@ -36,6 +36,7 @@
     <table class="table tableAdmin">
         <thead>
             <tr>
+                <th>Photo de l'élève</th>
                 <th>Nom de l'élève</th>
                 <th>Prénom de l'élève</th>
             </tr>
@@ -43,6 +44,13 @@
         <tbody>
             {% for eleve in eleves%}
                 <tr>
+                    <td>
+                        {% if eleve.photoEleve %}
+                            <img alt="Photo de l'élève" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
+                        {% else %}
+                            <img alt="Photo placeholder de l'élève" src="{{ asset('public/static/images/avatar.jpg') }}">
+                        {% endif %}
+                    </td>
                     <td>{{ eleve.nomEleve }}</td>
                     <td>{{ eleve.prenomEleve }}</td>
                 </tr>

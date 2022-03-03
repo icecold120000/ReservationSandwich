@@ -195,6 +195,12 @@ div#filtreEleve.filtre label{
     color: red;
 }
 
+/* Formulaire de limitation */
+
+div#limitation_commande_heureLimite {
+    display: flex;
+}
+
 /*Page de profil*/
 
 #profilHeader{

@@ -15,13 +15,6 @@ class BoissonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['row_attr']['route'] == "boisson_new") {
-            $required = true;
-        }
-        else{
-            $required = false;
-        }
-
         $builder
             ->add('nomBoisson', TextType::class,[
                 'label' => 'Nom de la boisson',
@@ -31,10 +24,10 @@ class BoissonType extends AbstractType
                 'label' => 'Photo de la boisson',
                 'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
                 'mapped' => false,
-                'required' => $required,
+                'required' => $options['fichierRequired'],
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -61,6 +54,7 @@ class BoissonType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Boisson::class,
             'attr' => ['id' => 'boissonForm'],
+            'fichierRequired' => true,
         ]);
     }
 }

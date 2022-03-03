@@ -65,7 +65,8 @@ class CommandeIndividuelleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $commandes = $comIndRepo->filterIndex(
                 $this->getUser(),
-                $filter->get('date')->getData()
+                $filter->get('date')->getData(),
+                $filter->get('cloture')->getData()
             );
         }
 
@@ -92,14 +93,14 @@ class CommandeIndividuelleController extends AbstractController
             $desactiveId->setIsDeactivated(true);
             $this->addFlash(
                 'SuccessDeactivation',
-                'La page de réservation a été déactivé !'
+                'La page de réservation a été désactivée !'
             );
         }
         elseif ($desactiveId->getIsDeactivated() === true) {
             $desactiveId->setIsDeactivated(false);
             $this->addFlash(
                 'SuccessDeactivation',
-                'La page de réservation a été réactivé !'
+                'La page de réservation a été réactivée !'
             );
         }
 
@@ -181,8 +182,6 @@ class CommandeIndividuelleController extends AbstractController
                     // Put the content in a file with format extension for example
                     file_put_contents('commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
                     $filename = 'commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx';
-                    // Déplace le fichier dans le dossier Uploads
-                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
 
                     //Permet le téléchargement du fichier
                     header('Content-Description: File Transfer');
@@ -193,6 +192,10 @@ class CommandeIndividuelleController extends AbstractController
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
+
+                    // Déplace le fichier dans le dossier Uploads
+                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+
                 } elseif ($modalite == "Regroupé") {
                     $sandwichDispo = $this->sandwichRepo->findByDispo(true);
                     $boissonDispo = $this->boissonRepo->findByDispo(true);
@@ -217,7 +220,7 @@ class CommandeIndividuelleController extends AbstractController
 
                     foreach ($dessertDispo as $dessert) {
                         $nomDessert[] = $dessert->getNomDessert();
-                        $nbDessert[] = count($comIndRepo->findByBoisson($dessert->getId(),$dateChoisi));
+                        $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(),$dateChoisi));
                     }
                     $dataRowSandwich = [];
                     for ($i = 0 ; $i < count($nomSandwich);$i++) {
@@ -278,7 +281,7 @@ class CommandeIndividuelleController extends AbstractController
                     // Put the content in a file with format extension for example
                     file_put_contents('commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
                     $filename = 'commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx';
-                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');
                     header("Cache-Control: no-cache, must-revalidate");
@@ -287,7 +290,10 @@ class CommandeIndividuelleController extends AbstractController
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
+
+                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
                 }
+                return new Response();
             }
             elseif ($methode == "Impression"){
                 CommandeIndividuelleController::printPreview($commandesExport,$modalite,$exportReq->get('dateExport')->getData());
@@ -401,7 +407,6 @@ class CommandeIndividuelleController extends AbstractController
         $dompdf->stream($fichier, [
             'Attachment' => true
         ]);
-
 
         // Retourne le résultat
         return new Response();

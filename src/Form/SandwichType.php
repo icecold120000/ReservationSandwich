@@ -16,12 +16,6 @@ class SandwichType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['row_attr']['route'] == "sandwich_new") {
-            $required = true;
-        }
-        else{
-            $required = false;
-        }
         $builder
             ->add('nomSandwich', TextType::class,[
                 'label' => 'Nom du sandwich',
@@ -31,10 +25,10 @@ class SandwichType extends AbstractType
                 'label' => 'Photo du sandwich',
                 'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
                 'mapped' => false,
-                'required' => $required,
+                'required' => $options['fichierRequired'],
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -69,7 +63,8 @@ class SandwichType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sandwich::class,
-            'attr' => ['id' => 'sandwichForm']
+            'attr' => ['id' => 'sandwichForm'],
+            'fichierRequired' => true,
         ]);
     }
 }

@@ -16,13 +16,6 @@ class DessertType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if ($options['row_attr']['route'] == "dessert_new") {
-            $required = true;
-        }
-        else{
-            $required = false;
-        }
-
         $builder
             ->add('nomDessert', TextType::class,[
                 'label' => 'Nom du dessert',
@@ -32,10 +25,10 @@ class DessertType extends AbstractType
                 'label' => 'Photo du dessert',
                 'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
                 'mapped' => false,
-                'required' => $required,
+                'required' => $options['fichierRequired'],
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -70,7 +63,8 @@ class DessertType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Dessert::class,
-            'attr' => ['id' => 'dessertForm']
+            'attr' => ['id' => 'dessertForm'],
+            'fichierRequired' => true,
         ]);
     }
 }

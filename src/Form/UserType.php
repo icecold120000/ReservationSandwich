@@ -21,12 +21,6 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['row_attr']['route'] == "user_new") {
-            $required = true;
-        }
-        else{
-            $required = false;
-        }
         $builder
             ->add('email', TextType::class,[
                 'label' => 'E-mail de l\'utilisateur',
@@ -51,7 +45,7 @@ class UserType extends AbstractType
             ])
             ->add('password', PasswordType::class,[
                 'label' => 'Mot de passe de l\'utilisateur',
-                'required' => $required,
+                'required' => $options['password_required'],
             ])
             ->add('nomUser', TextType::class,[
                 'label' => 'Nom de l\'utilisateur',
@@ -112,7 +106,8 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'attr' => ['id' => 'userForm']
+            'attr' => ['id' => 'userForm'],
+            'password_required' => true,
         ]);
     }
 }

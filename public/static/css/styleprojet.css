@@ -577,7 +577,7 @@ div#preciserRaison {
         height: 5em;
     }
 
-    #btnAjout, #btnRetour, .btn.btn-success {
+    #btnAjout, #btnRetour, .btn.btn-success, #btnProfilAdmin {
         padding: 30px;
         font-size: 2.5em;
         margin-bottom: 1em;
@@ -602,6 +602,7 @@ div#preciserRaison {
 
     div.divInput {
         display: flex;
+        flex-direction: column;
         justify-content: center;
     }
 

@@ -6,7 +6,7 @@
     <h1>Liste des commandes à venir</h1>
     <div>
         <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf" id="btnAjout">
                 Choisir votre mode d'exportation
             </button>
             <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
@@ -63,62 +63,64 @@
     <div>
         {{ knp_pagination_render(commandes_ind) }}
     </div>
-    <table class="table tableAdmin">
-        <thead>
-            <tr>
-                <th>Date de Livraison</th>
-                <th>Prénom et Nom</th>
-                <th>Classe</th>
-                <th>Commande</th>
-                <th>Chips</th>
-                <th>Éditer</th>
-                <th>Supprimer</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for commande in commandes_ind %}
+    <div class="table-responsive-lg">
+        <table class="table tableAdmin">
+            <thead>
                 <tr>
-                    <td>
-                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
-                    </td>
-                    <td>{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
-                    <td>
-                        {% if commande.commandeur.eleves %}
-                            {% for eleve in commande.commandeur.eleves %}
-                                {{ eleve.classeEleve.codeClasse }}
-                            {% else %}
-                                Adulte
-                            {% endfor %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        <span>{{ commande.sandwichChoisi.nomSandwich }}</span>
-                        <span>{{ commande.boissonChoisie.nomBoisson }}</span>
-                        <span>{{ commande.dessertChoisi.nomDessert }}</span>
-                    </td>
-                    <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
-                        '<i class="fas fa-times"></i>' }}</td>
-                    <td>
-                        <a href="{{ path('commande_individuelle_edit',
-                            {'id': commande.id}) }}" class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ path('commande_individuelle_delete_view',
-                            {'id': commande.id}) }}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
+                    <th>Date de Livraison</th>
+                    <th>Prénom et Nom</th>
+                    <th>Classe</th>
+                    <th>Commande</th>
+                    <th>Chips</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="erreur">Aucune commande n'a été trouvée</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for commande in commandes_ind %}
+                    <tr>
+                        <td>
+                            <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                            <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                        </td>
+                        <td>{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
+                        <td>
+                            {% if commande.commandeur.eleves %}
+                                {% for eleve in commande.commandeur.eleves %}
+                                    {{ eleve.classeEleve.codeClasse }}
+                                {% else %}
+                                    Adulte
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span>{{ commande.sandwichChoisi.nomSandwich }}</span>
+                            <span>{{ commande.boissonChoisie.nomBoisson }}</span>
+                            <span>{{ commande.dessertChoisi.nomDessert }}</span>
+                        </td>
+                        <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                            '<i class="fas fa-times"></i>' }}</td>
+                        <td>
+                            <a href="{{ path('commande_individuelle_edit',
+                                {'id': commande.id}) }}" class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('commande_individuelle_delete_view',
+                                {'id': commande.id}) }}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="erreur">Aucune commande n'a été trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <div>
         {{ knp_pagination_render(commandes_ind) }}
     </div>

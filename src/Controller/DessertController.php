@@ -58,8 +58,7 @@ class DessertController extends AbstractController
                         SluggerInterface $slugger): Response
     {
         $dessert = new Dessert();
-        $form = $this->createForm(DessertType::class, $dessert,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(DessertType::class, $dessert);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -112,8 +111,7 @@ class DessertController extends AbstractController
                         SluggerInterface $slugger): Response
     {
         $oldDessert = $dessert->getImageDessert();
-        $form = $this->createForm(DessertType::class, $dessert,
-            array('row_attr' => array('route' => $request->get('_route'))));
+        $form = $this->createForm(DessertType::class, $dessert,['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

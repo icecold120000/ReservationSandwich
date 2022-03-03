@@ -21,6 +21,14 @@ class FilterIndexCommandeType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('cloture', ChoiceType::class,[
+                'label' => 'Commande clôturé',
+                'choices' => [
+                    'Oui' => true,
+                    'Non' => false,
+                ],
+                'required' => false,
+            ])
         ;
     }
 

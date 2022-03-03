@@ -12,16 +12,11 @@
              class="btn btn-info" id="btnAjout">
                 Ajouter une nouvelle classe
             </a>
-            <a href="{{ path('espace_admin') }}"
-             class="btn btn-secondary" id="btnRetour">
-                Retourner à la liste des fonctionnalités
-            </a>
-        {% elseif is_granted('ROLE_ADULTE')%}
-            <a href="{{ path('profile_adulte') }}"
-             class="btn btn-secondary" id="btnRetour">
-                Retourner à la liste des fonctionnalités
-            </a>
         {% endif %}
+        <a href="{{ path('espace_admin') }}"
+           class="btn btn-secondary" id="btnRetour">
+            Retourner à la liste des fonctionnalités
+        </a>
     </div>
     <div>
         {{form_start(form)}}

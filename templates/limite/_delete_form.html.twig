@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('limite_delete', {'id': limitation.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette limitation ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ limitation.id) }}">
+    <button class="btn btn-danger" id="btnSuppr">Supprimer</button>
+</form>
