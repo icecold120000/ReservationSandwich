@@ -22,10 +22,56 @@
     </div>
     <div class="row">
         <div id="divAjout">
-            <button type="submit"
-                    class="btn btn-success" form="formCommandeInd" id="btnComInd">
-                Enregistrer votre commande
-            </button>
+            {% if is_granted('ROLE_ELEVE') %}
+                {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
+                    {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
+                        {% if nbCommandeMois < limiteNbMois and limiteActiveNbMois == true %}
+                            <button type="submit"
+                                    class="btn btn-success" form="formCommandeInd" id="btnComInd">
+                                Enregistrer votre commande
+                            </button>
+                        {% else %}
+                            {% if limiteActiveNbMois == false %}
+                                <button type="submit"
+                                        class="btn btn-success" form="formCommandeInd" id="btnComInd">
+                                    Enregistrer votre commande
+                                </button>
+                            {% else %}
+                                <button class="btn btn-success" id="btnAjout" disabled>
+                                    Vous avez dépassé le nombre limite mensuel de {{limiteNbMois}} commandes !
+                                </button>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        {% if limiteActiveNbSemaine == false %}
+                            <button type="submit"
+                                    class="btn btn-success" form="formCommandeInd" id="btnComInd">
+                                Enregistrer votre commande
+                            </button>
+                        {% else %}
+                            <button class="btn btn-success" id="btnAjout" disabled>
+                                Vous avez dépassé le nombre limite hebdomadaire de {{limiteNbSemaine}} commandes !
+                            </button>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    {% if limiteActiveNbJour == false %}
+                        <button type="submit"
+                                class="btn btn-success" form="formCommandeInd" id="btnComInd">
+                            Enregistrer votre commande
+                        </button>
+                    {% else %}
+                        <button class="btn btn-success" id="btnAjout" disabled>
+                            Vous avez dépassé le nombre limite journalier de {{limiteNbJournalier}} commandes !
+                        </button>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <button type="submit"
+                        class="btn btn-success" form="formCommandeInd" id="btnComInd">
+                    Enregistrer votre commande
+                </button>
+            {% endif %}
             <a href="{{ path('commande_individuelle_index') }}"
                class="btn btn-secondary" id="btnRetour">
                 Revenir à la liste

@@ -451,8 +451,12 @@ class CommandeIndividuelleController extends AbstractController
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
         $limite = new \DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new \DateTimeZone('Europe/Paris'));
         $dateNow = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
-        date_default_timezone_set('Europe/Paris');
-        $dateLivraison = new \DateTime('now 12:30:00',new \DateTimeZone('Europe/Paris'));
+        $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
+        $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
+        $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new \DateTime('now 00:00:00', new \DateTimezone('Europe/Paris')), new \DateTime('+1 day 23:59:00',new \DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 week 23:59:00',new \DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 month 23:59:00',new \DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -475,7 +479,7 @@ class CommandeIndividuelleController extends AbstractController
                     );
             }
             else {
-                if ($form->get('raisonCommande')->getData() == "Autres (à préciser)") {
+                if ($form->get('raisonCommande')->getData() == "Autre") {
                     $commandeIndividuelle->setRaisonCommande($form->get('raisonCommandeAutre')->getData());
                 }
                 $commandeIndividuelle->setCommandeur($this->getUser());
@@ -504,6 +508,15 @@ class CommandeIndividuelleController extends AbstractController
                 'boissons' => $boissons,
                 'desserts' => $desserts,
                 'limiteJourMeme' => $dateNow->format('d-m-y H:i'),
+                'limiteNbJournalier' => $limiteNbJour->getNbLimite(),
+                'limiteActiveNbJour' => $limiteNbJour->getIsActive(),
+                'limiteNbSemaine'=> $limiteNbSemaine->getNbLimite(),
+                'limiteActiveNbSemaine'=> $limiteNbSemaine->getIsActive(),
+                'limiteNbMois'=> $limiteNbMois->getNbLimite(),
+                'limiteActiveNbMois'=> $limiteNbMois->getIsActive(),
+                'nbCommandeJournalier' => $nbCommandeJournalier,
+                'nbCommandeSemaine' => $nbCommandeSemaine,
+                'nbCommandeMois' => $nbCommandeMois,
             ]);
         }
     }

@@ -126,7 +126,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('ci');
         $query
             ->andWhere('ci.commandeur = :user')
-            ->andWhere('ci.dateCreation Between :dateStart and :dateEnd')
+            ->andWhere('ci.dateHeureLivraison Between :dateStart and :dateEnd')
             ->setParameters(array('dateStart' =>$dateDebut, 'dateEnd' => $dateFin,'user' => $user))
             ->orderBy('ci.dateHeureLivraison', 'ASC')
         ;
