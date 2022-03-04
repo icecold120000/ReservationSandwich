@@ -5,13 +5,16 @@
 
 {% block body %}
     <h1>Faire une commande individuelle</h1>
-
     {% for message in app.flashes('SuccessComInd') %}
         <div class="flash-success">
             {{ message }}
         </div>
     {% endfor %}
-
+    {% for message in app.flashes('limiteCloture') %}
+        <div class="erreur">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <div class="container-fluid formEntité2" id="commandeFormInd">
            {{ include('commande_individuelle/_form.html.twig') }}
@@ -20,7 +23,7 @@
     <div class="row">
         <div id="divAjout">
             <button type="submit"
-                    class="btn btn-success" form="formCommandeInd">
+                    class="btn btn-success" form="formCommandeInd" id="btnComInd">
                 Enregistrer votre commande
             </button>
             <a href="{{ path('commande_individuelle_index') }}"

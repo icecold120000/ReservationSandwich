@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class LimitationCommandeType extends AbstractType
 {
@@ -32,6 +33,13 @@ class LimitationCommandeType extends AbstractType
                 'label' => 'Nombre limite',
                 'invalid_message' => 'Veuillez saisir un nombre !',
                 'required' => false,
+                'constraints' => [
+                    new Regex([
+                        'match' => false,
+                        'pattern' => "/[\-]/",
+                        'message' => "Veuillez saisir un nombre positif !",
+                    ])
+                ],
             ])
             ->add('heureLimite', TimeType::class,[
                 'label' => 'Heure limite',

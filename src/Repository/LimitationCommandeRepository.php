@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\LimitationCommande;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,20 @@ class LimitationCommandeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, LimitationCommande::class);
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @return LimitationCommande
+     */
+    public function findOneByLibelle($value): ?LimitationCommande
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.libelleLimite Like :val')
+            ->setParameter('val', '%'.$value.'%')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     // /**
@@ -36,15 +51,4 @@ class LimitationCommandeRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?LimitationCommande
-    {
-        return $this->createQueryBuilder('l')
-            ->andWhere('l.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

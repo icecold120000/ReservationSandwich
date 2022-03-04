@@ -1,6 +1,11 @@
 {{ form_start(form) }}
     <div id="part1">
         {{ form_label(form.sandwichChoisi) }}
+        {% if form_errors(form.sandwichChoisi) %}
+            <div class="erreur">
+                {{form_errors(form.sandwichChoisi)}}
+            </div>
+        {% endif %}
         {{ form_widget(form.sandwichChoisi) }}
         <div id="sandwichCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -28,6 +33,11 @@
         </div>
         <div>
             {{ form_label(form.dessertChoisi) }}
+            {% if form_errors(form.dessertChoisi) %}
+                <div class="erreur">
+                    {{form_errors(form.dessertChoisi)}}
+                </div>
+            {% endif %}
             {{ form_widget(form.dessertChoisi) }}
             <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -57,6 +67,11 @@
     <div id="part2">
         <div>
             {{ form_label(form.boissonChoisie) }}
+            {% if form_errors(form.boissonChoisie) %}
+                <div class="erreur">
+                    {{form_errors(form.boissonChoisie)}}
+                </div>
+            {% endif %}
             {{ form_widget(form.boissonChoisie) }}
             <div id="boissonCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
@@ -81,40 +96,42 @@
             </div>
         </div>
         {{form_label(form.prendreChips)}}
-        <div class="divInput">
-            {{form_widget(form.prendreChips)}}
-        </div>
         {% if form_errors(form.prendreChips) %}
             <div class="erreur">
                 {{form_errors(form.prendreChips)}}
             </div>
         {% endif %}
+        <div class="divInput">
+            {{form_widget(form.prendreChips)}}
+        </div>
         {{form_label(form.dateHeureLivraison)}}
         {{ form_help(form.dateHeureLivraison) }}
-        <div class="divInput">
-            {{form_widget(form.dateHeureLivraison)}}
-        </div>
         {% if form_errors(form.dateHeureLivraison) %}
             <div class="erreur">
                 {{form_errors(form.dateHeureLivraison)}}
             </div>
         {% endif %}
-        {{form_label(form.raisonCommande)}}
         <div class="divInput">
-            {{form_widget(form.raisonCommande)}}
+            {{form_widget(form.dateHeureLivraison)}}
         </div>
+        {{form_label(form.raisonCommande)}}
         {% if form_errors(form.raisonCommande) %}
             <div class="erreur">
                 {{form_errors(form.raisonCommande)}}
             </div>
         {% endif %}
+        <div class="divInput">
+            {{form_widget(form.raisonCommande)}}
+        </div>
         <script type="text/javascript">
             function update() {
-                const select = document.getElementById('commande_individuelle_raisonCommande');
-                const option = select.options[select.selectedIndex];
+                const selectRaison = document.getElementById('commande_individuelle_raisonCommande');
+                const option = selectRaison.options[selectRaison.selectedIndex];
                 const selected = option.text;
                 const toDisable = document.getElementById("preciserRaison");
 
+                const dateInput = document.getElementById("commande_individuelle_dateHeureLivraison").ariaValueText;
+                console.log(dateInput);
                 if (selected === "Autres (à préciser)"){
                     toDisable.style.display = "unset";
                 }
@@ -126,14 +143,14 @@
         </script>
         <div id="preciserRaison">
             {{form_label(form.raisonCommandeAutre)}}
-            <div class="divInput">
-                {{form_widget(form.raisonCommandeAutre)}}
-            </div>
             {% if form_errors(form.raisonCommandeAutre) %}
                 <div class="erreur">
                     {{form_errors(form.raisonCommandeAutre)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.raisonCommandeAutre)}}
+            </div>
         </div>
     </div>
 

@@ -55,6 +55,11 @@ class CommandeIndividuelle
      */
     private $commandeur;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateCreation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -140,6 +145,18 @@ class CommandeIndividuelle
     public function setCommandeur(?User $commandeur): self
     {
         $this->commandeur = $commandeur;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTimeInterface
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    {
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }

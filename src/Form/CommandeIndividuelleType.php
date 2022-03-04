@@ -79,7 +79,7 @@ class CommandeIndividuelleType extends AbstractType
                 'html5' => true,
                 'widget' => 'single_text',
                 'required' => true,
-                'help' => ' Format : JJ/MM/AAAA HH:mm',
+                'help' => 'Attention : Vous ne pouvez pas faire une commande pour le jour même après 9h30 !',
                 'empty_data' => date("d/m/Y H:i"),
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
             ])
