@@ -60,6 +60,11 @@ class CommandeIndividuelle
      */
     private $dateCreation;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $est_valide;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,6 +162,18 @@ class CommandeIndividuelle
     public function setDateCreation(\DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getEstValide(): ?bool
+    {
+        return $this->est_valide;
+    }
+
+    public function setEstValide(bool $est_valide): self
+    {
+        $this->est_valide = $est_valide;
 
         return $this;
     }

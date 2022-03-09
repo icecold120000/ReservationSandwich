@@ -146,6 +146,11 @@
                     {{form_errors(form.raisonCommandeAutre)}}
                 </div>
             {% endif %}
+            {% for message in app.flashes('precisionReason') %}
+                <div class="erreur">
+                    {{ message }}
+                </div>
+            {% endfor %}
             <div class="divInput">
                 {{form_widget(form.raisonCommandeAutre)}}
             </div>

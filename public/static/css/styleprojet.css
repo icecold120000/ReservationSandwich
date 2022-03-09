@@ -410,6 +410,11 @@ form textarea {
     display: block;
 }
 
+.invalidCommande {
+    color: red;
+    font-weight: 900;
+}
+
 /*Formulaire de Commandes*/
 
 #commande_individuelle_sandwichChoisi, #commande_individuelle_dessertChoisi,

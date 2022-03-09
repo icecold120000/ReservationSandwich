@@ -72,6 +72,8 @@
                     <th>Classe</th>
                     <th>Commande</th>
                     <th>Chips</th>
+                    <th>Raison</th>
+                    <th>Validé</th>
                     <th>Éditer</th>
                     <th>Supprimer</th>
                 </tr>
@@ -99,6 +101,10 @@
                             <span>{{ commande.dessertChoisi.nomDessert }}</span>
                         </td>
                         <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                            '<i class="fas fa-times"></i>' }}
+                        </td>
+                        <td>{{ commande.raisonCommande }}</td>
+                        <td>{{ commande.estValide ? '<i class="fas fa-check"></i>' :
                             '<i class="fas fa-times"></i>' }}</td>
                         <td>
                             <a href="{{ path('commande_individuelle_edit',

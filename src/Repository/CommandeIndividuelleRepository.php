@@ -48,6 +48,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('ci');
         $query
             ->andWhere('ci.dateHeureLivraison Like :date')
+            ->andWhere('ci.est_valide = 1')
             ->setParameter('date', '%' . $date . '%')
             ->orderBy('ci.dateHeureLivraison', 'ASC')
         ;

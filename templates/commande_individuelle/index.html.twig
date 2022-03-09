@@ -5,6 +5,7 @@
 
 {% block body %}
     <h1>Vos commandes</h1>
+    <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
     {% if is_granted('ROLE_ELEVE') %}
         <p>Nombre de commande effectuée aujourd'hui : {{ nbCommandeJournalier }}</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
@@ -51,6 +52,9 @@
             Faire une commande individuelle
         </a>
     {% endif %}
+    <a href="#" class="btn btn-primary" id="btnAjout">
+        Faire une commande groupé
+    </a>
     <div id="formFilter">
         <div id="filtre">
             {{form_start(form)}}
@@ -89,35 +93,68 @@
             <tbody>
                 {% for commande in commandes_ind %}
                     <tr>
-                        <td>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y H:i') : '' }}</td>
-                        <td>{{ commande.sandwichChoisi.nomSandwich }}</td>
-                        <td>{{ commande.boissonChoisie.nomBoisson }}</td>
-                        <td>{{ commande.dessertChoisi.nomDessert }}</td>
-                        <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
-                            '<i class="fas fa-times"></i>' }}</td>
-                        {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i') and limiteActive == true
-                            and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y')%}
-                            <td>
-                                Vous ne pouvez plus modifier votre commande.
-                                Veuillez contacter la cuisine.
-                            </td>
-                            <td>
-                                Vous ne pouvez plus annuler votre commande.
-                                Veuillez contacter la cuisine.
-                            </td>
+                        {% if commande.estValide %}
+                            <td>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y H:i') : '' }}</td>
+                            <td>{{ commande.sandwichChoisi.nomSandwich }}</td>
+                            <td>{{ commande.boissonChoisie.nomBoisson }}</td>
+                            <td>{{ commande.dessertChoisi.nomDessert }}</td>
+                            <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}</td>
+                            {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i') and limiteActive == true
+                                and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y')%}
+                                <td>
+                                    Vous ne pouvez plus modifier votre commande.
+                                    Veuillez contacter la cuisine.
+                                </td>
+                                <td>
+                                    Vous ne pouvez plus annuler votre commande.
+                                    Veuillez contacter la cuisine.
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ path('commande_individuelle_edit',
+                                        {'id': commande.id}) }}" class="btn btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('commande_individuelle_delete_view',
+                                        {'id': commande.id}) }}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
                         {% else %}
-                            <td>
-                                <a href="{{ path('commande_individuelle_edit',
-                                    {'id': commande.id}) }}" class="btn btn-primary">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ path('commande_individuelle_delete_view',
-                                    {'id': commande.id}) }}" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
+                            <td class="invalidCommande">{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y H:i') : '' }}</td>
+                            <td class="invalidCommande">{{ commande.sandwichChoisi.nomSandwich }}</td>
+                            <td class="invalidCommande">{{ commande.boissonChoisie.nomBoisson }}</td>
+                            <td class="invalidCommande">{{ commande.dessertChoisi.nomDessert }}</td>
+                            <td class="invalidCommande">{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}</td>
+                            {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i') and limiteActive == true
+                                and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y')%}
+                                <td class="invalidCommande">
+                                    Vous ne pouvez plus modifier votre commande.
+                                    Veuillez contacter la cuisine.
+                                </td>
+                                <td class="invalidCommande">
+                                    Vous ne pouvez plus annuler votre commande.
+                                    Veuillez contacter la cuisine.
+                                </td>
+                            {% else %}
+                                <td class="invalidCommande">
+                                    <a href="{{ path('commande_individuelle_edit',
+                                        {'id': commande.id}) }}" class="btn btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td class="invalidCommande">
+                                    <a href="{{ path('commande_individuelle_delete_view',
+                                        {'id': commande.id}) }}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
                         {% endif %}
                     </tr>
                 {% else %}

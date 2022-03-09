@@ -23,10 +23,17 @@
                     class="btn btn-success" form="formCommandeInd">
                 Modifier votre commande
             </button>
-            <a href="{{ path('commande_individuelle_index') }}"
-               class="btn btn-secondary" id="btnRetour">
-                Revenir à la liste
-            </a>
+            {% if is_granted('ROLE_ELEVE') or is_granted('ROLE_ADULTES')%}
+                <a href="{{ path('commande_individuelle_index') }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Revenir à la liste
+                </a>
+            {% elseif is_granted('ROLE_ADMIN')%}
+                <a href="{{ path('commande_individuelle_admin') }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Revenir à la liste
+                </a>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

@@ -16,6 +16,7 @@ class FilterIndexCommandeType extends AbstractType
                 'label' => 'Par date',
                 'choices' => [
                     'Aujourd\'hui' => new \DateTime('now'),
+                    'Demain' => new \DateTime('+1 day'),
                     'Dans 1 semaine' => new \DateTime('+1 week'),
                     'Dans 1 mois' => new \DateTime('+1 month'),
                 ],

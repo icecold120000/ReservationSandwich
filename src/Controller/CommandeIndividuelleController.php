@@ -56,6 +56,7 @@ class CommandeIndividuelleController extends AbstractController
     /**
      * @Route("/", name="commande_individuelle_index", methods={"GET","POST"})
      * @throws NonUniqueResultException
+     * @throws \Exception
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface $paginator, Request $request,
@@ -288,7 +289,6 @@ class CommandeIndividuelleController extends AbstractController
                         ]
                     );
 
-
                     $encoder = new ExcelEncoder($defaultContext = []);
 
                     // Test data
@@ -300,7 +300,6 @@ class CommandeIndividuelleController extends AbstractController
                     // Encode data with specific format
                     $xls = $encoder->encode($data, ExcelEncoder::XLSX);
                     $dateChoisi = $exportReq->get('dateExport')->getData();
-
 
                     // Put the content in a file with format extension for example
                     file_put_contents('commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
@@ -320,7 +319,7 @@ class CommandeIndividuelleController extends AbstractController
                 return new Response();
             }
             elseif ($methode == "Impression"){
-                CommandeIndividuelleController::printPreview($commandesExport,$modalite,$exportReq->get('dateExport')->getData());
+                $this->redirectToRoute('commande_impression',['commandes' => $commandesExport,'modalite' => $modalite,'dateChoisi'=> $exportReq->get('dateExport')->getData()]);
             }
 
         }
@@ -468,30 +467,49 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
-                $dateLivraison > new \DateTime('now 00:00:00',
-                    new \DateTimeZone('Europe/Paris')) &&
-                $dateLivraison < new \DateTime('now 23:59:59',
-                    new \DateTimeZone('Europe/Paris'))) {
+            if ($dateLivraison < new \DateTime('now 00:00:00')) {
+                $this->addFlash(
+                    'limiteCloture',
+                    'Veuillez sélectionner une date et/ou heure future !'
+                );
+            }
+            else {
+                if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+                    $dateLivraison > new \DateTime('now 00:00:00',
+                        new \DateTimeZone('Europe/Paris')) &&
+                    $dateLivraison < new \DateTime('now 23:59:59',
+                        new \DateTimeZone('Europe/Paris'))) {
                     $this->addFlash(
                         'limiteCloture',
                         'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                     );
-            }
-            else {
-                if ($form->get('raisonCommande')->getData() == "Autre") {
-                    $commandeIndividuelle->setRaisonCommande($form->get('raisonCommandeAutre')->getData());
                 }
-                $commandeIndividuelle->setCommandeur($this->getUser());
-                $commandeIndividuelle->setDateCreation($dateNow);
-                $entityManager->persist($commandeIndividuelle);
-                $entityManager->flush();
+                else {
+                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                    if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis != null && $raisonPrecis == "Ajouter text") {
+                        $this->addFlash(
+                            'precisionReason',
+                            'Veuillez préciser votre raison !'
+                        );
+                    }
+                    else {
+                        $commandeIndividuelle->setRaisonCommande($raisonPrecis)
+                            ->setCommandeur($this->getUser())
+                            ->setDateCreation($dateNow)
+                            ->setEstValide(true)
+                        ;
+                        $entityManager->persist($commandeIndividuelle);
+                        $entityManager->flush();
 
-                $this->addFlash(
-                    'SuccessComInd',
-                    'Votre commande a été sauvegardée !'
-                );
+                        $this->addFlash(
+                            'SuccessComInd',
+                            'Votre commande a été sauvegardée !'
+                        );
+                    }
+
+                }
             }
+
 
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
         }
@@ -556,8 +574,17 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+            if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis != null && $raisonPrecis != "Ajouter text") {
+                $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+            }
+            else {
+                $this->addFlash(
+                    'precisionReason',
+                    'Veuillez préciser votre raison !'
+                );
+            }
             $entityManager->flush();
-
             $this->addFlash(
                 'SuccessComInd',
                 'Votre commande a été modifié !'
