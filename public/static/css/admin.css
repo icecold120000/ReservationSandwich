@@ -201,6 +201,11 @@ div#limitation_commande_heureLimite {
     display: flex;
 }
 
+/*Liste des commandes admin*/
+table form {
+    padding: unset;
+}
+
 /*Page de profil*/
 
 #profilHeader{
@@ -235,7 +240,6 @@ div#limitation_commande_heureLimite {
 #btnProfilAcces4 {
     padding: 15px 56px;
 }
-
 
 /*Profil d'un élève*/
 

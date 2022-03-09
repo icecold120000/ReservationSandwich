@@ -16,6 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -83,6 +84,9 @@ class CommandeIndividuelleType extends AbstractType
                 'help' => 'Attention : Vous ne pouvez pas faire une commande pour le jour même après 9h30 !',
                 'empty_data' => date("d/m/Y H:i"),
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
+                'constraints' => [
+                    new GreaterThanOrEqual("today",null,"Veuillez sélectionner une date et/ou heure future !"),
+                ],
             ])
             ->add('raisonCommande', ChoiceType::class, [
                 'label' => 'Votre raison de faire cette commande',

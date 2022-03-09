@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Exception;
+use Psr\Container\ContainerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -467,49 +468,44 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ($dateLivraison < new \DateTime('now 00:00:00')) {
+            if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+                $dateLivraison > new \DateTime('now 00:00:00',
+                    new \DateTimeZone('Europe/Paris')) &&
+                $dateLivraison < new \DateTime('now 23:59:59',
+                    new \DateTimeZone('Europe/Paris'))) {
                 $this->addFlash(
                     'limiteCloture',
-                    'Veuillez sélectionner une date et/ou heure future !'
+                    'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
             }
             else {
-                if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
-                    $dateLivraison > new \DateTime('now 00:00:00',
-                        new \DateTimeZone('Europe/Paris')) &&
-                    $dateLivraison < new \DateTime('now 23:59:59',
-                        new \DateTimeZone('Europe/Paris'))) {
+                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                     $this->addFlash(
-                        'limiteCloture',
-                        'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
+                        'precisionReason',
+                        'Veuillez préciser votre raison !'
                     );
-                }
-                else {
-                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-                    if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis != null && $raisonPrecis == "Ajouter text") {
-                        $this->addFlash(
-                            'precisionReason',
-                            'Veuillez préciser votre raison !'
-                        );
+                } else {
+                    if ($form->get('raisonCommande')->getData() == "Autre") {
+                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
                     }
                     else {
-                        $commandeIndividuelle->setRaisonCommande($raisonPrecis)
-                            ->setCommandeur($this->getUser())
-                            ->setDateCreation($dateNow)
-                            ->setEstValide(true)
-                        ;
-                        $entityManager->persist($commandeIndividuelle);
-                        $entityManager->flush();
-
-                        $this->addFlash(
-                            'SuccessComInd',
-                            'Votre commande a été sauvegardée !'
-                        );
+                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                     }
+                    $commandeIndividuelle
+                        ->setCommandeur($this->getUser())
+                        ->setDateCreation($dateNow)
+                        ->setEstValide(true);
+                    $entityManager->persist($commandeIndividuelle);
+                    $entityManager->flush();
 
+                    $this->addFlash(
+                        'SuccessComInd',
+                        'Votre commande a été sauvegardée !'
+                    );
                 }
-            }
 
+            }
 
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
         }
@@ -550,6 +546,24 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * @Route("/validate/{id}", name="validate_commande",methods={"GET","POST"})
+     */
+    public function validateCommande(CommandeIndividuelle $commande, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        if ($commande->getEstValide() === false) {
+            $commande->setEstValide(true);
+        }
+        else {
+            $commande->setEstValide(false);
+        }
+        $entityManager->persist($commande);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('commande_individuelle_admin', [], Response::HTTP_SEE_OTHER);
+
+    }
+
+    /**
      * @Route("/{id}/delete_view", name="commande_individuelle_delete_view", methods={"GET","POST"})
      */
     public function delete_view(CommandeIndividuelle $commandeIndividuelle): Response
@@ -575,14 +589,19 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-            if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis != null && $raisonPrecis != "Ajouter text") {
-                $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-            }
-            else {
+            if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                 $this->addFlash(
                     'precisionReason',
                     'Veuillez préciser votre raison !'
                 );
+            }
+            else {
+                if ($form->get('raisonCommande')->getData() == "Autre") {
+                    $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                }
+                else {
+                    $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                }
             }
             $entityManager->flush();
             $this->addFlash(

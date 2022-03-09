@@ -105,7 +105,16 @@
                         </td>
                         <td>{{ commande.raisonCommande }}</td>
                         <td>{{ commande.estValide ? '<i class="fas fa-check"></i>' :
-                            '<i class="fas fa-times"></i>' }}</td>
+                            '<i class="fas fa-times"></i>' }}
+                            {% if commande.estValide %}
+                                <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment mettre cette commande: invalide ?');">
+                                    <button class="btn btn-danger">Non validé</button>
+                                </form>
+                            {% else %}
+                                <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment mettre cette commande: valide ?');">
+                                    <button class="btn btn-success">Validé</button>
+                                </form>
+                            {% endif %}
                         <td>
                             <a href="{{ path('commande_individuelle_edit',
                                 {'id': commande.id}) }}" class="btn btn-primary">
