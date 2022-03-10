@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.4.10",
+        "php": ">=8.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ang3/php-excel-encoder": "^2.0",

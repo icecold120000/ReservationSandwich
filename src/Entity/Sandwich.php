@@ -6,6 +6,7 @@ use App\Repository\SandwichRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=SandwichRepository::class)
@@ -49,9 +50,15 @@ class Sandwich
      */
     private $commandeIndividuelles;
 
-    public function __construct()
+    /**
+     * @ORM\OneToMany(targetEntity=SandwichCommandeGroupe::class, mappedBy="sandwichChoisi", orphanRemoval=true)
+     */
+    private $sandwichCommandeGroupes;
+
+    #[Pure] public function __construct()
     {
         $this->commandeIndividuelles = new ArrayCollection();
+        $this->sandwichCommandeGroupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +150,36 @@ class Sandwich
             // set the owning side to null (unless already changed)
             if ($commandeIndividuelle->getSandwichChoisi() === $this) {
                 $commandeIndividuelle->setSandwichChoisi(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SandwichCommandeGroupe[]
+     */
+    public function getSandwichCommandeGroupes(): Collection
+    {
+        return $this->sandwichCommandeGroupes;
+    }
+
+    public function addSandwichCommandeGroupe(SandwichCommandeGroupe $sandwichCommandeGroupe): self
+    {
+        if (!$this->sandwichCommandeGroupes->contains($sandwichCommandeGroupe)) {
+            $this->sandwichCommandeGroupes[] = $sandwichCommandeGroupe;
+            $sandwichCommandeGroupe->setSandwichChoisi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSandwichCommandeGroupe(SandwichCommandeGroupe $sandwichCommandeGroupe): self
+    {
+        if ($this->sandwichCommandeGroupes->removeElement($sandwichCommandeGroupe)) {
+            // set the owning side to null (unless already changed)
+            if ($sandwichCommandeGroupe->getSandwichChoisi() === $this) {
+                $sandwichCommandeGroupe->setSandwichChoisi(null);
             }
         }
 

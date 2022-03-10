@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('commande_groupe_delete', {'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer cette commande groupé ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commande_groupe.id) }}">
+    <button class="btn btn-danger" id="btnSuppr">Supprimer</button>
+</form>

@@ -36,6 +36,16 @@ class FilterAdminCommandeType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('affichageTableau', ChoiceType::class,[
+                'label' => 'Affichage tableau',
+                'choices' => [
+                    'Les deux' => 'les deux',
+                    'Commandes individuelle seulement' => 'individuelle',
+                    'Commandes groupé seulement' => 'groupé',
+                ],
+                'required' => false,
+                'empty_data' => 'les deux',
+            ])
         ;
     }
 

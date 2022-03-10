@@ -63,7 +63,8 @@
                     <td>{{ dessert.nomDessert }}</td>
                     <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description' }}</td>
                     <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire'}}</td>
-                    <td>{{ dessert.dispoDessert ? 'Oui' : 'Non' }}</td>
+                    <td>{{ dessert.dispoDessert ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
                     <td>
                         <a href="{{ path('dessert_edit',
                             {'id': dessert.id}) }}" class="btn btn-primary">

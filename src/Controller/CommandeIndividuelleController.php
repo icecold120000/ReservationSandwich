@@ -11,17 +11,19 @@ use App\Form\FilterOrSearch\FilterAdminCommandeType;
 use App\Form\FilterOrSearch\FilterExportationType;
 use App\Form\FilterOrSearch\FilterIndexCommandeType;
 use App\Repository\BoissonRepository;
+use App\Repository\CommandeGroupeRepository;
 use App\Repository\CommandeIndividuelleRepository;
 use App\Repository\DesactivationCommandeRepository;
 use App\Repository\DessertRepository;
 use App\Repository\EleveRepository;
 use App\Repository\LimitationCommandeRepository;
 use App\Repository\SandwichRepository;
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use PhpOffice\PhpSpreadsheet\Exception;
-use Psr\Container\ContainerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,7 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Dompdf\Dompdf as Dompdf;
 use Dompdf\Options as OptionsPdf;
-use Symfony\Component\Validator\Constraints\Timezone;
 
 /**
  * @Route("/commande/individuelle")
@@ -61,18 +62,22 @@ class CommandeIndividuelleController extends AbstractController
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface $paginator, Request $request,
-                          LimitationCommandeRepository $limiteRepo): Response
+                          LimitationCommandeRepository $limiteRepo,
+                          CommandeGroupeRepository $comGrRepo): Response
     {
+        $affichageTableau = "les deux";
+        $limiteGroupeCom = $limiteRepo->findOneByLibelle("sortie");
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
-        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new \DateTime('now 00:00:00', new \DateTimezone('Europe/Paris')), new \DateTime('+1 day 23:59:00',new \DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 week 23:59:00',new \DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 month 23:59:00',new \DateTimezone('Europe/Paris'))));
-        $limiteDate = new \DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),
-            new \DateTimeZone('Europe/Paris'));
+        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
+        $limiteDate = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),
+            new DateTimeZone('Europe/Paris'));
         $commandes = $comIndRepo->findIndexAllNonCloture($this->getUser());
+        $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($this->getUser());
 
         $form = $this->createForm(FilterIndexCommandeType::class);
         $filter = $form->handleRequest($request);
@@ -83,12 +88,27 @@ class CommandeIndividuelleController extends AbstractController
                 $filter->get('date')->getData(),
                 $filter->get('cloture')->getData()
             );
+
+            $affichageTableau = $filter->get('affichageTableau')->getData();
+
+            $commandesGroupe = $comGrRepo->filterIndex(
+                $this->getUser(),
+                $filter->get('date')->getData(),
+                $filter->get('cloture')->getData()
+            );
+
         }
 
         $commandes = $paginator->paginate(
             $commandes,
             $request->query->getInt('page',1),
             25
+        );
+
+        $commandesGroupe = $paginator->paginate(
+            $commandesGroupe,
+            $request->query->getInt('page',1),
+            5
         );
 
         return $this->render('commande_individuelle/index.html.twig', [
@@ -105,6 +125,10 @@ class CommandeIndividuelleController extends AbstractController
             'nbCommandeJournalier' => $nbCommandeJournalier,
             'nbCommandeSemaine' => $nbCommandeSemaine,
             'nbCommandeMois' => $nbCommandeMois,
+            'commande_groupes' => $commandesGroupe,
+            'affichageTableau' => $affichageTableau,
+            'limiteGroupeCom' => $limiteGroupeCom,
+            'limiteGroupeComActive' => $limiteGroupeCom->getIsActive(),
         ]);
     }
 
@@ -143,10 +167,12 @@ class CommandeIndividuelleController extends AbstractController
      * @throws NonUniqueResultException
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
-                          PaginatorInterface $paginator, Request $request): Response
+                          PaginatorInterface $paginator, Request $request,
+                          CommandeGroupeRepository $comGrRepo): Response
     {
-
+        $affichageTableau = "les deux";
         $commandes = $comIndRepo->findAllNonCloture();
+        $commandesGroupe = $comGrRepo->findAllAdminNonClotureGroupe();
 
         $export = $this->createForm(FilterExportationType::class);
         $exportReq = $export->handleRequest($request);
@@ -335,6 +361,14 @@ class CommandeIndividuelleController extends AbstractController
                 $filter->get('date')->getData(),
                 $filter->get('cloture')->getData()
             );
+
+            $affichageTableau = $filter->get('affichageTableau')->getData();
+
+            $commandesGroupe = $comGrRepo->filterAdmin(
+                $filter->get('nom')->getData(),
+                $filter->get('date')->getData(),
+                $filter->get('cloture')->getData()
+            );
         }
 
         $commandes = $paginator->paginate(
@@ -343,10 +377,18 @@ class CommandeIndividuelleController extends AbstractController
             25
         );
 
+        $commandesGroupe = $paginator->paginate(
+            $commandesGroupe,
+            $request->query->getInt('page',1),
+            5
+        );
+
         return $this->render('commande_individuelle/admin.html.twig', [
             'commandes_ind' => $commandes,
+            'commande_groupes' => $commandesGroupe,
             'form' => $form->createView(),
             'exportForm' => $export->createView(),
+            'affichageTableau' => $affichageTableau,
         ]);
     }
 
@@ -449,14 +491,14 @@ class CommandeIndividuelleController extends AbstractController
                         LimitationCommandeRepository $limiteRepo): Response
     {
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
-        $limite = new \DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new \DateTimeZone('Europe/Paris'));
-        $dateNow = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+        $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
+        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
-        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new \DateTime('now 00:00:00', new \DateTimezone('Europe/Paris')), new \DateTime('+1 day 23:59:00',new \DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 week 23:59:00',new \DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new \DateTime('now 00:00:00',new \DateTimezone('Europe/Paris')),new \DateTime('+1 month 23:59:00',new \DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -465,14 +507,13 @@ class CommandeIndividuelleController extends AbstractController
         $commandeIndividuelle = new CommandeIndividuelle();
         $form = $this->createForm(CommandeIndividuelleType::class, $commandeIndividuelle);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
             if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
-                $dateLivraison > new \DateTime('now 00:00:00',
-                    new \DateTimeZone('Europe/Paris')) &&
-                $dateLivraison < new \DateTime('now 23:59:59',
-                    new \DateTimeZone('Europe/Paris'))) {
+                $dateLivraison > new DateTime('now 00:00:00',
+                    new DateTimeZone('Europe/Paris')) &&
+                $dateLivraison < new DateTime('now 23:59:59',
+                    new DateTimeZone('Europe/Paris'))) {
                 $this->addFlash(
                     'limiteCloture',
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
@@ -575,51 +616,96 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="commande_individuelle_edit", methods={"GET", "POST"})
+     * @throws NonUniqueResultException
+     * @throws \Exception
      */
-    public function edit(Request $request, CommandeIndividuelle $commandeIndividuelle,
-                         EntityManagerInterface $entityManager,
+    public function edit(Request $request, EntityManagerInterface $entityManager,
                          SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
-                         DessertRepository $dessertRepo): Response
+                         DessertRepository $dessertRepo,
+                         DesactivationCommandeRepository $deactiveRepo,
+                         LimitationCommandeRepository $limiteRepo): Response
     {
+        $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
+        $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
+        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
+        $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
+        $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
+        $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
+
+        $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
+        $commandeIndividuelle = new CommandeIndividuelle();
         $form = $this->createForm(CommandeIndividuelleType::class, $commandeIndividuelle);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-            if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
+            $dateLivraison = $form->get('dateHeureLivraison')->getData();
+            if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+                $dateLivraison > new DateTime('now 00:00:00',
+                    new DateTimeZone('Europe/Paris')) &&
+                $dateLivraison < new DateTime('now 23:59:59',
+                    new DateTimeZone('Europe/Paris'))) {
                 $this->addFlash(
-                    'precisionReason',
-                    'Veuillez préciser votre raison !'
+                    'limiteCloture',
+                    'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
             }
             else {
-                if ($form->get('raisonCommande')->getData() == "Autre") {
-                    $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                }
-                else {
-                    $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
+                    $this->addFlash(
+                        'precisionReason',
+                        'Veuillez préciser votre raison !'
+                    );
+                } else {
+                    if ($form->get('raisonCommande')->getData() == "Autre") {
+                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                    } else {
+                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                    }
+                    $commandeIndividuelle
+                        ->setCommandeur($this->getUser())
+                        ->setDateCreation($dateNow)
+                        ->setEstValide(true);
+
+                    $entityManager->flush();
+                    $this->addFlash(
+                        'SuccessComInd',
+                        'Votre commande a été modifié !'
+                    );
                 }
             }
-            $entityManager->flush();
-            $this->addFlash(
-                'SuccessComInd',
-                'Votre commande a été modifié !'
-            );
 
             return $this->redirectToRoute('commande_individuelle_edit',
                 ['id' => $commandeIndividuelle->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('commande_individuelle/edit.html.twig', [
-            'commande_individuelle' => $commandeIndividuelle,
-            'form' => $form,
-            'sandwichs' => $sandwichs,
-            'boissons' => $boissons,
-            'desserts' => $desserts,
-        ]);
+        if ($deactive->getIsDeactivated() === true) {
+            return $this->redirectToRoute('deactivate_commande');
+        }
+        else {
+            return $this->renderForm('commande_individuelle/edit.html.twig', [
+                'commande_individuelle' => $commandeIndividuelle,
+                'form' => $form,
+                'sandwichs' => $sandwichs,
+                'boissons' => $boissons,
+                'desserts' => $desserts,
+                'limiteJourMeme' => $dateNow->format('d-m-y H:i'),
+                'limiteNbJournalier' => $limiteNbJour->getNbLimite(),
+                'limiteActiveNbJour' => $limiteNbJour->getIsActive(),
+                'limiteNbSemaine'=> $limiteNbSemaine->getNbLimite(),
+                'limiteActiveNbSemaine'=> $limiteNbSemaine->getIsActive(),
+                'limiteNbMois'=> $limiteNbMois->getNbLimite(),
+                'limiteActiveNbMois'=> $limiteNbMois->getIsActive(),
+                'nbCommandeJournalier' => $nbCommandeJournalier,
+                'nbCommandeSemaine' => $nbCommandeSemaine,
+                'nbCommandeMois' => $nbCommandeMois,
+            ]);
+        }
     }
 
     /**

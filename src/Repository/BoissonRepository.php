@@ -47,6 +47,21 @@ class BoissonRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @param $value
+     * @return Boisson|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByNom($value): ?Boisson
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.nomBoisson = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
     // /**
     //  * @return Boisson[] Returns an array of Boisson objects
     //  */

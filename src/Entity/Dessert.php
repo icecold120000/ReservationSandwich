@@ -6,6 +6,7 @@ use App\Repository\DessertRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=DessertRepository::class)
@@ -49,9 +50,15 @@ class Dessert
      */
     private $commandeIndividuelles;
 
-    public function __construct()
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="dessertChoisi", orphanRemoval=true)
+     */
+    private $commandeGroupes;
+
+    #[Pure] public function __construct()
     {
         $this->commandeIndividuelles = new ArrayCollection();
+        $this->commandeGroupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +150,36 @@ class Dessert
             // set the owning side to null (unless already changed)
             if ($commandeIndividuelle->getDessertChoisi() === $this) {
                 $commandeIndividuelle->setDessertChoisi(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeGroupe[]
+     */
+    public function getCommandeGroupes(): Collection
+    {
+        return $this->commandeGroupes;
+    }
+
+    public function addCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if (!$this->commandeGroupes->contains($commandeGroupe)) {
+            $this->commandeGroupes[] = $commandeGroupe;
+            $commandeGroupe->setDessertChoisi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if ($this->commandeGroupes->removeElement($commandeGroupe)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeGroupe->getDessertChoisi() === $this) {
+                $commandeGroupe->setDessertChoisi(null);
             }
         }
 

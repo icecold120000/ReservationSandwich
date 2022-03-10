@@ -52,13 +52,14 @@
             <tr>
                 <td>
                     {% if boisson.imageBoisson %}
-                        <img src="{{ asset('uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="photo d'une boisson">
+                        <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="photo d'une boisson">
                     {% else %}
                         <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
                     {% endif %}
                 </td>
                 <td>{{ boisson.nomBoisson }}</td>
-                <td>{{ boisson.dispoBoisson ? 'Oui' : 'Non' }}</td>
+                <td>{{ boisson.dispoBoisson ? '<i class="fas fa-check"></i>' :
+                    '<i class="fas fa-times"></i>' }}</td>
                 <td>
                     <a href="{{ path('boisson_edit',
                         {'id': boisson.id}) }}" class="btn btn-primary">

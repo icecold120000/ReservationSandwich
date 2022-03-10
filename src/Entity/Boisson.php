@@ -6,6 +6,7 @@ use App\Repository\BoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=BoissonRepository::class)
@@ -39,9 +40,15 @@ class Boisson
      */
     private $commandeIndividuelles;
 
-    public function __construct()
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="boissonChoisi", orphanRemoval=true)
+     */
+    private $commandeGroupes;
+
+    #[Pure] public function __construct()
     {
         $this->commandeIndividuelles = new ArrayCollection();
+        $this->commandeGroupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -86,7 +93,7 @@ class Boisson
     }
 
     /**
-     * @return Collection|CommandeIndividuelle[]
+     * @return Collection
      */
     public function getCommandeIndividuelles(): Collection
     {
@@ -109,6 +116,36 @@ class Boisson
             // set the owning side to null (unless already changed)
             if ($commandeIndividuelle->getBoissonChoisie() === $this) {
                 $commandeIndividuelle->setBoissonChoisie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeGroupe[]
+     */
+    public function getCommandeGroupes(): Collection
+    {
+        return $this->commandeGroupes;
+    }
+
+    public function addCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if (!$this->commandeGroupes->contains($commandeGroupe)) {
+            $this->commandeGroupes[] = $commandeGroupe;
+            $commandeGroupe->setBoissonChoisi($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if ($this->commandeGroupes->removeElement($commandeGroupe)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeGroupe->getBoissonChoisi() === $this) {
+                $commandeGroupe->setBoissonChoisi(null);
             }
         }
 

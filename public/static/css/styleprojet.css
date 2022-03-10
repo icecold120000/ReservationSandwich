@@ -332,6 +332,11 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
 
 /*CSS pour tout les formulaires de l'application*/
 
+div.erreur ul{
+    margin: 0;
+    padding: 0;
+}
+
 .formEntité div.container-fluid{
     display: inline-block;
     position: relative;
@@ -415,14 +420,19 @@ form textarea {
     font-weight: 900;
 }
 
-/*Formulaire de Commandes*/
+/*Formulaire de Commandes individuelle et groupé*/
 
 #commande_individuelle_sandwichChoisi, #commande_individuelle_dessertChoisi,
 #commande_individuelle_boissonChoisie {
     display: none;
 }
 
-#sandwichCarousel img, #dessertCarousel img {
+#commande_groupe_sandwichChoisi1 , #commande_groupe_sandwichChoisi2,
+#commande_groupe_dessertChoisi{
+    display: none;
+}
+
+ #sandwichCarousel img, #dessertCarousel img,#sandwich1Carousel img, #sandwich2Carousel img {
     height: 200px;
     width: 80%;
 }
@@ -447,10 +457,11 @@ div#preciserRaison {
     display: none;
 }
 
-#commandeFormInd #part2 {
+#commandeFormInd #part2, #commandeFormGroupe #part2{
     align-items: unset;
     margin-left: 1em;
 }
+
 
 /*Responsive de la barre de navigation*/
 @media screen and (max-width: 990px) {
@@ -719,7 +730,7 @@ div#preciserRaison {
         font-size: 2.5em;
     }
 
-    #sandwichCarousel img, #dessertCarousel img {
+    #sandwichCarousel img, #dessertCarousel img,#sandwich1Carousel img, #sandwich2Carousel img {
         width: 100%;
         height: 400px;
     }

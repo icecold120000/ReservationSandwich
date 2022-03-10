@@ -30,6 +30,16 @@ class FilterIndexCommandeType extends AbstractType
                 ],
                 'required' => false,
             ])
+            ->add('affichageTableau', ChoiceType::class,[
+                'label' => 'Affichage tableau',
+                'choices' => [
+                    'Les deux' => 'les deux',
+                    'Commandes individuelles seulement' => 'individuelle',
+                    'Commandes groupées seulement' => 'groupé',
+                ],
+                'required' => false,
+                'empty_data' => 'les deux',
+            ])
         ;
     }
 

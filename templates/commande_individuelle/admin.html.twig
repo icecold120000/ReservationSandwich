@@ -40,121 +40,198 @@
     <div id="formFilter">
         <div id="filtre">
             {{form_start(form)}}
-            <div class="selectFiltre">
-                <span>{{form_label(form.nom)}} </span>
-                {{form_widget(form.nom)}}
-            </div>
-            <div class="selectFiltre">
-                <span>{{form_label(form.date)}}</span>
-                {{form_widget(form.date)}}
-            </div>
-            <div class="selectFiltre">
-                <span>{{form_label(form.cloture)}}</span>
-                {{form_widget(form.cloture)}}
+            <div>
+                <div class="selectFiltre">
+                    <span>{{form_label(form.nom)}} </span>
+                    {{form_widget(form.nom)}}
+                </div>
+                <div class="selectFiltre">
+                    <span>{{form_label(form.date)}}</span>
+                    {{form_widget(form.date)}}
+                </div>
             </div>
             <div>
-                <button type="submit" class="btn btn-info">
-                    Afficher
-                </button>
+                <div class="selectFiltre">
+                    <span>{{form_label(form.cloture)}}</span>
+                    {{form_widget(form.cloture)}}
+                </div>
+                <div class="selectFiltre">
+                    <span>{{form_label(form.affichageTableau)}}</span>
+                    {{form_widget(form.affichageTableau)}}
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-info">
+                        Afficher
+                    </button>
+                </div>
             </div>
             {{form_end(form)}}
         </div>
     </div>
-    <div>
-        {{ knp_pagination_render(commandes_ind) }}
-    </div>
-    <div class="table-responsive-lg">
-        <table class="table tableAdmin">
-            <thead>
-                <tr>
-                    <th>Date de Livraison</th>
-                    <th>Prénom et Nom</th>
-                    <th>Classe</th>
-                    <th>Commande</th>
-                    <th>Chips</th>
-                    <th>Raison</th>
-                    <th>Validé</th>
-                    <th>Éditer</th>
-                    <th>Supprimer</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for commande in commandes_ind %}
+    {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
+        <div class="table-responsive-lg">
+            <h2>Commandes groupées :</h2>
+            <div>
+                {{ knp_pagination_render(commande_groupes) }}
+            </div>
+            <table class="table tableAdmin">
+                <thead>
+                    <tr>
+                        <th>Date de livraison</th>
+                        <th>Lieu de livraison</th>
+                        <th>Nom et Prénom</th>
+                        <th>Commande</th>
+                        <th>Chips</th>
+                        <th>Motif de la Sortie</th>
+                        <th>Validé</th>
+                        <th>Éditer</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for commande_groupe in commande_groupes %}
                     <tr>
                         <td>
-                            <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                            <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                            <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                            <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
                         </td>
-                        <td>{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
+                        <td>{{ commande_groupe.lieuLivraison }}</td>
                         <td>
-                            {% if commande.commandeur.eleves %}
-                                {% for eleve in commande.commandeur.eleves %}
-                                    {{ eleve.classeEleve.codeClasse }}
-                                {% else %}
-                                    Adulte
-                                {% endfor %}
-                            {% endif %}
+                            <span>{{ commande_groupe.commandeur.prenomUser }}</span>
+                            <span>{{ commande_groupe.commandeur.nomUser }}</span>
                         </td>
                         <td>
-                            <span>{{ commande.sandwichChoisi.nomSandwich }}</span>
-                            <span>{{ commande.boissonChoisie.nomBoisson }}</span>
-                            <span>{{ commande.dessertChoisi.nomDessert }}</span>
+                            {% set nombreEleve = 0 %}
+                            {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
+                                <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                                {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                            {% endfor %}
+                            <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisi.nomBoisson }}</span>
+                            <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
                         </td>
-                        <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                        <td>
+                            {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
                             '<i class="fas fa-times"></i>' }}
                         </td>
-                        <td>{{ commande.raisonCommande }}</td>
-                        <td>{{ commande.estValide ? '<i class="fas fa-check"></i>' :
+                        <td>{{ commande_groupe.motifSortie }}</td>
+                        <td>
+                            {{ commande_groupe.estValide ? '<i class="fas fa-check"></i>' :
                             '<i class="fas fa-times"></i>' }}
-                            {% if commande.estValide %}
-                                <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment mettre cette commande: invalide ?');">
+                            {% if commande_groupe.estValide %}
+                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande groupée ?');">
                                     <button class="btn btn-danger">Non validé</button>
                                 </form>
                             {% else %}
-                                <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment mettre cette commande: valide ?');">
+                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande groupé ?');">
                                     <button class="btn btn-success">Validé</button>
                                 </form>
                             {% endif %}
+                        </td>
                         <td>
-                            <a href="{{ path('commande_individuelle_edit',
-                                {'id': commande.id}) }}" class="btn btn-primary">
+                            <a href="{{ path('commande_groupe_edit',
+                            {'id': commande_groupe.id}) }}" class="btn btn-primary">
                                 <i class="far fa-edit"></i>
                             </a>
                         </td>
                         <td>
-                            <a href="{{ path('commande_individuelle_delete_view',
-                                {'id': commande.id}) }}" class="btn btn-danger">
+                            <a href="{{ path('commande_groupe_delete_view',
+                                {'id': commande_groupe.id}) }}" class="btn btn-danger">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="erreur">Aucune commande n'a été trouvée</td>
+                        <td colspan="9" class="erreur">Aucune commande n'a été trouvée</td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div>
-        {{ knp_pagination_render(commandes_ind) }}
-    </div>
-    <script>
-        function myFunction() {
-            const x = document.getElementById("selectExport").value;
-            let toEnable;
-            let toDisable;
-            if (x === "Séparé") {
-                toEnable = document.getElementById("exportComSepare");
-                toEnable.style.display = "unset";
-                toDisable = document.getElementById("exportComRegroupe")
-                toDisable.style.display = "none";
-            } else {
-                toEnable = document.getElementById("exportComRegroupe")
-                toEnable.style.display = "unset";
-                toDisable = document.getElementById("exportComSepare");
-                toDisable.style.display = "none";
-            }
-        }
-    </script>
+                </tbody>
+            </table>
+            <div>
+                {{ knp_pagination_render(commande_groupes) }}
+            </div>
+        </div>
+    {% endif %}
+    {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
+        <div class="table-responsive-lg">
+            <h2>Commandes individuelles :</h2>
+            <div>
+                {{ knp_pagination_render(commandes_ind) }}
+            </div>
+            <table class="table tableAdmin">
+                <thead>
+                    <tr>
+                        <th>Date de Livraison</th>
+                        <th>Prénom et Nom</th>
+                        <th>Classe</th>
+                        <th>Commande</th>
+                        <th>Chips</th>
+                        <th>Raison</th>
+                        <th>Validé</th>
+                        <th>Éditer</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for commande in commandes_ind %}
+                        <tr>
+                            <td>
+                                <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                                <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                            </td>
+                            <td>{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
+                            <td>
+                                {% if commande.commandeur.eleves %}
+                                    {% for eleve in commande.commandeur.eleves %}
+                                        {{ eleve.classeEleve.codeClasse }}
+                                    {% else %}
+                                        Adulte
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span>{{ commande.sandwichChoisi.nomSandwich }}</span>
+                                <span>{{ commande.boissonChoisie.nomBoisson }}</span>
+                                <span>{{ commande.dessertChoisi.nomDessert }}</span>
+                            </td>
+                            <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>{{ commande.raisonCommande }}</td>
+                            <td>{{ commande.estValide ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                                {% if commande.estValide %}
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande ?');">
+                                        <button class="btn btn-danger">Non validé</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande ?');">
+                                        <button class="btn btn-success">Validé</button>
+                                    </form>
+                                {% endif %}
+                            <td>
+                                <a href="{{ path('commande_individuelle_edit',
+                                    {'id': commande.id}) }}" class="btn btn-primary">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('commande_individuelle_delete_view',
+                                    {'id': commande.id}) }}" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="erreur">Aucune commande n'a été trouvée</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                {{ knp_pagination_render(commandes_ind) }}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

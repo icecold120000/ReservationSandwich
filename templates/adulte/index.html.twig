@@ -26,32 +26,36 @@
                 </div>
             </div>
         </div>
-        <div>
-            {{form_start(form)}}
-            <div id="filtre" class="filtre form-row align-items-end">
-                <div class="selectFiltre">
+        <div id="formFilter">
+            <div id="filtre" >
+                {{form_start(form)}}
                     <div>
-                        <span>{{ form_label(form.nomAdulte)}}</span>
-                        {{form_widget(form.nomAdulte)}}
+                        <div class="selectFiltre">
+                            <span>{{ form_label(form.nomAdulte)}}</span>
+                            {{form_widget(form.nomAdulte)}}
+                        </div>
+                        <div class="selectFiltre">
+                            <span>{{form_label(form.ordrePrenom)}}</span>
+                            {{form_widget(form.ordrePrenom)}}
+                        </div>
                     </div>
                     <div>
-                        <span>{{form_label(form.ordrePrenom)}}</span>
-                        {{form_widget(form.ordrePrenom)}}
+                        <div class="selectFiltre">
+                            <span>{{form_label(form.ordreNom)}}</span>
+                            {{form_widget(form.ordreNom)}}
+                        </div>
+                        <div class="selectFiltre">
+                            <span>{{form_label(form.archiveAdulte)}}</span>
+                            {{form_widget(form.archiveAdulte)}}
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-info" >
+                                Afficher
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <span>{{form_label(form.ordreNom)}}</span>
-                        {{form_widget(form.ordreNom)}}
-                        <span>{{form_label(form.archiveAdulte)}}</span>
-                        {{form_widget(form.archiveAdulte)}}
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-info" >
-                            Afficher
-                        </button>
-                    </div>
-                </div>
+                {{form_end(form)}}
             </div>
-            {{form_end(form)}}
         </div>
         <div>
             {{ knp_pagination_render(adultes) }}

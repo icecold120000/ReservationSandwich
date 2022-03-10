@@ -63,7 +63,8 @@
                     <td>{{ sandwich.nomSandwich }}</td>
                     <td>{{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description'}}</td>
                     <td>{{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire'}}</td>
-                    <td>{{ sandwich.dispoSandwich ? 'Oui' : 'Non' }}</td>
+                    <td>{{ sandwich.dispoSandwich ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
                     <td>
                         <a href="{{ path('sandwich_edit',
                             {'id': sandwich.id}) }}" class="btn btn-primary">

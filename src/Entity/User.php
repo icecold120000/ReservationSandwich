@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -88,12 +89,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $commandeIndividuelles;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="commandeur", orphanRemoval=true)
+     */
+    private $commandeGroupes;
 
-    public function __construct()
+
+    #[Pure] public function __construct()
     {
         $this->adultes = new ArrayCollection();
         $this->eleves = new ArrayCollection();
         $this->commandeIndividuelles = new ArrayCollection();
+        $this->commandeGroupes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -331,6 +338,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commandeIndividuelle->getCommandeur() === $this) {
                 $commandeIndividuelle->setCommandeur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CommandeGroupe[]
+     */
+    public function getCommandeGroupes(): Collection
+    {
+        return $this->commandeGroupes;
+    }
+
+    public function addCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if (!$this->commandeGroupes->contains($commandeGroupe)) {
+            $this->commandeGroupes[] = $commandeGroupe;
+            $commandeGroupe->setCommandeur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommandeGroupe(CommandeGroupe $commandeGroupe): self
+    {
+        if ($this->commandeGroupes->removeElement($commandeGroupe)) {
+            // set the owning side to null (unless already changed)
+            if ($commandeGroupe->getCommandeur() === $this) {
+                $commandeGroupe->setCommandeur(null);
             }
         }
 
