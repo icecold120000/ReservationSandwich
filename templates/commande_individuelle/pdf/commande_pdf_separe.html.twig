@@ -3,6 +3,7 @@
 {% block title %}PDF du {{ dateChoisi|date('d/m/Y') }}{% endblock %}
 {% block body %}
     <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
+    <h2>Commandes individuelles :</h2>
     <table style="border: solid; width: 100%">
         <thead>
             <tr>
@@ -41,6 +42,47 @@
             {% else %}
                 <tr style="text-align: center">
                     <td colspan="7" style="color: red">Aucune commande n'a été trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>Commandes groupées :</h2>
+    <table style="border: solid; width: 100%">
+        <thead>
+            <tr>
+                <th style="border: solid">Heure de Livraison</th>
+                <th style="border: solid">Lieu de Livraison</th>
+                <th style="border: solid">Prénom et Nom</th>
+                <th style="border: solid">Commande</th>
+                <th style="border: solid">Chips</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandesGroupe %}
+                <tr>
+                    <td style="text-align: center;border: solid">
+                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                    </td>
+                    <td style="text-align: center;border: solid">
+                        {{ commande.lieuLivraison }}
+                    </td>
+                    <td style="text-align: center;border: solid">{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
+                    <td style="text-align: center;border: solid">
+                        {% set nombreEleve = 0 %}
+                        {% for sandwichCommande in commande.sandwichCommandeGroupes %}
+                            <span style="display: block">{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                            {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                        {% endfor %}
+                        <span style="display: block">{{ nombreEleve }} {{ commande.boissonChoisie.nomBoisson }}</span>
+                        <span style="display: block">{{ nombreEleve }} {{ commande.dessertChoisi.nomDessert }}</span>
+                    </td>
+                    <td style="text-align: center;border: solid">
+                        {{ commande.prendreChips ? 'Oui' : 'Non' }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr style="text-align: center">
+                    <td colspan="5" style="color: red">Aucune commande n'a été trouvée !</td>
                 </tr>
             {% endfor %}
         </tbody>

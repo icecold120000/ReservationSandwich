@@ -122,6 +122,14 @@ table a.btn.btn-info{
     justify-content: center
 }
 
+#filtre form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
 #filtre span{
     font-size: 20px;
 }

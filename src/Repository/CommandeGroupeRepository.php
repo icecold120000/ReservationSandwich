@@ -58,13 +58,32 @@ class CommandeGroupeRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('ci');
         $query
             ->andWhere('ci.dateHeureLivraison Like :date')
-            ->andWhere('ci.est_valide = 1')
+            ->andWhere('ci.estValide = 1')
             ->setParameter('date', '%' . $date . '%')
             ->orderBy('ci.dateHeureLivraison', 'ASC')
         ;
 
         return $query->getQuery()->getResult();
     }
+
+    /**
+     * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
+     */
+    public function findBySandwich($sandwich ,$date): array
+    {
+        $query = $this->createQueryBuilder('ci');
+        $query
+            ->leftJoin('ci.sandwichCommandeGroupe','sc')
+            ->andWhere('ci.dateHeureLivraison Like :date')
+            ->andWhere('ci.estValide = 1')
+            ->andWhere('sc.sandwichChoisi = :sandwich')
+            ->setParameters(['sandwich' => $sandwich,'date'=>'%' . $date . '%'])
+            ->orderBy('ci.dateHeureLivraison', 'ASC')
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects

@@ -24,7 +24,7 @@ class CommandeGroupe
      * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeGroupes")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $boissonChoisi;
+    private $boissonChoisie;
 
     /**
      * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeGroupes")
@@ -88,14 +88,14 @@ class CommandeGroupe
         return $this->id;
     }
 
-    public function getBoissonChoisi(): ?Boisson
+    public function getBoissonChoisie(): ?Boisson
     {
-        return $this->boissonChoisi;
+        return $this->boissonChoisie;
     }
 
-    public function setBoissonChoisi(?Boisson $boissonChoisi): self
+    public function setBoissonChoisie(?Boisson $boissonChoisie): self
     {
-        $this->boissonChoisi = $boissonChoisi;
+        $this->boissonChoisie = $boissonChoisie;
 
         return $this;
     }

@@ -186,14 +186,15 @@ class CommandeIndividuelleController extends AbstractController
                 ->exportationCommande($dateChoisi);
             $modalite = $exportReq->get('modaliteCommande')->getData();
 
+            $commandesGroupeExport = $comGrRepo->exportationCommandeGroupe($dateChoisi);
             $methode = $exportReq->get('methodeExport')->getData();
             if ($methode == "PDF") {
-                CommandeIndividuelleController::pdfDownload($commandesExport,$modalite,$exportReq->get('dateExport')->getData());
+                CommandeIndividuelleController::pdfDownload($commandesExport,$commandesGroupeExport,$modalite,$exportReq->get('dateExport')->getData());
             }
             elseif ($methode == "Excel") {
-
                 if ($modalite == "Séparé") {
                     $commandeRow = [];
+                    $commandeGroupeRow = [];
                     foreach ($commandesExport as $commande) {
 
                         if (in_array(User::ROLE_ELEVE,$commande->getCommandeur()->getRoles()) ) {
@@ -212,20 +213,62 @@ class CommandeIndividuelleController extends AbstractController
                         }
                         $commandeRow[] = [
                             'Date et heure de Livraison' => $commande->getDateHeureLivraison()->format('d/m/y h:i'),
-                            'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser().', '.$commande->getCommandeur()->getNomUser(),
+                            'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser().' '.$commande->getCommandeur()->getNomUser(),
                             'Classe' => $classe,
                             'Commande' => $commande->getSandwichChoisi()->getNomSandwich().', '.$commande->getBoissonChoisie()->getNomBoisson().', '.$commande->getDessertChoisi()->getNomDessert(),
                             'Chips' => $chips,
                         ];
                     }
+                    foreach ($commandesGroupeExport as $commandeGroupe) {
+                        if (in_array(User::ROLE_ELEVE,$commandeGroupe->getCommandeur()->getRoles()) ) {
+                            $eleve = $this->eleveRepo->findOneByCompte($commandeGroupe->getCommandeur()->getId());
+                            $classe = $eleve->getClasseEleve()->getCodeClasse();
+                        }
+                        else {
+                            $classe = "Adulte";
+                        }
+
+                        $sandwichsGroupe = [];
+                        $nombreEleve = 0;
+                        foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichChoisi) {
+                            $nombreEleve = $nombreEleve + $sandwichChoisi->getNombreSandwich();
+                            $sandwichsGroupe[] = $sandwichChoisi->getNombreSandwich().' '.$sandwichChoisi->getSandwichChoisi()->getNomSandwich();
+                        }
+
+                        $commandeGroupeRow[] = [
+                            'Date et heure de Livraison' => $commandeGroupe->getDateHeureLivraison()->format('d/m/y h:i'),
+                            'Prénom et Nom' => $commandeGroupe->getCommandeur()->getPrenomUser().' '.$commandeGroupe->getCommandeur()->getNomUser(),
+                            'Classe' => $classe,
+                            'Commande' => $sandwichsGroupe[0].', '.$sandwichsGroupe[1].', '.$nombreEleve.' '.$commandeGroupe->getBoissonChoisie()->getNomBoisson().', '.$nombreEleve.' '.$commandeGroupe->getDessertChoisi()->getNomDessert(),
+                            'Chips' => $nombreEleve.' Chips',
+                        ];
+
+                    }
 
                     $encoder = new ExcelEncoder($defaultContext = []);
 
-                    // Test data
-                    $data = [
-                        // Array by sheet
-                        'Feuille 1' => $commandeRow
-                    ];
+                    if ($commandeGroupeRow != [] || $commandeRow != []) {
+                        $commandesRegroupe = array_merge($commandeRow, $commandeGroupeRow);
+                        $data = [
+                            // Array by sheet
+                            'Feuille 1' => $commandesRegroupe
+                        ];
+                    }
+                    else {
+                        if ($commandeRow != []) {
+                            $data = [
+                                // Array by sheet
+                                'Feuille 1' => $commandeRow
+                            ];
+                        }
+                        else{
+                            $data = [
+                                // Array by sheet
+                                'Feuille 1' => $commandeGroupeRow
+                            ];
+                        }
+
+                    }
 
                     // Encode data with specific format
                     $xls = $encoder->encode($data, ExcelEncoder::XLSX);
@@ -262,17 +305,49 @@ class CommandeIndividuelleController extends AbstractController
 
                     foreach ($sandwichDispo as $sandwich) {
                         $nomSandwich[] = $sandwich->getNomSandwich();
-                        $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(),$dateChoisi));
+                        $nombreSandwich = 0;
+                        if ($commandesGroupeExport != null) {
+                            foreach ($commandesGroupeExport as $commandeGroupe) {
+                                foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichComGroupe) {
+                                    if ($sandwichComGroupe->getSandwichChoisi()->getId() == $sandwich->getId()) {
+                                        $nombreSandwich = $sandwichComGroupe->getNombreSandwich();
+                                    }
+
+                                }
+                            }
+                        }
+                        $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(),$dateChoisi)) + $nombreSandwich;
                     }
 
                     foreach ($boissonDispo as $boisson) {
                         $nomBoisson[] = $boisson->getNomBoisson();
-                        $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(),$dateChoisi));
+                        $nombreEleve = 0;
+                        if ($commandesGroupeExport != null) {
+                            foreach ($commandesGroupeExport as $commandeGroupe) {
+                                foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichComGroupe) {
+                                    if ($commandeGroupe->getBoissonChoisie()->getId() == $boisson->getId()) {
+                                        $nombreEleve = $nombreEleve + $sandwichComGroupe->getNombreSandwich();
+                                    }
+                                }
+                            }
+                        }
+                        $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(),$dateChoisi)) + $nombreEleve;
                     }
 
                     foreach ($dessertDispo as $dessert) {
                         $nomDessert[] = $dessert->getNomDessert();
-                        $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(),$dateChoisi));
+                        $nombreEleve = 0;
+                        if ($commandesGroupeExport != null) {
+                            foreach ($commandesGroupeExport as $commandeGroupe) {
+                                foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichComGroupe) {
+                                    if ($commandeGroupe->getDessertChoisi()->getId() == $dessert->getId()) {
+                                        $nombreEleve = $nombreEleve + $sandwichComGroupe->getNombreSandwich();
+                                    }
+                                }
+                            }
+                        }
+                        $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(),$dateChoisi)) + $nombreEleve;
+                        $nbChips = $nbChips + $nombreEleve;
                     }
                     $dataRowSandwich = [];
                     for ($i = 0 ; $i < count($nomSandwich);$i++) {
@@ -392,33 +467,11 @@ class CommandeIndividuelleController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/preview", name="commande_impression", methods={"GET","POST"})
-     */
-    public function printPreview($commandes, $modalite, $dateChoisi): Response
-    {
-        if ($modalite == "Séparé") {
-            return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
-                'commandes' => $commandes,
-                'dateChoisi' => $dateChoisi,
-            ]);
-        }
-        elseif ($modalite == "Regroupé") {
-            return $this->render('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
-                'commandes' => $commandes,
-                'dateChoisi' => $dateChoisi,
-                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
-                'boissonDispo' => $this->boissonRepo->findByDispo(true),
-                'dessertDispo' => $this->dessertRepo->findByDispo(true),
-            ]);
-        }
-        return new Response();
-    }
 
     /**
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
      */
-    public function pdfDownload($commandes, $modalite, $dateChoisi): Response
+    public function pdfDownload($commandes,$commandesGroupe, $modalite, $dateChoisi): Response
     {
         // Défini les options du pdf
         $optionsPdf = new OptionsPdf();
@@ -446,12 +499,14 @@ class CommandeIndividuelleController extends AbstractController
         if ($modalite == "Séparé") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
                 'commandes' => $commandes,
+                'commandesGroupe' => $commandesGroupe,
                 'dateChoisi' => $dateChoisi,
             ]);
         }
         elseif ($modalite == "Regroupé") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
                 'commandes' => $commandes,
+                'commandesGroupe' => $commandesGroupe,
                 'dateChoisi' => $dateChoisi,
                 'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
                 'boissonDispo' => $this->boissonRepo->findByDispo(true),

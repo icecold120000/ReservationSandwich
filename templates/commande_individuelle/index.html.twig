@@ -114,7 +114,7 @@
                                     <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
                                     {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
                                 {% endfor %}
-                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisi.nomBoisson }}</span>
+                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
                                 <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
                             </td>
                         {% else %}
@@ -129,7 +129,7 @@
                                     <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
                                     {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
                                 {% endfor %}
-                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisi.nomBoisson }}</span>
+                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
                                 <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
                             </td>
                         {% endif %}

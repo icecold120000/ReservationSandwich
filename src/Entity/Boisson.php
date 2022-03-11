@@ -41,7 +41,7 @@ class Boisson
     private $commandeIndividuelles;
 
     /**
-     * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="boissonChoisi", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="boissonChoisie", orphanRemoval=true)
      */
     private $commandeGroupes;
 
