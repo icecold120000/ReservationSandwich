@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Commande individuelle{% endblock %}
+{% block title %}Modifier votre commande individuelle{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Éditer une commande individuelle</h1>
+    <h1>Modifier votre commande individuelle</h1>
 
     {% for message in app.flashes('SuccessComInd') %}
         <div class="flash-success">

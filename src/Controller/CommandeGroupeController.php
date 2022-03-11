@@ -21,16 +21,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/commande/groupe')]
+/**
+ * @Route("/commande/groupe")
+ */
 class CommandeGroupeController extends AbstractController
 {
-    private CommandeGroupeRepository $comGrRepo;
 
     /**
      * @throws NonUniqueResultException
      * @throws Exception
+     * @Route("/new", name="commande_groupe_new", methods={"GET", "POST"})
      */
-    #[Route('/new', name: 'commande_groupe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager,
                         SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
                         DessertRepository $dessertRepo,
@@ -60,7 +61,7 @@ class CommandeGroupeController extends AbstractController
             $commandeGroupe
                 ->setCommandeur($this->getUser())
                 ->setDateCreation($dateNow)
-                ->setBoissonChoisi($boisson)
+                ->setBoissonChoisie($boisson)
                 ->setEstValide(true);
             $entityManager->persist($commandeGroupe);
             $entityManager->flush();
@@ -106,10 +107,11 @@ class CommandeGroupeController extends AbstractController
                 'desserts' => $desserts,
             ]);
         }
-
     }
 
-    #[Route('/{id}/delete_view', name: 'commande_groupe_delete_view', methods: ['GET','POST'])]
+    /**
+     * @Route("/{id}/delete_view", name="commande_groupe_delete_view", methods={"GET", "POST"})
+     */
     public function delete_view(CommandeGroupe $commandeGroupe): Response
     {
         return $this->render('commande_groupe/delete_view.html.twig', [
@@ -137,8 +139,8 @@ class CommandeGroupeController extends AbstractController
 
     /**
      * @throws NonUniqueResultException
+     * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
      */
-    #[Route('/{id}/edit', name: 'commande_groupe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, EntityManagerInterface $entityManager,
                          SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
                          DessertRepository $dessertRepo,
@@ -207,7 +209,9 @@ class CommandeGroupeController extends AbstractController
         }
     }
 
-    #[Route('/{id}', name: 'commande_groupe_delete', methods: ['POST'])]
+    /**
+     * @Route("/{id}", name="commande_groupe_delete", methods={"POST"})
+     */
     public function delete(Request $request, CommandeGroupe $commandeGroupe, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$commandeGroupe->getId(), $request->request->get('_token'))) {

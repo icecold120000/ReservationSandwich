@@ -55,7 +55,7 @@ class Sandwich
      */
     private $sandwichCommandeGroupes;
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->commandeIndividuelles = new ArrayCollection();
         $this->sandwichCommandeGroupes = new ArrayCollection();

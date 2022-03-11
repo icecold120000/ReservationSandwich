@@ -10,7 +10,7 @@
                 Choisir votre mode d'exportation
             </button>
             <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
@@ -40,31 +40,31 @@
     <div id="formFilter">
         <div id="filtre">
             {{form_start(form)}}
-            <div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.nom)}} </span>
-                    {{form_widget(form.nom)}}
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.nom)}} </span>
+                        {{form_widget(form.nom)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.date)}}</span>
+                        {{form_widget(form.date)}}
+                    </div>
                 </div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.date)}}</span>
-                    {{form_widget(form.date)}}
-                </div>
-            </div>
-            <div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.cloture)}}</span>
-                    {{form_widget(form.cloture)}}
-                </div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.affichageTableau)}}</span>
-                    {{form_widget(form.affichageTableau)}}
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.cloture)}}</span>
+                        {{form_widget(form.cloture)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.affichageTableau)}}</span>
+                        {{form_widget(form.affichageTableau)}}
+                    </div>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-info">
                         Afficher
                     </button>
                 </div>
-            </div>
             {{form_end(form)}}
         </div>
     </div>
@@ -83,8 +83,8 @@
                         <th>Commande</th>
                         <th>Chips</th>
                         <th>Motif de la Sortie</th>
-                        <th>Validé</th>
-                        <th>Éditer</th>
+                        <th>Validée</th>
+                        <th>Modifier</th>
                         <th>Supprimer</th>
                     </tr>
                 </thead>
@@ -119,11 +119,11 @@
                             '<i class="fas fa-times"></i>' }}
                             {% if commande_groupe.estValide %}
                                 <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande groupée ?');">
-                                    <button class="btn btn-danger">Non validé</button>
+                                    <button class="btn btn-danger">Non validée</button>
                                 </form>
                             {% else %}
                                 <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande groupé ?');">
-                                    <button class="btn btn-success">Validé</button>
+                                    <button class="btn btn-success">Validée</button>
                                 </form>
                             {% endif %}
                         </td>
@@ -167,8 +167,8 @@
                         <th>Commande</th>
                         <th>Chips</th>
                         <th>Raison</th>
-                        <th>Validé</th>
-                        <th>Éditer</th>
+                        <th>Validée</th>
+                        <th>Modifier</th>
                         <th>Supprimer</th>
                     </tr>
                 </thead>
@@ -202,11 +202,11 @@
                                 '<i class="fas fa-times"></i>' }}
                                 {% if commande.estValide %}
                                     <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande ?');">
-                                        <button class="btn btn-danger">Non validé</button>
+                                        <button class="btn btn-danger">Non validée</button>
                                     </form>
                                 {% else %}
                                     <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande ?');">
-                                        <button class="btn btn-success">Validé</button>
+                                        <button class="btn btn-success">Validée</button>
                                     </form>
                                 {% endif %}
                             <td>

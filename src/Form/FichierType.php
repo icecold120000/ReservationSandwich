@@ -26,7 +26,7 @@ class FichierType extends AbstractType
                             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                         ],
                         'mimeTypesMessage' => 'Veuillez sélectionner un fichier .xlsx !',
-                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de {{limit}} !',
+                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 8192 Ko !',
                     ]),
                     new NotNull([
                         'message' => 'Veuillez sélectionner un fichier'

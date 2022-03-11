@@ -276,7 +276,7 @@ table form {
         font-size: 2em;
     }
 
-    table a.btn.btn-info{
+    table a.btn.btn-info, table form .btn.btn-danger{
         font-size: 1.5em;
     }
 
@@ -310,6 +310,7 @@ table form {
     #filtre select, #filtre input{
         height: 3em;
         font-size: 1em;
+        width: 100%;
     }
 
     #submitFiltre button{
@@ -324,9 +325,14 @@ table form {
     }
 
     #filtre div{
-        margin: 0 0 1em 0;
+        margin: 0 2rem 1em 0;
         padding: 0;
-        float: unset;
+        display: flex;
+        align-items: center;
+    }
+
+    #filtre span {
+        margin: 0 1em 0 2em;
     }
 
     #filtre #left p{
@@ -355,7 +361,6 @@ table form {
 
     /*Formulaire d'ajout + modification*/
 
-
     #warning p {
         font-size: 4em;
     }
@@ -383,6 +388,35 @@ table form {
         width: 80%;
         left: 10%;
         position: relative;
+    }
+
+    /*Filtre classe */
+    #filterOrder button{
+        margin-left: 2em;
+    }
+
+    /*Filtre détail classe*/
+    #filterClasseEleve div {
+        flex-wrap: wrap;
+        margin: 0 0 1em 0;
+        justify-content: center;
+    }
+
+    /*Filtre gestion de commande*/
+    #filterAdminCom div, #filterUser div{
+        margin: 0 2rem 0.5em 0;
+    }
+
+    /*Modal exportation */
+    .modal form select, .modal form input {
+        font-size: 1.75em;
+        margin-top: 0.5em;
+    }
+
+    .modal form div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
 }

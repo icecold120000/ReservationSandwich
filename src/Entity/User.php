@@ -95,7 +95,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $commandeGroupes;
 
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->adultes = new ArrayCollection();
         $this->eleves = new ArrayCollection();

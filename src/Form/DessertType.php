@@ -34,7 +34,7 @@ class DessertType extends AbstractType
                             'image/jpeg',
                         ],
                         'mimeTypesMessage' => 'Veuillez sélectionner un fichier .png/.jpeg/.jpg !',
-                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de {{limit}} !',
+                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 4096 Ko !',
                     ])
                 ],
             ])

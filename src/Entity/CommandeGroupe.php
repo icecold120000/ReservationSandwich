@@ -78,7 +78,7 @@ class CommandeGroupe
      */
     private $estValide;
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->sandwichCommandeGroupes = new ArrayCollection();
     }

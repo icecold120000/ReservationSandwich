@@ -56,7 +56,7 @@ class UserFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
+            'attr' => ['id' => 'filterUser'],
         ]);
     }
 }

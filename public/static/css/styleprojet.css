@@ -720,6 +720,11 @@ div#preciserRaison {
         flex-direction: column;
     }
 
+    /* Modal titre */
+    .modal-title {
+        font-size: 2.25em;
+    }
+
     /*Formulaire de commande individuelle */
 
     #commandeFormInd p {

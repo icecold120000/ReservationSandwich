@@ -45,7 +45,7 @@ class Boisson
      */
     private $commandeGroupes;
 
-    #[Pure] public function __construct()
+    public function __construct()
     {
         $this->commandeIndividuelles = new ArrayCollection();
         $this->commandeGroupes = new ArrayCollection();
