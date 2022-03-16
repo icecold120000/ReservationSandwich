@@ -25,6 +25,10 @@ ul.pagination{
 
 /*Espace d'administration*/
 
+#btnActive {
+    padding: 0 0 10px 0;
+}
+
 .tableAdmin{
     margin: 30px 0;
     border: solid black;

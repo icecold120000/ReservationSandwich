@@ -35,7 +35,7 @@ class InscriptionCantineRepository extends ServiceEntityRepository
 
     /**
      * @param $value
-     * @return InscriptionCantine|null Returns an array of InscriptionCantine objects
+     * @return InscriptionCantine|null Returns an InscriptionCantine object
      * @throws NonUniqueResultException
      */
     public function findOneByEleve($value): ?InscriptionCantine

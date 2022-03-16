@@ -52,7 +52,7 @@ class InscriptionCantine
     /**
      * @ORM\Column(type="boolean")
      */
-    private $archiveInscription;
+    private ?bool $archiveInscription;
 
 
     public function getId(): ?int

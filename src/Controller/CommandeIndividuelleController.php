@@ -16,8 +16,10 @@ use App\Repository\CommandeIndividuelleRepository;
 use App\Repository\DesactivationCommandeRepository;
 use App\Repository\DessertRepository;
 use App\Repository\EleveRepository;
+use App\Repository\InscriptionCantineRepository;
 use App\Repository\LimitationCommandeRepository;
 use App\Repository\SandwichRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -542,11 +544,23 @@ class CommandeIndividuelleController extends AbstractController
                         SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
                         DessertRepository $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
-                        LimitationCommandeRepository $limiteRepo): Response
+                        LimitationCommandeRepository $limiteRepo,
+                        InscriptionCantineRepository $cantineRepository,
+                        UserRepository $userRepo): Response
     {
+
+        $user = $userRepo->find($this->getUser());
+        $roles = $user->getRoles();
+        $cantine = null;
+        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
+
+        if (in_array("ROLE_ELEVE",$roles) == true) {
+            $cantine = $cantineRepository->findOneByEleve($user->getEleves());
+        }
+
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
         $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
-        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
+
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
@@ -573,35 +587,91 @@ class CommandeIndividuelleController extends AbstractController
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
             }
-            else {
-                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-                if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
-                    $this->addFlash(
-                        'precisionReason',
-                        'Veuillez préciser votre raison !'
-                    );
-                } else {
-                    if ($form->get('raisonCommande')->getData() == "Autre") {
-                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                    }
-                    else {
-                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
-                    }
-                    $commandeIndividuelle
-                        ->setCommandeur($this->getUser())
-                        ->setDateCreation($dateNow)
-                        ->setEstValide(true);
-                    $entityManager->persist($commandeIndividuelle);
-                    $entityManager->flush();
-
-                    $this->addFlash(
-                        'SuccessComInd',
-                        'Votre commande a été sauvegardée !'
-                    );
-                }
-
+            elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
+                $this->addFlash(
+                    'limiteCloture',
+                    'Vous ne pouvez pas faire une commande le samedi et le dimanche !'
+                );
             }
+            else {
+                $error = false;
+                if (in_array("ROLE_ELEVE",$roles) == true) {
+                    switch ($dateLivraison->format('l')) {
+                        case "Monday":
+                            if($cantine->getRepasJ1() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le lundi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Tuesday":
+                            if($cantine->getRepasJ2() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le mardi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Wednesday":
+                            if($cantine->getRepasJ3() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le mercredi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Thursday":
+                            if($cantine->getRepasJ4() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le jeudi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Friday":
+                            if($cantine->getRepasJ5() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le vendredi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                    }
+                }
+                if ($error == false ) {
+                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                    if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
+                        $this->addFlash(
+                            'precisionReason',
+                            'Veuillez préciser votre raison !'
+                        );
+                    } else {
+                        if ($form->get('raisonCommande')->getData() == "Autre") {
+                            $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                        }
+                        else {
+                            $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                        }
+                        $commandeIndividuelle
+                            ->setCommandeur($user)
+                            ->setDateCreation($dateNow)
+                            ->setEstValide(true);
+                        $entityManager->persist($commandeIndividuelle);
+                        $entityManager->flush();
 
+                        $this->addFlash(
+                            'SuccessComInd',
+                            'Votre commande a été sauvegardée !'
+                        );
+                    }
+                }
+            }
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -677,8 +747,17 @@ class CommandeIndividuelleController extends AbstractController
                          SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
                          DessertRepository $dessertRepo,
                          DesactivationCommandeRepository $deactiveRepo,
-                         LimitationCommandeRepository $limiteRepo): Response
+                         LimitationCommandeRepository $limiteRepo,
+                         InscriptionCantineRepository $cantineRepository,
+                         UserRepository $userRepo): Response
     {
+        $user = $userRepo->find($this->getUser());
+        $roles = $user->getRoles();
+        $cantine = null;
+
+        if (in_array("ROLE_ELEVE",$roles) == true) {
+            $cantine = $cantineRepository->findOneByEleve($user->getEleves());
+        }
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
         $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
         $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
@@ -708,29 +787,87 @@ class CommandeIndividuelleController extends AbstractController
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
             }
+            elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
+                $this->addFlash(
+                    'limiteCloture',
+                    'Vous ne pouvez pas faire une commande le samedi et le dimanche !'
+                );
+            }
             else {
-                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-                if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
-                    $this->addFlash(
-                        'precisionReason',
-                        'Veuillez préciser votre raison !'
-                    );
-                } else {
-                    if ($form->get('raisonCommande')->getData() == "Autre") {
-                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                    } else {
-                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                $error = false;
+                if (in_array("ROLE_ELEVE",$roles) == true) {
+                    switch ($dateLivraison->format('l')) {
+                        case "Monday":
+                            if($cantine->getRepasJ1() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le lundi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Tuesday":
+                            if($cantine->getRepasJ2() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le mardi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Wednesday":
+                            if($cantine->getRepasJ3() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le mercredi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Thursday":
+                            if($cantine->getRepasJ4() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le jeudi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
+                        case "Friday":
+                            if($cantine->getRepasJ5() == false) {
+                                $this->addFlash(
+                                    'limiteCloture',
+                                    'Vous n\'êtes pas inscrit le vendredi à la cantine !'
+                                );
+                                $error = true;
+                            }
+                            break;
                     }
-                    $commandeIndividuelle
-                        ->setCommandeur($this->getUser())
-                        ->setDateCreation($dateNow)
-                        ->setEstValide(true);
+                }
+                if ($error == false ) {
+                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                    if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
+                        $this->addFlash(
+                            'precisionReason',
+                            'Veuillez préciser votre raison !'
+                        );
+                    } else {
+                        if ($form->get('raisonCommande')->getData() == "Autre") {
+                            $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                        } else {
+                            $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                        }
+                        $commandeIndividuelle
+                            ->setCommandeur($this->getUser())
+                            ->setDateCreation($dateNow)
+                            ->setEstValide(true);
 
-                    $entityManager->flush();
-                    $this->addFlash(
-                        'SuccessComInd',
-                        'Votre commande a été modifié !'
-                    );
+                        $entityManager->flush();
+                        $this->addFlash(
+                            'SuccessComInd',
+                            'Votre commande a été modifié !'
+                        );
+                    }
                 }
             }
 

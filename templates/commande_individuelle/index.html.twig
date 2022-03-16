@@ -6,7 +6,6 @@
 {% block body %}
     <h1>Vos commandes</h1>
     <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
-    {% if is_granted('ROLE_ELEVE') %}
         <p>Nombre de commande effectuée aujourd'hui : {{ nbCommandeJournalier }}</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
             {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
@@ -47,11 +46,6 @@
                 </button>
             {% endif %}
         {% endif %}
-    {% else %}
-        <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-            Faire une commande individuelle
-        </a>
-    {% endif %}
     <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
         Faire une commande groupé
     </a>

@@ -77,6 +77,7 @@ security:
          - { path: ^/profile/adulte, roles: ROLE_ADULTES }
          - { path: ^/profile/eleve, roles: ROLE_ELEVE }
          - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/individuelle/admin, roles: ROLE_ADMIN }
          - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_FULLY }
          - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
