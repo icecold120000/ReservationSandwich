@@ -1,30 +1,30 @@
     {{form_start(form)}}
 		{{form_label(form.nomBoisson)}}
-        <div class="divInput">
-            {{form_widget(form.nomBoisson)}}
-        </div>
         {% if form_errors(form.nomBoisson) %}
             <div class="erreur">
                 {{form_errors(form.nomBoisson)}}
             </div>
         {% endif %}
+        <div class="divInput">
+            {{form_widget(form.nomBoisson)}}
+        </div>
         {{form_label(form.imageBoisson)}}
         {{form_help(form.imageBoisson)}}
-        <div class="divInput fileInput">
-            {{form_widget(form.imageBoisson)}}
-        </div>
         {% if form_errors(form.imageBoisson) %}
             <div class="erreur">
                 {{form_errors(form.imageBoisson)}}
             </div>
         {% endif %}
-		{{form_label(form.dispoBoisson)}}
-        <div class="divInput">
-            {{form_widget(form.dispoBoisson)}}
+        <div class="divInput fileInput">
+            {{form_widget(form.imageBoisson)}}
         </div>
+		{{form_label(form.dispoBoisson)}}
         {% if form_errors(form.dispoBoisson) %}
             <div class="erreur">
                 {{form_errors(form.dispoBoisson)}}
             </div>
         {% endif %}
+        <div class="divInput">
+            {{form_widget(form.dispoBoisson)}}
+        </div>
     {{form_end(form)}}

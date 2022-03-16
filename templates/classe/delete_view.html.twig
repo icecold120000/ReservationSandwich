@@ -16,16 +16,14 @@
                 <table class="table tableSuppr">
                     <thead>
                         <tr>
-                            <th>Id</th>
                             <th>Prénom de l'élève</th>
-                            <th>Nom de l'événement</th>
-                            <th>Éditer</th>
+                            <th>Nom de l'élève</th>
+                            <th>Modifier</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for eleve in classe.eleves %}
                             <tr>
-                                <td>{{eleve.id}}</td>
                                 <td>{{eleve.nomEleve}}</td>
                                 <td>{{eleve.prenomEleve}}</td>
                                 <td>

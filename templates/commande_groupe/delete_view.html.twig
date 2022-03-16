@@ -9,34 +9,34 @@
         <h2>Cliquez sur le bouton Supprimer pour supprimer la commande groupée choisie : </h2>
         <table class="table tableAdmin">
             <thead>
-            <tr>
-                <th>Date de Livraison</th>
-                <th>Nom et Prénom</th>
-                <th>Sandwich choisi</th>
-                <th>Chips</th>
-            </tr>
+                <tr>
+                    <th>Date de Livraison</th>
+                    <th>Nom et Prénom</th>
+                    <th>Sandwich choisi</th>
+                    <th>Chips</th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>
-                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
-                </td>
-                <td>
-                    <span>{{ commande_groupe.commandeur.prenomUser }}</span>
-                    <span>{{ commande_groupe.commandeur.nomUser }}</span>
-                </td>
-                <td>
-                    {% set nombreEleve = 0 %}
-                    {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
-                        <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
-                        {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
-                    {% endfor %}
-                    <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
-                </td>
-                <td>{{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
-                    '<i class="fas fa-times"></i>' }}</td>
-            </tr>
+                <tr>
+                    <td>
+                        <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                        <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
+                    </td>
+                    <td>
+                        <span>{{ commande_groupe.commandeur.prenomUser }}</span>
+                        <span>{{ commande_groupe.commandeur.nomUser }}</span>
+                    </td>
+                    <td>
+                        {% set nombreEleve = 0 %}
+                        {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
+                            <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                            {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                        {% endfor %}
+                        <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
+                    </td>
+                    <td>{{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
+                </tr>
             </tbody>
         </table>
 

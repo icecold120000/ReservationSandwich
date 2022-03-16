@@ -21,11 +21,21 @@
             {{ form_start(form) }}
             <div>
                 {{form_label(form.emailFirst)}}
+                {% if form_errors(form.emailFirst) %}
+                    <div class="erreur">
+                        <p>{{ form_errors(form.emailFirst) }}<p>
+                    </div>
+                {% endif %}
                 <div>
                     {{form_widget(form.emailFirst)}}
                 </div>
                 {{form_label(form.dateAnniversaire)}}
                 {{form_help(form.dateAnniversaire)}}
+                {% if form_errors(form.dateAnniversaire) %}
+                    <div class="erreur">
+                        <p>{{ form_errors(form.dateAnniversaire) }}<p>
+                    </div>
+                {% endif %}
                 <div>
                     {{form_widget(form.dateAnniversaire)}}
                 </div>

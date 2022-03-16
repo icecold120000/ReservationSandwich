@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des élèves{% endblock %}
+{% block title %}Liste d'élèves{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste des élèves</h1>
+    <h1>Liste d'élèves</h1>
     <div>
         <div>
             <a href="{{ path('eleve_new') }}">
@@ -14,7 +14,7 @@
             </a>
             <a href="{{ path('eleve_file') }}">
                 <button class="btn btn-info" id="btnAjout">
-                    Ajouter une liste d'élève
+                    Ajouter une liste d'élèves
                 </button>
             </a>
         </div>
@@ -62,7 +62,7 @@
                 <th>Photo</th>
                 <th>Prénom et Nom</th>
                 <th>Date de naissance</th>
-                <th>Éditer</th>
+                <th>Modifier</th>
                 <th>Supprimer</th>
             </tr>
         </thead>
@@ -97,7 +97,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="11" class="erreur">Aucune donnée n'a été trouvée</td>
+                <td colspan="11" class="erreur">Aucun élève n'a été trouvé</td>
             </tr>
         {% endfor %}
         </tbody>

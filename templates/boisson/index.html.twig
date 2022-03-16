@@ -43,7 +43,7 @@
                 <th>Photo</th>
                 <th>Nom</th>
                 <th>Disponibilité</th>
-                <th>Éditer</th>
+                <th>Modifier</th>
                 <th>Supprimer</th>
             </tr>
         </thead>
@@ -52,9 +52,9 @@
             <tr>
                 <td>
                     {% if boisson.imageBoisson %}
-                        <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="photo d'une boisson">
+                        <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="Photo d'une boisson">
                     {% else %}
-                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="Placeholder">
                     {% endif %}
                 </td>
                 <td>{{ boisson.nomBoisson }}</td>
@@ -75,7 +75,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="5" class="erreur">Aucune donnée n'a été trouvée !</td>
+                <td colspan="5" class="erreur">Aucune boisson n'a été trouvée !</td>
             </tr>
         {% endfor %}
         </tbody>

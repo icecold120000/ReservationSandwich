@@ -23,8 +23,10 @@
                     <td>{{ commande.sandwichChoisi.nomSandwich }}</td>
                     <td>{{ commande.boissonChoisie.nomBoisson }}</td>
                     <td>{{ commande.dessertChoisi.nomDessert }}</td>
-                    <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
-                        '<i class="fas fa-times"></i>' }}</td>
+                    <td>
+                        {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}
+                    </td>
                 </tr>
             </tbody>
         </table>

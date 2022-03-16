@@ -43,13 +43,13 @@
             </tr>
         </thead>
         <tbody>
-            {% for eleve in eleves%}
+            {% for eleve in eleves %}
                 <tr>
                     <td>
                         {% if eleve.photoEleve %}
                             <img alt="Photo de l'élève" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
                         {% else %}
-                            <img alt="Photo placeholder de l'élève" src="{{ asset('public/static/images/avatar.jpg') }}">
+                            <img alt="Placeholder" src="{{ asset('public/static/images/avatar.jpg') }}">
                         {% endif %}
                     </td>
                     <td>{{ eleve.prenomEleve }}</td>
@@ -110,7 +110,7 @@
                                             </table>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2" class="erreur">Aucune donnée n'a été trouvée !</td>
+                    <td colspan="2" class="erreur">Aucun élève n'a été trouvé !</td>
                 </tr>
             {% endfor%}
         </tbody>

@@ -85,7 +85,7 @@
                         <th>Motif de la Sortie</th>
                         <th>Validée</th>
                         <th>Modifier</th>
-                        <th>Supprimer</th>
+                        <th>Annuler</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,7 +142,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="9" class="erreur">Aucune commande n'a été trouvée</td>
+                        <td colspan="9" class="erreur">Aucune commande groupée n'a été réalisée !</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -169,7 +169,7 @@
                         <th>Raison</th>
                         <th>Validée</th>
                         <th>Modifier</th>
-                        <th>Supprimer</th>
+                        <th>Annuler</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -194,11 +194,13 @@
                                 <span>{{ commande.boissonChoisie.nomBoisson }}</span>
                                 <span>{{ commande.dessertChoisi.nomDessert }}</span>
                             </td>
-                            <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                            <td>
+                                {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
                                 '<i class="fas fa-times"></i>' }}
                             </td>
                             <td>{{ commande.raisonCommande }}</td>
-                            <td>{{ commande.estValide ? '<i class="fas fa-check"></i>' :
+                            <td>
+                                {{ commande.estValide ? '<i class="fas fa-check"></i>' :
                                 '<i class="fas fa-times"></i>' }}
                                 {% if commande.estValide %}
                                     <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande ?');">
@@ -224,7 +226,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="9" class="erreur">Aucune commande n'a été trouvée</td>
+                            <td colspan="9" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -1,43 +1,43 @@
     {{form_start(form)}}
         <div id="part1">
             {{form_label(form.nomAdulte)}}
-            <div class="divInput">
-                {{form_widget(form.nomAdulte)}}
-            </div>
             {% if form_errors(form.nomAdulte) %}
                 <div class="erreur">
                     {{form_errors(form.nomAdulte)}}
                 </div>
             {% endif %}
-            {{form_label(form.prenomAdulte)}}
             <div class="divInput">
-                {{form_widget(form.prenomAdulte)}}
+                {{form_widget(form.nomAdulte)}}
             </div>
+            {{form_label(form.prenomAdulte)}}
             {% if form_errors(form.prenomAdulte) %}
                 <div class="erreur">
                     {{form_errors(form.prenomAdulte)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.prenomAdulte)}}
+            </div>
         </div>
         <div id="part2">
             {{form_label(form.dateNaissance)}}
             {{form_help(form.dateNaissance)}}
-            <div class="divInput">
-                {{form_widget(form.dateNaissance)}}
-            </div>
             {% if form_errors(form.dateNaissance) %}
                 <div class="erreur">
                     {{form_errors(form.dateNaissance)}}
                 </div>
             {% endif %}
-            {{form_label(form.archiveAdulte)}}
             <div class="divInput">
-                {{form_widget(form.archiveAdulte)}}
+                {{form_widget(form.dateNaissance)}}
             </div>
+            {{form_label(form.archiveAdulte)}}
             {% if form_errors(form.archiveAdulte) %}
                 <div class="erreur">
                     {{form_errors(form.archiveAdulte)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.archiveAdulte)}}
+            </div>
         </div>
     {{form_end(form)}}

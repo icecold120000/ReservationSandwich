@@ -10,6 +10,7 @@ use App\Repository\ClasseRepository;
 use App\Repository\EleveRepository;
 use App\Repository\InscriptionCantineRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +84,7 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function show(Classe $classe,Request $request, EleveRepository $eleveRepo,
                          InscriptionCantineRepository $cantineRepository): Response

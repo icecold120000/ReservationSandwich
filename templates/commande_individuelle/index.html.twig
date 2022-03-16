@@ -117,6 +117,10 @@
                                 <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
                                 <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
                             </td>
+                            <td>
+                                {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
                         {% else %}
                             <td class="invalidCommande">
                                 <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
@@ -132,11 +136,11 @@
                                 <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
                                 <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
                             </td>
+                            <td class="invalidCommande">
+                                {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
                         {% endif %}
-                        <td>
-                            {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
-                            '<i class="fas fa-times"></i>' }}
-                        </td>
                         {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('d/m/Y') %}
                         {% if dateLimiteGroupe < "now"|date('d/m/Y') %}
                             <td>
@@ -166,7 +170,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="9" class="erreur">Aucune commande n'a été trouvée</td>
+                        <td colspan="6" class="erreur">Aucune commande groupée n'a été réalisée !</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -202,8 +206,10 @@
                                 <td>{{ commande.sandwichChoisi.nomSandwich }}</td>
                                 <td>{{ commande.boissonChoisie.nomBoisson }}</td>
                                 <td>{{ commande.dessertChoisi.nomDessert }}</td>
-                                <td>{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
-                                    '<i class="fas fa-times"></i>' }}</td>
+                                <td>
+                                    {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                                    '<i class="fas fa-times"></i>' }}
+                                </td>
                                 {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i') and limiteActive == true
                                     and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y')%}
                                     <td>
@@ -235,8 +241,10 @@
                                 <td class="invalidCommande">{{ commande.sandwichChoisi.nomSandwich }}</td>
                                 <td class="invalidCommande">{{ commande.boissonChoisie.nomBoisson }}</td>
                                 <td class="invalidCommande">{{ commande.dessertChoisi.nomDessert }}</td>
-                                <td class="invalidCommande">{{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
-                                    '<i class="fas fa-times"></i>' }}</td>
+                                <td class="invalidCommande">
+                                    {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
+                                    '<i class="fas fa-times"></i>' }}
+                                </td>
                                 {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i') and limiteActive == true
                                     and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y')%}
                                     <td>
@@ -267,7 +275,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="7" class="erreur">Aucune commande n'a été effectuée</td>
+                            <td colspan="7" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
                 </tbody>

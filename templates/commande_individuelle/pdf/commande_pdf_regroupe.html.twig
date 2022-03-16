@@ -33,6 +33,10 @@
                         {{ nbSandwich }}
                     </td>
                 </tr>
+            {% else %}
+                <tr>
+                    <td style="color: red; font-weight: bold">Aucun sandwich n'a été commandé !</td>
+                </tr>
             {% endfor %}
             {% for boisson in boissonDispo %}
                 <tr>
@@ -57,6 +61,10 @@
                         {% endfor %}
                         {{ nbBoisson }}
                     </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td style="color: red; font-weight: bold">Aucune boisson n'a été commandée !</td>
                 </tr>
             {% endfor %}
             {% for dessert in dessertDispo %}
@@ -83,6 +91,10 @@
                         {{ nbDessert }}
                     </td>
                 </tr>
+            {% else %}
+                <tr>
+                    <td style="color: red; font-weight: bold">Aucun dessert n'a été commandé !</td>
+                </tr>
             {% endfor %}
             <tr>
                 <td style="text-align: center;border: solid">
@@ -100,7 +112,12 @@
                             {% set nbChips = nbChips + sandwichCommande.nombreSandwich  %}
                         {% endfor %}
                     {% endfor %}
-                    {{ nbChips }}
+                    {% if nbChips != 0 %}
+                        {{ nbChips }}
+                    {% else %}
+                    {% else %}
+                        <span style="color: red; font-weight: bold">Aucun paquet de chips n'a été commandé !</span>
+                    {% endif %}
                 </td>
             </tr>
         </tbody>

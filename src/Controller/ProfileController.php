@@ -63,9 +63,7 @@ class ProfileController extends AbstractController
      */
     public function admin(): Response
     {
-        return $this->render('profile/admin.html.twig', [
-
-        ]);
+        return $this->render('profile/admin.html.twig');
     }
 
     /**
@@ -93,9 +91,7 @@ class ProfileController extends AbstractController
      */
     public function cuisine(): Response
     {
-        return $this->render('profile/cuisine.html.twig', [
-
-        ]);
+        return $this->render('profile/cuisine.html.twig');
     }
 
     /**
@@ -104,8 +100,6 @@ class ProfileController extends AbstractController
      */
     public function adulte(): Response
     {
-        return $this->render('profile/adulte.html.twig', [
-
-        ]);
+        return $this->render('profile/adulte.html.twig');
     }
 }

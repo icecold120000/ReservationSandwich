@@ -1,53 +1,53 @@
     {{form_start(form)}}
         <div id="part1">
             {{form_label(form.nomDessert)}}
-            <div class="divInput">
-                {{form_widget(form.nomDessert)}}
-            </div>
             {% if form_errors(form.nomDessert) %}
                 <div class="erreur">
                     {{form_errors(form.nomDessert)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.nomDessert)}}
+            </div>
             {{form_label(form.imageDessert)}}
             {{form_help(form.imageDessert)}}
-            <div class="divInput fileInput">
-                {{form_widget(form.imageDessert)}}
-            </div>
             {% if form_errors(form.imageDessert) %}
                 <div class="erreur">
                     {{form_errors(form.imageDessert)}}
                 </div>
             {% endif %}
-            {{form_label(form.dispoDessert)}}
-            <div class="divInput">
-                {{form_widget(form.dispoDessert)}}
+            <div class="divInput fileInput">
+                {{form_widget(form.imageDessert)}}
             </div>
+            {{form_label(form.dispoDessert)}}
             {% if form_errors(form.dispoDessert) %}
                 <div class="erreur">
                     {{form_errors(form.dispoDessert)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.dispoDessert)}}
+            </div>
         </div>
         <div id="part2">
             {{form_label(form.ingredientDessert)}}
-            <div class="divInput">
-                {{form_widget(form.ingredientDessert)}}
-            </div>
             {% if form_errors(form.ingredientDessert) %}
                 <div class="erreur">
                     {{form_errors(form.ingredientDessert)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.ingredientDessert)}}
+            </div>
             {{form_label(form.commentaireDessert)}}
             {{form_help(form.commentaireDessert)}}
-            <div class="divInput">
-                {{form_widget(form.commentaireDessert)}}
-            </div>
             {% if form_errors(form.commentaireDessert) %}
                 <div class="erreur">
                     {{form_errors(form.commentaireDessert)}}
                 </div>
             {% endif %}
+            <div class="divInput">
+                {{form_widget(form.commentaireDessert)}}
+            </div>
         </div>
     {{form_end(form)}}

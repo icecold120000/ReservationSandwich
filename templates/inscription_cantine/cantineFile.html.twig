@@ -18,15 +18,15 @@
         <div>
             <label>Liste des inscriptions (en XLSX) :</label>
             {{ form_help(form.fileSubmit) }}
+            {% if form_errors(form.fileSubmit) %}
+                <div class="erreur">
+                    {{form_errors(form.fileSubmit)}}
+                </div>
+            {% endif %}
         </div>
         <div id="fileInputUser">
             {{form_widget(form.fileSubmit)}}
         </div>
-        {% if form_errors(form.fileSubmit) %}
-            <div class="erreur">
-                {{form_errors(form.fileSubmit)}}
-            </div>
-        {% endif %}
     {{form_end(form)}}
     <div class="row">
         <div id="divAjout">

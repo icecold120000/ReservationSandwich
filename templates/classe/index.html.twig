@@ -77,11 +77,11 @@
         {% else %}
             {% if is_granted('ROLE_ADMIN')%}
                 <tr>
-                    <td colspan="4">Aucune donnée n'a été trouvée</td>
+                    <td colspan="5">Aucune donnée n'a été trouvée</td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2">Aucune donnée n'a été trouvée</td>
+                    <td colspan="3">Aucune donnée n'a été trouvée</td>
                 </tr>
             {% endif %}
         {% endfor %}

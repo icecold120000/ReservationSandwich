@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des adultes{% endblock %}
+{% block title %}Liste d'adultes{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
     <main>
-        <h1>Liste des adultes</h1>
+        <h1>Liste d'adultes</h1>
         <div>
             <div>
                 <div>
@@ -97,7 +97,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="erreur">Aucune donnée n'a été trouvée</td>
+                        <td colspan="7" class="erreur">Aucun adulte n'a été trouvé !</td>
                     </tr>
                 {% endfor %}
             </tbody>

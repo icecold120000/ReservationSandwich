@@ -27,20 +27,30 @@
                 <tbody>
                     {% if inscritCantine %}
                         <tr>
-                            <td>{{ inscritCantine.repasJ1 ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}</td>
-                            <td>{{ inscritCantine.repasJ2 ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}</td>
-                            <td>{{ inscritCantine.repasJ3 ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}</td>
-                            <td>{{ inscritCantine.repasJ4 ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}</td>
-                            <td>{{ inscritCantine.repasJ5 ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}</td>
+                            <td>
+                                {{ inscritCantine.repasJ1 ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>
+                                {{ inscritCantine.repasJ2 ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>
+                                {{ inscritCantine.repasJ3 ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>
+                                {{ inscritCantine.repasJ4 ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>
+                                {{ inscritCantine.repasJ5 ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
                         </tr>
                     {% else %}
                         <tr>
-                            <td class="erreur">Vous n'êtes pas inscrit à la cantine</td>
+                            <td colspan="5" class="erreur">Vous n'êtes pas inscrit à la cantine</td>
                         </tr>
                     {% endif %}
                 </tbody>

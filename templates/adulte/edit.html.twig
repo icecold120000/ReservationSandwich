@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Éditer un adulte{% endblock %}
+{% block title %}Modifier un adulte{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
     <main>
-        <h1>Éditer un adulte</h1>
+        <h1>Modifier un adulte</h1>
 
         {% for message in app.flashes('SuccessAdulte') %}
             <div class="flash-success">

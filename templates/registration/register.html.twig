@@ -25,53 +25,53 @@
                         {{form_start(registrationForm)}}
                         <div id="part1">
                             {{form_label(registrationForm.prenomUser)}}
-                            <div class="divInput">
-                                {{form_widget(registrationForm.prenomUser)}}
-                            </div>
                             {% if form_errors(registrationForm.prenomUser) %}
                                 <div class="erreur">
                                     {{form_errors(registrationForm.prenomUser)}}
                                 </div>
                             {% endif %}
-                            {{form_label(registrationForm.nomUser)}}
                             <div class="divInput">
-                                {{form_widget(registrationForm.nomUser)}}
+                                {{form_widget(registrationForm.prenomUser)}}
                             </div>
+                            {{form_label(registrationForm.nomUser)}}
                             {% if form_errors(registrationForm.nomUser) %}
                                 <div class="erreur">
                                     {{form_errors(registrationForm.nomUser)}}
                                 </div>
                             {% endif %}
-                            {{form_label(registrationForm.email)}}
                             <div class="divInput">
-                                {{form_widget(registrationForm.email)}}
+                                {{form_widget(registrationForm.nomUser)}}
                             </div>
+                            {{form_label(registrationForm.email)}}
                             {% if form_errors(registrationForm.email) %}
                                 <div class="erreur">
                                     {{form_errors(registrationForm.email)}}
                                 </div>
                             {% endif %}
-                            {{form_label(registrationForm.dateNaissanceUser)}}
                             <div class="divInput">
-                                {{form_help(registrationForm.dateNaissanceUser)}}
-                                {{form_widget(registrationForm.dateNaissanceUser)}}
+                                {{form_widget(registrationForm.email)}}
                             </div>
+                            {{form_label(registrationForm.dateNaissanceUser)}}
                             {% if form_errors(registrationForm.dateNaissanceUser) %}
                                 <div class="erreur">
                                     {{form_errors(registrationForm.dateNaissanceUser)}}
                                 </div>
                             {% endif %}
+                            <div class="divInput">
+                                {{form_help(registrationForm.dateNaissanceUser)}}
+                                {{form_widget(registrationForm.dateNaissanceUser)}}
+                            </div>
                         </div>
                         <div id="part2">
-                            <div class="divInput">
-                                {{form_help(registrationForm.plainPassword)}}
-                                {{form_widget(registrationForm.plainPassword)}}
-                            </div>
                             {% if form_errors(registrationForm.plainPassword)%}
                                 <div class="erreur">
                                     {{form_errors(registrationForm.plainPassword)}}
                                 </div>
                             {% endif %}
+                            <div class="divInput">
+                                {{form_help(registrationForm.plainPassword)}}
+                                {{form_widget(registrationForm.plainPassword)}}
+                            </div>
                         </div>
                         {{form_end(registrationForm)}}
                     </div>

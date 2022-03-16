@@ -41,7 +41,6 @@ class OubliMdpController extends AbstractController
 
             $data = $em->getRepository(User::class)->findOneByEmailAndDate($user, $dateNaissance);
 
-
             if(empty($data))
                 $error = "L'adresse mail n'est lié à aucun compte !";
             else{

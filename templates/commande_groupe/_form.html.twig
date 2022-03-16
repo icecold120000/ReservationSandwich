@@ -14,8 +14,8 @@
                         <label for="commande_groupe_sandwichChoisi1_{{ sandwich.id }}">
                             <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
                             <p>{{ sandwich.nomSandwich }}</p>
-                            <p>Ingredients : {{ sandwich.ingredientSandwich }}</p>
-                            <p>Commentaire : {{ sandwich.commentaireSandwich }}</p>
+                            <p>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</p>
+                            <p>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.'}}</p>
                             <input type="radio" id="commande_groupe_sandwichChoisi1_{{ sandwich.id }}"
                                    name="commande_groupe[sandwichChoisi1]" value="{{ sandwich.id }}" >
                         </label>
@@ -54,8 +54,8 @@
                         <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
                             <label for="commande_groupe_dessertChoisi_{{ dessert.id }}">
                                 <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block" alt="{{ dessert.nomDessert }}-image">
-                                <p>Ingredients : {{ dessert.ingredientDessert }}</p>
-                                <p>Commentaire : {{ dessert.commentaireDessert }}</p>
+                                <p>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</p>
+                                <p>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.'}}</p>
                                 <input type="radio" name="commande_groupe[dessertChoisi]" value="{{ dessert.id }}"
                                        id="commande_groupe_dessertChoisi_{{ dessert.id }}">
                             </label>

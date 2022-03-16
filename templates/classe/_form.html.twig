@@ -1,20 +1,20 @@
 	{{form_start(form)}}
 		{{form_label(form.libelleClasse)}}
-        <div class="divInput">
-            {{form_widget(form.libelleClasse)}}
-        </div>
         {% if form_errors(form.libelleClasse) %}
             <div class="erreur">
                 {{form_errors(form.libelleClasse)}}
             </div>
         {% endif %}
-        {{form_label(form.codeClasse)}}
         <div class="divInput">
-            {{form_widget(form.codeClasse)}}
+            {{form_widget(form.libelleClasse)}}
         </div>
+        {{form_label(form.codeClasse)}}
         {% if form_errors(form.codeClasse) %}
             <div class="erreur">
                 {{form_errors(form.codeClasse)}}
             </div>
         {% endif %}
+        <div class="divInput">
+            {{form_widget(form.codeClasse)}}
+        </div>
     {{form_end(form)}}

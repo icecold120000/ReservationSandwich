@@ -312,7 +312,6 @@ class CommandeIndividuelleController extends AbstractController
                                     if ($sandwichComGroupe->getSandwichChoisi()->getId() == $sandwich->getId()) {
                                         $nombreSandwich = $sandwichComGroupe->getNombreSandwich();
                                     }
-
                                 }
                             }
                         }

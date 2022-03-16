@@ -9,10 +9,8 @@
         Le paragraphe enchaîne ensuite les informations d’appui (raisons, preuves, explications) en les reliant par des transitions. Cet enchaînement est la base de la construction d’un argument.
         Les transitions sont des phrases, des parties de phrase, des expressions, des mots de liaison et des signes de ponctuation. Vous les utiliser pour lier des objets ou des idées dans le temps ou dans l’espace, pour établir des liens logiques, pour indiquer le rapport entre les idées (cause, conséquence, explication, illustration, ressemblance, opposition, alternative, extension).
     </p>
-
     <div>
         <h3>Voici le menu de la semaine : </h3>
-
         {% if menu.fileName %}
             <img id="menuImg" src="{{ asset('uploads/menu/' ~ menu.fileName) }}" alt="Menu de la semaine">
         {% else %}
@@ -43,7 +41,6 @@
             </div>
         </div>
     </div>
-
     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
         {% for message in app.flashes('SuccessMenu') %}
             <div class="flash-success">
@@ -69,5 +66,4 @@
             </button>
         </div>
     {% endif %}
-
 {% endblock %}

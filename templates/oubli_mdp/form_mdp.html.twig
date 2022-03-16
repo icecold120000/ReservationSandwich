@@ -8,15 +8,15 @@
 			<section id="formResetMdp">
 			    <div class="container-fluid formEntité">
 			      	{{form_start(form)}}
+						{% if form_errors(form.plainPassword) %}
+							<div class="erreur">
+								<p>{{ form_errors(form.plainPassword) }}<p>
+							</div>
+						{% endif %}
 				        <div class="divInput">
 				        	{{form_help(form.plainPassword)}}
 				            {{form_widget(form.plainPassword)}}
 				        </div>
-						{% if form_errors(form.plainPassword) %}
-							<div class="erreur">
-						    	<p>{{ form_errors(form.plainPassword) }}<p>
-							</div>
-						{% endif %}
 				        <div>
 				            <div id="divAjout" class="form-actions">
 				                <button type="submit" name="submit" class="btn btn-success" form="resetMdpForm">

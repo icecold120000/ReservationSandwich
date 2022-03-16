@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une liste d'utilisateur{% endblock %}
+{% block title %}Ajouter une liste d'adultes{% endblock %}
 
 {% block body %}
 	<main>
 		<h1>Ajouter une liste d'utilisateur</h1>
 
-		<h2>Veuillez selectionner un fichier contenant une liste d'utilisateur</h2>
+		<h2>Veuillez sélectionner un fichier contenant une liste d'adultes</h2>
 
 		{% for message in app.flashes('SuccessFileSubmit') %}
 	        <div class="flash-success">
@@ -16,17 +16,17 @@
 
 		{{form_start(form)}}
 			<div>
-				<label>Liste des utilisateurs (en XLSX) :</label>
+				<label>Liste d'adultes (en XLSX) :</label>
 				{{ form_help(form.fileSubmit) }}
+				{% if form_errors(form.fileSubmit) %}
+					<div class="erreur">
+						{{form_errors(form.fileSubmit)}}
+					</div>
+				{% endif %}
 			</div>
 			<div id="fileInputUser">
 				{{form_widget(form.fileSubmit)}}
 			</div>
-			{% if form_errors(form.fileSubmit) %}
-				<div class="erreur">
-					{{form_errors(form.fileSubmit)}}
-				</div>
-			{% endif %}
 		{{form_end(form)}}
         <div class="row">
           <div id="divAjout">
