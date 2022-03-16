@@ -37,8 +37,9 @@
         <thead>
             <tr>
                 <th>Photo de l'élève</th>
-                <th>Nom de l'élève</th>
                 <th>Prénom de l'élève</th>
+                <th>Nom de l'élève</th>
+                <th>Inscription cantine</th>
             </tr>
         </thead>
         <tbody>
@@ -51,12 +52,75 @@
                             <img alt="Photo placeholder de l'élève" src="{{ asset('public/static/images/avatar.jpg') }}">
                         {% endif %}
                     </td>
-                    <td>{{ eleve.nomEleve }}</td>
                     <td>{{ eleve.prenomEleve }}</td>
+                    <td>{{ eleve.nomEleve }}</td>
+                    <td>
+                        <div class="container">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{ eleve.id }}" id="btnModal">
+                                Voir détail
+                            </button>
+                            <div class="modal fade" id="exampleModal{{ eleve.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-fullscreen">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="formExportLabel">Inscription cantine de {{ eleve.prenomEleve }} {{ eleve.nomEleve }} </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table tableAdmin">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Lundi</th>
+                                                        <th scope="col">Mardi</th>
+                                                        <th scope="col">Mercredi</th>
+                                                        <th scope="col">Jeudi</th>
+                                                        <th scope="col">Vendredi</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for cantine in cantineInscrits|filter(cantine => cantine != null and cantine.eleve.id == eleve.id) %}
+                                                        <tr>
+                                                            <td>
+                                                                {{ cantine.repasJ1 ? '<i class="fas fa-check"></i>' :
+                                                                '<i class="fas fa-times"></i>' }}
+                                                            </td>
+                                                            <td>
+                                                                {{ cantine.repasJ2 ? '<i class="fas fa-check"></i>' :
+                                                                '<i class="fas fa-times"></i>' }}
+                                                            </td>
+                                                            <td>
+                                                                {{ cantine.repasJ3 ? '<i class="fas fa-check"></i>' :
+                                                                '<i class="fas fa-times"></i>' }}
+                                                            </td>
+                                                            <td>
+                                                                {{ cantine.repasJ4 ? '<i class="fas fa-check"></i>' :
+                                                                '<i class="fas fa-times"></i>' }}
+                                                            </td>
+                                                            <td>
+                                                                {{ cantine.repasJ5 ? '<i class="fas fa-check"></i>' :
+                                                                '<i class="fas fa-times"></i>' }}
+                                                            </td>
+                                                        </tr>
+                                                    {% else %}
+                                                        <tr>
+                                                            <td colspan="5" class="erreur">L'élève n'est pas inscrit(e) à la cantine !</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="2" class="erreur">Aucune donnée n'a été trouvée</td>
+                    <td colspan="2" class="erreur">Aucune donnée n'a été trouvée !</td>
                 </tr>
             {% endfor%}
         </tbody>

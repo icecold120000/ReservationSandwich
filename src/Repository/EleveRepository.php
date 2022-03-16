@@ -38,7 +38,7 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function orderByEleve($ordreNom = null, $ordrePrenom = null) : array
+    public function orderByEleve($ordreNom = null, $ordrePrenom = null, $classe = null) : array
     {
         $query = $this->createQueryBuilder('el');
         if ($ordreNom != null && $ordrePrenom != null) {
@@ -53,6 +53,14 @@ class EleveRepository extends ServiceEntityRepository
         }
         else {
             $this->findAllWithClasse();
+        }
+
+        if ($classe != null) {
+            $query
+                ->leftJoin('el.classeEleve' ,'c')
+                ->andWhere('c.id = :classe')
+                ->setParameter('classe',$classe)
+            ;
         }
 
         return $query->getQuery()->getResult();

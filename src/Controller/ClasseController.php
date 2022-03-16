@@ -8,6 +8,7 @@ use App\Form\FilterOrSearch\OrderEleveType;
 use App\Form\FilterOrSearch\OrderType;
 use App\Repository\ClasseRepository;
 use App\Repository\EleveRepository;
+use App\Repository\InscriptionCantineRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,8 +83,10 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function show(Classe $classe,Request $request, EleveRepository $eleveRepo): Response
+    public function show(Classe $classe,Request $request, EleveRepository $eleveRepo,
+                         InscriptionCantineRepository $cantineRepository): Response
     {
 
         $eleves = $classe->getEleves();
@@ -95,14 +98,21 @@ class ClasseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $eleves = $eleveRepo->orderByEleve(
                 $search->get('ordreNom')->getData(),
-                $search->get('ordrePrenom')->getData()
+                $search->get('ordrePrenom')->getData(),
+                $classe->getId()
             );
-
         }
+
+        $cantineInscrit = [];
+        foreach ($eleves as $eleve) {
+            $cantineInscrit[] = $cantineRepository->findOneByEleve($eleve->getId());
+        }
+
 
         return $this->render('classe/show.html.twig', [
             'eleves' => $eleves,
             'classe' => $classe,
+            'cantineInscrits' => $cantineInscrit,
             'form' => $form->createView(),
         ]);
     }

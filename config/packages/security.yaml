@@ -39,43 +39,50 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: ^/admin, roles: ROLE_ADMIN }
-         - { path: ^/sandwich, roles: ROLE_ADMIN }
-         - { path: ^/sandwich/new, roles: ROLE_ADMIN }
-         - { path: ^/sandwich/edit, roles: ROLE_ADMIN }
-         - { path: ^/sandwich/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/boisson, roles: ROLE_ADMIN }
-         - { path: ^/boisson/new, roles: ROLE_ADMIN }
-         - { path: ^/boisson/edit, roles: ROLE_ADMIN }
-         - { path: ^/boisson/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/dessert, roles: ROLE_ADMIN }
-         - { path: ^/dessert/new, roles: ROLE_ADMIN }
-         - { path: ^/dessert/edit, roles: ROLE_ADMIN }
-         - { path: ^/dessert/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/inscription/cantine, roles: ROLE_ADMIN }
+         - { path: ^/sandwich, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/sandwich/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/sandwich/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/sandwich/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/boisson, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/boisson/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/boisson/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/boisson/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/dessert, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/dessert/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/dessert/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/dessert/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/inscription/cantine, roles: [ROLE_ADMIN, ROLE_CUISINE] }
          - { path: ^/adulte, roles: ROLE_ADMIN }
          - { path: ^/adulte/new, roles: ROLE_ADMIN }
          - { path: ^/adulte/edit, roles: ROLE_ADMIN }
          - { path: ^/adulte/file, roles: ROLE_ADMIN }
          - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/classe, roles: ROLE_ADMIN }
+         - { path: ^/classe, roles: [ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES] }
          - { path: ^/classe/new, roles: ROLE_ADMIN }
          - { path: ^/classe/edit, roles: ROLE_ADMIN }
-         - { path: ^/classe/show, roles: ROLE_ADMIN }
+         - { path: ^/classe/show, roles: [ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES] }
          - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
          - { path: ^/eleve, roles: ROLE_ADMIN }
          - { path: ^/eleve/new, roles: ROLE_ADMIN }
          - { path: ^/eleve/edit, roles: ROLE_ADMIN }
          - { path: ^/eleve/file, roles: ROLE_ADMIN }
          - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/user, roles: ROLE_ADMIN }
-         - { path: ^/user/new, roles: ROLE_ADMIN }
-         - { path: ^/user/edit, roles: ROLE_ADMIN }
-         - { path: ^/user/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/user/file, roles: ROLE_ADMIN }
+         - { path: ^/user, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/user/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/user/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/user/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
+         - { path: ^/user/file, roles: [ROLE_ADMIN, ROLE_CUISINE] }
          - { path: ^/profile/admin, roles: ROLE_ADMIN }
          - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
-         - { path: ^/profile/adulte, roles: ROLE_ADULTES}
+         - { path: ^/profile/adulte, roles: ROLE_ADULTES }
          - { path: ^/profile/eleve, roles: ROLE_ELEVE }
+         - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/groupe/new, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/groupe/edit, roles: IS_AUTHENTICATED_FULLY }
+         - { path: ^/commande/groupe/delete_view, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

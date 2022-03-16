@@ -57,6 +57,7 @@ class Eleve
      */
     private ?int $nbRepas;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,4 +158,5 @@ class Eleve
 
         return $this;
     }
+
 }
