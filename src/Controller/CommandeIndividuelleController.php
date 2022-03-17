@@ -45,16 +45,18 @@ class CommandeIndividuelleController extends AbstractController
     private DessertRepository $dessertRepo;
     private CommandeIndividuelleRepository $comIndRepo;
     private EleveRepository $eleveRepo;
+    private CommandeGroupeRepository $comGrRepo;
 
     public function __construct(SandwichRepository $sandwichRepo,
                                 BoissonRepository $boissonRepo, DessertRepository $dessertRepo,
                                 CommandeIndividuelleRepository $comIndRepo,
-                                EleveRepository $eleveRepo) {
+                                EleveRepository $eleveRepo, CommandeGroupeRepository $comGrRepo) {
         $this->sandwichRepo = $sandwichRepo;
         $this->boissonRepo = $boissonRepo;
         $this->dessertRepo = $dessertRepo;
         $this->comIndRepo = $comIndRepo;
         $this->eleveRepo = $eleveRepo;
+        $this->comGrRepo = $comGrRepo;
     }
 
     /**
@@ -422,7 +424,8 @@ class CommandeIndividuelleController extends AbstractController
                 return new Response();
             }
             elseif ($methode == "Impression"){
-                $this->redirectToRoute('commande_impression',['commandes' => $commandesExport,'modalite' => $modalite,'dateChoisi'=> $exportReq->get('dateExport')->getData()]);
+                return CommandeIndividuelleController::printPreview($modalite,
+                    $exportReq->get('dateExport')->getData());
             }
 
         }
@@ -468,6 +471,39 @@ class CommandeIndividuelleController extends AbstractController
         ]);
     }
 
+    /**
+     * @param $modalite
+     * @param $dateChoisi
+     * @return Response
+     * @Route("/preview", name="commande_impression", methods={"GET","POST"})
+     */
+    public function printPreview($modalite, $dateChoisi): Response
+    {
+        $commandes = $this->comIndRepo
+            ->exportationCommande($dateChoisi->format('y-m-d'));
+
+        $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
+
+        if ($modalite == "Séparé") {
+            return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
+                'type' => "Impression",
+                'commandes' => $commandes,
+                'commandesGroupe' => $commandeGroupe,
+                'dateChoisi' => $dateChoisi,
+            ]);
+        }
+        else{
+            return $this->render('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+                'commandesGroupe' => $commandeGroupe,
+                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
+                'boissonDispo' => $this->boissonRepo->findByDispo(true),
+                'dessertDispo' => $this->dessertRepo->findByDispo(true),
+            ]);
+        }
+    }
+
 
     /**
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
@@ -499,6 +535,7 @@ class CommandeIndividuelleController extends AbstractController
         // Génère le pdf et le rendu html à partir du TWIG
         if ($modalite == "Séparé") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
+                'type' => "PDF",
                 'commandes' => $commandes,
                 'commandesGroupe' => $commandesGroupe,
                 'dateChoisi' => $dateChoisi,
@@ -577,7 +614,8 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+            if (in_array("ROLE_ADMIN",$roles) == false &&
+                $limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
                 $dateLivraison > new DateTime('now 00:00:00',
                     new DateTimeZone('Europe/Paris')) &&
                 $dateLivraison < new DateTime('now 23:59:59',
@@ -587,10 +625,10 @@ class CommandeIndividuelleController extends AbstractController
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
             }
-            elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
+            elseif (in_array("ROLE_ADMIN",$roles) == false && $dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
                 $this->addFlash(
                     'limiteCloture',
-                    'Vous ne pouvez pas faire une commande le samedi et le dimanche !'
+                    'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
                 );
             }
             else {
@@ -777,7 +815,8 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ($limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+            if ( in_array("ROLE_ADMIN",$roles) == false &&
+                $limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
                 $dateLivraison > new DateTime('now 00:00:00',
                     new DateTimeZone('Europe/Paris')) &&
                 $dateLivraison < new DateTime('now 23:59:59',
@@ -858,7 +897,7 @@ class CommandeIndividuelleController extends AbstractController
                             $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                         }
                         $commandeIndividuelle
-                            ->setCommandeur($this->getUser())
+                            ->setCommandeur($user)
                             ->setDateCreation($dateNow)
                             ->setEstValide(true);
 

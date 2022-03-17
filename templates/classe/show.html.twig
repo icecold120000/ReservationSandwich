@@ -49,7 +49,7 @@
                         {% if eleve.photoEleve %}
                             <img alt="Photo de l'élève" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
                         {% else %}
-                            <img alt="Placeholder" src="{{ asset('public/static/images/avatar.jpg') }}">
+                            <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
                         {% endif %}
                     </td>
                     <td>{{ eleve.prenomEleve }}</td>

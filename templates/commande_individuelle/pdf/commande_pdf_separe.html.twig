@@ -1,27 +1,52 @@
 {% extends 'base_pdf.html.twig'%}
 
-{% block title %}PDF du {{ dateChoisi|date('d/m/Y') }}{% endblock %}
+{% block title %}
+    {% if type == "PDF" %}
+        PDF du {{ dateChoisi|date('d/m/Y') }}
+    {% else %}
+        Page pré-impression du PDF du {{ dateChoisi|date('d/m/Y') }}
+    {% endif %}
+{% endblock %}
 {% block body %}
     <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
     <h2>Commandes individuelles :</h2>
     <table style="border: solid; width: 100%">
         <thead>
             <tr>
-                <th style="border: solid">Heure de Livraison</th>
-                <th style="border: solid">Prénom et Nom</th>
-                <th style="border: solid">Classe</th>
-                <th style="border: solid">Commande</th>
-                <th style="border: solid">Chips</th>
+                {% if type == "Impression"%}
+                    <th style="text-align: center; border: solid ;font-size: 1.5em">Photo élève</th>
+                {% endif %}
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Heure de Livraison</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Prénom et Nom</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Classe</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Commande</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Chips</th>
             </tr>
         </thead>
         <tbody>
             {% for commande in commandes %}
                 <tr>
-                    <td style="text-align: center;border: solid">
+                    {% if type == "Impression" %}
+                        <td style="text-align: center; border: solid ;font-size: 1.5em">
+                            {% if commande.commandeur.eleves %}
+                                {% for eleve in commande.commandeur.eleves %}
+                                    {% if eleve.photoEleve %}
+                                        <img alt="Photo de l'élève" style="width: 160px; height: 160px" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
+                                    {% endif %}
+                                {% else %}
+                                    <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                     </td>
-                    <td style="text-align: center;border: solid">{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                        {{ commande.commandeur.prenomUser }}
+                        <span>{{ commande.commandeur.nomUser }}</span>
+                    </td>
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         {% if commande.commandeur.eleves %}
                             {% for eleve in commande.commandeur.eleves %}
                                 {{ eleve.classeEleve.codeClasse }}
@@ -30,18 +55,18 @@
                             {% endfor %}
                         {% endif %}
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                         <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
                         <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         {{ commande.prendreChips ? 'Oui' : 'Non' }}
                     </td>
                 </tr>
             {% else %}
-                <tr style="text-align: center">
-                    <td colspan="5" style="color: red">Aucune commande individuelle n'a été réalisée</td>
+                <tr style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td colspan="5" style="color: red">Aucune commande individuelle n'a été réalisée !</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -50,38 +75,43 @@
     <table style="border: solid; width: 100%">
         <thead>
             <tr>
-                <th style="border: solid">Heure de Livraison</th>
-                <th style="border: solid">Lieu de Livraison</th>
-                <th style="border: solid">Prénom et Nom</th>
-                <th style="border: solid">Commande</th>
-                <th style="border: solid">Chips</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Heure de Livraison</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Lieu de Livraison</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Prénom et Nom</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Commande</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Chips</th>
             </tr>
         </thead>
         <tbody>
             {% for commande in commandesGroupe %}
                 <tr>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         {{ commande.lieuLivraison }}
                     </td>
-                    <td style="text-align: center;border: solid">{{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span></td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                        {{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span>
+                    </td>
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         {% set nombreEleve = 0 %}
                         {% for sandwichCommande in commande.sandwichCommandeGroupes %}
-                            <span style="display: block">{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                            <span style="display: block">
+                                {{ sandwichCommande.nombreSandwich }}
+                                {{ sandwichCommande.sandwichChoisi.nomSandwich }}
+                            </span>
                             {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
                         {% endfor %}
                         <span style="display: block">{{ nombreEleve }} {{ commande.boissonChoisie.nomBoisson }}</span>
                         <span style="display: block">{{ nombreEleve }} {{ commande.dessertChoisi.nomDessert }}</span>
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.5em">
                         {{ commande.prendreChips ? 'Oui' : 'Non' }}
                     </td>
                 </tr>
             {% else %}
-                <tr style="text-align: center">
+                <tr style="text-align: center; border: solid ;font-size: 1.5em">
                     <td colspan="5" style="color: red">Aucune commande groupée n'a été réalisée !</td>
                 </tr>
             {% endfor %}

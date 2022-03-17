@@ -6,17 +6,17 @@
     <table style="border: solid; width: 100%">
         <thead>
             <tr>
-                <th style="text-align: center;border: solid">Nom du produit</th>
-                <th style="text-align: center;border: solid">Nombre de produits commandés</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Nom du produit</th>
+                <th style="text-align: center; border: solid ;font-size: 1.5em">Nombre de produits commandés</th>
             </tr>
         </thead>
         <tbody>
             {% for sandwich in sandwichDispo %}
                 <tr>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {{ sandwich.nomSandwich }}
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {% set nbSandwich = 0 %}
                         {% for commande in commandes %}
                             {% if commande.sandwichChoisi.id == sandwich.id %}
@@ -30,7 +30,11 @@
                                 {% endif %}
                             {% endfor %}
                         {% endfor %}
-                        {{ nbSandwich }}
+                        {% if nbSandwich != 0 %}
+                            {{ nbSandwich }}
+                        {% else %}
+                            <span style="color: red; font-weight: bold">Aucun sandwich de ce type n'a été commandé !</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -40,10 +44,10 @@
             {% endfor %}
             {% for boisson in boissonDispo %}
                 <tr>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {{ boisson.nomBoisson }}
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {% set nbBoisson = 0 %}
                         {% for commande in commandes %}
                             {% if commande.boissonChoisie.id == boisson.id %}
@@ -59,7 +63,11 @@
                                 {% set nbBoisson = nbBoisson + nombreEleve %}
                             {% endif %}
                         {% endfor %}
-                        {{ nbBoisson }}
+                        {% if nbBoisson != 0 %}
+                            {{ nbBoisson }}
+                        {% else %}
+                            <span style="color: red; font-weight: bold">Aucune boisson de ce type n'a été commandée !</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -69,10 +77,10 @@
             {% endfor %}
             {% for dessert in dessertDispo %}
                 <tr>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {{ dessert.nomDessert }}
                     </td>
-                    <td style="text-align: center;border: solid">
+                    <td style="text-align: center; border: solid ;font-size: 1.25em">
                         {% set nbDessert = 0 %}
                         {% for commande in commandes %}
                             {% if commande.dessertChoisi.id == dessert.id %}
@@ -88,7 +96,11 @@
                                 {% set nbDessert = nbDessert + nombreEleve %}
                             {% endif %}
                         {% endfor %}
-                        {{ nbDessert }}
+                        {% if nbDessert != 0 %}
+                            {{ nbDessert }}
+                        {% else %}
+                            <span style="color: red; font-weight: bold">Aucun dessert de ce type n'a été commandé !</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -97,10 +109,10 @@
                 </tr>
             {% endfor %}
             <tr>
-                <td style="text-align: center;border: solid">
+                <td style="text-align: center; border: solid ;font-size: 1.25em">
                     Chips
                 </td>
-                <td style="text-align: center;border: solid">
+                <td style="text-align: center; border: solid ;font-size: 1.25em">
                     {% set nbChips = 0 %}
                     {% for commande in commandes %}
                         {% if commande.prendreChips == 1 %}
@@ -114,7 +126,6 @@
                     {% endfor %}
                     {% if nbChips != 0 %}
                         {{ nbChips }}
-                    {% else %}
                     {% else %}
                         <span style="color: red; font-weight: bold">Aucun paquet de chips n'a été commandé !</span>
                     {% endif %}

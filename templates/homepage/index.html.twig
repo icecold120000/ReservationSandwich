@@ -14,7 +14,7 @@
         {% if menu.fileName %}
             <img id="menuImg" src="{{ asset('uploads/menu/' ~ menu.fileName) }}" alt="Menu de la semaine">
         {% else %}
-            <img id="menuImg" src="{{ asset('static/images/placeholder.png') }}" alt="Placeholder menu de la semaine">
+            <img id="menuImg" src="{{ asset('/static/images/placeholder.png') }}" alt="Placeholder menu de la semaine">
         {% endif %}
     </div>
     <div class="container">
