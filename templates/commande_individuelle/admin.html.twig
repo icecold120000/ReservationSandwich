@@ -6,6 +6,14 @@
     <h1>Liste des commandes à venir</h1>
     <div>
         <div>
+            <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
+                Faire une commande individuelle
+            </a>
+            <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
+                Faire une commande groupée
+            </a>
+        </div>
+        <div id="divRetour">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf" id="btnAjout">
                 Choisir votre mode d'exportation
             </button>
@@ -22,7 +30,7 @@
                             {{ form_end(exportForm) }}
                             <button type="submit"
                                     class="btn btn-success" form="formExport">
-                                Démarré votre export
+                                Démarrer votre export
                             </button>
                         </div>
                         <div class="modal-footer">

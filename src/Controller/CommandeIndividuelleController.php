@@ -169,6 +169,7 @@ class CommandeIndividuelleController extends AbstractController
      * @Route("/admin", name="commande_individuelle_admin", methods={"GET","POST"})
      * @throws Exception
      * @throws NonUniqueResultException
+     * @throws \Exception
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface $paginator, Request $request,
@@ -435,17 +436,25 @@ class CommandeIndividuelleController extends AbstractController
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $dateFilter = $filter->get('date')->getData();
+            if ($dateFilter != null) {
+                $dateFilter->format('Y-m-d');
+            }
+            else {
+                $dateFilter = null;
+            }
+
             $commandes = $comIndRepo->filterAdmin(
                 $filter->get('nom')->getData(),
-                $filter->get('date')->getData(),
+                $dateFilter,
                 $filter->get('cloture')->getData()
             );
 
             $affichageTableau = $filter->get('affichageTableau')->getData();
-
             $commandesGroupe = $comGrRepo->filterAdmin(
                 $filter->get('nom')->getData(),
-                $filter->get('date')->getData(),
+                $dateFilter,
                 $filter->get('cloture')->getData()
             );
         }

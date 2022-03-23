@@ -179,8 +179,9 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
 
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
+     * @throws \Exception
      */
-    public function filterAdmin($nom = null, $date = null, $cloture = false): array
+    public function filterAdmin($nom = null, $date = null, $cloture = null): array
     {
         $query = $this->createQueryBuilder('ci');
         if($nom != null){
@@ -196,7 +197,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         }
 
         if ($date != null) {
-            if ($date == new \DateTime('now')) {
+            if (new \DateTime($date.'00:00:00') == new \DateTime('now 00:00:00')) {
                 $query->andWhere('ci.dateHeureLivraison Like :date')
                     ->setParameter('date', '%'.$date.'%')
                     ->orderBy('ci.dateHeureLivraison', 'ASC')
@@ -210,17 +211,19 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
             }
         }
 
-        if ($cloture == false) {
-            $query->andWhere('ci.dateHeureLivraison > :date')
-                ->setParameter('date',  new \DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
-        }
-        else {
-            $query->andWhere('ci.dateHeureLivraison < :date')
-                ->setParameter('date', new \DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
+        if ($cloture != null) {
+            if ($cloture != false) {
+                $query->andWhere('ci.dateHeureLivraison > :date')
+                    ->setParameter('date',  new \DateTime('now'))
+                    ->orderBy('ci.dateHeureLivraison', 'ASC')
+                ;
+            }
+            else {
+                $query->andWhere('ci.dateHeureLivraison < :date')
+                    ->setParameter('date', new \DateTime('now'))
+                    ->orderBy('ci.dateHeureLivraison', 'ASC')
+                ;
+            }
         }
 
         return $query->getQuery()->getResult();

@@ -38,7 +38,7 @@ class Adulte
     private ?bool $archiveAdulte;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adultes")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adultes", cascade={"remove"})
      */
     private $compteAdulte;
 

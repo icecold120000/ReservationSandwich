@@ -18,7 +18,7 @@ class SandwichCommandeGroupe
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="sandwichCommandeGroupes")
+     * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="sandwichCommandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $sandwichChoisi;
@@ -29,7 +29,8 @@ class SandwichCommandeGroupe
     private $nombreSandwich;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CommandeGroupe::class, inversedBy="sandwichCommandeGroupes")
+     * @ORM\ManyToOne(targetEntity=CommandeGroupe::class,
+     *      inversedBy="sandwichCommandeGroupes", cascade={"remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $commandeAffecte;

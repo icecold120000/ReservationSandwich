@@ -1,5 +1,5 @@
     {{form_start(form)}}
-        <div id="part1">
+        <div id="screenLeft">
             {{form_label(form.nomDessert)}}
             {% if form_errors(form.nomDessert) %}
                 <div class="erreur">
@@ -29,7 +29,7 @@
                 {{form_widget(form.dispoDessert)}}
             </div>
         </div>
-        <div id="part2">
+        <div id="screenRight">
             {{form_label(form.ingredientDessert)}}
             {% if form_errors(form.ingredientDessert) %}
                 <div class="erreur">

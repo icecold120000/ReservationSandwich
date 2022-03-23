@@ -1,5 +1,5 @@
     {{form_start(form)}}
-        <div id="part1">
+        <div id="screenLeft">
             {{form_label(form.nomEleve)}}
             {% if form_errors(form.nomEleve) %}
                 <div class="erreur">
@@ -29,7 +29,7 @@
                 {{ form_widget(form.photoEleve) }}
             </div>
         </div>
-        <div id="part2">
+        <div id="screenRight">
             {{ form_label(form.dateNaissance) }}
             {{ form_help(form.dateNaissance) }}
             {%if form_errors(form.dateNaissance) %}

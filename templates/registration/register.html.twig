@@ -23,7 +23,7 @@
                 <div class="container-fluid">
                     <div>
                         {{form_start(registrationForm)}}
-                        <div id="part1">
+                        <div id="screenLeft">
                             {{form_label(registrationForm.prenomUser)}}
                             {% if form_errors(registrationForm.prenomUser) %}
                                 <div class="erreur">
@@ -62,10 +62,10 @@
                                 {{form_widget(registrationForm.dateNaissanceUser)}}
                             </div>
                         </div>
-                        <div id="part2">
-                            {% if form_errors(registrationForm.plainPassword)%}
+                        <div id="screenRight">
+                            {% if form_errors(registrationForm.plainPassword.first)%}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.plainPassword)}}
+                                    {{form_errors(registrationForm.plainPassword.first)}}
                                 </div>
                             {% endif %}
                             <div class="divInput">

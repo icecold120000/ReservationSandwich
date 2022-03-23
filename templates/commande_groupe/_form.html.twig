@@ -1,5 +1,5 @@
 {{ form_start(form) }}
-    <div id="part1">
+    <div id="screenLeft">
         {{ form_label(form.sandwichChoisi1) }}
         {% if form_errors(form.sandwichChoisi1) %}
             <div class="erreur">
@@ -10,7 +10,7 @@
         <div id="sandwich1Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for sandwich in sandwichs %}
-                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
                         <label for="commande_groupe_sandwichChoisi1_{{ sandwich.id }}">
                             <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
                             <p>{{ sandwich.nomSandwich }}</p>
@@ -51,11 +51,11 @@
             <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
                     {% for dessert in desserts %}
-                        <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+                        <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
                             <label for="commande_groupe_dessertChoisi_{{ dessert.id }}">
                                 <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block" alt="{{ dessert.nomDessert }}-image">
-                                <p>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</p>
-                                <p>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.'}}</p>
+                                <p>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisé.'}}</p>
+                                <p>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire précisé.'}}</p>
                                 <input type="radio" name="commande_groupe[dessertChoisi]" value="{{ dessert.id }}"
                                        id="commande_groupe_dessertChoisi_{{ dessert.id }}">
                             </label>
@@ -83,7 +83,7 @@
             {{form_widget(form.motifSortie)}}
         </div>
     </div>
-    <div id="part2">
+    <div id="screenRight">
         {{ form_label(form.sandwichChoisi2) }}
         {% if form_errors(form.sandwichChoisi2) %}
             <div class="erreur">
@@ -94,7 +94,7 @@
         <div id="sandwich2Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for sandwich in sandwichs %}
-                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}">
+                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
                         <label for="commande_groupe_sandwichChoisi2_{{ sandwich.id }}">
                             <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
                             <p>{{ sandwich.nomSandwich }}</p>

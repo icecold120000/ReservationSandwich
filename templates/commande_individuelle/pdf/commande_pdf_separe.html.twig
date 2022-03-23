@@ -9,29 +9,17 @@
 {% endblock %}
 {% block body %}
     <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
-    <h2>Commandes individuelles :</h2>
-    <table style="border: solid; width: 100%">
-        <thead>
-            <tr>
-                {% if type == "Impression"%}
-                    <th style="text-align: center; border: solid ;font-size: 1.5em">Photo élève</th>
-                {% endif %}
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Heure de Livraison</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Prénom et Nom</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Classe</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Commande</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Chips</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for commande in commandes %}
+    <h2>Commandes individuelles par élèves :</h2>
+    {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
+        <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+            <tbody>
                 <tr>
                     {% if type == "Impression" %}
-                        <td style="text-align: center; border: solid ;font-size: 1.5em">
+                        <td style="text-align: center; font-size: 1.5em">
                             {% if commande.commandeur.eleves %}
                                 {% for eleve in commande.commandeur.eleves %}
                                     {% if eleve.photoEleve %}
-                                        <img alt="Photo de l'élève" style="width: 160px; height: 160px" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
+                                        <img alt="Photo de l'élève" style="width: 200px; height: 200px" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
                                     {% endif %}
                                 {% else %}
                                     <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
@@ -39,62 +27,93 @@
                             {% endif %}
                         </td>
                     {% endif %}
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
-                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Heure de livraison :</span>
+                        <span style="display: block">{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                     </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Élève :</span>
                         {{ commande.commandeur.prenomUser }}
                         <span>{{ commande.commandeur.nomUser }}</span>
                     </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Classe :</span>
                         {% if commande.commandeur.eleves %}
                             {% for eleve in commande.commandeur.eleves %}
                                 {{ eleve.classeEleve.codeClasse }}
-                            {% else %}
-                                Adulte
                             {% endfor %}
                         {% endif %}
                     </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Commande :</span>
                         <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                         <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
                         <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
-                    </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
-                        {{ commande.prendreChips ? 'Oui' : 'Non' }}
+                        <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
                     </td>
                 </tr>
-            {% else %}
-                <tr style="text-align: center; border: solid ;font-size: 1.5em">
-                    <td colspan="5" style="color: red">Aucune commande individuelle n'a été réalisée !</td>
+            </tbody>
+        </table>
+        {% if loop.last != true %}
+            <p style="margin: 0 0 3em 0">
+                <i class="fas fa-cut"></i>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            </p>
+        {% endif %}
+    {% else %}
+        <tr style="text-align: center; border: solid ;font-size: 1.5em">
+            <td colspan="5" style="color: red">Aucune commande individuelle par élèves n'a été réalisée !</td>
+        </tr>
+    {% endfor %}
+    <h2>Commandes individuelles par adultes :</h2>
+    {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
+        <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+            <tbody>
+                <tr>
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Heure de livraison :</span>
+                        <span style="display: block">{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                    </td>
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Adulte :</span>
+                        {{ commande.commandeur.prenomUser }}
+                        <span>{{ commande.commandeur.nomUser }}</span>
+                    </td>
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Commande :</span>
+                        <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
+                        <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
+                        <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
+                        <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
+                    </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+        {% if loop.last != true %}
+            <p style="margin: 0 0 3em 0">
+                <i class="fas fa-cut"></i>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            </p>
+        {% endif %}
+    {% else %}
+        <tr style="text-align: center; border: solid ;font-size: 1.5em">
+            <td colspan="5" style="color: red">Aucune commande individuelle par adultes n'a été réalisée !</td>
+        </tr>
+    {% endfor %}
     <h2>Commandes groupées :</h2>
     <table style="border: solid; width: 100%">
-        <thead>
-            <tr>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Heure de Livraison</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Lieu de Livraison</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Prénom et Nom</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Commande</th>
-                <th style="text-align: center; border: solid ;font-size: 1.5em">Chips</th>
-            </tr>
-        </thead>
         <tbody>
             {% for commande in commandesGroupe %}
                 <tr>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
-                        <span>{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Lieu et heure</span>
+                        <span style="display: block">de livraison :</span>
+                        <span style="display: block">{{ commande.lieuLivraison }} à {{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                     </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
-                        {{ commande.lieuLivraison }}
-                    </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Enseignant :</span>
                         {{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span>
                     </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
+                    <td style="text-align: center; font-size: 1.5em">
+                        <span style="display: block">Commande :</span>
                         {% set nombreEleve = 0 %}
                         {% for sandwichCommande in commande.sandwichCommandeGroupes %}
                             <span style="display: block">
@@ -105,9 +124,7 @@
                         {% endfor %}
                         <span style="display: block">{{ nombreEleve }} {{ commande.boissonChoisie.nomBoisson }}</span>
                         <span style="display: block">{{ nombreEleve }} {{ commande.dessertChoisi.nomDessert }}</span>
-                    </td>
-                    <td style="text-align: center; border: solid ;font-size: 1.5em">
-                        {{ commande.prendreChips ? 'Oui' : 'Non' }}
+                        <span style="display: block"> {{ nombreEleve }} Chips</span>
                     </td>
                 </tr>
             {% else %}

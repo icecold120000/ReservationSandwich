@@ -46,7 +46,7 @@ class Sandwich
     private ?bool $dispoSandwich;
 
     /**
-     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="sandwichChoisi")
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="sandwichChoisi", orphanRemoval=true)
      */
     private $commandeIndividuelles;
 

@@ -13,7 +13,7 @@
         {% endfor %}
         <div class="container-fluid formEntité2" id="formUserProfile">
             {{ form_start(form) }}
-                <div id="part1">
+                <div id="screenLeft">
                     {{form_label(form.prenomUser)}}
                     {% if form_errors(form.prenomUser) %}
                         <div class="erreur">
@@ -42,7 +42,7 @@
                         {{form_widget(form.email)}}
                     </div>
                 </div>
-                <div id="part2">
+                <div id="screenRight">
                     {% if form_errors(form.plainPassword) %}
                         <div class="erreur">
                             {{form_errors(form.plainPassword)}}

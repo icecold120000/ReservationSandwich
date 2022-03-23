@@ -30,7 +30,7 @@ class Classe
     private ?string $codeClasse;
 
     /**
-     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="classeEleve")
+     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="classeEleve", cascade={"persist"})
      */
     private $eleves;
 

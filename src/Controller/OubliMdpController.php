@@ -13,9 +13,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -28,41 +30,52 @@ class OubliMdpController extends AbstractController
      * @Route("/oubli/mdp", name="oubli_mdp")
      * @throws TransportExceptionInterface
      */
-    public function forgottenPassword(EntityManagerInterface $em, Request $request, MailerInterface $mailer): Response
+    public function forgottenPassword(EntityManagerInterface $em,
+                                      Request $request,
+                                      MailerInterface $mailer,
+                                      RateLimiterFactory $anonymousApiLimiter): Response
     {
 
         $form = $this->createForm(OubliMdpType::class);
         $email = $form->handleRequest($request);
+        $limiter = $anonymousApiLimiter->create($request->getClientIp());
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        // the argument of consume() is the number of tokens to consume
+        // and returns an object of type Limit
+        if (false === $limiter->consume(1)->isAccepted()) {
+            throw new TooManyRequestsHttpException('Dans une heure','Vous avez fait trop de demande d\'inscription !');
+        }
+        else {
+            if ($form->isSubmitted() && $form->isValid()) {
 
-            $user = $email->get("emailFirst")->getData();
-            $dateNaissance = $email->get("dateAnniversaire")->getData();
+                $user = $email->get("emailFirst")->getData();
+                $dateNaissance = $email->get("dateAnniversaire")->getData();
 
-            $data = $em->getRepository(User::class)->findOneByEmailAndDate($user, $dateNaissance);
+                $data = $em->getRepository(User::class)->findOneByEmailAndDate($user, $dateNaissance);
 
-            if(empty($data))
-                $error = "L'adresse mail n'est lié à aucun compte !";
-            else{
+                if (empty($data))
+                    $error = "L'adresse mail n'est lié à aucun compte !";
+                else {
 
-                $email = (new TemplatedEmail())
-                    ->from('assocsportive.stvincent@gmail.com')
-                    ->to($data->getEmail())
-                    ->subject('Votre réinitialisation de mot de passe')
-                    ->htmlTemplate('email/send_oubli_mdp.html.twig')
-                    ->context([
-                        'user' => $data
-                    ]);
+                    $email = (new TemplatedEmail())
+                        ->from('assocsportive.stvincent@gmail.com')
+                        ->to($data->getEmail())
+                        ->subject('Votre réinitialisation de mot de passe')
+                        ->htmlTemplate('email/send_oubli_mdp.html.twig')
+                        ->context([
+                            'user' => $data
+                        ]);
 
-                $mailer->send($email);
+                    $mailer->send($email);
 
-                $this->addFlash(
-                    'SuccessOubli',
-                    'Votre demande a été envoyée.
-                    Vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.'
-                );
+                    $this->addFlash(
+                        'SuccessOubli',
+                        'Votre demande a été envoyée.
+                        Vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.'
+                    );
 
-                return $this->redirectToRoute("oubli_mdp");
+                    return $this->redirectToRoute("oubli_mdp");
+                }
             }
         }
 

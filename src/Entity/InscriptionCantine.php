@@ -20,7 +20,7 @@ class InscriptionCantine
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Eleve::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Eleve::class, cascade={"remove"})
      */
     private $eleve;
 

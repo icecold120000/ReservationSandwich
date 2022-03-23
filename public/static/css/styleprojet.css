@@ -39,7 +39,7 @@ form div{
     font-style: italic;
 }
 
-#part1{
+#screenLeft{
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -47,12 +47,13 @@ form div{
     padding: 0;
 }
 
-#part2{
+#screenRight{
     width: 45%;
     display: flex;
     flex-direction: column;
     align-items: flex-start
 }
+
 footer a, nav a, a.btn  {
     color: white;
     text-decoration: none;
@@ -225,7 +226,7 @@ h6{
     margin-bottom: 40px;
 }
 
-#login, #login div#part1, #login div#part2{
+#login, #login div#screenLeft, #login div#screenRight{
     display: inline-block;
 }
 
@@ -253,13 +254,12 @@ input#rememberMe {
 #btnRegister{
     background-color: dimgrey;
     color: #fff;
-    border-radius: 20px;
     border-style: none;
     padding: 10px;
     font-size: 15px;
 }
 
-#login #part1 a.btn.btn-info{
+#login #screenLeft a.btn.btn-info{
     padding: 10px;
     font-size: 15px;
 }
@@ -317,9 +317,12 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
     display: inline-block;
 }
 
-#formRegister ul li{
-    position: relative;
-    right: 5%;
+#formRegister #screenRight div.divInput ul {
+    display: none;
+}
+
+#formRegister .erreur{
+    padding: 0 0 10px 0;
 }
 
 #formRegister .help-text{
@@ -367,7 +370,7 @@ div.erreur ul{
     justify-content: center;
 }
 
-.formEntité2 #part1 {
+.formEntité2 #screenLeft {
     align-items: unset;
 }
 
@@ -407,6 +410,11 @@ form textarea {
 /*Formulaire de réinitialisation de mot de passe */
 #formResetMdp form{
     align-items: center;
+}
+
+#formResetMdp label{
+    display: flex;
+    justify-content: center;
 }
 
 /*Listes des commandes*/
@@ -457,7 +465,7 @@ div#preciserRaison {
     display: none;
 }
 
-#commandeFormInd #part2, #commandeFormGroupe #part2{
+#commandeFormInd #screenRight, #commandeFormGroupe #screenRight{
     align-items: unset;
     margin-left: 1em;
 }
@@ -607,12 +615,12 @@ div#preciserRaison {
         font-size: 1.5em;
     }
 
-    #part1 , #part2 {
+    #screenLeft , #screenRight {
         width: 100%;
         align-items: center;
     }
 
-    #part2 div {
+    #screenRight div {
         padding: 0;
     }
 
@@ -673,7 +681,7 @@ div#preciserRaison {
         font-size: 1em;
     }
 
-    #login #part1 a.btn.btn-info{
+    #login #screenLeft a.btn.btn-info{
         padding: 30px;
         font-size: 3.5em;
     }

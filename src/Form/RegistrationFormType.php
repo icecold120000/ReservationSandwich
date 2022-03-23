@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class RegistrationFormType extends AbstractType
 {
@@ -24,7 +25,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir un nom',
+                        'message' => 'Veuillez saisir un nom !',
                     ]),
                 ],
             ])
@@ -33,7 +34,7 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir un prénom',
+                        'message' => 'Veuillez saisir un prénom !',
                     ]),
                 ],
             ])
@@ -42,17 +43,20 @@ class RegistrationFormType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir un e-mail',
+                        'message' => 'Veuillez saisir un e-mail !',
                     ]),
                 ],
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Votre date de naissance',
-                'html5' => false,
+                'html5' => true,
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy',
                 'required' => true,
-                'help' => ' format : JJ/MM/AAAA'
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'Veuillez saisir une date de naissance !',
+                    ]),
+                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,
@@ -68,8 +72,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Vos champs doit comporter au moins {{ limit }} caractères !',
-                        // max length allowed by Symfony for security reasons
+                        'minMessage' => 'Vos champs doit comporter au moins 6 caractères !',
                         'max' => 4096,
                     ]),
                 ],

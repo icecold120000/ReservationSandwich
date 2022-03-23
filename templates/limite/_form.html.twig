@@ -1,5 +1,5 @@
 {{form_start(form)}}
-    <div id="part1">
+    <div id="screenLeft">
         {{form_label(form.libelleLimite)}}
         {% if form_errors(form.libelleLimite) %}
             <div class="erreur">
@@ -19,7 +19,7 @@
             {{ form_widget(form.is_active) }}
         </div>
     </div>
-    <div id="part2">
+    <div id="screenRight">
         {{ form_label(form.nbLimite) }}
         {%if form_errors(form.nbLimite) %}
             <div class="erreur">

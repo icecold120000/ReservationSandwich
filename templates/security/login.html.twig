@@ -5,7 +5,7 @@
 {% block body %}
     <main>
         <div class="container" id="login">
-            <div id="part1">
+            <div id="screenLeft">
                 <h1 class="title">Connectez-vous</h1>
                 {% for message in app.flashes('successInscription') %}
                     <div class="flash-success">
@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <div id="part2">
+            <div id="screenRight">
                 <h1 class="title">Pas encore de compte ?</h1>
                 <h6>Vous êtes élève ou personnel de l'établissement et vous n'avez pas encore de compte sur la plateforme ?</h6>
                 <a id="btnRegister" href={{path('app_register')}} >

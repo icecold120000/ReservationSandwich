@@ -36,7 +36,7 @@ class Boisson
     private ?bool $dispoBoisson;
 
     /**
-     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="boissonChoisie")
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="boissonChoisie", orphanRemoval=true)
      */
     private $commandeIndividuelles;
 

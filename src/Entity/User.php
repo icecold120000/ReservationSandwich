@@ -75,17 +75,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $isVerified;
 
     /**
-     * @ORM\OneToMany(targetEntity=Adulte::class, mappedBy="compteAdulte")
+     * @ORM\OneToMany(targetEntity=Adulte::class, mappedBy="compteAdulte", cascade={"remove"})
      */
     private $adultes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="compteEleve")
+     * @ORM\OneToMany(targetEntity=Eleve::class, mappedBy="compteEleve", cascade={"remove"})
      */
     private $eleves;
 
     /**
-     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="commandeur")
+     * @ORM\OneToMany(targetEntity=CommandeIndividuelle::class, mappedBy="commandeur", orphanRemoval=true)
      */
     private $commandeIndividuelles;
 
@@ -215,7 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->dateNaissanceUser;
     }
 
-    public function setDateNaissanceUser(DateTime $dateNaissanceUser): self
+    public function setDateNaissanceUser(?DateTime $dateNaissanceUser): self
     {
         $this->dateNaissanceUser = $dateNaissanceUser;
 

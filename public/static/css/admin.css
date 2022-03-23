@@ -192,11 +192,11 @@ div#filtreEleve.filtre label{
     display: none;
 }
 
-#formUser.formEntité2 div#part2 div:first-child, div#user_roles div{
+#formUser.formEntité2 div#screenRight div:first-child, div#user_roles div{
     padding-bottom: 0;
 }
 
-#formUser.formEntité2 div#part2 div:first-child{
+#formUser.formEntité2 div#screenRight div:first-child{
     display: contents;
 }
 

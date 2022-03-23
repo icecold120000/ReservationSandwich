@@ -18,19 +18,19 @@ class CommandeIndividuelle
     private int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="commandeIndividuelles")
+     * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $sandwichChoisi;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeIndividuelles")
+     * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $boissonChoisie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeIndividuelles")
+     * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $dessertChoisi;
@@ -51,7 +51,7 @@ class CommandeIndividuelle
     private ?string $raisonCommande;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeIndividuelles")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      */
     private $commandeur;
 
@@ -123,7 +123,7 @@ class CommandeIndividuelle
         return $this->dateHeureLivraison;
     }
 
-    public function setDateHeureLivraison(\DateTimeInterface $dateHeureLivraison): self
+    public function setDateHeureLivraison(?\DateTimeInterface $dateHeureLivraison): self
     {
         $this->dateHeureLivraison = $dateHeureLivraison;
 

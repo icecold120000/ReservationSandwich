@@ -21,13 +21,13 @@ class CommandeGroupe
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeGroupes")
+     * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $boissonChoisie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeGroupes")
+     * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $dessertChoisi;
@@ -68,7 +68,7 @@ class CommandeGroupe
     private $dateCreation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeGroupes")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $commandeur;
@@ -153,7 +153,7 @@ class CommandeGroupe
         return $this->dateHeureLivraison;
     }
 
-    public function setDateHeureLivraison(\DateTimeInterface $dateHeureLivraison): self
+    public function setDateHeureLivraison(?\DateTimeInterface $dateHeureLivraison): self
     {
         $this->dateHeureLivraison = $dateHeureLivraison;
 

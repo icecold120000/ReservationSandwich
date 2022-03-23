@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class CommandeGroupeType extends AbstractType
@@ -111,11 +112,13 @@ class CommandeGroupeType extends AbstractType
                 'widget' => 'single_text',
                 'required' => true,
                 'help' => "Attention : Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum !",
-                'empty_data' => date("d/m/Y H:i"),
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
                     new GreaterThanOrEqual("+".$options['limiteDateSortie']."days 00:00:00",
                         null,"Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum !"),
+                    new NotNull([
+                        'message' => 'Veuillez saisir une date et heure de livraison !',
+                    ]),
                 ],
             ])
             ->add('lieuLivraison', ChoiceType::class, [

@@ -19,6 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class CommandeIndividuelleType extends AbstractType
 {
@@ -82,10 +83,12 @@ class CommandeIndividuelleType extends AbstractType
                 'widget' => 'single_text',
                 'required' => true,
                 'help' => 'Attention : Vous ne pouvez pas faire une commande pour le jour même après 9h30 !',
-                'empty_data' => date("d/m/Y H:i"),
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
                     new GreaterThanOrEqual("today",null,"Veuillez sélectionner une date et/ou heure future !"),
+                    new NotNull([
+                        'message' => 'Veuillez saisir une date et heure de livraison !',
+                    ]),
                 ],
             ])
             ->add('raisonCommande', ChoiceType::class, [

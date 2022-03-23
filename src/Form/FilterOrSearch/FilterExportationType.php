@@ -23,11 +23,11 @@ class FilterExportationType extends AbstractType
                 ],
             ])
             ->add('modaliteCommande', ChoiceType::class, [
-                'label' => 'Les commandes seront',
+                'label' => 'Choix de présentation',
                 'required' => true,
                 'choices' => [
-                    'Séparé' => 'Séparé',
-                    'Regroupé' => 'Regroupé'
+                    'Par commande' => 'Séparé',
+                    'Groupée pour préparation' => 'Regroupé'
                 ],
             ])
             ->add('dateExport', DateType::class,[

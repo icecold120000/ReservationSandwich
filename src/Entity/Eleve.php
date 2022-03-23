@@ -38,12 +38,12 @@ class Eleve
     private ?bool $archiveEleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="eleves")
+     * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="eleves", cascade={"persist"})
      */
     private $classeEleve;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="eleves")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="eleves", cascade={"remove"})
      */
     private $compteEleve;
 
