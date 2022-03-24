@@ -48,11 +48,13 @@ class CommandeGroupeController extends AbstractController
         $commandeGroupe = new CommandeGroupe();
         if ($limiteDate->getIsActive() == true) {
             $form = $this->createForm(CommandeGroupeType::class,
-                $commandeGroupe,['limiteDateSortie' => $limiteDate->getNbLimite()])
+                $commandeGroupe,['limiteDateSortie' => $limiteDate->getNbLimite(),
+                    'sandwichChoisi1' => null,'sandwichChoisi2' => null])
             ;
         }
         else {
-            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe);
+            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,
+                ['sandwichChoisi1' => null,'sandwichChoisi2' => null]);
         }
 
         $form->handleRequest($request);
@@ -154,12 +156,16 @@ class CommandeGroupeController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
         $limiteDate = $limiteRepo->findOneByLibelle('sortie');
-
+        $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
         if ($limiteDate->getIsActive() == true) {
-            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,['limiteDateSortie' => $limiteDate->getNbLimite()]);
+            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,['limiteDateSortie' => 0
+                ,'sandwichChoisi1' => $groupeSandwich[0],'sandwichChoisi2' => $groupeSandwich[1]]);
         }
         else {
-            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe);
+            $form = $this->createForm(CommandeGroupeType::class,
+                $commandeGroupe,['limiteDateSortie' => 0,
+                    'sandwichChoisi1' => $groupeSandwich[0],
+                    'sandwichChoisi2' => $groupeSandwich[1]]);
         }
 
         $form->handleRequest($request);
@@ -177,7 +183,7 @@ class CommandeGroupeController extends AbstractController
                 $form->get('nbSandwichChoisi2')->getData()
             ];
             $i = 0;
-            $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
+
             foreach ($sandwichsChoisi as $sandwichChoisi) {
                 $groupeSandwich[$i]
                     ->setCommandeAffecte($commandeGroupe)

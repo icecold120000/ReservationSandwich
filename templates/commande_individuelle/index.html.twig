@@ -46,9 +46,11 @@
                 </button>
             {% endif %}
         {% endif %}
-    <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
-        Faire une commande groupée
-    </a>
+    {% if not is_granted('ROLE_ELEVE') %}
+        <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
+            Faire une commande groupée
+        </a>
+    {% endif %}
     <div id="formFilter">
         <div id="filtre">
             {{form_start(form)}}

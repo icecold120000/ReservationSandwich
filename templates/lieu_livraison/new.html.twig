@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New LieuLivraison{% endblock %}
+
+{% block body %}
+    <h1>Create new LieuLivraison</h1>
+
+    {{ include('lieu_livraison/_form.html.twig') }}
+
+    <a href="{{ path('lieu_livraison_index') }}">back to list</a>
+{% endblock %}

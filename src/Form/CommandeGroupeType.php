@@ -4,8 +4,11 @@ namespace App\Form;
 
 use App\Entity\CommandeGroupe;
 use App\Entity\Dessert;
+use App\Entity\LieuLivraison;
 use App\Entity\Sandwich;
+use App\Entity\SandwichCommandeGroupe;
 use App\Repository\DessertRepository;
+use App\Repository\LieuLivraisonRepository;
 use App\Repository\SandwichRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -24,6 +27,7 @@ class CommandeGroupeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder
             ->add('sandwichChoisi1', EntityType::class,[
                 'label' => 'Choisir un premier sandwich',
@@ -39,6 +43,7 @@ class CommandeGroupeType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'data' => $options['sandwichChoisi1']?->getSandwichChoisi(),
             ])
             ->add('nbSandwichChoisi1', NumberType::class,[
                 'label' => 'Nombre du premier sandwich choisi',
@@ -52,6 +57,7 @@ class CommandeGroupeType extends AbstractType
                         'message' => "Veuillez saisir un nombre positif !",
                     ])
                 ],
+                'data' => $options['sandwichChoisi1']?->getNombreSandwich(),
             ])
             ->add('sandwichChoisi2', EntityType::class,[
                 'label' => 'Choisir un deuxième sandwich',
@@ -67,6 +73,7 @@ class CommandeGroupeType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'data' => $options['sandwichChoisi2']?->getSandwichChoisi(),
             ])
             ->add('nbSandwichChoisi2', NumberType::class,[
                 'label' => 'Nombre du deuxième sandwich choisi',
@@ -80,6 +87,7 @@ class CommandeGroupeType extends AbstractType
                         'message' => "Veuillez saisir un nombre positif !",
                     ])
                 ],
+                'data' => $options['sandwichChoisi2']?->getNombreSandwich(),
             ])
             ->add('prendreChips', ChoiceType::class, [
                 'label' => 'Prendre des chips',
@@ -99,11 +107,11 @@ class CommandeGroupeType extends AbstractType
                 ],
             ])
             ->add('motifSortie', TextareaType::class,[
-                'label' => 'Motif sortie',
+                'label' => 'Motif de la sortie',
                 'help' => 'Description de la sortie, nombre de participant...',
                 'required' => true,
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un commentaire.'])
+                    new NotBlank(['message' => 'Veuillez saisir un motif.'])
                 ],
             ])
             ->add('dateHeureLivraison', DateTimeType::class, [
@@ -111,25 +119,27 @@ class CommandeGroupeType extends AbstractType
                 'html5' => true,
                 'widget' => 'single_text',
                 'required' => true,
-                'help' => "Attention : Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum !",
+                'help' => "Attention : Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum après aujourd'hui !",
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
                     new GreaterThanOrEqual("+".$options['limiteDateSortie']."days 00:00:00",
-                        null,"Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum !"),
+                        null,"Veuillez choisir une date d'au moins ".$options['limiteDateSortie']." jours minimum !"),
                     new NotNull([
-                        'message' => 'Veuillez saisir une date et heure de livraison !',
+                        'message' => 'Veuillez choisir une date et heure de livraison !',
                     ]),
                 ],
             ])
-            ->add('lieuLivraison', ChoiceType::class, [
-                'label' => 'Choisir le lieu de livraison',
-                'choices' => [
-                    'Self' => 'Self',
-                    'Accueil' => 'Accueil',
-                    'Cuisine' => 'Cuisine',
-                ],
+            ->add('lieuLivraison', EntityType::class,[
+                'label' => 'Choisir un lieu de livraison',
+                'class' => LieuLivraison::class,
+                'query_builder' => function (LieuLivraisonRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->where('l.estActive = :active')
+                        ->setParameter('active', true)
+                        ->orderBy('l.libelleLieu', 'ASC');
+                },
+                'choice_label' => 'libelleLieu',
                 'required' => true,
-                'empty_data' => false,
             ])
             ->add('dessertChoisi', EntityType::class,[
                 'label' => 'Choisir un dessert',
@@ -154,6 +164,8 @@ class CommandeGroupeType extends AbstractType
             'data_class' => CommandeGroupe::class,
             'attr' => ['id'=>'formCommandeGroupe'],
             'limiteDateSortie' => 7,
+            'sandwichChoisi1' => SandwichCommandeGroupe::class,
+            'sandwichChoisi2' => SandwichCommandeGroupe::class,
         ]);
     }
 }

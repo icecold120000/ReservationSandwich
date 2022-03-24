@@ -103,7 +103,7 @@
                             <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
                             <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
                         </td>
-                        <td>{{ commande_groupe.lieuLivraison }}</td>
+                        <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
                         <td>
                             <span>{{ commande_groupe.commandeur.prenomUser }}</span>
                             <span>{{ commande_groupe.commandeur.nomUser }}</span>
@@ -126,11 +126,11 @@
                             {{ commande_groupe.estValide ? '<i class="fas fa-check"></i>' :
                             '<i class="fas fa-times"></i>' }}
                             {% if commande_groupe.estValide %}
-                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande groupée ?');">
+                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande groupée ?');">
                                     <button class="btn btn-danger">Non validée</button>
                                 </form>
                             {% else %}
-                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande groupé ?');">
+                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande groupé ?');">
                                     <button class="btn btn-success">Validée</button>
                                 </form>
                             {% endif %}
@@ -211,11 +211,11 @@
                                 {{ commande.estValide ? '<i class="fas fa-check"></i>' :
                                 '<i class="fas fa-times"></i>' }}
                                 {% if commande.estValide %}
-                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalidé cette commande ?');">
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande ?');">
                                         <button class="btn btn-danger">Non validée</button>
                                     </form>
                                 {% else %}
-                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment validé cette commande ?');">
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande ?');">
                                         <button class="btn btn-success">Validée</button>
                                     </form>
                                 {% endif %}

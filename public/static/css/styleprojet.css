@@ -20,7 +20,7 @@ form{
 }
 
 label{
-    font-size: 15px;
+    font-size: 1.25rem;
     margin: 0;
 }
 
@@ -412,7 +412,7 @@ form textarea {
     align-items: center;
 }
 
-#formResetMdp label{
+#formResetMdp label, #formExport label{
     display: flex;
     justify-content: center;
 }

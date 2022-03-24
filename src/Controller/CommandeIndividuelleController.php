@@ -790,7 +790,8 @@ class CommandeIndividuelleController extends AbstractController
      * @throws NonUniqueResultException
      * @throws \Exception
      */
-    public function edit(Request $request, EntityManagerInterface $entityManager,
+    public function edit(Request $request, CommandeIndividuelle $commandeIndividuelle,
+                         EntityManagerInterface $entityManager,
                          SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
                          DessertRepository $dessertRepo,
                          DesactivationCommandeRepository $deactiveRepo,
@@ -819,7 +820,6 @@ class CommandeIndividuelleController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
-        $commandeIndividuelle = new CommandeIndividuelle();
         $form = $this->createForm(CommandeIndividuelleType::class, $commandeIndividuelle);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

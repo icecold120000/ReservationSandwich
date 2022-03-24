@@ -52,10 +52,6 @@ class CommandeGroupe
      */
     private $dateHeureLivraison;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $lieuLivraison;
 
     /**
      * @ORM\OneToMany(targetEntity=SandwichCommandeGroupe::class, mappedBy="commandeAffecte", orphanRemoval=true)
@@ -77,6 +73,12 @@ class CommandeGroupe
      * @ORM\Column(type="boolean")
      */
     private $estValide;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=LieuLivraison::class, inversedBy="CommandeGroupe")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $lieuLivraison;
 
     public function __construct()
     {
@@ -160,18 +162,6 @@ class CommandeGroupe
         return $this;
     }
 
-    public function getLieuLivraison(): ?string
-    {
-        return $this->lieuLivraison;
-    }
-
-    public function setLieuLivraison(string $lieuLivraison): self
-    {
-        $this->lieuLivraison = $lieuLivraison;
-
-        return $this;
-    }
-
     /**
      * @return Collection|SandwichCommandeGroupe[]
      */
@@ -234,6 +224,18 @@ class CommandeGroupe
     public function setEstValide(bool $estValide): self
     {
         $this->estValide = $estValide;
+
+        return $this;
+    }
+
+    public function getLieuLivraison(): ?LieuLivraison
+    {
+        return $this->lieuLivraison;
+    }
+
+    public function setLieuLivraison(?LieuLivraison $lieuLivraison): self
+    {
+        $this->lieuLivraison = $lieuLivraison;
 
         return $this;
     }

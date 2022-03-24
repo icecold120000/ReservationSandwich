@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LieuLivraison index{% endblock %}
+
+{% block body %}
+    <h1>LieuLivraison index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>LibelleLieu</th>
+                <th>EstActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lieu_livraison in lieu_livraisons %}
+            <tr>
+                <td>{{ lieu_livraison.id }}</td>
+                <td>{{ lieu_livraison.libelleLieu }}</td>
+                <td>{{ lieu_livraison.EstActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('lieu_livraison_show', {'id': lieu_livraison.id}) }}">show</a>
+                    <a href="{{ path('lieu_livraison_edit', {'id': lieu_livraison.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('lieu_livraison_new') }}">Create new</a>
+{% endblock %}

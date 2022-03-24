@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LieuLivraison{% endblock %}
+
+{% block body %}
+    <h1>LieuLivraison</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ lieu_livraison.id }}</td>
+            </tr>
+            <tr>
+                <th>LibelleLieu</th>
+                <td>{{ lieu_livraison.libelleLieu }}</td>
+            </tr>
+            <tr>
+                <th>EstActive</th>
+                <td>{{ lieu_livraison.EstActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('lieu_livraison_index') }}">back to list</a>
+
+    <a href="{{ path('lieu_livraison_edit', {'id': lieu_livraison.id}) }}">edit</a>
+
+    {{ include('lieu_livraison/_delete_form.html.twig') }}
+{% endblock %}

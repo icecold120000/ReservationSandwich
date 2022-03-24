@@ -85,9 +85,9 @@ class CommandeIndividuelleType extends AbstractType
                 'help' => 'Attention : Vous ne pouvez pas faire une commande pour le jour même après 9h30 !',
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
-                    new GreaterThanOrEqual("today",null,"Veuillez sélectionner une date et/ou heure future !"),
+                    new GreaterThanOrEqual("today",null,"Veuillez choisir une date et/ou heure future !"),
                     new NotNull([
-                        'message' => 'Veuillez saisir une date et heure de livraison !',
+                        'message' => 'Veuillez choisir une date et heure de livraison !',
                     ]),
                 ],
             ])
