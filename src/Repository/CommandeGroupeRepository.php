@@ -21,7 +21,6 @@ class CommandeGroupeRepository extends ServiceEntityRepository
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
-     *
      */
     public function findAllIndexNonClotureGroupe($user): array
     {
@@ -37,7 +36,6 @@ class CommandeGroupeRepository extends ServiceEntityRepository
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
-     *
      */
     public function findAllAdminNonClotureGroupe(): array
     {
@@ -84,6 +82,21 @@ class CommandeGroupeRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
+    /**
+     * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
+     */
+    public function findByLieuLivraison($lieu): array
+    {
+        $query = $this->createQueryBuilder('ci');
+        $query
+            ->leftJoin('ci.lieuLivraison','ll')
+            ->andWhere('ll.id = :lieu')
+            ->setParameter('lieu', $lieu)
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
@@ -121,6 +134,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
+     * @throws \Exception
      */
     public function filterAdmin($nom = null, $date = null, $cloture = false): array
     {

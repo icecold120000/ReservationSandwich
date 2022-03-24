@@ -27,13 +27,13 @@ class SandwichRepository extends ServiceEntityRepository
      */
     public function filter(int $dispo = null , string $order = 'ASC'): array
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.dispoSandwich = :val')
-            ->setParameter('val', $dispo)
-            ->orderBy('d.nomSandwich', $order)
-            ->getQuery()
-            ->getResult()
+        $query = $this->createQueryBuilder('s');
+        if ($dispo !== null) {
+            $query->andWhere('s.dispoSandwich = :val')
+                ->setParameter('val', $dispo)
             ;
+        }
+        return $query->orderBy('s.nomSandwich', $order)->getQuery()->getResult();
     }
 
     /**

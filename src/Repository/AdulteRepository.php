@@ -46,29 +46,21 @@ class AdulteRepository extends ServiceEntityRepository
                 OR a.id LIKE :nom')
                 ->setParameter('nom', '%'.$nom.'%');
         }
-        else {
-            $this->findByArchive(false);
-        }
 
-        if ($ordreNom != null && $ordrePrenom != null) {
+        if ($ordreNom !== null && $ordrePrenom !== null) {
             $query->addOrderBy('a.nomAdulte',$ordreNom)
                 ->addOrderBy('a.prenomAdulte', $ordrePrenom);
         }
-        elseif ($ordreNom == null && $ordrePrenom != null) {
+        elseif ($ordreNom == null && $ordrePrenom !== null) {
             $query->orderBy('a.prenomAdulte', $ordrePrenom);
         }
-        elseif ($ordrePrenom == null && $ordreNom != null) {
+        elseif ($ordrePrenom == null && $ordreNom !== null) {
             $query->orderBy('a.nomAdulte', $ordreNom);
         }
-        else {
-            $this->findByArchive(false);
-        }
-        if ($archive != null) {
+
+        if ($archive !== null) {
             $query->andWhere('a.archiveAdulte = :archive')
                 ->setParameter('archive', $archive);
-        }
-        else {
-            $this->findByArchive(false);
         }
 
         return $query->getQuery()->getResult();

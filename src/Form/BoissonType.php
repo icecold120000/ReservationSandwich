@@ -40,11 +40,10 @@ class BoissonType extends AbstractType
             ->add('dispoBoisson', ChoiceType::class, [
                 'label' => 'Disponibilité de la boisson',
                 'choices' => [
-                    'Oui' => 1,
-                    'Non' => '0',
+                    'Oui' => true,
+                    'Non' => false,
                 ],
                 'required' => true,
-                'empty_data' => 1,
             ])
         ;
     }

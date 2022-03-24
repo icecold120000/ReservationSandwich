@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Suppression d'un lieu{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block body %}
+    <main>
+        <h1>Suppression d'un lieu</h1>
+
+        <h2>Cliquez sur le bouton Supprimer pour supprimer le lieu choisi : {{lieu_livraison.libelleLieu}}</h2>
+
+        <div id="warning">
+            <p><i class="fas fa-exclamation-triangle"></i> Attention : Toutes les commandes groupées qui utilise ce lieu vont être modifié par la valeur par défaut "Aucun".</p>
+        </div>
+
+        {{ include('limite/_delete_form.html.twig') }}
+
+        <div>
+            <a href="{{ path('lieu_livraison_index') }}">
+                <button class="btn btn-secondary" id="btnRetourSuppr">
+                    Revenir à la liste
+                </button>
+            </a>
+        </div>
+    </main>
+{% endblock %}

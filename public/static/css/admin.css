@@ -109,6 +109,11 @@ table a.btn.btn-info{
     padding: 15px 99px;
 }
 
+#btnAdmin10{
+    padding: 15px 120px;
+}
+
+
 #warning{
     color: red;
     border: solid;

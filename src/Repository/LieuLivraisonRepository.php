@@ -19,6 +19,20 @@ class LieuLivraisonRepository extends ServiceEntityRepository
         parent::__construct($registry, LieuLivraison::class);
     }
 
+    /**
+     * @return LieuLivraison[] Returns an array of Boisson objects
+     */
+    public function filter(bool $active = null , string $order = 'ASC'): array
+    {
+        $query = $this->createQueryBuilder('l');
+        if ($active !== null) {
+            $query->andWhere('l.estActive = :val')
+                ->setParameter('val', $active)
+            ;
+        }
+        return $query->orderBy('l.libelleLieu', $order)->getQuery()->getResult();
+    }
+
     // /**
     //  * @return LieuLivraison[] Returns an array of LieuLivraison objects
     //  */

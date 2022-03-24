@@ -34,10 +34,10 @@ class BoissonController extends AbstractController
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-                $boissons = $boissonRepo->filter(
-                    $filter->get('ordre')->getData(),
-                    $filter->get('dispo')->getData()
-                );
+            $boissons = $boissonRepo->filter(
+                $filter->get('dispo')->getData(),
+                $filter->get('ordre')->getData()
+            );
         }
 
         $boissons = $paginator->paginate(

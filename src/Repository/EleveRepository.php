@@ -92,9 +92,7 @@ class EleveRepository extends ServiceEntityRepository
                 OR el.id LIKE :nom')
                 ->setParameter('nom', '%'.$nom.'%');
         }
-        else{
-            $this->findAllWithClasse();
-        }
+
         if($classe != null){
             $query->leftJoin('el.classeEleve', 'cl');
             $query->andWhere('cl.id = :id')
@@ -103,14 +101,12 @@ class EleveRepository extends ServiceEntityRepository
         else{
             $this->findAllWithClasse();
         }
-        if ($archive != null) {
+        if ($archive !== null) {
             $query->andWhere('el.archiveEleve = :archive')
                 ->setParameter('archive',$archive)
             ;
         }
-        else {
-            $this->findAllWithClasse();
-        }
+
         if ($ordreNom != null && $ordrePrenom != null) {
             $query->addOrderBy('el.nomEleve', $ordreNom)
                 ->addOrderBy('el.prenomEleve', $ordrePrenom);
@@ -121,9 +117,7 @@ class EleveRepository extends ServiceEntityRepository
         elseif ($ordrePrenom == null && $ordreNom != null) {
             $query->orderBy('el.nomEleve', $ordreNom);
         }
-        else {
-            $this->findAllWithClasse();
-        }
+
         return $query->getQuery()->getResult();
     }
 
@@ -149,8 +143,9 @@ class EleveRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $value
+     * @return Eleve|null
      * @throws NonUniqueResultException
-     * @return Eleve
      */
     public function findOneByCompte($value): ?Eleve
     {

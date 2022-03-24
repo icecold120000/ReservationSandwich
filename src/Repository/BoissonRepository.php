@@ -23,15 +23,15 @@ class BoissonRepository extends ServiceEntityRepository
      /**
       * @return Boisson[] Returns an array of Boisson objects
       */
-    public function filter(int $dispo = null , string $order = 'ASC'): array
+    public function filter(bool $dispo = null , string $order = 'ASC'): array
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.dispoBoisson = :val')
-            ->setParameter('val', $dispo)
-            ->orderBy('b.nomBoisson', $order)
-            ->getQuery()
-            ->getResult()
+        $query = $this->createQueryBuilder('b');
+        if ($dispo !== null) {
+            $query->andWhere('b.dispoBoisson = :val')
+                ->setParameter('val', $dispo)
             ;
+        }
+        return $query->orderBy('b.nomBoisson', $order)->getQuery()->getResult();
     }
 
     /**

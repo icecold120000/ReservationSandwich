@@ -27,13 +27,13 @@ class DessertRepository extends ServiceEntityRepository
      */
     public function filter(int $dispo = null , string $order = 'ASC'): array
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.dispoDessert = :val')
-            ->setParameter('val', $dispo)
-            ->orderBy('d.nomDessert', $order)
-            ->getQuery()
-            ->getResult()
+        $query = $this->createQueryBuilder('d');
+        if ($dispo !== null) {
+            $query->andWhere('d.dispoDessert = :val')
+                ->setParameter('val', $dispo)
             ;
+        }
+        return $query->orderBy('d.nomDessert', $order)->getQuery()->getResult();
     }
 
     /**

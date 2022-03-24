@@ -7,22 +7,22 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class FilterMenuType extends AbstractType
+class FilterLieuType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ordre', ChoiceType::class, [
+            ->add('ordreLieu', ChoiceType::class, [
                 'label' => 'Ordre',
                 'choices' => [
                     'Croissant' => 'ASC',
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-                'empty_data' => 'ASC'
+                'empty_data' => 'ASC',
             ])
-            ->add('dispo', ChoiceType::class, [
-                'label' => 'Disponibilité',
+            ->add('lieuActive', ChoiceType::class,[
+                'label' => 'Active',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,

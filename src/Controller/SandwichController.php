@@ -35,8 +35,8 @@ class SandwichController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $sandwiches = $sandwichRepo->filter(
-                $filter->get('ordre')->getData(),
-                $filter->get('dispo')->getData()
+                $filter->get('dispo')->getData(),
+                $filter->get('ordre')->getData()
             );
         }
 

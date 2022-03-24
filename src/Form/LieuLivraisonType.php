@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\LieuLivraison;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,8 +14,18 @@ class LieuLivraisonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelleLieu')
-            ->add('EstActive')
+            ->add('libelleLieu', TextType::class,[
+                'label' => 'Libellé du lieu',
+                'required' => true,
+            ])
+            ->add('estActive', ChoiceType::class, [
+                'label' => 'Activé',
+                'choices' => [
+                    'Oui' => true,
+                    'Non' => false,
+                ],
+                'required' => true,
+            ])
         ;
     }
 
@@ -21,6 +33,7 @@ class LieuLivraisonType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => LieuLivraison::class,
+            'attr' => ['id' => 'lieuForm'],
         ]);
     }
 }
