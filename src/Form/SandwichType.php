@@ -44,7 +44,7 @@ class SandwichType extends AbstractType
             ])
             ->add('commentaireSandwich', TextareaType::class,[
                 'label' => 'Commentaire sur le sandwich',
-                'help' => 'Spéficié des allergies ou le groupe d\'individus.',
+                'help' => 'Spécifié des allergies ou le groupe d\'individus.',
                 'required' => false,
             ])
             ->add('dispoSandwich',ChoiceType::class, [

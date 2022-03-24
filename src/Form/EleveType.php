@@ -30,38 +30,36 @@ class EleveType extends AbstractType
             ])
             ->add('photoEleve', FileType::class, [
                 'label' => 'Photo de l\'élève',
-                'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
+                'help' => 'Type de fichier supporté : .png, .jpg ou .jpeg.',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
                     new File([
-                        'maxSize' => '1024k',
+                        'maxSize' => '4096k',
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
                         ],
                         'mimeTypesMessage' => 'Veuillez sélectionner un fichier .png/.jpeg/.jpg !',
-                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de {{limit}} !',
+                        'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 4096ko !',
                     ])
                 ],
             ])
             ->add('dateNaissance', DateType::class, [
                 'label' => 'Date de naissance de l\'élève',
-                'help' => 'Format : JJ/MM/AAAA.',
-                'html5' => false,
+                'html5' => true,
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy',
                 'required' => true,
                 'invalid_message' => 'Votre saisie n\'est pas une date !',
             ])
             ->add('archiveEleve', ChoiceType::class, [
                 'label' => 'Élève archivé',
                 'choices' => [
-                    'Non' => '0',
-                    'Oui' => 1,
+                    'Non' => false,
+                    'Oui' => true,
                 ],
                 'required' => false,
-                'empty_data' => '0',
+                'empty_data' => false,
             ])
             ->add('classeEleve', EntityType::class,[
                 'label' => 'Classe de l\'élève',

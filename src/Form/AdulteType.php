@@ -38,7 +38,7 @@ class AdulteType extends AbstractType
                     'Oui' => true,
                 ],
                 'required' => true,
-                'empty_data' => 1,
+                'empty_data' => false,
             ])
         ;
     }

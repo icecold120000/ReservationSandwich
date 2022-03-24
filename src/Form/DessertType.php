@@ -23,7 +23,7 @@ class DessertType extends AbstractType
             ])
             ->add('imageDessert', FileType::class, [
                 'label' => 'Photo du dessert',
-                'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
+                'help' => 'Type de fichier supporté : .png, .jpg ou .jpeg.',
                 'mapped' => false,
                 'required' => $options['fichierRequired'],
                 'constraints' => [
@@ -50,11 +50,11 @@ class DessertType extends AbstractType
             ->add('dispoDessert',ChoiceType::class, [
                 'label' => 'Disponibilité du dessert',
                 'choices' => [
-                    'Oui' => 1,
-                    'Non' => '0',
+                    'Oui' => true,
+                    'Non' => false,
                 ],
                 'required' => true,
-                'empty_data' => 1,
+                'empty_data' => true,
             ])
         ;
     }

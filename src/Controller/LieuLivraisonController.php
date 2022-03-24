@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\LieuLivraison;
 use App\Form\FilterOrSearch\FilterLieuType;
 use App\Form\LieuLivraisonType;
+use App\Repository\CommandeGroupeRepository;
 use App\Repository\LieuLivraisonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -113,9 +114,17 @@ class LieuLivraisonController extends AbstractController
     /**
      * @Route("/{id}", name="classe_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
+                           CommandeGroupeRepository $comGroupeRepo, LieuLivraisonRepository $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$lieuLivraison->getId(), $request->request->get('_token'))) {
+
+            $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());
+
+            foreach ($commandesGroupe as $commandeGroupe) {
+                $commandeGroupe->setLieuLivraison($lieuRepository->find(['id' => 1]));
+            }
+
             $entityManager->remove($lieuLivraison);
             $entityManager->flush();
         }

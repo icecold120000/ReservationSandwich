@@ -19,7 +19,7 @@ class LieuLivraisonType extends AbstractType
                 'required' => true,
             ])
             ->add('estActive', ChoiceType::class, [
-                'label' => 'Activé',
+                'label' => 'Lieu activé',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,

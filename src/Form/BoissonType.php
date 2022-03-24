@@ -22,7 +22,7 @@ class BoissonType extends AbstractType
             ])
             ->add('imageBoisson', FileType::class, [
                 'label' => 'Photo de la boisson',
-                'help' => 'Type de fichier supporté : png, jpg ou jpeg.',
+                'help' => 'Type de fichier supporté : .png, .jpg ou .jpeg.',
                 'mapped' => false,
                 'required' => $options['fichierRequired'],
                 'constraints' => [

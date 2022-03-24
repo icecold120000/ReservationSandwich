@@ -135,8 +135,7 @@ class CommandeGroupeType extends AbstractType
                 'query_builder' => function (LieuLivraisonRepository $er) {
                     return $er->createQueryBuilder('l')
                         ->andWhere('l.estActive = :active')
-                        ->andWhere('not l.libelleLieu = :aucun')
-                        ->setParameters(array('active' => true, 'aucun' => "Aucun"))
+                        ->setParameter('active',true)
                         ->orderBy('l.libelleLieu', 'ASC');
                 },
                 'choice_label' => 'libelleLieu',
