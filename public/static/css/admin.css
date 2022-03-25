@@ -113,7 +113,6 @@ table a.btn.btn-info{
     padding: 15px 120px;
 }
 
-
 #warning{
     color: red;
     border: solid;
@@ -223,6 +222,10 @@ table form {
     padding: unset;
 }
 
+table form button.btn-danger {
+    font-size: 10px;
+}
+
 /*Page de profil*/
 
 #profilHeader{
@@ -274,6 +277,23 @@ table form {
 
 /* Responsive pour les téléphones */
 @media screen and (max-device-width: 700px) {
+    /*Page de profil élève*/
+
+    #btnProfilAcces1 {
+        padding: 15px 140px;
+    }
+
+    #btnProfilAcces2 {
+        padding: 15px 15px;
+    }
+
+    #btnProfilAcces3 {
+        padding: 15px 37px;
+    }
+
+    #btnProfilAcces4 {
+        padding: 15px 50px;
+    }
 
     /*Espace administration*/
     table img {
@@ -286,7 +306,47 @@ table form {
     }
 
     table a.btn.btn-info, table form .btn.btn-danger{
-        font-size: 1.5em;
+        font-size: 1em;
+    }
+
+    #btnAdmin1{
+        padding: 15px 111px;
+    }
+
+    #btnAdmin2{
+        padding: 15px 113px;
+    }
+
+    #btnAdmin3{
+        padding: 15px 88px;
+    }
+
+    #btnAdmin4{
+        padding: 15px 124px;
+    }
+
+    #btnAdmin5{
+        padding: 15px 123px;
+    }
+
+    #btnAdmin6{
+        padding: 15px 130px;
+    }
+
+    #btnAdmin7{
+        padding: 15px 99px;
+    }
+
+    #btnAdmin8{
+        padding: 15px 105px;
+    }
+
+    #btnAdmin9{
+        padding: 15px 93px;
+    }
+
+    #btnAdmin10{
+        padding: 15px 142px;
     }
 
     /*Page de gestion*/
@@ -314,6 +374,8 @@ table form {
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin: 0 2em 1em 0;
+        padding: 0;
     }
 
     #filtre select, #filtre input{
@@ -331,13 +393,6 @@ table form {
     #filtre button {
         padding: 1em 2em;
         font-size: 1em;
-    }
-
-    #filtre div{
-        margin: 0 2rem 1em 0;
-        padding: 0;
-        display: flex;
-        align-items: center;
     }
 
     #filtre span {
@@ -411,12 +466,20 @@ table form {
         justify-content: center;
     }
 
+    table #btnModal {
+        font-size: 1.25em;
+        padding: 30px;
+    }
+
     /*Filtre gestion de commande*/
     #filterAdminCom div, #filterUser div{
-        margin: 0 2rem 0.5em 0;
+        margin: 0 0.5rem 0.5em 0;
     }
 
     /*Modal exportation */
+    .modal h1 {
+        margin: 0;
+    }
     .modal form select, .modal form input {
         font-size: 1.75em;
         margin-top: 0.5em;

@@ -22,7 +22,7 @@ class FilterLieuType extends AbstractType
                 'empty_data' => 'ASC',
             ])
             ->add('lieuActive', ChoiceType::class,[
-                'label' => 'Active',
+                'label' => 'Activé',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,

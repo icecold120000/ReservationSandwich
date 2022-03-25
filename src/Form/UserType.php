@@ -68,10 +68,9 @@ class UserType extends AbstractType
             ->add('isVerified', ChoiceType::class, [
                 'label' => 'Utilisateur vérifié',
                 'choices' => [
-                    'Non' => 0,
-                    'Oui' => 1,
+                    'Oui' => true,
+                    'Non' => false,
                 ],
-                'empty_data' => '0',
                 'required' => false,
             ])
             ->add('eleve', EntityType::class,[

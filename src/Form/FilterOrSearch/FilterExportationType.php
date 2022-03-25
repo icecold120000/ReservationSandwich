@@ -29,12 +29,22 @@ class FilterExportationType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('affichageExport', ChoiceType::class,[
+                'label' => 'Affichage de l\'export',
+                'choices' => [
+                    'Les deux' => 'les deux',
+                    'Commandes individuelles seulement' => 'individuelle',
+                    'Commandes groupées seulement' => 'groupé',
+                ],
+                'required' => true,
+                'empty_data' => 'les deux',
+            ])
             ->add('modaliteCommande', ChoiceType::class, [
                 'label' => 'Choix de présentation',
                 'required' => true,
                 'choices' => [
                     'Par commande' => 'Séparé',
-                    'Groupée pour préparation' => 'Regroupé'
+                    'Regroupée pour la préparation' => 'Regroupé'
                 ],
                 'constraints' => [
                     new NotNull([

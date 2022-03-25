@@ -23,7 +23,7 @@ class FilterIndexCommandeType extends AbstractType
                 'required' => false,
             ])
             ->add('cloture', ChoiceType::class,[
-                'label' => 'Commande clôturé',
+                'label' => 'Commande clôturée',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,
@@ -31,7 +31,7 @@ class FilterIndexCommandeType extends AbstractType
                 'required' => false,
             ])
             ->add('affichageTableau', ChoiceType::class,[
-                'label' => 'Affichage tableau',
+                'label' => 'Affichage de la page',
                 'choices' => [
                     'Les deux' => 'les deux',
                     'Commandes individuelles seulement' => 'individuelle',

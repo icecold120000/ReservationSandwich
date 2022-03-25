@@ -4,6 +4,11 @@
 
 {% block body %}
     <h1>Liste des commandes à venir</h1>
+    {% for message in app.flashes('failedExport') %}
+        <div class="erreur">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <div>
             <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
@@ -27,6 +32,46 @@
                         <div class="modal-body">
                             <h1>Choisir les modalités de votre export</h1>
                             {{ form_start(exportForm) }}
+                            <div id="screenLeft">
+                                {{form_label(exportForm.methodeExport)}}
+                                {% if form_errors(exportForm.methodeExport) %}
+                                    <div class="erreur">
+                                        {{ form_errors(exportForm.methodeExport) }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    {{ form_widget(exportForm.methodeExport) }}
+                                </div>
+                                {{ form_label(exportForm.affichageExport) }}
+                                {%if form_errors(exportForm.affichageExport) %}
+                                    <div class="erreur">
+                                        {{ form_errors(exportForm.affichageExport) }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    {{ form_widget(exportForm.affichageExport) }}
+                                </div>
+                            </div>
+                            <div id="screenRight">
+                                {{ form_label(exportForm.modaliteCommande) }}
+                                {%if form_errors(exportForm.modaliteCommande) %}
+                                    <div class="erreur">
+                                        {{ form_errors(exportForm.modaliteCommande) }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    {{ form_widget(exportForm.modaliteCommande) }}
+                                </div>
+                                {{form_label(exportForm.dateExport)}}
+                                {%if form_errors(exportForm.dateExport)%}
+                                    <div class="erreur">
+                                        {{ form_errors(exportForm.dateExport) }}
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    {{ form_widget(exportForm.dateExport) }}
+                                </div>
+                            </div>
                             {{ form_end(exportForm) }}
                             <button type="submit"
                                     class="btn btn-success" form="formExport">

@@ -50,11 +50,11 @@ class SandwichType extends AbstractType
             ->add('dispoSandwich',ChoiceType::class, [
                 'label' => 'Disponibilité du sandwich',
                 'choices' => [
-                    'Oui' => 1,
-                    'Non' => '0',
+                    'Oui' => true,
+                    'Non' => false,
                 ],
                 'required' => true,
-                'empty_data' => 1,
+                'empty_data' => true,
             ])
         ;
     }

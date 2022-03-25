@@ -186,12 +186,25 @@ class CommandeIndividuelleController extends AbstractController
 
             $dateChoisi = $exportReq->get('dateExport')->getData();
             $dateChoisi = $dateChoisi->format('y-m-d');
-
-            $commandesExport = $comIndRepo
-                ->exportationCommande($dateChoisi);
             $modalite = $exportReq->get('modaliteCommande')->getData();
+            if ($exportReq->get('affichageExport')->getData() == "les deux" ||
+                $exportReq->get('affichageExport')->getData() == "individuelle") {
 
-            $commandesGroupeExport = $comGrRepo->exportationCommandeGroupe($dateChoisi);
+                $commandesExport = $comIndRepo->exportationCommande($dateChoisi);
+            }
+            else {
+                $commandesExport = null;
+            }
+
+            if ($exportReq->get('affichageExport')->getData() == "les deux" ||
+                $exportReq->get('affichageExport')->getData() == "groupé") {
+
+                $commandesGroupeExport = $comGrRepo->exportationCommandeGroupe($dateChoisi);
+            }
+            else {
+                $commandesGroupeExport = null;
+            }
+
             $methode = $exportReq->get('methodeExport')->getData();
             if ($methode == "PDF") {
                 CommandeIndividuelleController::pdfDownload($commandesExport,$commandesGroupeExport,$modalite,$exportReq->get('dateExport')->getData());
@@ -426,9 +439,16 @@ class CommandeIndividuelleController extends AbstractController
             }
             elseif ($methode == "Impression"){
                 return CommandeIndividuelleController::printPreview($modalite,
-                    $exportReq->get('dateExport')->getData());
+                    $exportReq->get('dateExport')->getData(),
+                    $exportReq->get('affichageExport')->getData());
             }
 
+        }
+        elseif ($export->isSubmitted()) {
+            $this->addFlash(
+                'failedExport',
+                'Votre export a échoué à la suite d\'une erreur !'
+            );
         }
 
         $form = $this->createForm(FilterAdminCommandeType::class);
@@ -483,15 +503,28 @@ class CommandeIndividuelleController extends AbstractController
     /**
      * @param $modalite
      * @param $dateChoisi
+     * @param $affichage
      * @return Response
      * @Route("/preview", name="commande_impression", methods={"GET","POST"})
      */
-    public function printPreview($modalite, $dateChoisi): Response
+    public function printPreview($modalite, $dateChoisi, $affichage): Response
     {
-        $commandes = $this->comIndRepo
-            ->exportationCommande($dateChoisi->format('y-m-d'));
 
-        $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
+        if ($affichage == "les deux" || $affichage == "individuelle") {
+            $commandes = $this->comIndRepo
+                ->exportationCommande($dateChoisi->format('y-m-d'));
+        }
+        else {
+            $commandes = null;
+        }
+
+        if ($affichage == "les deux" || $affichage == "groupé") {
+
+            $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
+        }
+        else {
+            $commandeGroupe = null;
+        }
 
         if ($modalite == "Séparé") {
             return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig',[

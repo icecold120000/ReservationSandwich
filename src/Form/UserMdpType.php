@@ -28,9 +28,9 @@ class UserMdpType extends AbstractType
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères !',
+                        'minMessage' => 'Votre mot de passe doit comporter au moins 6 caractères !',
                         'max' => 4096,
-                        'maxMessage' => 'Votre mot de passe doit être limité à {{ limit }} caractères !',
+                        'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
                     ]),
                 ],
             ])

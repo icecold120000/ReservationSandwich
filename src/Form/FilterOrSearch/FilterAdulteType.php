@@ -36,7 +36,7 @@ class FilterAdulteType extends AbstractType
                 'empty_data' => 'ASC',
             ])
             ->add('archiveAdulte', ChoiceType::class, [
-                'label' => 'Archivé',
+                'label' => 'Archivés',
                 'choices' => [
                     'Non' => false,
                     'Oui' => true,

@@ -53,83 +53,85 @@
                 {{form_end(form)}}
             </div>
         </div>
-        <div>
-            {% if users|length == 0 %}
-                <h2>Aucun utilisateur n'a été trouvé</h2>
-            {% elseif users|length == 1 %}
-                <h2>{{users|length }} utilisateur trouvé</h2>
-            {% elseif users|length > 1 and users|length < 30 %}
-                <h2>{{users|length }} utilisateurs trouvés</h2>
-            {% else %}
-                <h2>{{usersTotal|length }} utilisateurs trouvés</h2>
-            {% endif %}
-        </div>
-        <div>
-            {{ knp_pagination_render(users) }}
-        </div>
-        <table class="table tableAdmin">
-            <thead>
-                <tr>
-                    <th>Prénom et Nom</th>
-                    <th>Email</th>
-                    <th>Fonction</th>
-                    <th>Utilisateur vérifié</th>
-                    <th>Éditer</th>
-                    <th>Supprimer</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.prenomUser }} <span>{{ user.nomUser }}</span></td>
-                    <td>{{ user.email|replace({"@":"<br/>@"})| raw }}</td>
-                    <td>
-                        {% switch user.roles|json_encode %}
-                            {% case '["ROLE_ADMIN","ROLE_USER"]' %}
-                                Admin
-                            {% case '["ROLE_CUISINE","ROLE_USER"]' %}
-                                Cuisinier
-                            {% case '["ROLE_ELEVE","ROLE_USER"]' %}
-                                Élève
-                            {% case '["ROLE_ADULTES","ROLE_USER"]' %}
-                                Adulte
-                            {% default %}
-                                Utilisateur
-                        {% endswitch %}
-                    </td>
-                    <td>
-                        {% if user.isVerified == 1 or user.isVerified == true %}
-                            Oui
-                        {% else %}
-                            Non
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{{ path('user_edit',
-                        {'id': user.id}) }}" class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' %}
-                            <a href="{{ path('user_delete_view', {'id': user.id}) }}"
-                             class="btn btn-danger">
-                                <i class="fas fa-trash"></i>
+        <div class="table-responsive-lg">
+            <div>
+                {% if users|length == 0 %}
+                    <h2>Aucun utilisateur n'a été trouvé</h2>
+                {% elseif users|length == 1 %}
+                    <h2>{{users|length }} utilisateur trouvé</h2>
+                {% elseif users|length > 1 and users|length < 30 %}
+                    <h2>{{users|length }} utilisateurs trouvés</h2>
+                {% else %}
+                    <h2>{{usersTotal|length }} utilisateurs trouvés</h2>
+                {% endif %}
+            </div>
+            <div>
+                {{ knp_pagination_render(users) }}
+            </div>
+            <table class="table tableAdmin">
+                <thead>
+                    <tr>
+                        <th>Prénom et Nom</th>
+                        <th>Email</th>
+                        <th>Fonction</th>
+                        <th>Utilisateur vérifié</th>
+                        <th>Éditer</th>
+                        <th>Supprimer</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.prenomUser }} <span>{{ user.nomUser }}</span></td>
+                        <td>{{ user.email|replace({"@":"<br/>@"})| raw }}</td>
+                        <td>
+                            {% switch user.roles|json_encode %}
+                                {% case '["ROLE_ADMIN","ROLE_USER"]' %}
+                                    Admin
+                                {% case '["ROLE_CUISINE","ROLE_USER"]' %}
+                                    Cuisinier
+                                {% case '["ROLE_ELEVE","ROLE_USER"]' %}
+                                    Élève
+                                {% case '["ROLE_ADULTES","ROLE_USER"]' %}
+                                    Adulte
+                                {% default %}
+                                    Utilisateur
+                            {% endswitch %}
+                        </td>
+                        <td>
+                            {% if user.isVerified == 1 or user.isVerified == true %}
+                                Oui
+                            {% else %}
+                                Non
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ path('user_edit',
+                            {'id': user.id}) }}" class="btn btn-primary">
+                                <i class="far fa-edit"></i>
                             </a>
-                        {% else %}
-                            Cet utilisateur ne peut <span>pas être supprimé !</span>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="erreur">Aucun utilisateur n'a été trouvé</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <div>
-            {{ knp_pagination_render(users) }}
+                        </td>
+                        <td>
+                            {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' %}
+                                <a href="{{ path('user_delete_view', {'id': user.id}) }}"
+                                 class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% else %}
+                                Cet utilisateur ne peut <span>pas être supprimé !</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="erreur">Aucun utilisateur n'a été trouvé</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                {{ knp_pagination_render(users) }}
+            </div>
         </div>
     </main>
 {% endblock %}
