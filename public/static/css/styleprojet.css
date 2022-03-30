@@ -186,6 +186,10 @@ footer i{
 
 /*Page d'accueil */
 
+#formMenu form {
+    flex-direction: column;
+}
+
 #menuImg {
     height: 400px;
     width: 85%;
