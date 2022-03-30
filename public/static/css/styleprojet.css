@@ -229,11 +229,18 @@ h6{
 }
 
 #login, #login div#screenLeft, #login div#screenRight{
-    display: inline-block;
+    display: flex;
+    align-items: stretch;
+    align-content: space-between;
+}
+
+#login div#screenLeft {
+    margin-right: 2em;
 }
 
 #formConnexion {
     padding: 0;
+    display: unset;
 }
 
 #formConnexion input{
@@ -448,7 +455,7 @@ form textarea {
 }
 
 #boissonCarousel img {
-    height: 300px;
+    height: 290px;
     width: 80%;
 }
 
@@ -680,6 +687,10 @@ div#preciserRaison {
     h6{
         font-size: 2em;
         margin-bottom: 40px;
+    }
+
+    #login, #login div#screenLeft, #login div#screenRight {
+        flex-direction: column;
     }
 
     #formConnexion input, #formRegister input, #formResetMdp input{

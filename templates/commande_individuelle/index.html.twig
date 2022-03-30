@@ -103,7 +103,7 @@
                                 <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
                                 <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
                             </td>
-                            <td>{{ commande_groupe.lieuLivraison }}</td>
+                            <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
                             <td>
                                 {% set nombreEleve = 0 %}
                                 {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
@@ -138,7 +138,7 @@
                             </td>
                         {% endif %}
                         {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('d/m/Y', 'Europe/Paris') %}
-                        {% if dateLimiteGroupe < "now"|date('d/m/Y') %}
+                        {% if dateLimiteGroupe < "now"|date('d') and dateLimiteGroupe >= "now"|date('m') %}
                             <td>
                                 Vous ne pouvez plus <span>modifier cette commande.</span>
                                 Vous avez dépassé date
@@ -218,7 +218,7 @@
                                         Vous avez dépassé heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
-                                {% elseif commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') < "now"|date('d/m/Y', 'Europe/Paris') or commande.dateHeureLivraison|date('m', 'Europe/Paris') < "now"|date('m', 'Europe/Paris') %}
+                                {% elseif commande.dateHeureLivraison|date('d', 'Europe/Paris') < "now"|date('d', 'Europe/Paris') and commande.dateHeureLivraison|date('m', 'Europe/Paris') <= "now"|date('m', 'Europe/Paris') %}
                                     <td>
                                         <span>Cette commande est clôturée.</span>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>

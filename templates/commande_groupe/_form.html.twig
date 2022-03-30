@@ -16,7 +16,7 @@
                             <p>{{ sandwich.nomSandwich }}</p>
                             <p>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</p>
                             <p>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.'}}</p>
-                            <input type="radio" id="commande_groupe_sandwichChoisi1_{{ sandwich.id }}"
+                            <input type="radio" id="input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}"
                                    name="commande_groupe[sandwichChoisi1]" value="{{ sandwich.id }}" >
                         </label>
                     </div>
@@ -57,7 +57,7 @@
                                 <p>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisé.'}}</p>
                                 <p>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire précisé.'}}</p>
                                 <input type="radio" name="commande_groupe[dessertChoisi]" value="{{ dessert.id }}"
-                                       id="commande_groupe_dessertChoisi_{{ dessert.id }}">
+                                       id="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
                             </label>
                         </div>
                     {% endfor %}
@@ -100,7 +100,7 @@
                             <p>{{ sandwich.nomSandwich }}</p>
                             <p>Ingredients : {{ sandwich.ingredientSandwich }}</p>
                             <p>Commentaire : {{ sandwich.commentaireSandwich }}</p>
-                            <input type="radio" id="commande_groupe_sandwichChoisi2_{{ sandwich.id }}"
+                            <input type="radio" id="input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}"
                                    name="commande_groupe[sandwichChoisi2]" value="{{ sandwich.id }}" >
                         </label>
                     </div>
@@ -163,4 +163,26 @@
             {{form_widget(form.commentaireCommande)}}
         </div>
     </div>
+    <script>
+        {% for sandwich in sandwichs %}
+            const firstSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi1_{{ sandwich.id }}');
+            if (firstSelectedSandwich{{ sandwich.id }}.checked === true) {
+                const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}')
+                inputSandwich.checked = true;
+            }
+
+            const secondSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi2_{{ sandwich.id }}');
+            if (secondSelectedSandwich{{ sandwich.id }}.checked === true) {
+                const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}')
+                inputSandwich.checked = true;
+            }
+        {% endfor %}
+        {% for dessert in desserts %}
+            const selectedDessert{{ dessert.id }} = document.getElementById('commande_groupe_dessertChoisi_{{ dessert.id }}');
+            if (selectedDessert{{ dessert.id }}.checked === true) {
+                const inputDessert = document.getElementById('input_commande_groupe_dessertChoisi_{{ dessert.id }}')
+                inputDessert.checked = true;
+            }
+        {% endfor %}
+    </script>
 {{ form_end(form) }}

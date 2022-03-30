@@ -107,7 +107,7 @@ class CommandeIndividuelleType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir une raison valable!'])
+                    new NotBlank(['message' => 'Veuillez saisir une raison valable !'])
                 ],
                 'empty_data' => 'Ajouter text',
             ])
