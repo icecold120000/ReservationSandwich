@@ -6,13 +6,13 @@
 parameters:
     menu_directory: '%kernel.project_dir%/public/uploads/menu'
     boisson_directory: '%kernel.project_dir%/public/uploads/imgBoisson'
-    dessert_directory: '%kernel.project_dir%/uploads/public/imgDessert'
-    photoeleve_directory: '%kernel.project_dir%/uploads/photoFile'
-    sandwich_directory: '%kernel.project_dir%/uploads/public/imgSandwich'
+    dessert_directory: '%kernel.project_dir%/public/uploads/imgDessert'
+    sandwich_directory: '%kernel.project_dir%/public/uploads/imgSandwich'
+    photoeleve_directory: '%kernel.project_dir%/public/uploads/photoFile'
     elevefile_directory: '%kernel.project_dir%/uploads/eleveFile'
     adultefile_directory: '%kernel.project_dir%/uploads/adulteFile'
     cantineFile_directory: '%kernel.project_dir%/uploads/cantineFile'
-    excelFile_directory: '%kernel.project_dir%/uploads/excelFile'
+    exportFile_directory: '%kernel.project_dir%/uploads/exportFile'
 
 services:
     # default configuration for services in *this* file

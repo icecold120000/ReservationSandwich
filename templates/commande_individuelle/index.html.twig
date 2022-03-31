@@ -141,12 +141,12 @@
                         {% if dateLimiteGroupe < "now"|date('d') and dateLimiteGroupe >= "now"|date('m') %}
                             <td>
                                 Vous ne pouvez plus <span>modifier cette commande.</span>
-                                Vous avez dépassé date
+                                Vous avez dépassé la date
                                 <span>limite de modification : {{ dateLimiteGroupe }}</span>
                             </td>
                             <td>
                                 Vous ne pouvez plus <span>annuler cette commande.</span>
-                                Vous avez dépassé date
+                                Vous avez dépassé la date
                                 <span>limite de modification : {{ dateLimiteGroupe }}</span>
                             </td>
                         {% else %}
@@ -210,12 +210,12 @@
                                     and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y', 'Europe/Paris')%}
                                     <td>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
-                                        Vous avez dépassé heure
+                                        Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
                                     <td>
                                         Vous ne pouvez plus <span>annuler cette commande.</span>
-                                        Vous avez dépassé heure
+                                        Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
                                 {% elseif commande.dateHeureLivraison|date('d', 'Europe/Paris') < "now"|date('d', 'Europe/Paris') and commande.dateHeureLivraison|date('m', 'Europe/Paris') <= "now"|date('m', 'Europe/Paris') %}
@@ -254,12 +254,12 @@
                                     and commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') == "now"|date('d/m/Y', 'Europe/Paris')%}
                                     <td class="invalidCommande">
                                         Vous ne pouvez plus <span>modifier votre commande.</span>
-                                        Vous avez dépassé heure
+                                        Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
                                     <td class="invalidCommande">
                                         Vous ne pouvez plus <span>annuler votre commande.</span>
-                                        Vous avez dépassé heure
+                                        Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
                                 {% elseif commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') < "now"|date('d/m/Y', 'Europe/Paris') or commande.dateHeureLivraison|date('m', 'Europe/Paris') < "now"|date('m', 'Europe/Paris')%}

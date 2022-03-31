@@ -307,7 +307,7 @@ class CommandeIndividuelleController extends AbstractController
                     readfile($filename);
 
                     // Déplace le fichier dans le dossier Uploads
-                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+                    rename($filename,$this->getParameter('exportFile_directory').'/'.$filename);
 
                 } elseif ($modalite == "Regroupé") {
                     $sandwichDispo = $this->sandwichRepo->findByDispo(true);
