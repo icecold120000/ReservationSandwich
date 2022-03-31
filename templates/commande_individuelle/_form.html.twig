@@ -11,7 +11,7 @@
             <div class="carousel-inner">
                 {% for sandwich in sandwichs %}
                     <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                        <label for="commande_individuelle_sandwichChoisi_{{ sandwich.id }}">
+                        <label for="input_commande_individuelle_sandwichChoisi_{{ sandwich.id }}">
                             <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
                             <span>{{ sandwich.nomSandwich }}</span>
                             <span>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</span>
@@ -43,7 +43,7 @@
                 <div class="carousel-inner">
                     {% for dessert in desserts %}
                         <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                            <label for="commande_individuelle_dessertChoisi_{{ dessert.id }}">
+                            <label for="input_commande_individuelle_dessertChoisi_{{ dessert.id }}">
                                 <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block" alt="{{ dessert.nomDessert }}-image">
                                 <span>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisée.' }}</span>
                                 <span>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.'}}</span>
@@ -77,7 +77,7 @@
                 <div class="carousel-inner">
                     {% for boisson in boissons %}
                         <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                            <label for="commande_individuelle_boissonChoisie_{{ boisson.id }}">
+                            <label for="input_commande_individuelle_boissonChoisie_{{ boisson.id }}">
                                 <img src="{{ asset('uploads/imgBoisson/' ~ boisson.imageBoisson) }}" class="d-block " alt="{{ boisson.nomBoisson }}-image">
                                 <span>{{ boisson.nomBoisson }}</span>
                                 <input type="radio" name="commande_individuelle[boissonChoisie]"

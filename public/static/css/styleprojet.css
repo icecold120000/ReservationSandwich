@@ -469,6 +469,11 @@ form textarea {
     border: solid;
 }
 
+.carousel-inner label span{
+    color: black;
+    font-style: italic;
+}
+
 .carousel-inner input {
     position: unset;
     right: unset;
