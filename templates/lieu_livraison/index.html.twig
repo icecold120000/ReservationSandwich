@@ -5,7 +5,11 @@
 
 {% block body %}
     <h1>Gestion des lieux de livraison</h1>
-
+    {% for message in app.flashes('SuccessDeleteLieu') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <a href="{{ path('lieu_livraison_new') }}"
            class="btn btn-primary" id="btnAjout">
@@ -51,7 +55,10 @@
         {% for lieu_livraison in lieu_livraisons %}
             <tr>
                 <td>{{ lieu_livraison.libelleLieu }}</td>
-                <td>{{ lieu_livraison.estActive ? 'Oui' : 'Non' }}</td>
+                <td>
+                    {{ lieu_livraison.estActive ? '<i class="fas fa-check"></i>' :
+                    '<i class="fas fa-times"></i>' }}
+                </td>
                 <td>
                     <a href="{{ path('lieu_livraison_edit',
                         {'id': lieu_livraison.id}) }}">

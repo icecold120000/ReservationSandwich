@@ -6,6 +6,11 @@
 
 {% block body %}
     <h1>Liste des classes</h1>
+    {% for message in app.flashes('SuccessDeleteClasse') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         {% if is_granted('ROLE_ADMIN')%}
             <a href="{{ path('classe_new') }}"
@@ -23,6 +28,8 @@
         <div id="filtre">
             <div class="selectFiltre">
                 <div>
+                    <span>{{form_label(form.searchClasse)}}</span>
+                    {{form_widget(form.searchClasse)}}
                     <span>{{form_label(form.ordreAlphabet)}}</span>
                     {{form_widget(form.ordreAlphabet)}}
                     <button type="submit" class="btn btn-info" >

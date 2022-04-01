@@ -13,8 +13,8 @@
 	            {{ message }}
 	        </div>
 	    {% endfor %}
-
-		{{form_start(form)}}
+		<div class="fichierForm">
+			{{form_start(form)}}
 			<div>
 				<label>Liste d'adultes (en XLSX) :</label>
 				{{ form_help(form.fileSubmit) }}
@@ -27,7 +27,8 @@
 			<div id="fileInputUser">
 				{{form_widget(form.fileSubmit)}}
 			</div>
-		{{form_end(form)}}
+			{{form_end(form)}}
+		</div>
         <div class="row">
           <div id="divAjout">
               <button type="submit" class="btn btn-success" form="formFichier">

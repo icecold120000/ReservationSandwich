@@ -21,8 +21,9 @@ class LimitationCommandeRepository extends ServiceEntityRepository
     }
 
     /**
+     * @param $value
+     * @return LimitationCommande|null
      * @throws NonUniqueResultException
-     * @return LimitationCommande
      */
     public function findOneByLibelle($value): ?LimitationCommande
     {

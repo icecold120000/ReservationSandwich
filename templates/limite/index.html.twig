@@ -5,6 +5,11 @@
 
 {% block body %}
     <h1>Gestion des limitations</h1>
+    {% for message in app.flashes('SuccessDeleteLimite') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <a href="{{ path('limite_new') }}"
            class="btn btn-primary" id="btnAjout">
@@ -30,7 +35,10 @@
         {% for limitation in limitations %}
             <tr>
                 <td>{{ limitation.libelleLimite }}</td>
-                <td>{{ limitation.isActive ? 'Oui' : 'Non' }}</td>
+                <td>
+                    {{ limitation.isActive ? '<i class="fas fa-check"></i>' :
+                    '<i class="fas fa-times"></i>' }}
+                </td>
                 <td>{{ limitation.nbLimite ? limitation.nbLimite : '<i class="fas fa-times"></i>'}}</td>
                 <td>{{ limitation.heureLimite ? limitation.heureLimite|date('H:i') : '<i class="fas fa-times"></i>' }}</td>
                 <td>

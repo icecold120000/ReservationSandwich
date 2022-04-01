@@ -175,6 +175,10 @@ class BoissonController extends AbstractController
             unlink($this->getParameter('boisson_directory').'/'.$boisson->getImageBoisson());
             $entityManager->remove($boisson);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteBoisson',
+                'Votre boisson a été supprimée !'
+            );
         }
 
         return $this->redirectToRoute('boisson_index', [], Response::HTTP_SEE_OTHER);

@@ -39,9 +39,9 @@ class ProfileType extends AbstractType
                 'constraints' => [
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit comporter au moins 6 caractères.',
+                        'minMessage' => 'Votre mot de passe doit comporter au moins 6 caractères !',
                         'max' => 4096,
-                        'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères.',
+                        'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
                     ]),
                 ],
             ])

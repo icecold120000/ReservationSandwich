@@ -21,7 +21,8 @@ class MenuAccueilRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return MenuAccueil
+     * @param $id
+     * @return MenuAccueil|null
      * @throws NonUniqueResultException
      */
     public function findCurrentOne($id): ?MenuAccueil

@@ -6,15 +6,15 @@
 {% block body %}
 
     <h1>Modifier les inscriptions à la cantine.</h1>
-    <h2>Veuillez sélectionner un fichier contenant une liste des inscriptions.</h2>
+    <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine.</h2>
 
     {% for message in app.flashes('SuccessFileSubmit') %}
         <div class="flash-success">
             {{ message }}
         </div>
     {% endfor %}
-
-    {{form_start(form)}}
+    <div class="fichierForm">
+        {{form_start(form)}}
         <div>
             <label>Liste des inscriptions (en XLSX) :</label>
             {{ form_help(form.fileSubmit) }}
@@ -27,7 +27,8 @@
         <div id="fileInputUser">
             {{form_widget(form.fileSubmit)}}
         </div>
-    {{form_end(form)}}
+        {{form_end(form)}}
+    </div>
     <div class="row">
         <div id="divAjout">
             <button type="submit" class="btn btn-success" form="formFichier">

@@ -29,13 +29,13 @@ class OubliMdpController extends AbstractController
     /**
      * @Route("/oubli/mdp", name="oubli_mdp")
      * @throws TransportExceptionInterface
+     * @throws NonUniqueResultException
      */
-    public function forgottenPassword(EntityManagerInterface $em,
-                                      Request $request,
+    public function forgottenPassword(Request $request,
                                       MailerInterface $mailer,
-                                      RateLimiterFactory $anonymousApiLimiter): Response
+                                      RateLimiterFactory $anonymousApiLimiter,
+                                      UserRepository $userRepo): Response
     {
-
         $form = $this->createForm(OubliMdpType::class);
         $email = $form->handleRequest($request);
         $limiter = $anonymousApiLimiter->create($request->getClientIp());
@@ -51,12 +51,11 @@ class OubliMdpController extends AbstractController
                 $user = $email->get("emailFirst")->getData();
                 $dateNaissance = $email->get("dateAnniversaire")->getData();
 
-                $data = $em->getRepository(User::class)->findOneByEmailAndDate($user, $dateNaissance);
+                $data = $userRepo->findOneByEmailAndDate($user, $dateNaissance);
 
                 if (empty($data))
                     $error = "L'adresse mail n'est lié à aucun compte !";
                 else {
-
                     $email = (new TemplatedEmail())
                         ->from('assocsportive.stvincent@gmail.com')
                         ->to($data->getEmail())
@@ -64,10 +63,10 @@ class OubliMdpController extends AbstractController
                         ->htmlTemplate('email/send_oubli_mdp.html.twig')
                         ->context([
                             'user' => $data
-                        ]);
+                        ])
+                    ;
 
                     $mailer->send($email);
-
                     $this->addFlash(
                         'SuccessOubli',
                         'Votre demande a été envoyée.
@@ -111,7 +110,6 @@ class OubliMdpController extends AbstractController
             }
 
             $em->flush();
-
             $this->addFlash(
                 'SuccessResetMdp',
                 'Votre mot de passe a été modifié !'

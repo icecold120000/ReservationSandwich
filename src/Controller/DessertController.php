@@ -174,6 +174,10 @@ class DessertController extends AbstractController
             unlink($this->getParameter('dessert_directory').'/'.$dessert->getImageDessert());
             $entityManager->remove($dessert);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteDessert',
+                'Votre dessert a été supprimé !'
+            );
         }
 
         return $this->redirectToRoute('dessert_index');

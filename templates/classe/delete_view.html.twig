@@ -6,11 +6,11 @@
     <main>
         <h1>Suppression d'une classe</h1>
 
-        <h2>Cliquez sur le bouton Supprimer pour supprimer la classe choisie : {{classe.libelle}}</h2>
+        <h2>Cliquez sur le bouton Supprimer pour supprimer la classe choisie : {{classe.libelleClasse}}</h2>
 
         {% for message in app.flashes('deleteDangerClasse') %}
             <div class="flash-danger" id="warning">
-                <p>{{ message|replace({".":".</br>"})|raw }}.</p>
+                <p>{{ message|replace({".":".</br>"})|raw }}</p>
             </div>
             <div>
                 <table class="table tableSuppr">

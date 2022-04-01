@@ -94,13 +94,11 @@ class CommandeIndividuelleController extends AbstractController
             );
 
             $affichageTableau = $filter->get('affichageTableau')->getData();
-
             $commandesGroupe = $comGrRepo->filterIndex(
                 $this->getUser(),
                 $filter->get('date')->getData(),
                 $filter->get('cloture')->getData()
             );
-
         }
 
         $commandes = $paginator->paginate(
@@ -550,7 +548,7 @@ class CommandeIndividuelleController extends AbstractController
     /**
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
      */
-    public function pdfDownload($commandes,$commandesGroupe, $modalite, $dateChoisi): Response
+    public function pdfDownload($commandes, $commandesGroupe, $modalite, $dateChoisi): Response
     {
         // Défini les options du pdf
         $optionsPdf = new OptionsPdf();
@@ -988,6 +986,10 @@ class CommandeIndividuelleController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$commandeIndividuelle->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeIndividuelle);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteComInd',
+                'Votre commande individuelle a été supprimée !'
+            );
         }
 
         return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);

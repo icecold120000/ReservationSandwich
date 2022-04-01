@@ -6,13 +6,11 @@ use Ang3\Component\Serializer\Encoder\ExcelEncoder;
 use App\Entity\Fichier;
 use App\Entity\InscriptionCantine;
 use App\Form\FichierType;
-use App\Form\InscriptionCantineType;
 use App\Repository\EleveRepository;
 use App\Repository\InscriptionCantineRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -53,7 +51,6 @@ class InscriptionCantineController extends AbstractController
 
         // Vérifie si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierEleve */
             $fichierEleve = $form->get('fileSubmit')->getData();
 
@@ -186,6 +183,7 @@ class InscriptionCantineController extends AbstractController
                                     ->setRepasJ4(!empty($rowData['Repas Midi J4']))
                                     ->setRepasJ5(!empty($rowData['Repas Midi J5']))
                                 ;
+                                $inscription->setArchiveInscription(false);
                                 $this->entityManager->persist($inscription);
                         }
 

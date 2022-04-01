@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Classe;
 use App\Form\ClasseType;
 use App\Form\FilterOrSearch\OrderEleveType;
-use App\Form\FilterOrSearch\OrderType;
+use App\Form\FilterOrSearch\FilterClasseType;
 use App\Repository\ClasseRepository;
 use App\Repository\EleveRepository;
 use App\Repository\InscriptionCantineRepository;
@@ -28,19 +28,16 @@ class ClasseController extends AbstractController
     public function index(ClasseRepository $classeRepos,
                           PaginatorInterface $paginator, Request $request): Response
     {
+        $classes = $classeRepos->filterClasse('ASC');
 
-        $classes = $classeRepos->findAllOrderByAlphabetCroissant();
-
-        $form = $this->createForm(OrderType::class);
-        $change = $form->handleRequest($request);
+        $form = $this->createForm(FilterClasseType::class);
+        $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($change->get('ordreAlphabet')->getData() == 1) {
-                $classes = $classeRepos->findAllOrderByAlphabetCroissant();
-            }
-            elseif ($change->get('ordreAlphabet')->getData() == 0){
-                $classes = $classeRepos->findAllOrderByAlphabetDecroissant();
-            }
+            $classes = $classeRepos->filterClasse(
+                $filter->get('ordreAlphabet')->getData(),
+                $filter->get('searchClasse')->getData()
+            );
         }
 
         $classes = $paginator->paginate(
@@ -89,7 +86,6 @@ class ClasseController extends AbstractController
     public function show(Classe $classe,Request $request, EleveRepository $eleveRepo,
                          InscriptionCantineRepository $cantineRepository): Response
     {
-
         $eleves = $classe->getEleves();
 
         $form = $this->createForm(OrderEleveType::class);
@@ -144,7 +140,7 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET"})
+     * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET","POST"})
      */
     public function delete_view(Classe $classe): Response
     {
@@ -154,12 +150,11 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="classe_delete", methods={"DELETE"})
+     * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
      */
     public function delete(Request $request, Classe $classe, EleveRepository $eleveRepo,
                            EntityManagerInterface $entityManager): Response
     {
-
         $eleveRelated = $eleveRepo->findByClasse($classe->getId());
 
         if($eleveRelated){
@@ -176,9 +171,12 @@ class ClasseController extends AbstractController
                 $request->request->get('_token'))) {
                 $entityManager->remove($classe);
                 $entityManager->flush();
+                $this->addFlash(
+                    'SuccessDeleteClasse',
+                    'Votre classe a été supprimée !'
+                );
             }
         }
-
 
         return $this->redirectToRoute('classe_index');
     }

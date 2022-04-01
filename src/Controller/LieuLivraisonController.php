@@ -77,7 +77,7 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete_view", name="lieu_livraison_delete_view", methods={"GET"})
+     * @Route("/{id}/delete_view", name="lieu_livraison_delete_view", methods={"GET","POST"})
      */
     public function delete_view(LieuLivraison $lieuLivraison): Response
     {
@@ -112,7 +112,7 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="classe_delete", methods={"DELETE"})
+     * @Route("/{id}", name="lieu_livraison_delete", methods={"DELETE"})
      */
     public function delete(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
                            CommandeGroupeRepository $comGroupeRepo, LieuLivraisonRepository $lieuRepository): Response

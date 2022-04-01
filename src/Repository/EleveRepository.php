@@ -51,9 +51,6 @@ class EleveRepository extends ServiceEntityRepository
         elseif ($ordrePrenom == null && $ordreNom != null) {
             $query->orderBy('el.nomEleve', $ordreNom);
         }
-        else {
-            $this->findAllWithClasse();
-        }
 
         if ($classe != null) {
             $query
@@ -98,9 +95,7 @@ class EleveRepository extends ServiceEntityRepository
             $query->andWhere('cl.id = :id')
                 ->setParameter('id', $classe);
         }
-        else{
-            $this->findAllWithClasse();
-        }
+
         if ($archive !== null) {
             $query->andWhere('el.archiveEleve = :archive')
                 ->setParameter('archive',$archive)

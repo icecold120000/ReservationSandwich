@@ -40,10 +40,8 @@ class RegistrationController extends AbstractController
         }
         else {
             if ($form->isSubmitted() && $form->isValid()) {
-
                 $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
-
 
                 $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
@@ -87,10 +85,8 @@ class RegistrationController extends AbstractController
                      (nom, prénom et date de naissance) correspondent à celles données à l\'administration.'
                     );
                 }
-
             }
         }
-
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),

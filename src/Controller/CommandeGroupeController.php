@@ -26,7 +26,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class CommandeGroupeController extends AbstractController
 {
-
     /**
      * @throws NonUniqueResultException
      * @throws Exception
@@ -61,7 +60,7 @@ class CommandeGroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeGroupe
-                ->setCommandeur($this->getUser())
+                ->setCommandeur($this->getUser()->getId())
                 ->setDateCreation($dateNow)
                 ->setBoissonChoisie($boisson)
                 ->setEstValide(true);
@@ -155,18 +154,9 @@ class CommandeGroupeController extends AbstractController
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
-        $limiteDate = $limiteRepo->findOneByLibelle('sortie');
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
-        if ($limiteDate->getIsActive() == true) {
-            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,['limiteDateSortie' => 0
-                ,'sandwichChoisi1' => $groupeSandwich[0],'sandwichChoisi2' => $groupeSandwich[1]]);
-        }
-        else {
-            $form = $this->createForm(CommandeGroupeType::class,
-                $commandeGroupe,['limiteDateSortie' => 0,
-                    'sandwichChoisi1' => $groupeSandwich[0],
-                    'sandwichChoisi2' => $groupeSandwich[1]]);
-        }
+        $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,['limiteDateSortie' => 0
+            ,'sandwichChoisi1' => $groupeSandwich[0],'sandwichChoisi2' => $groupeSandwich[1]]);
 
         $form->handleRequest($request);
 
@@ -223,6 +213,10 @@ class CommandeGroupeController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$commandeGroupe->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeGroupe);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteComGr',
+                'Votre commande groupée a été supprimée !'
+            );
         }
 
         return $this->redirectToRoute('commande_groupe_index', [], Response::HTTP_SEE_OTHER);

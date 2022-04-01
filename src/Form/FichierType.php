@@ -29,7 +29,7 @@ class FichierType extends AbstractType
                         'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 8192 Ko !',
                     ]),
                     new NotNull([
-                        'message' => 'Veuillez sélectionner un fichier'
+                        'message' => 'Veuillez sélectionner un fichier !'
                     ])
                 ],
             ])

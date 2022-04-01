@@ -8,11 +8,12 @@ parameters:
     boisson_directory: '%kernel.project_dir%/public/uploads/imgBoisson'
     dessert_directory: '%kernel.project_dir%/public/uploads/imgDessert'
     sandwich_directory: '%kernel.project_dir%/public/uploads/imgSandwich'
-    photoeleve_directory: '%kernel.project_dir%/public/uploads/photoFile'
-    elevefile_directory: '%kernel.project_dir%/uploads/eleveFile'
-    adultefile_directory: '%kernel.project_dir%/uploads/adulteFile'
+    photoEleve_directory: '%kernel.project_dir%/public/uploads/photoFile'
+    eleveFile_directory: '%kernel.project_dir%/uploads/eleveFile'
+    adulteFile_directory: '%kernel.project_dir%/uploads/adulteFile'
     cantineFile_directory: '%kernel.project_dir%/uploads/cantineFile'
     exportFile_directory: '%kernel.project_dir%/uploads/exportFile'
+    userFile_directory: '%kernel.project_dir%/uploads/userFile'
 
 services:
     # default configuration for services in *this* file

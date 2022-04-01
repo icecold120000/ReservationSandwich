@@ -6,25 +6,26 @@
 {% block body %}
     <main>
         <h1>Liste d'adultes</h1>
-        <div>
-            <div>
-                <div>
-                    <a href="{{ path('adulte_new') }}"
-                       class="btn btn-primary" id="btnAjout">
-                        Ajouter un nouvel adulte
-                    </a>
-                    <a href="{{ path('adulte_file') }}"
-                       class="btn btn-info" id="btnAjout">
-                        Ajouter une liste d'adultes
-                    </a>
-                </div>
-                <div id="divRetour">
-                    <a href="{{ path('espace_admin') }}"
-                       class="btn btn-secondary" id="btnRetour">
-                        Retourner à la liste des fonctionnalités
-                    </a>
-                </div>
+        {% for message in app.flashes('SuccessDeleteAdulte') %}
+            <div class="flash-success">
+                {{ message }}
             </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('adulte_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter un nouvel adulte
+            </a>
+            <a href="{{ path('adulte_file') }}"
+               class="btn btn-info" id="btnAjout">
+                Ajouter une liste d'adultes
+            </a>
+        </div>
+        <div id="divRetour">
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à la liste des fonctionnalités
+            </a>
         </div>
         <div id="formFilter">
             <div id="filtre" >
@@ -81,7 +82,10 @@
                                 Aucune date donnée
                             {% endif %}
                         </td>
-                        <td>{{ adulte.archiveAdulte ? 'Oui' : 'Non' }}</td>
+                        <td>
+                            {{ adulte.archiveAdulte ? '<i class="fas fa-check"></i>' :
+                            '<i class="fas fa-times"></i>' }}
+                        </td>
                         <td>
                             <a href="{{ path('adulte_edit',
                                 {'id': adulte.id}) }}" class="btn btn-primary">

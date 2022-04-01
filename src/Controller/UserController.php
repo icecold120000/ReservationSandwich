@@ -52,18 +52,15 @@ class UserController extends AbstractController
         $this->userPasswordHasher = $userPasswordHasher;
     }
 
-
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
     public function index(Request $request, UserRepository $userRepository,
                           PaginatorInterface $paginator): Response
     {
-
         $users = $userRepository->findAll();
 
         $form = $this->createForm(UserFilterType::class);
-
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,7 +73,6 @@ class UserController extends AbstractController
         }
 
         $usersTotal = $users;
-
         $users = $paginator->paginate(
             $users,
             $request->query->getInt('page',1),
@@ -133,8 +129,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-
             /** @var UploadedFile $fichierUser */
             $fichierUser = $form->get('fileSubmit')->getData();
 
@@ -155,20 +149,15 @@ class UserController extends AbstractController
                 }
                 $userFile->setFileName($newFilename);
             }
-            // updates the 'brochureFilename' property to store the CSV or XLSX file name
-            // instead of its contents
-
 
             $entityManager->persist($userFile);
             $entityManager->flush();
 
             UserController::creerUsers($userFile->getFileName());
-
             $this->addFlash(
                 'SuccessFileSubmit',
                 'Vos utilisateurs ont été sauvegardés !'
             );
-
             return $this->redirectToRoute('user_file');
         }
 
@@ -181,15 +170,12 @@ class UserController extends AbstractController
     public function getDataFromFile(string $fileName): array
     {
         $file = $this->getParameter('userfile_directory').'/'.$fileName;
-
         $fileExtension =pathinfo($file, PATHINFO_EXTENSION);
 
         $normalizers = [new ObjectNormalizer()];
-
         $encoders=[
             new ExcelEncoder($defaultContext = []),
         ];
-
         $serializer = new Serializer($normalizers, $encoders);
 
         /** @var string $fileString */
@@ -285,7 +271,6 @@ class UserController extends AbstractController
                             $this->entityManager->persist($user);
                         }
                         else{
-
                             $userRelated->setPassword(
                                 $this->userPasswordHasher->hashPassword(
                                     $userRelated,
@@ -300,7 +285,6 @@ class UserController extends AbstractController
                                 ->setIsVerified(true)
                                 ->setTokenHash(md5($userRelated->getNomUser().$userRelated->getEmail()))
                             ;
-
                             $this->entityManager->persist($userRelated);
                         }
                         $userCreated++;
@@ -308,10 +292,9 @@ class UserController extends AbstractController
                 }
             }
         }
-        unlink($this->getParameter('userfile_directory').'/'.$fileName);
+        unlink($this->getParameter('userFile_directory').'/'.$fileName);
         $this->entityManager->flush();
     }
-
 
     /**
      * @Route("/{id}/delete_view", name="user_delete_view", methods={"GET"})
@@ -345,7 +328,6 @@ class UserController extends AbstractController
 
             $user->setTokenHash(md5($user->getId().$user->getEmail()));
             $entityManager->flush();
-
             return $this->redirectToRoute('user_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -363,6 +345,10 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteUser',
+                'Votre utilisateur a été supprimé !'
+            );
         }
 
         return $this->redirectToRoute('user_index', [], Response::HTTP_SEE_OTHER);

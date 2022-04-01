@@ -17,7 +17,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProfileController extends AbstractController
 {
-
     /**
      * @Route("profile/{id}/edit", name="profile_edit", methods={"GET","POST"})
      */
@@ -41,14 +40,12 @@ class ProfileController extends AbstractController
             }
 
             $user->setTokenHash(md5($user->getId().$user->getEmail()));
-
             $em->flush();
 
             $this->addFlash(
                 'SuccessProfile',
                 'Votre profil a été modifié !'
             );
-
             return $this->redirectToRoute('profile_edit', array('id' => $user->getId()));
         }
 

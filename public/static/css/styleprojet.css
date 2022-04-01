@@ -270,6 +270,7 @@ input#rememberMe {
     border-style: none;
     padding: 10px;
     font-size: 15px;
+    border-radius: 0.25rem;
 }
 
 #login #screenLeft a.btn.btn-info{

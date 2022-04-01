@@ -5,6 +5,16 @@
 
 {% block body %}
     <h1>Vos commandes</h1>
+    {% for message in app.flashes('SuccessDeleteComInd') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('SuccessDeleteComGr') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
         <p>Nombre de commande effectuée aujourd'hui : {{ nbCommandeJournalier }}</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}

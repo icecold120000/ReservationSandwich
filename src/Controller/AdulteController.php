@@ -92,10 +92,9 @@ class AdulteController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'.'.$fichierUser->guessExtension();
 
-                // Move the file to the directory where brochures are stored
                 try {
                     $fichierUser->move(
-                        $this->getParameter('adultefile_directory'),
+                        $this->getParameter('adulteFile_directory'),
                         $newFilename
                     );
                 } catch (FileException $e) {
@@ -103,7 +102,6 @@ class AdulteController extends AbstractController
                 }
                 $adulteFile->setFileName($newFilename);
             }
-
 
             $entityManager->persist($adulteFile);
             $entityManager->flush();
@@ -126,7 +124,7 @@ class AdulteController extends AbstractController
 
     public function getDataFromFile(string $fileName): array
     {
-        $file = $this->getParameter('adultefile_directory') .'/'. $fileName;
+        $file = $this->getParameter('adulteFile_directory') .'/'. $fileName;
 
         $fileExtension =pathinfo($file, PATHINFO_EXTENSION);
 
@@ -301,6 +299,10 @@ class AdulteController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$adulte->getId(), $request->request->get('_token'))) {
             $entityManager->remove($adulte);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteAdulte',
+                'Votre adulte a été supprimé !'
+            );
         }
 
         return $this->redirectToRoute('adulte_index', [], Response::HTTP_SEE_OTHER);

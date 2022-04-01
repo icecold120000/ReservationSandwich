@@ -78,8 +78,8 @@ class AdulteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('a');
         $query->andWhere('a.nomAdulte = :val')
             ->andWhere('a.prenomAdulte = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom),
-                array("string","string"));
+            ->setParameters(array('val' => $nom, 'val2' => $prenom))
+        ;
         if($birthday != null){
             $query->andWhere('a.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
@@ -96,8 +96,7 @@ class AdulteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('a');
         $query->andWhere('a.nomAdulte = :val')
             ->andWhere('a.prenomAdulte = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom),
-                array("string","string"));
+            ->setParameters(array('val' => $nom, 'val2' => $prenom));
 
         return $query->getQuery()->getOneOrNullResult();
     }

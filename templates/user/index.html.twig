@@ -6,6 +6,11 @@
 {% block body %}
     <main id="userIndex">
         <h1>Liste des utilisateurs</h1>
+        {% for message in app.flashes('SuccessDeleteUser') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
         <div>
             <a href="{{ path('user_new') }}"
              class="btn btn-primary" id="btnAjout">
@@ -99,20 +104,21 @@
                             {% endswitch %}
                         </td>
                         <td>
-                            {% if user.isVerified == 1 or user.isVerified == true %}
-                                Oui
+                            {{ user.isVerified ? '<i class="fas fa-check"></i>' :
+                            '<i class="fas fa-times"></i>' }}
+                        </td>
+                        <td>
+                            {% if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' or is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('user_edit',
+                                {'id': user.id}) }}" class="btn btn-primary">
+                                    <i class="far fa-edit"></i>
+                                </a>
                             {% else %}
-                                Non
+                                Cet utilisateur ne peut <span>pas être modifié !</span>
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{{ path('user_edit',
-                            {'id': user.id}) }}" class="btn btn-primary">
-                                <i class="far fa-edit"></i>
-                            </a>
-                        </td>
-                        <td>
-                            {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' %}
+                            {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('user_delete_view', {'id': user.id}) }}"
                                  class="btn btn-danger">
                                     <i class="fas fa-trash"></i>
@@ -124,7 +130,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7" class="erreur">Aucun utilisateur n'a été trouvé</td>
+                        <td colspan="7" class="erreur">Aucun utilisateur n'a été trouvé !</td>
                     </tr>
                 {% endfor %}
                 </tbody>

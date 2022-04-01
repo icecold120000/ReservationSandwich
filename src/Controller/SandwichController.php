@@ -27,7 +27,6 @@ class SandwichController extends AbstractController
     public function index(SandwichRepository $sandwichRepo, Request $request,
                           PaginatorInterface $paginator): Response
     {
-
         $sandwiches = $sandwichRepo->findAll();
 
         $form = $this->createForm(FilterMenuType::class);
@@ -63,7 +62,6 @@ class SandwichController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierSandwich */
             $fichierSandwich = $form->get('imageSandwich')->getData();
 
@@ -84,7 +82,6 @@ class SandwichController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-
                 $sandwich->setImageSandwich($newFilename);
             }
 
@@ -171,6 +168,10 @@ class SandwichController extends AbstractController
             unlink($this->getParameter('sandwich_directory').'/'.$sandwich->getImageSandwich());
             $entityManager->remove($sandwich);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteEleve',
+                'Votre sandwich a été supprimé !'
+            );
         }
 
         return $this->redirectToRoute('sandwich_index');

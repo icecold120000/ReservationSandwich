@@ -5,26 +5,29 @@
 
 {% block body %}
     <h1>Liste d'élèves</h1>
+    {% for message in app.flashes('SuccessDeleteEleve') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
-        <div>
-            <a href="{{ path('eleve_new') }}">
-                <button class="btn btn-primary" id="btnAjout">
-                    Ajouter un nouveau élève
-                </button>
-            </a>
-            <a href="{{ path('eleve_file') }}">
-                <button class="btn btn-info" id="btnAjout">
-                    Ajouter une liste d'élèves
-                </button>
-            </a>
-        </div>
-        <div id="divRetour">
-            <a href="{{ path('espace_admin') }}">
-                <button class="btn btn-secondary" id="btnRetour">
-                    Retourner dans la liste de fonctionnalité
-                </button>
-            </a>
-        </div>
+        <a href="{{ path('eleve_new') }}">
+            <button class="btn btn-primary" id="btnAjout">
+                Ajouter un nouveau élève
+            </button>
+        </a>
+        <a href="{{ path('eleve_file') }}">
+            <button class="btn btn-info" id="btnAjout">
+                Ajouter une liste d'élèves
+            </button>
+        </a>
+    </div>
+    <div id="divRetour">
+        <a href="{{ path('espace_admin') }}">
+            <button class="btn btn-secondary" id="btnRetour">
+                Retourner dans la liste de fonctionnalité
+            </button>
+        </a>
     </div>
     <div id="filtreEleve" class="filtre form-row align-items-end">
         {{form_start(form)}}

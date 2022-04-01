@@ -5,6 +5,11 @@
 
 {% block body %}
     <h1>Liste de boissons</h1>
+    {% for message in app.flashes('SuccessDeleteBoisson') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <a href="{{ path('boisson_new') }}"
            class="btn btn-primary" id="btnAjout">

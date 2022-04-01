@@ -166,8 +166,8 @@ class CommandeGroupeRepository extends ServiceEntityRepository
             }
         }
 
-        if ($cloture != null) {
-            if ($cloture != false) {
+        if ($cloture !== null) {
+            if ($cloture = false) {
                 $query->andWhere('ci.dateHeureLivraison > :date')
                     ->setParameter('date',  new \DateTime('now'))
                     ->orderBy('ci.dateHeureLivraison', 'ASC')

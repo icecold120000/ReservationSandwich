@@ -9,6 +9,16 @@
             {{ message }}
         </div>
     {% endfor %}
+    {% for message in app.flashes('SuccessDeleteComInd') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('SuccessDeleteComGr') %}
+        <div class="flash-success">
+            {{ message }}
+        </div>
+    {% endfor %}
     <div>
         <div>
             <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">

@@ -119,8 +119,15 @@ table a.btn.btn-info{
     position: relative;
 }
 
+/*Page de suppression*/
+
 #warning p{
     font-size: 35px;
+}
+
+.tableSuppr, .tableSuppr th, .tableSuppr td {
+    border: red solid 2px;
+    vertical-align: middle;
 }
 
 /*Filtre des pages de gestions et listes*/
@@ -187,6 +194,11 @@ div#filtreEleve.filtre label{
 
 #filtreEleve.filtre select , #filtreEleve.filtre input{
     font-size: 20px;
+}
+
+/*Formulaire d'ajout par une liste*/
+.fichierForm form{
+    flex-direction: column;
 }
 
 /*Les Formulaires d'ajout et de modification des utilisateurs*/
@@ -301,7 +313,7 @@ table form button.btn-danger {
         height: 6em;
     }
 
-    .tableAdmin th, .tableAdmin td {
+    .tableAdmin th, .tableAdmin td, .tableSuppr th, .tableSuppr td {
         font-size: 2em;
     }
 
@@ -403,6 +415,8 @@ table form button.btn-danger {
         font-size: 30px;
         margin: 8px 0 0 0;
     }
+
+
 
     /*Filtre de gestion des élèves*/
 

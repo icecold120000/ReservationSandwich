@@ -65,15 +65,16 @@ class RegistrationFormType extends AbstractType
                 'first_options' => ['label' => 'Votre mot de passe'],
                 'second_options' => ['label' => 'Confirmer votre mot de passe'],
                 'invalid_message' => 'Vos mots de passe doivent correspondre !',
-                'help' => 'Veuillez saisir un mot de passe avec au moins 6 caractères.',
+                'help' => 'Votre mot de passe doit comporter au moins 6 caractères.',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez saisir votre mot de passe !',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Vos champs doit comporter au moins 6 caractères !',
+                        'minMessage' => 'Vos mot de passe doit comporter au moins 6 caractères !',
                         'max' => 4096,
+                        'maxMessage' => 'Vos mot de passe doit être limité à 4096 caractères !',
                     ]),
                 ],
             ])

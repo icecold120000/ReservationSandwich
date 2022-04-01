@@ -26,7 +26,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">Accueil</a>
                     </li>
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                         {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
                             <li class="nav-item">
                                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
@@ -47,7 +47,7 @@
                 </ul>
                 <ul class="nav-item ml-auto dropdown" id="connexion">
                     <li>
-                        {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                        {% if is_granted('IS_AUTHENTICATED_FULLY')%}
                             <div class="dropdown" id="dropdownProfile">
                                 <a class="nav-link dropdown-toggle" href="#" role="link" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-user-circle"> Mon Profil</i>

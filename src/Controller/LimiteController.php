@@ -42,7 +42,6 @@ class LimiteController extends AbstractController
                 'SuccessLimite',
                 'Votre limitation a été sauvegardée !'
             );
-
             return $this->redirectToRoute('limite_new', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -94,6 +93,10 @@ class LimiteController extends AbstractController
         if ($this->isCsrfTokenValid('delete'.$limitationCommande->getId(), $request->request->get('_token'))) {
             $entityManager->remove($limitationCommande);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteEleve',
+                'Votre limitation a été supprimée !'
+            );
         }
 
         return $this->redirectToRoute('limite_index', [], Response::HTTP_SEE_OTHER);

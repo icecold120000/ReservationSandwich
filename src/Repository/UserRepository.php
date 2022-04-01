@@ -44,33 +44,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function search($roleUser = null, $userVerifie = null, $ordreNom = null, $ordrePrenom = null): array
     {
         $query = $this->createQueryBuilder('u');
-        if($roleUser != null){
+        if($roleUser !== null){
             $query->andWhere('u.roles like :role')
                 ->setParameter('role','%'.$roleUser.'%');
         }
-        else{
-            $this->findAll();
-        }
-        if($userVerifie != null){
+
+        if($userVerifie !== null){
             $query->andWhere('u.isVerified = :userVerifie')
                 ->setParameter('userVerifie', $userVerifie);
         }
-        else{
-            $this->findAll();
-        }
-        if ($ordreNom != null && $ordrePrenom != null) {
+
+        if ($ordreNom !== null && $ordrePrenom !== null) {
             $query->addOrderBy('u.nomUser', $ordreNom)
                 ->addOrderBy('u.prenomUser', $ordrePrenom);
         }
-        elseif ($ordreNom == null && $ordrePrenom != null) {
+        elseif ($ordreNom == null && $ordrePrenom !== null) {
             $query->orderBy('u.prenomUser', $ordrePrenom);
         }
-        elseif ($ordrePrenom == null && $ordreNom != null) {
+        elseif ($ordrePrenom == null && $ordreNom !== null) {
             $query->orderBy('u.nomUser', $ordreNom);
         }
-        else {
-            $this->findAll();
-        }
+
         return $query->getQuery()->getResult();
     }
 
@@ -95,28 +89,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->createQueryBuilder('u')
             ->andWhere('u.email = :val')
             ->andWhere('u.dateNaissanceUser = :val2')
-            ->setParameters(array('val' => $email, 'val2' => $date),
-                array("string","\DateTime"))
+            ->setParameters(array('val' => $email, 'val2' => $date))
             ->getQuery()
             ->getOneOrNullResult()
             ;
-    }
-
-    /**
-     * @return User[]
-     */
-    public function findByNomPrenomAndBirthday($nom, $prenom, $birthday): array
-    {
-        $query = $this->createQueryBuilder('u');
-        $query->andWhere('u.nomUser = :val')
-            ->andWhere('u.prenomUser = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom),
-                array("string","string"));
-        if($birthday != null){
-            $query->andWhere('u.dateNaissanceUser = :birthday')
-                ->setParameter('birthday', $birthday);
-        }
-        return $query->getQuery()->getResult();
     }
 
     /**

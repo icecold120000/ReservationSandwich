@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class EleveType extends AbstractType
 {
@@ -70,7 +71,11 @@ class EleveType extends AbstractType
                 },
                 'choice_label' => 'codeClasse',
                 'required' => true,
-                'empty_data' => '1',
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'Veuillez sélectionner une classe !'
+                    ])
+                ],
             ])
         ;
     }

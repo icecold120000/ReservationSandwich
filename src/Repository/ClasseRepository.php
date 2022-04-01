@@ -23,17 +23,18 @@ class ClasseRepository extends ServiceEntityRepository
     /**
      * @return Classe[]
      */
-    public function findAllOrderByAlphabetCroissant(): array
+    public function filterClasse($order, $search = null):array
     {
-        return $this->findBy(array(), array('libelleClasse' => 'ASC'));
-    }
+        $query = $this->createQueryBuilder('c');
+        if ($search != null) {
+            $query
+                ->andWhere('c.codeClasse Like :search or c.libelleClasse Like :search')
+                ->setParameter('search', '%'.$search .'%')
+            ;
+        }
 
-    /**
-     * @return Classe[]
-     */
-    public function findAllOrderByAlphabetDecroissant(): array
-    {
-        return $this->findBy(array(), array('libelleClasse' => 'DESC'));
+        $query->orderBy('c.codeClasse',$order);
+        return $query->getQuery()->getResult();
     }
 
     /**
