@@ -3,9 +3,8 @@
 {% block title %}Suppression d'un sandwich{% endblock %}
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 {% block body %}
-    <main>
+    <main class="container-fluid">
         <h1>Suppression d'un sandwich</h1>
-
         <h2>Cliquez sur le bouton Supprimer pour supprimer le sandwich choisi : {{sandwich.nomSandwich}}</h2>
 
         <div id="warning">

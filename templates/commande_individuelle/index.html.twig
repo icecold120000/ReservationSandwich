@@ -4,18 +4,19 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Vos commandes</h1>
-    {% for message in app.flashes('SuccessDeleteComInd') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('SuccessDeleteComGr') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-    <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
+    <main class="container-fluid">
+        <h1>Vos commandes</h1>
+        {% for message in app.flashes('SuccessDeleteComInd') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('SuccessDeleteComGr') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
         <p>Nombre de commande effectuée aujourd'hui : {{ nbCommandeJournalier }}</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
             {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
@@ -56,155 +57,155 @@
                 </button>
             {% endif %}
         {% endif %}
-    {% if not is_granted('ROLE_ELEVE') %}
-        <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
-            Faire une commande groupée
-        </a>
-    {% endif %}
-    <div id="formFilter">
-        <div id="filtre">
-            {{form_start(form)}}
-            <div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.date)}}</span>
-                    {{form_widget(form.date)}}
+        {% if not is_granted('ROLE_ELEVE') %}
+            <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
+                Faire une commande groupée
+            </a>
+        {% endif %}
+        <div id="formFilter">
+            <div id="filtre">
+                {{form_start(form)}}
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.date)}}</span>
+                        {{form_widget(form.date)}}
+                    </div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.cloture)}}</span>
+                        {{form_widget(form.cloture)}}
+                    </div>
                 </div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.cloture)}}</span>
-                    {{form_widget(form.cloture)}}
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{form_label(form.affichageTableau)}}</span>
+                        {{form_widget(form.affichageTableau)}}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div class="selectFiltre">
-                    <span>{{form_label(form.affichageTableau)}}</span>
-                    {{form_widget(form.affichageTableau)}}
+                <div>
+                    <button type="submit" class="btn btn-info">
+                        Afficher
+                    </button>
                 </div>
-            </div>
-            <div>
-                <button type="submit" class="btn btn-info">
-                    Afficher
-                </button>
-            </div>
-            {{form_end(form)}}
-        </div>
-    </div>
-    {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
-        <div class="table-responsive-lg">
-            <h2>Commandes groupées :</h2>
-            <div>
-                {{ knp_pagination_render(commande_groupes) }}
-            </div>
-            <table class="table tableAdmin">
-                <thead>
-                <tr>
-                    <th>Date de livraison</th>
-                    <th>Lieu de livraison</th>
-                    <th>Commande</th>
-                    <th>Chips</th>
-                    <th>Modifier</th>
-                    <th>Annuler</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for commande_groupe in commande_groupes %}
-                    <tr>
-                        {% if commande_groupe.estValide %}
-                            <td>
-                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
-                            </td>
-                            <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
-                            <td>
-                                {% set nombreEleve = 0 %}
-                                {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
-                                    <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
-                                    {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
-                                {% endfor %}
-                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
-                                <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
-                            </td>
-                            <td>
-                                {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}
-                            </td>
-                        {% else %}
-                            <td class="invalidCommande">
-                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
-                            </td>
-                            <td class="invalidCommande">{{ commande_groupe.lieuLivraison }}</td>
-                            <td class="invalidCommande">
-                                {% set nombreEleve = 0 %}
-                                {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
-                                    <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
-                                    {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
-                                {% endfor %}
-                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
-                                <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
-                            </td>
-                            <td class="invalidCommande">
-                                {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
-                                '<i class="fas fa-times"></i>' }}
-                            </td>
-                        {% endif %}
-                        {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('d/m/Y', 'Europe/Paris') %}
-                        {% if dateLimiteGroupe < "now"|date('d') and dateLimiteGroupe >= "now"|date('m') %}
-                            <td>
-                                Vous ne pouvez plus <span>modifier cette commande.</span>
-                                Vous avez dépassé la date
-                                <span>limite de modification : {{ dateLimiteGroupe }}</span>
-                            </td>
-                            <td>
-                                Vous ne pouvez plus <span>annuler cette commande.</span>
-                                Vous avez dépassé la date
-                                <span>limite de modification : {{ dateLimiteGroupe }}</span>
-                            </td>
-                        {% else %}
-                            <td>
-                                <a href="{{ path('commande_groupe_edit',
-                                    {'id': commande_groupe.id}) }}" class="btn btn-primary">
-                                    <i class="far fa-edit"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="{{ path('commande_groupe_delete_view',
-                                    {'id': commande_groupe.id}) }}" class="btn btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="6" class="erreur">Aucune commande groupée n'a été réalisée !</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                {{ knp_pagination_render(commande_groupes) }}
+                {{form_end(form)}}
             </div>
         </div>
-    {% endif %}
-    {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
-        <div class="table-responsive-lg">
-            <h2>Commandes individuelles :</h2>
-            <div>
-                {{ knp_pagination_render(commandes_ind) }}
+        {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
+            <div class="table-responsive-lg">
+                <h2>Commandes groupées :</h2>
+                <div>
+                    {{ knp_pagination_render(commande_groupes) }}
+                </div>
+                <table class="table tableAdmin">
+                    <thead>
+                    <tr>
+                        <th>Date de livraison</th>
+                        <th>Lieu de livraison</th>
+                        <th>Commande</th>
+                        <th>Chips</th>
+                        <th>Modifier</th>
+                        <th>Annuler</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for commande_groupe in commande_groupes %}
+                        <tr>
+                            {% if commande_groupe.estValide %}
+                                <td>
+                                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
+                                </td>
+                                <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
+                                <td>
+                                    {% set nombreEleve = 0 %}
+                                    {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
+                                        <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                                        {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                                    {% endfor %}
+                                    <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
+                                    <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
+                                </td>
+                                <td>
+                                    {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                                    '<i class="fas fa-times"></i>' }}
+                                </td>
+                            {% else %}
+                                <td class="invalidCommande">
+                                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                                    <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
+                                </td>
+                                <td class="invalidCommande">{{ commande_groupe.lieuLivraison }}</td>
+                                <td class="invalidCommande">
+                                    {% set nombreEleve = 0 %}
+                                    {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
+                                        <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                                        {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                                    {% endfor %}
+                                    <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
+                                    <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
+                                </td>
+                                <td class="invalidCommande">
+                                    {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                                    '<i class="fas fa-times"></i>' }}
+                                </td>
+                            {% endif %}
+                            {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('d/m/Y', 'Europe/Paris') %}
+                            {% if dateLimiteGroupe < "now"|date('d') and dateLimiteGroupe >= "now"|date('m') %}
+                                <td>
+                                    Vous ne pouvez plus <span>modifier cette commande.</span>
+                                    Vous avez dépassé la date
+                                    <span>limite de modification : {{ dateLimiteGroupe }}</span>
+                                </td>
+                                <td>
+                                    Vous ne pouvez plus <span>annuler cette commande.</span>
+                                    Vous avez dépassé la date
+                                    <span>limite de modification : {{ dateLimiteGroupe }}</span>
+                                </td>
+                            {% else %}
+                                <td>
+                                    <a href="{{ path('commande_groupe_edit',
+                                        {'id': commande_groupe.id}) }}" class="btn btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ path('commande_groupe_delete_view',
+                                        {'id': commande_groupe.id}) }}" class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="erreur">Aucune commande groupée n'a été réalisée !</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    {{ knp_pagination_render(commande_groupes) }}
+                </div>
             </div>
-            <table class="table tableAdmin">
-                <thead>
-                <tr>
-                    <th>Date de Livraison</th>
-                    <th>Sandwich choisi</th>
-                    <th>Boisson choisie</th>
-                    <th>Dessert choisi</th>
-                    <th>Chips</th>
-                    <th>Modifier</th>
-                    <th>Annuler</th>
-                </tr>
-                </thead>
-                <tbody>
+        {% endif %}
+        {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
+            <div class="table-responsive-lg">
+                <h2>Commandes individuelles :</h2>
+                <div>
+                    {{ knp_pagination_render(commandes_ind) }}
+                </div>
+                <table class="table tableAdmin">
+                    <thead>
+                    <tr>
+                        <th>Date de Livraison</th>
+                        <th>Sandwich choisi</th>
+                        <th>Boisson choisie</th>
+                        <th>Dessert choisi</th>
+                        <th>Chips</th>
+                        <th>Modifier</th>
+                        <th>Annuler</th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {% for commande in commandes_ind %}
                         <tr>
                             {% if commande.estValide %}
@@ -302,11 +303,12 @@
                             <td colspan="7" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                {{ knp_pagination_render(commandes_ind) }}
+                    </tbody>
+                </table>
+                <div>
+                    {{ knp_pagination_render(commandes_ind) }}
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </main>
 {% endblock %}

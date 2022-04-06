@@ -4,9 +4,8 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-	<main>
+	<main class="container-fluid">
 	    <h1>Suppression d'un utilisateur</h1>
-
 	    <h2>Appuyer sur le bouton Supprimer pour supprimer l'utilisateur choisi : {{user.prenomUser}} {{user.nomUser}}</h2>
 
         {% for message in app.flashes('FailedDeleteUser') %}

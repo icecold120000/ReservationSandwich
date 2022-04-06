@@ -1,22 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <img src="{{ asset('static/images/StVincent.png') }}" alt="Logo Saint-Vincent">
-    <h1>Page non trouvée</h1>
+    <main class="container-fluid">
+        <img src="{{ asset('static/images/StVincent.png') }}" alt="Logo Saint-Vincent">
+        <h1>Page non trouvée</h1>
 
-    <h2>
-        Votre page n'a pas été trouvée.
-    </h2>
+        <h2>
+            Votre page n'a pas été trouvée.
+        </h2>
 
-    <p>
-    	Veuillez vérifier votre URL pour des fautes d'orthographe
-         ou revenir à la page d'accueil.
-    </p>
-    <div>
-        <a href="{{ path('homepage') }}">
-        	<button class="btn btn-info">
-        		Revenir à la page d'accueil
-        	</button>
-        </a>
-    </div>
+        <p>
+            Veuillez vérifier votre URL pour des fautes d'orthographe
+            ou revenir à la page d'accueil.
+        </p>
+        <div>
+            <a href="{{ path('homepage') }}">
+                <button class="btn btn-info">
+                    Revenir à la page d'accueil
+                </button>
+            </a>
+        </div>
+    </main>
 {% endblock %}

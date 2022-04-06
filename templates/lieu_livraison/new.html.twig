@@ -4,29 +4,31 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un lieu de livraison</h1>
+    <main class="container-fluid">
+        <h1>Ajouter un lieu de livraison</h1>
 
-    {% for message in app.flashes('SuccessLieu') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
+        {% for message in app.flashes('SuccessLieu') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
 
-    <div>
-        <div class="container-fluid formEntité" id="formLieu">
-            {{ include('lieu_livraison/_form.html.twig') }}
+        <div>
+            <div class="container-fluid formEntité" id="formLieu">
+                {{ include('lieu_livraison/_form.html.twig') }}
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div id="divAjout" class="form-actions">
-            <button type="submit" class="btn btn-success" form="lieuForm">
-                Ajouter le lieu de livraison
-            </button>
-            <a href="{{ path('lieu_livraison_index') }}">
-                <button class="btn btn-secondary" id="btnRetour">
-                    Revenir dans la liste
+        <div class="row">
+            <div id="divAjout" class="form-actions">
+                <button type="submit" class="btn btn-success" form="lieuForm">
+                    Ajouter le lieu de livraison
                 </button>
-            </a>
+                <a href="{{ path('lieu_livraison_index') }}">
+                    <button class="btn btn-secondary" id="btnRetour">
+                        Revenir dans la liste
+                    </button>
+                </a>
+            </div>
         </div>
-    </div>
+    </main>
 {% endblock %}

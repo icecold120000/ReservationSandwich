@@ -4,63 +4,64 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste d'élèves</h1>
-    {% for message in app.flashes('SuccessDeleteEleve') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Liste d'élèves</h1>
+        {% for message in app.flashes('SuccessDeleteEleve') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('eleve_new') }}">
+                <button class="btn btn-primary" id="btnAjout">
+                    Ajouter un nouveau élève
+                </button>
+            </a>
+            <a href="{{ path('eleve_file') }}">
+                <button class="btn btn-info" id="btnAjout">
+                    Ajouter une liste d'élèves
+                </button>
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('eleve_new') }}">
-            <button class="btn btn-primary" id="btnAjout">
-                Ajouter un nouveau élève
-            </button>
-        </a>
-        <a href="{{ path('eleve_file') }}">
-            <button class="btn btn-info" id="btnAjout">
-                Ajouter une liste d'élèves
-            </button>
-        </a>
-    </div>
-    <div id="divRetour">
-        <a href="{{ path('espace_admin') }}">
-            <button class="btn btn-secondary" id="btnRetour">
-                Retourner dans la liste de fonctionnalité
-            </button>
-        </a>
-    </div>
-    <div id="filtreEleve" class="filtre form-row align-items-end">
-        {{form_start(form)}}
-        <div id="left">
-            <span>{{ form_label(form.nom)}}</span>
-            {{form_widget(form.nom)}}
+        <div id="divRetour">
+            <a href="{{ path('espace_admin') }}">
+                <button class="btn btn-secondary" id="btnRetour">
+                    Retourner dans la liste de fonctionnalité
+                </button>
+            </a>
+        </div>
+        <div id="filtreEleve" class="filtre form-row align-items-end">
+            {{form_start(form)}}
+            <div id="left">
+                <span>{{ form_label(form.nom)}}</span>
+                {{form_widget(form.nom)}}
+            </div>
+            <div>
+                <span>{{ form_label(form.classe)}}</span>
+                {{form_widget(form.classe)}}
+                <span>{{ form_label(form.archiveEleve)}}</span>
+                {{form_widget(form.archiveEleve)}}
+            </div>
+            <div>
+                <span>{{ form_label(form.ordrePrenom)}}</span>
+                {{form_widget(form.ordrePrenom)}}
+            </div>
+            <div>
+                <span>{{ form_label(form.ordreNom)}}</span>
+                {{form_widget(form.ordreNom)}}
+            </div>
+            <div id="submitFiltre">
+                <button type="submit" class="btn btn-info">
+                    Afficher
+                </button>
+            </div>
+            {{form_end(form)}}
         </div>
         <div>
-            <span>{{ form_label(form.classe)}}</span>
-            {{form_widget(form.classe)}}
-            <span>{{ form_label(form.archiveEleve)}}</span>
-            {{form_widget(form.archiveEleve)}}
+            {{ knp_pagination_render(eleves) }}
         </div>
-        <div>
-            <span>{{ form_label(form.ordrePrenom)}}</span>
-            {{form_widget(form.ordrePrenom)}}
-        </div>
-        <div>
-            <span>{{ form_label(form.ordreNom)}}</span>
-            {{form_widget(form.ordreNom)}}
-        </div>
-        <div id="submitFiltre">
-            <button type="submit" class="btn btn-info">
-                Afficher
-            </button>
-        </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(eleves) }}
-    </div>
-    <table class="table tableAdmin">
-        <thead>
+        <table class="table tableAdmin">
+            <thead>
             <tr>
                 <th>Photo</th>
                 <th>Prénom et Nom</th>
@@ -68,44 +69,45 @@
                 <th>Modifier</th>
                 <th>Supprimer</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for eleve in eleves %}
-            <tr>
-                <td>
-                    {% if eleve.photoEleve %}
-                        <img alt="Photo de l'élève" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
-                    {% else %}
-                        <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
-                    {% endif %}
-                </td>
-                <td>{{ eleve.prenomEleve }} <span>{{ eleve.nomEleve }}</span></td>
-                <td>{{ eleve.dateNaissance ? eleve.dateNaissance|date('d/m/Y') : '' }}</td>
-                <td>
-                    <a href="{{ path('eleve_edit',
-                    {'id': eleve.id}) }}">
-                        <button class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </button>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('eleve_delete',
-                     {'id': eleve.id}) }}">
-                        <button class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11" class="erreur">Aucun élève n'a été trouvé</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        {{ knp_pagination_render(eleves) }}
-    </div>
+            </thead>
+            <tbody>
+            {% for eleve in eleves %}
+                <tr>
+                    <td>
+                        {% if eleve.photoEleve %}
+                            <img alt="Photo de l'élève" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
+                        {% else %}
+                            <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
+                        {% endif %}
+                    </td>
+                    <td>{{ eleve.prenomEleve }} <span>{{ eleve.nomEleve }}</span></td>
+                    <td>{{ eleve.dateNaissance ? eleve.dateNaissance|date('d/m/Y') : '' }}</td>
+                    <td>
+                        <a href="{{ path('eleve_edit',
+                            {'id': eleve.id}) }}">
+                            <button class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('eleve_delete',
+                            {'id': eleve.id}) }}">
+                            <button class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11" class="erreur">Aucun élève n'a été trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ knp_pagination_render(eleves) }}
+        </div>
+    </main>
 {% endblock %}

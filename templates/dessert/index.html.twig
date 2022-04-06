@@ -4,47 +4,48 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste des desserts</h1>
-    {% for message in app.flashes('SuccessDeleteDessert') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Liste des desserts</h1>
+        {% for message in app.flashes('SuccessDeleteDessert') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('dessert_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter un nouveau dessert
+            </a>
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à l'espace administration
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('dessert_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter un nouveau dessert
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
-    </div>
-    <div>
-        {{form_start(form)}}
-        <div id="filtre" class="filtre form-row align-items-end">
-            <div class="selectFiltre">
-                <div>
-                    <span>{{form_label(form.ordre)}}</span>
-                    {{form_widget(form.ordre)}}
-                    <span>{{form_label(form.dispo)}}</span>
-                    {{form_widget(form.dispo)}}
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-info" >
-                        Afficher
-                    </button>
+        <div>
+            {{form_start(form)}}
+            <div id="filtre" class="filtre form-row align-items-end">
+                <div class="selectFiltre">
+                    <div>
+                        <span>{{form_label(form.ordre)}}</span>
+                        {{form_widget(form.ordre)}}
+                        <span>{{form_label(form.dispo)}}</span>
+                        {{form_widget(form.dispo)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info" >
+                            Afficher
+                        </button>
+                    </div>
                 </div>
             </div>
+            {{form_end(form)}}
         </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(desserts) }}
-    </div>
-    <div class="table-responsive-lg">
-        <table class="table table-lg tableAdmin">
-            <thead>
+        <div>
+            {{ knp_pagination_render(desserts) }}
+        </div>
+        <div class="table-responsive-lg">
+            <table class="table table-lg tableAdmin">
+                <thead>
                 <tr>
                     <th>Image</th>
                     <th>Nom</th>
@@ -54,46 +55,47 @@
                     <th>Modifier</th>
                     <th>Supprimer</th>
                 </tr>
-            </thead>
-            <tbody>
-            {% for dessert in desserts %}
-                <tr>
-                    <td>
-                        {% if dessert.imageDessert %}
-                            <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
-                        {% else %}
-                            <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
-                        {% endif %}
-                    </td>
-                    <td>{{ dessert.nomDessert }}</td>
-                    <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisée.' }}</td>
-                    <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.'}}</td>
-                    <td>
-                        {{ dessert.dispoDessert ? '<i class="fas fa-check"></i>' :
-                        '<i class="fas fa-times"></i>' }}
-                    </td>
-                    <td>
-                        <a href="{{ path('dessert_edit',
-                            {'id': dessert.id}) }}" class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ path('dessert_delete_view',
-                            {'id': dessert.id}) }}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7" class="erreur">Aucun dessert n'a été trouvé !</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div>
-        {{ knp_pagination_render(desserts) }}
-    </div>
+                </thead>
+                <tbody>
+                {% for dessert in desserts %}
+                    <tr>
+                        <td>
+                            {% if dessert.imageDessert %}
+                                <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
+                            {% else %}
+                                <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
+                            {% endif %}
+                        </td>
+                        <td>{{ dessert.nomDessert }}</td>
+                        <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisée.' }}</td>
+                        <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.'}}</td>
+                        <td>
+                            {{ dessert.dispoDessert ? '<i class="fas fa-check"></i>' :
+                            '<i class="fas fa-times"></i>' }}
+                        </td>
+                        <td>
+                            <a href="{{ path('dessert_edit',
+                                {'id': dessert.id}) }}" class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('dessert_delete_view',
+                                {'id': dessert.id}) }}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="erreur">Aucun dessert n'a été trouvé !</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ knp_pagination_render(desserts) }}
+        </div>
+    </main>
 {% endblock %}

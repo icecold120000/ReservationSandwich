@@ -4,7 +4,7 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <main>
+    <main class="container-fluid">
         <h1>Ajouter une nouvelle boisson</h1>
 
         {% for message in app.flashes('SuccessBoisson') %}

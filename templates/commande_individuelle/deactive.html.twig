@@ -3,8 +3,10 @@
 {% block title %}Réservation désactivée{% endblock %}
 
 {% block body %}
-    <img id="errorPage" src="{{ asset('static/images/StVincent.png') }}" alt="Logo Saint-Vincent">
-    <h1>Le service de réservation de sandwich est déactivé.</h1>
-    <h2>Toutes les commandes réalisées avant la désactivation du service seront prises en compte.</h2>
-    <h3>Veuillez contacter l'administrateur ou un personnel de cuisine pour plus de précision.</h3>
+    <main class="container-fluid">
+        <img id="errorPage" src="{{ asset('static/images/StVincent.png') }}" alt="Logo Saint-Vincent">
+        <h1>Le service de réservation de sandwich est déactivé.</h1>
+        <h2>Toutes les commandes réalisées avant la désactivation du service seront prises en compte.</h2>
+        <h3>Veuillez contacter l'administrateur ou un personnel de cuisine pour plus de précision.</h3>
+    </main>
 {% endblock %}

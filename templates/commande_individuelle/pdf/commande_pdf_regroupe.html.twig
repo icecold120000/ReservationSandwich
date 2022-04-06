@@ -2,15 +2,16 @@
 
 {% block title %}PDF du {{ dateChoisi|date('d/m/Y') }}{% endblock %}
 {% block body %}
-    <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
-    <table style="border: solid; width: 100%">
-        <thead>
+    <main>
+        <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
+        <table style="border: solid; width: 100%">
+            <thead>
             <tr>
                 <th style="text-align: center; border: solid ;font-size: 1.5em">Nom du produit</th>
                 <th style="text-align: center; border: solid ;font-size: 1.5em">Nombre de produits commandés</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             {% for sandwich in sandwichDispo %}
                 <tr>
                     <td style="text-align: center; border: solid ;font-size: 1.25em">
@@ -131,6 +132,7 @@
                     {% endif %}
                 </td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </main>
 {% endblock %}

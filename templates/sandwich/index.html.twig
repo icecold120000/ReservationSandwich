@@ -4,47 +4,48 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste de sandwichs</h1>
-    {% for message in app.flashes('SuccessDeleteSandwich') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Liste de sandwichs</h1>
+        {% for message in app.flashes('SuccessDeleteSandwich') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('sandwich_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter un nouveau sandwich
+            </a>
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à l'espace administration
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('sandwich_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter un nouveau sandwich
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
-    </div>
-    <div>
-        {{form_start(form)}}
-        <div id="filtre" class="filtre form-row align-items-end">
-            <div class="selectFiltre">
-                <div>
-                    <span>{{form_label(form.ordre)}}</span>
-                    {{form_widget(form.ordre)}}
-                    <span>{{form_label(form.dispo)}}</span>
-                    {{form_widget(form.dispo)}}
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-info" >
-                        Afficher
-                    </button>
+        <div>
+            {{form_start(form)}}
+            <div id="filtre" class="filtre form-row align-items-end">
+                <div class="selectFiltre">
+                    <div>
+                        <span>{{form_label(form.ordre)}}</span>
+                        {{form_widget(form.ordre)}}
+                        <span>{{form_label(form.dispo)}}</span>
+                        {{form_widget(form.dispo)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info" >
+                            Afficher
+                        </button>
+                    </div>
                 </div>
             </div>
+            {{form_end(form)}}
         </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(sandwiches) }}
-    </div>
-    <div class="table-responsive-lg">
-        <table class="table table-lg tableAdmin">
-            <thead>
+        <div>
+            {{ knp_pagination_render(sandwiches) }}
+        </div>
+        <div class="table-responsive-lg">
+            <table class="table table-lg tableAdmin">
+                <thead>
                 <tr>
                     <th>Photo</th>
                     <th>Nom</th>
@@ -54,8 +55,8 @@
                     <th>Modifier</th>
                     <th>Supprimer</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for sandwich in sandwiches %}
                     <tr>
                         <td>
@@ -90,10 +91,11 @@
                         <td colspan="7" class="erreur">Aucun sandwich n'a été trouvé !</td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div>
-        {{ knp_pagination_render(sandwiches) }}
-    </div>
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ knp_pagination_render(sandwiches) }}
+        </div>
+    </main>
 {% endblock %}

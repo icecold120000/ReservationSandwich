@@ -3,106 +3,107 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste des commandes à venir</h1>
-    {% for message in app.flashes('failedExport') %}
-        <div class="erreur">
-            {{ message }}
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('SuccessDeleteComInd') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-    {% for message in app.flashes('SuccessDeleteComGr') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-    <div>
+    <main class="container-fluid">
+        <h1>Liste des commandes à venir</h1>
+        {% for message in app.flashes('failedExport') %}
+            <div class="erreur">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('SuccessDeleteComInd') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('SuccessDeleteComGr') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
         <div>
-            <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                Faire une commande individuelle
-            </a>
-            <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
-                Faire une commande groupée
-            </a>
-        </div>
-        <div id="divRetour">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf" id="btnAjout">
-                Choisir votre mode d'exportation
-            </button>
-            <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
-                <div class="modal-dialog modal-fullscreen">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <h1>Choisir les modalités de votre export</h1>
-                            {{ form_start(exportForm) }}
-                            <div id="screenLeft">
-                                {{form_label(exportForm.methodeExport)}}
-                                {% if form_errors(exportForm.methodeExport) %}
-                                    <div class="erreur">
-                                        {{ form_errors(exportForm.methodeExport) }}
-                                    </div>
-                                {% endif %}
-                                <div>
-                                    {{ form_widget(exportForm.methodeExport) }}
-                                </div>
-                                {{ form_label(exportForm.affichageExport) }}
-                                {%if form_errors(exportForm.affichageExport) %}
-                                    <div class="erreur">
-                                        {{ form_errors(exportForm.affichageExport) }}
-                                    </div>
-                                {% endif %}
-                                <div>
-                                    {{ form_widget(exportForm.affichageExport) }}
-                                </div>
+            <div>
+                <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
+                    Faire une commande individuelle
+                </a>
+                <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
+                    Faire une commande groupée
+                </a>
+            </div>
+            <div id="divRetour">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf" id="btnAjout">
+                    Choisir votre mode d'exportation
+                </button>
+                <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div id="screenRight">
-                                {{ form_label(exportForm.modaliteCommande) }}
-                                {%if form_errors(exportForm.modaliteCommande) %}
-                                    <div class="erreur">
-                                        {{ form_errors(exportForm.modaliteCommande) }}
+                            <div class="modal-body">
+                                <h1>Choisir les modalités de votre export</h1>
+                                {{ form_start(exportForm) }}
+                                <div id="screenLeft">
+                                    {{form_label(exportForm.methodeExport)}}
+                                    {% if form_errors(exportForm.methodeExport) %}
+                                        <div class="erreur">
+                                            {{ form_errors(exportForm.methodeExport) }}
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        {{ form_widget(exportForm.methodeExport) }}
                                     </div>
-                                {% endif %}
-                                <div>
-                                    {{ form_widget(exportForm.modaliteCommande) }}
-                                </div>
-                                {{form_label(exportForm.dateExport)}}
-                                {%if form_errors(exportForm.dateExport)%}
-                                    <div class="erreur">
-                                        {{ form_errors(exportForm.dateExport) }}
+                                    {{ form_label(exportForm.affichageExport) }}
+                                    {%if form_errors(exportForm.affichageExport) %}
+                                        <div class="erreur">
+                                            {{ form_errors(exportForm.affichageExport) }}
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        {{ form_widget(exportForm.affichageExport) }}
                                     </div>
-                                {% endif %}
-                                <div>
-                                    {{ form_widget(exportForm.dateExport) }}
                                 </div>
+                                <div id="screenRight">
+                                    {{ form_label(exportForm.modaliteCommande) }}
+                                    {%if form_errors(exportForm.modaliteCommande) %}
+                                        <div class="erreur">
+                                            {{ form_errors(exportForm.modaliteCommande) }}
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        {{ form_widget(exportForm.modaliteCommande) }}
+                                    </div>
+                                    {{form_label(exportForm.dateExport)}}
+                                    {%if form_errors(exportForm.dateExport)%}
+                                        <div class="erreur">
+                                            {{ form_errors(exportForm.dateExport) }}
+                                        </div>
+                                    {% endif %}
+                                    <div>
+                                        {{ form_widget(exportForm.dateExport) }}
+                                    </div>
+                                </div>
+                                {{ form_end(exportForm) }}
+                                <button type="submit"
+                                        class="btn btn-success" form="formExport">
+                                    Démarrer votre export
+                                </button>
                             </div>
-                            {{ form_end(exportForm) }}
-                            <button type="submit"
-                                    class="btn btn-success" form="formExport">
-                                Démarrer votre export
-                            </button>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <a href="{{ path('espace_admin') }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Retourner à la liste des fonctionnalités
+                </a>
             </div>
-            <a href="{{ path('espace_admin') }}"
-               class="btn btn-secondary" id="btnRetour">
-                Retourner à la liste des fonctionnalités
-            </a>
         </div>
-    </div>
-    <div id="formFilter">
-        <div id="filtre">
-            {{form_start(form)}}
+        <div id="formFilter">
+            <div id="filtre">
+                {{form_start(form)}}
                 <div>
                     <div class="selectFiltre">
                         <span>{{form_label(form.nom)}} </span>
@@ -128,17 +129,17 @@
                         Afficher
                     </button>
                 </div>
-            {{form_end(form)}}
-        </div>
-    </div>
-    {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
-        <div class="table-responsive-lg">
-            <h2>Commandes groupées :</h2>
-            <div>
-                {{ knp_pagination_render(commande_groupes) }}
+                {{form_end(form)}}
             </div>
-            <table class="table tableAdmin">
-                <thead>
+        </div>
+        {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
+            <div class="table-responsive-lg">
+                <h2>Commandes groupées :</h2>
+                <div>
+                    {{ knp_pagination_render(commande_groupes) }}
+                </div>
+                <table class="table tableAdmin">
+                    <thead>
                     <tr>
                         <th>Date de livraison</th>
                         <th>Lieu de livraison</th>
@@ -150,79 +151,79 @@
                         <th>Modifier</th>
                         <th>Annuler</th>
                     </tr>
-                </thead>
-                <tbody>
-                {% for commande_groupe in commande_groupes %}
-                    <tr>
-                        <td>
-                            <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
-                            <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
-                        </td>
-                        <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
-                        <td>
-                            <span>{{ commande_groupe.commandeur.prenomUser }}</span>
-                            <span>{{ commande_groupe.commandeur.nomUser }}</span>
-                        </td>
-                        <td>
-                            {% set nombreEleve = 0 %}
-                            {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
-                                <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
-                                {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
-                            {% endfor %}
-                            <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
-                            <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
-                        </td>
-                        <td>
-                            {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
-                            '<i class="fas fa-times"></i>' }}
-                        </td>
-                        <td>{{ commande_groupe.motifSortie }}</td>
-                        <td>
-                            {{ commande_groupe.estValide ? '<i class="fas fa-check"></i>' :
-                            '<i class="fas fa-times"></i>' }}
-                            {% if commande_groupe.estValide %}
-                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande groupée ?');">
-                                    <button class="btn btn-danger">Non validée</button>
-                                </form>
-                            {% else %}
-                                <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande groupé ?');">
-                                    <button class="btn btn-success">Validée</button>
-                                </form>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{{ path('commande_groupe_edit',
-                            {'id': commande_groupe.id}) }}" class="btn btn-primary">
-                                <i class="far fa-edit"></i>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('commande_groupe_delete_view',
-                                {'id': commande_groupe.id}) }}" class="btn btn-danger">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="9" class="erreur">Aucune commande groupée n'a été réalisée !</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                {{ knp_pagination_render(commande_groupes) }}
+                    </thead>
+                    <tbody>
+                    {% for commande_groupe in commande_groupes %}
+                        <tr>
+                            <td>
+                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('d/m/Y') : '' }}</span>
+                                <span>{{ commande_groupe.dateHeureLivraison ? commande_groupe.dateHeureLivraison|date('H:i') : '' }}</span>
+                            </td>
+                            <td>{{ commande_groupe.lieuLivraison.libelleLieu }}</td>
+                            <td>
+                                <span>{{ commande_groupe.commandeur.prenomUser }}</span>
+                                <span>{{ commande_groupe.commandeur.nomUser }}</span>
+                            </td>
+                            <td>
+                                {% set nombreEleve = 0 %}
+                                {% for sandwichCommande in commande_groupe.sandwichCommandeGroupes %}
+                                    <span>{{ sandwichCommande.nombreSandwich }} {{ sandwichCommande.sandwichChoisi.nomSandwich }}</span>
+                                    {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
+                                {% endfor %}
+                                <span>{{ nombreEleve }} {{ commande_groupe.boissonChoisie.nomBoisson }}</span>
+                                <span>{{ nombreEleve }} {{ commande_groupe.dessertChoisi.nomDessert }}</span>
+                            </td>
+                            <td>
+                                {{ commande_groupe.prendreChips ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                            </td>
+                            <td>{{ commande_groupe.motifSortie }}</td>
+                            <td>
+                                {{ commande_groupe.estValide ? '<i class="fas fa-check"></i>' :
+                                '<i class="fas fa-times"></i>' }}
+                                {% if commande_groupe.estValide %}
+                                    <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande groupée ?');">
+                                        <button class="btn btn-danger">Non validée</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande groupé ?');">
+                                        <button class="btn btn-success">Validée</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('commande_groupe_edit',
+                                    {'id': commande_groupe.id}) }}" class="btn btn-primary">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('commande_groupe_delete_view',
+                                    {'id': commande_groupe.id}) }}" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="erreur">Aucune commande groupée n'a été réalisée !</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    {{ knp_pagination_render(commande_groupes) }}
+                </div>
             </div>
-        </div>
-    {% endif %}
-    {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
-        <div class="table-responsive-lg">
-            <h2>Commandes individuelles :</h2>
-            <div>
-                {{ knp_pagination_render(commandes_ind) }}
-            </div>
-            <table class="table tableAdmin">
-                <thead>
+        {% endif %}
+        {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
+            <div class="table-responsive-lg">
+                <h2>Commandes individuelles :</h2>
+                <div>
+                    {{ knp_pagination_render(commandes_ind) }}
+                </div>
+                <table class="table tableAdmin">
+                    <thead>
                     <tr>
                         <th>Date de Livraison</th>
                         <th>Prénom et Nom</th>
@@ -234,8 +235,8 @@
                         <th>Modifier</th>
                         <th>Annuler</th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {% for commande in commandes_ind %}
                         <tr>
                             <td>
@@ -292,11 +293,12 @@
                             <td colspan="9" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
-            <div>
-                {{ knp_pagination_render(commandes_ind) }}
+                    </tbody>
+                </table>
+                <div>
+                    {{ knp_pagination_render(commandes_ind) }}
+                </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </main>
 {% endblock %}

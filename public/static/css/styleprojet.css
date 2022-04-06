@@ -594,6 +594,7 @@ div#preciserRaison {
     /* Footer */
     footer i{
         font-size: 2.5em;
+        padding-bottom: 1em;
     }
 
     .coordonnees, .contact, .access, .networks {

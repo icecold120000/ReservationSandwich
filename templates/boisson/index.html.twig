@@ -4,46 +4,47 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Liste de boissons</h1>
-    {% for message in app.flashes('SuccessDeleteBoisson') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Liste de boissons</h1>
+        {% for message in app.flashes('SuccessDeleteBoisson') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('boisson_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter une nouvelle boisson
+            </a>
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à l'espace administration
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('boisson_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter une nouvelle boisson
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
-    </div>
-    <div>
-        {{form_start(form)}}
-        <div id="filtre" class="filtre form-row align-items-end">
-            <div class="selectFiltre">
-                <div>
-                    <span>{{form_label(form.ordre)}}</span>
-                    {{form_widget(form.ordre)}}
-                    <span>{{form_label(form.dispo)}}</span>
-                    {{form_widget(form.dispo)}}
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-info" >
-                        Afficher
-                    </button>
+        <div>
+            {{form_start(form)}}
+            <div id="filtre" class="filtre form-row align-items-end">
+                <div class="selectFiltre">
+                    <div>
+                        <span>{{form_label(form.ordre)}}</span>
+                        {{form_widget(form.ordre)}}
+                        <span>{{form_label(form.dispo)}}</span>
+                        {{form_widget(form.dispo)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info" >
+                            Afficher
+                        </button>
+                    </div>
                 </div>
             </div>
+            {{form_end(form)}}
         </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(boissons) }}
-    </div>
-    <table class="table tableAdmin">
-        <thead>
+        <div>
+            {{ knp_pagination_render(boissons) }}
+        </div>
+        <table class="table tableAdmin">
+            <thead>
             <tr>
                 <th>Photo</th>
                 <th>Nom</th>
@@ -51,41 +52,42 @@
                 <th>Modifier</th>
                 <th>Supprimer</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for boisson in boissons %}
-            <tr>
-                <td>
-                    {% if boisson.imageBoisson %}
-                        <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="Photo d'une boisson">
-                    {% else %}
-                        <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="Placeholder">
-                    {% endif %}
-                </td>
-                <td>{{ boisson.nomBoisson }}</td>
-                <td>{{ boisson.dispoBoisson ? '<i class="fas fa-check"></i>' :
-                    '<i class="fas fa-times"></i>' }}</td>
-                <td>
-                    <a href="{{ path('boisson_edit',
-                        {'id': boisson.id}) }}" class="btn btn-primary">
-                        <i class="far fa-edit"></i>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('boisson_delete_view',
-                        {'id': boisson.id}) }}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5" class="erreur">Aucune boisson n'a été trouvée !</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        {{ knp_pagination_render(boissons) }}
-    </div>
+            </thead>
+            <tbody>
+            {% for boisson in boissons %}
+                <tr>
+                    <td>
+                        {% if boisson.imageBoisson %}
+                            <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="Photo d'une boisson">
+                        {% else %}
+                            <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="Placeholder">
+                        {% endif %}
+                    </td>
+                    <td>{{ boisson.nomBoisson }}</td>
+                    <td>{{ boisson.dispoBoisson ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}</td>
+                    <td>
+                        <a href="{{ path('boisson_edit',
+                            {'id': boisson.id}) }}" class="btn btn-primary">
+                            <i class="far fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('boisson_delete_view',
+                            {'id': boisson.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="erreur">Aucune boisson n'a été trouvée !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ knp_pagination_render(boissons) }}
+        </div>
+    </main>
 {% endblock %}

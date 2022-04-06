@@ -4,24 +4,25 @@
 {% block title %}Gestion des limitations{% endblock %}
 
 {% block body %}
-    <h1>Gestion des limitations</h1>
-    {% for message in app.flashes('SuccessDeleteLimite') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Gestion des limitations</h1>
+        {% for message in app.flashes('SuccessDeleteLimite') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('limite_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter une nouvelle limitation
+            </a>
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à l'espace administration
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('limite_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter une nouvelle limitation
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
-    </div>
-    <table class="table tableAdmin">
-        <thead>
+        <table class="table tableAdmin">
+            <thead>
             <tr>
                 <th>Libelle</th>
                 <th>Est activé</th>
@@ -30,36 +31,37 @@
                 <th>Éditer</th>
                 <th>Supprimer</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for limitation in limitations %}
-            <tr>
-                <td>{{ limitation.libelleLimite }}</td>
-                <td>
-                    {{ limitation.isActive ? '<i class="fas fa-check"></i>' :
-                    '<i class="fas fa-times"></i>' }}
-                </td>
-                <td>{{ limitation.nbLimite ? limitation.nbLimite : '<i class="fas fa-times"></i>'}}</td>
-                <td>{{ limitation.heureLimite ? limitation.heureLimite|date('H:i') : '<i class="fas fa-times"></i>' }}</td>
-                <td>
-                    <a href="{{ path('limite_edit', {'id': limitation.id}) }}">
-                        <button class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </button>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('limite_delete_view',
-                        {'id': limitation.id}) }}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5" class="erreur">Aucune limitation a été trouvée !</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for limitation in limitations %}
+                <tr>
+                    <td>{{ limitation.libelleLimite }}</td>
+                    <td>
+                        {{ limitation.isActive ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}
+                    </td>
+                    <td>{{ limitation.nbLimite ? limitation.nbLimite : '<i class="fas fa-times"></i>'}}</td>
+                    <td>{{ limitation.heureLimite ? limitation.heureLimite|date('H:i') : '<i class="fas fa-times"></i>' }}</td>
+                    <td>
+                        <a href="{{ path('limite_edit', {'id': limitation.id}) }}">
+                            <button class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('limite_delete_view',
+                            {'id': limitation.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5" class="erreur">Aucune limitation a été trouvée !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </main>
 {% endblock %}

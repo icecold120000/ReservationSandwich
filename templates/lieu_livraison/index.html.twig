@@ -4,84 +4,86 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Gestion des lieux de livraison</h1>
-    {% for message in app.flashes('SuccessDeleteLieu') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Gestion des lieux de livraison</h1>
+        {% for message in app.flashes('SuccessDeleteLieu') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <a href="{{ path('lieu_livraison_new') }}"
+               class="btn btn-primary" id="btnAjout">
+                Ajouter un nouveau lieu de livraison
+            </a>
+            <a href="{{ path('espace_admin') }}"
+               class="btn btn-secondary" id="btnRetour">
+                Retourner à l'espace administration
+            </a>
         </div>
-    {% endfor %}
-    <div>
-        <a href="{{ path('lieu_livraison_new') }}"
-           class="btn btn-primary" id="btnAjout">
-            Ajouter un nouveau lieu de livraison
-        </a>
-        <a href="{{ path('espace_admin') }}"
-           class="btn btn-secondary" id="btnRetour">
-            Retourner à l'espace administration
-        </a>
-    </div>
-    <div>
-        {{form_start(form)}}
-        <div id="filtre" class="filtre form-row align-items-end">
-            <div class="selectFiltre">
-                <div>
-                    <span>{{form_label(form.lieuActive)}}</span>
-                    {{form_widget(form.lieuActive)}}
-                    <span>{{form_label(form.ordreLieu)}}</span>
-                    {{form_widget(form.ordreLieu)}}
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-info" >
-                        Afficher
-                    </button>
+        <div>
+            {{form_start(form)}}
+            <div id="filtre" class="filtre form-row align-items-end">
+                <div class="selectFiltre">
+                    <div>
+                        <span>{{form_label(form.lieuActive)}}</span>
+                        {{form_widget(form.lieuActive)}}
+                        <span>{{form_label(form.ordreLieu)}}</span>
+                        {{form_widget(form.ordreLieu)}}
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-info" >
+                            Afficher
+                        </button>
+                    </div>
                 </div>
             </div>
+            {{form_end(form)}}
         </div>
-        {{form_end(form)}}
-    </div>
-    <div>
-        {{ knp_pagination_render(lieu_livraisons) }}
-    </div>
-    <table class="table tableAdmin">
-        <thead>
+        <div>
+            {{ knp_pagination_render(lieu_livraisons) }}
+        </div>
+        <table class="table tableAdmin">
+            <thead>
             <tr>
                 <th>Libelle</th>
                 <th>Est activé</th>
                 <th>Modifier</th>
                 <th>Supprimer</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for lieu_livraison in lieu_livraisons %}
-            <tr>
-                <td>{{ lieu_livraison.libelleLieu }}</td>
-                <td>
-                    {{ lieu_livraison.estActive ? '<i class="fas fa-check"></i>' :
-                    '<i class="fas fa-times"></i>' }}
-                </td>
-                <td>
-                    <a href="{{ path('lieu_livraison_edit',
-                        {'id': lieu_livraison.id}) }}">
-                        <button class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </button>
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ path('lieu_livraison_delete_view',
-                        {'id': lieu_livraison.id}) }}" class="btn btn-danger">
-                        <i class="fas fa-trash"></i>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4" class="erreur">Aucun lieu n'a été trouvé !</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <div>
-        {{ knp_pagination_render(lieu_livraisons) }}
-    </div>
+            </thead>
+            <tbody>
+            {% for lieu_livraison in lieu_livraisons %}
+                <tr>
+                    <td>{{ lieu_livraison.libelleLieu }}</td>
+                    <td>
+                        {{ lieu_livraison.estActive ? '<i class="fas fa-check"></i>' :
+                        '<i class="fas fa-times"></i>' }}
+                    </td>
+                    <td>
+                        <a href="{{ path('lieu_livraison_edit',
+                            {'id': lieu_livraison.id}) }}">
+                            <button class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </button>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ path('lieu_livraison_delete_view',
+                            {'id': lieu_livraison.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="erreur">Aucun lieu n'a été trouvé !</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div>
+            {{ knp_pagination_render(lieu_livraisons) }}
+        </div>
+    </main>
 {% endblock %}

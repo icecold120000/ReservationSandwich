@@ -4,41 +4,41 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
+	<main class="container-fluid">
+		<h1>Ajouter une liste d'élèves</h1>
+		<h2>Veuillez sélectionner un fichier contenant une liste d'élèves</h2>
 
-	<h1>Ajouter une liste d'élèves</h1>
-	<h2>Veuillez sélectionner un fichier contenant une liste d'élèves</h2>
-
-	{% for message in app.flashes('SuccessFileSubmit') %}
-        <div class="flash-success">
-            {{ message }}
-        </div>
-    {% endfor %}
-	<div class="fichierForm">
-		{{form_start(form)}}
-		<div>
-			<label>Liste d'élèves (en XLSX) :</label>
-			{{ form_help(form.fileSubmit) }}
-			{% if form_errors(form.fileSubmit) %}
-				<div class="erreur">
-					{{form_errors(form.fileSubmit)}}
-				</div>
-			{% endif %}
+		{% for message in app.flashes('SuccessFileSubmit') %}
+			<div class="flash-success">
+				{{ message }}
+			</div>
+		{% endfor %}
+		<div class="fichierForm">
+			{{form_start(form)}}
+			<div>
+				<label>Liste d'élèves (en XLSX) :</label>
+				{{ form_help(form.fileSubmit) }}
+				{% if form_errors(form.fileSubmit) %}
+					<div class="erreur">
+						{{form_errors(form.fileSubmit)}}
+					</div>
+				{% endif %}
+			</div>
+			<div id="fileInputUser">
+				{{form_widget(form.fileSubmit)}}
+			</div>
+			{{form_end(form)}}
 		</div>
-		<div id="fileInputUser">
-			{{form_widget(form.fileSubmit)}}
+		<div class="row">
+			<div id="divAjout">
+				<button type="submit" class="btn btn-success" form="formFichier">
+					Envoyer votre liste d'élèves
+				</button>
+				<a href="{{ path('eleve_index') }}"
+				   id="btnRetour" class="btn btn-secondary">
+					Revenir à la liste
+				</a>
+			</div>
 		</div>
-		{{form_end(form)}}
-	</div>
-	<div class="row">
-		<div id="divAjout">
-			<button type="submit" class="btn btn-success" form="formFichier">
-				Envoyer votre liste d'élèves
-			</button>
-			<a href="{{ path('eleve_index') }}"
-			   id="btnRetour" class="btn btn-secondary">
-				Revenir à la liste
-			</a>
-		</div>
-	</div>
-
+	</main>
 {% endblock %}

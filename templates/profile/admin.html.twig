@@ -3,7 +3,7 @@
 {% block title %}Votre Profile{% endblock %}
 
 {% block body %}
-    <main>
+    <main class="container-fluid">
         <div id="profilHeader">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
                 <h1>Bienvenue {{app.user.getPrenomUser}} {{app.user.getNomUser}}.</h1>

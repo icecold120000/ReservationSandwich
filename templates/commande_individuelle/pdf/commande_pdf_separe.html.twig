@@ -8,13 +8,14 @@
     {% endif %}
 {% endblock %}
 {% block body %}
-    <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
-    {% if commandes %}
-        {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
-            <h2>Commandes individuelles par élèves :</h2>
-            {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
-                <table style="border: solid; width: 100%; margin: 0 0 3em 0">
-                    <tbody>
+    <main>
+        <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
+        {% if commandes %}
+            {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
+                <h2>Commandes individuelles par élèves :</h2>
+                {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
+                    <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+                        <tbody>
                         <tr>
                             {% if type == "Impression" %}
                                 <td style="text-align: center; font-size: 1.5em">
@@ -54,23 +55,23 @@
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-                {% if loop.last != true %}
-                    <p style="margin: 0 0 5em 0">
-                        <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-                    </p>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-        {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"])%}
-            <p style="margin: 0 0 5em 0">
-                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-            </p>
-            <h2>Commandes individuelles par adultes :</h2>
-            {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
-                <table style="border: solid; width: 100%; margin: 0 0 3em 0">
-                    <tbody>
+                        </tbody>
+                    </table>
+                    {% if loop.last != true %}
+                        <p style="margin: 0 0 5em 0">
+                            <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"])%}
+                <p style="margin: 0 0 5em 0">
+                    <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                </p>
+                <h2>Commandes individuelles par adultes :</h2>
+                {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
+                    <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+                        <tbody>
                         <tr>
                             <td style="text-align: center; font-size: 1.5em">
                                 <span style="display: block">Heure de livraison :</span>
@@ -89,23 +90,23 @@
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-                {% if loop.last != true %}
-                    <p style="margin: 0 0 5em 0">
-                        <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-                    </p>
-                {% endif %}
-            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% if loop.last != true %}
+                        <p style="margin: 0 0 5em 0">
+                            <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                        </p>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         {% endif %}
-    {% endif %}
-    {% if commandesGroupe %}
-        <p style="margin: 0 0 5em 0">
-            <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-        </p>
-        <h2>Commandes groupées :</h2>
-        <table style="border: solid; width: 100%">
-            <tbody>
+        {% if commandesGroupe %}
+            <p style="margin: 0 0 5em 0">
+                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+            </p>
+            <h2>Commandes groupées :</h2>
+            <table style="border: solid; width: 100%">
+                <tbody>
                 {% for commande in commandesGroupe %}
                     <tr>
                         <td style="text-align: center; font-size: 1.5em">
@@ -138,7 +139,9 @@
                         </p>
                     {% endif %}
                 {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
+                </tbody>
+            </table>
+        {% endif %}
+    </main>
+
 {% endblock %}

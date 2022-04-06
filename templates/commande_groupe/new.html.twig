@@ -4,35 +4,37 @@
 {% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
 
 {% block body %}
-    <h1>Faire une commande groupée</h1>
-    <span>L'eau est déjà automatiquement choisi pour les commandes groupées.</span>
-    {% for message in app.flashes('SuccessComGr') %}
-        <div class="flash-success">
-            {{ message }}
+    <main class="container-fluid">
+        <h1>Faire une commande groupée</h1>
+        <span>L'eau est déjà automatiquement choisi pour les commandes groupées.</span>
+        {% for message in app.flashes('SuccessComGr') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div>
+            <div class="container-fluid formEntité2" id="commandeFormGroupe">
+                {{ include('commande_groupe/_form.html.twig') }}
+            </div>
         </div>
-    {% endfor %}
-    <div>
-        <div class="container-fluid formEntité2" id="commandeFormGroupe">
-            {{ include('commande_groupe/_form.html.twig') }}
+        <div class="row">
+            <div id="divAjout">
+                <button type="submit"
+                        class="btn btn-success" form="formCommandeGroupe" id="btnComGroupe">
+                    Enregistrer votre commande groupée
+                </button>
+                {% if is_granted('ROLE_ELEVE') or is_granted('ROLE_ADULTES')%}
+                    <a href="{{ path('commande_individuelle_index') }}"
+                       class="btn btn-secondary" id="btnRetour">
+                        Revenir à la liste
+                    </a>
+                {% elseif is_granted('ROLE_ADMIN')%}
+                    <a href="{{ path('commande_individuelle_admin') }}"
+                       class="btn btn-secondary" id="btnRetour">
+                        Revenir à la liste
+                    </a>
+                {% endif %}
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div id="divAjout">
-            <button type="submit"
-                    class="btn btn-success" form="formCommandeGroupe" id="btnComGroupe">
-                Enregistrer votre commande groupée
-            </button>
-            {% if is_granted('ROLE_ELEVE') or is_granted('ROLE_ADULTES')%}
-                <a href="{{ path('commande_individuelle_index') }}"
-                   class="btn btn-secondary" id="btnRetour">
-                    Revenir à la liste
-                </a>
-            {% elseif is_granted('ROLE_ADMIN')%}
-                <a href="{{ path('commande_individuelle_admin') }}"
-                   class="btn btn-secondary" id="btnRetour">
-                    Revenir à la liste
-                </a>
-            {% endif %}
-        </div>
-    </div>
+    </main>
 {% endblock %}
