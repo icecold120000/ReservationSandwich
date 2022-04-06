@@ -42,8 +42,8 @@ class OubliMdpController extends AbstractController
 
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
-        if (false === $limiter->consume(1)->isAccepted()) {
-            throw new TooManyRequestsHttpException('Dans une heure','Vous avez fait trop de demande d\'inscription !');
+        if (false === $limiter->consume(2)->isAccepted()) {
+            $error = throw new TooManyRequestsHttpException('dans une heure','Vous avez fait trop de demande d\'oubli de mot de passe !');
         }
         else {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -79,8 +79,8 @@ class OubliMdpController extends AbstractController
         }
 
         return $this->render('oubli_mdp/index.html.twig', [
-            "error" => $error ?? null,
-            "form" => $form->createView(),
+            'error' => $error ?? null,
+            'form' => $form->createView(),
         ]);
     }
 

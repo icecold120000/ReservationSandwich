@@ -317,7 +317,7 @@ table form button.btn-danger {
         font-size: 2em;
     }
 
-    table a.btn.btn-info, table form .btn.btn-danger{
+    table a.btn.btn-info, table form .btn.btn-danger, table .btn.btn-success{
         font-size: 1em;
     }
 

@@ -25,8 +25,10 @@ class OubliMdpType extends AbstractType
             ])
             ->add('dateAnniversaire', DateType::class, [
                 'label' => 'Votre date d\'anniversaire',
-                'html5' => true,
+                'html5' => false,
                 'widget' => 'single_text',
+                'format' => 'dd/MM/yyyy',
+                'help' => ' format : JJ/MM/AAAA',
                 'required' => true,
                 'constraints' => [
                     new NotBlank([

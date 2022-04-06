@@ -478,6 +478,7 @@ form textarea {
 .carousel-inner input {
     position: unset;
     right: unset;
+    margin: 0.5em 0;
 }
 
 div#preciserRaison {
@@ -488,7 +489,6 @@ div#preciserRaison {
     align-items: unset;
     margin-left: 1em;
 }
-
 
 /*Responsive de la barre de navigation*/
 @media screen and (max-width: 990px) {
@@ -570,6 +570,7 @@ div#preciserRaison {
     #btnModal {
         font-size: 2.5em;
         padding: 30px;
+        margin: 0.5em 0;
     }
 
     #menuImgModal {
@@ -624,10 +625,14 @@ div#preciserRaison {
         height: 5em;
     }
 
-    #btnAjout, #btnRetour, .btn.btn-success, #btnProfilAdmin {
+    #btnAjout, #btnRetour, .btn.btn-success {
         padding: 30px;
         font-size: 2.5em;
         margin-bottom: 1em;
+    }
+
+    #btnProfilAdmin{
+        font-size: 3.5em;
     }
 
     label {
@@ -666,7 +671,8 @@ div#preciserRaison {
     #divAjout {
         display: flex;
         flex-direction: column;
-        font-size: 2em;
+        font-size: 1.5em;
+        padding: 1em;
     }
 
     .formEntité2 form {
@@ -762,12 +768,8 @@ div#preciserRaison {
 
     /*Formulaire de commande individuelle */
 
-    #commandeFormInd p {
-        font-size: 1.5em;
-    }
-
     #commandeFormInd label {
-        font-size: 2.5em;
+        font-size: 1.5em;
     }
 
     #sandwichCarousel img, #dessertCarousel img,#sandwich1Carousel img, #sandwich2Carousel img {
@@ -782,6 +784,10 @@ div#preciserRaison {
 
     .carousel-inner input {
         height: 125px;
+    }
+
+    #commandeFormInd #screenRight, #commandeFormGroupe #screenRight{
+        margin-left: unset;
     }
 
 }

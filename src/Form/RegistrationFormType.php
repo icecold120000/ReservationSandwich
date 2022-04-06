@@ -49,7 +49,9 @@ class RegistrationFormType extends AbstractType
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Votre date de naissance',
-                'html5' => true,
+                'html5' => false,
+                'format' => 'dd/MM/yyyy',
+                'help' => ' format : JJ/MM/AAAA',
                 'widget' => 'single_text',
                 'required' => true,
                 'constraints' => [

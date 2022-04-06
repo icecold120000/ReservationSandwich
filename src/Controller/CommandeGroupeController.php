@@ -139,7 +139,6 @@ class CommandeGroupeController extends AbstractController
     }
 
     /**
-     * @throws NonUniqueResultException
      * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, EntityManagerInterface $entityManager,

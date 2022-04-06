@@ -19,6 +19,12 @@
                     {{ message|replace({".":".</br>"})|raw }}
                 </div>
             {% endfor %}
+            {% if error %}
+                <div class="erreur">
+                    {{ message|replace({".":".</br>"})|raw }}
+                    Veuillez ressayer {{ retryAfter|raw }} !
+                </div>
+            {% endif %}
             <section id="formRegister">
                 <div class="container-fluid">
                     <div>

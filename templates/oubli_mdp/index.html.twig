@@ -15,6 +15,10 @@
         {% if error %}
             <div class="erreur">
                 {{ error }}
+                {% if retryAfter %}
+                    {{ message|replace({".":".</br>"})|raw }}
+                    Veuillez ressayer {{ retryAfter|raw }} !
+                {% endif %}
             </div>
         {% endif %}
         <div class="container-fluid formEntité">

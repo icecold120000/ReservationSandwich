@@ -35,8 +35,8 @@ class RegistrationController extends AbstractController
 
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
-        if (false === $limiter->consume(1)->isAccepted()) {
-            throw new TooManyRequestsHttpException('Dans une heure','Vous avez fait trop de demande d\'inscription !');
+        if (false === $limiter->consume(2)->isAccepted()) {
+            $error = throw new TooManyRequestsHttpException('dans une heure','Vous avez fait trop de demande d\'inscription !');
         }
         else {
             if ($form->isSubmitted() && $form->isValid()) {
@@ -90,6 +90,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'error' => $error ?? null,
         ]);
     }
 }
