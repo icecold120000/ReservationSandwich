@@ -6,6 +6,7 @@
 {% block body %}
     <main class="container-fluid">
         <h1>Modifier une commande groupée</h1>
+        <span id="helpCommandeGroupe">L'eau est déjà automatiquement choisi pour les commandes groupées.</span>
         {% for message in app.flashes('SuccessComGr') %}
             <div class="flash-success">
                 {{ message }}

@@ -78,7 +78,11 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'class' => Eleve::class,
                 'query_builder' => function (EleveRepository $er) {
-                    return $er->createQueryBuilder('el');
+                    return $er
+                        ->createQueryBuilder('el')
+                        ->andWhere('el.archiveEleve = :archive')
+                        ->setParameter('archive',false)
+                        ;
                 },
                 'choice_label' => function (?Eleve $eleve) {
                     return $eleve ? substr($eleve->getPrenomEleve(),0,4).'. '. $eleve->getNomEleve() : '';
@@ -90,7 +94,11 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'class' => Adulte::class,
                 'query_builder' => function (AdulteRepository $er) {
-                    return $er->createQueryBuilder('ad');
+                    return $er
+                        ->createQueryBuilder('ad')
+                        ->andWhere('ad.archiveAdulte = :archive')
+                        ->setParameter('archive',false)
+                        ;
                 },
                 'choice_label' => function (?Adulte $adulte) {
                     return $adulte ? substr($adulte->getPrenomAdulte(),0,4).'. '. $adulte->getNomAdulte() : '';

@@ -42,7 +42,7 @@ class OubliMdpController extends AbstractController
 
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
-        if (false === $limiter->consume(2)->isAccepted()) {
+        if (false === $limiter->consume(1)->isAccepted()) {
             $error = throw new TooManyRequestsHttpException('dans une heure','Vous avez fait trop de demande d\'oubli de mot de passe !');
         }
         else {

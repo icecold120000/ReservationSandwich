@@ -45,7 +45,6 @@ form div{
     width: 50%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     padding: 0;
 }
 
@@ -53,7 +52,6 @@ form div{
     width: 45%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start
 }
 
 footer a, nav a, a.btn  {
@@ -232,7 +230,7 @@ img#errorPage {
 
 /*formulaire de connexion*/
 
-h6{
+#login h6{
     font-size: 15px;
     margin-bottom: 40px;
 }
@@ -389,10 +387,6 @@ div.erreur ul{
     justify-content: center;
 }
 
-.formEntité2 #screenLeft {
-    align-items: unset;
-}
-
 .formEntité2 .erreur li{
     right: 1%;
     text-align: left;
@@ -491,7 +485,6 @@ div#preciserRaison {
 }
 
 #commandeFormInd #screenRight, #commandeFormGroupe #screenRight{
-    align-items: unset;
     margin-left: 1em;
 }
 
@@ -512,6 +505,10 @@ div#preciserRaison {
     /*Générale*/
     h1 {
         font-size: 3em;
+    }
+
+    .erreur {
+        font-size: 1.25em;
     }
 
     /*Navbar*/
@@ -575,8 +572,40 @@ div#preciserRaison {
         font-size: 1.75em;
     }
 
+    .formEntité input {
+        width: 75%;
+        height: 3em;
+        font-size: 1em;
+    }
+
+    .formEntité select {
+        font-size: 1.5em;
+    }
+
+    .formEntité2 form {
+        justify-content: space-between;
+    }
+
+    .formEntité2 select {
+        font-size: 1em;
+        display: flex;
+    }
+
+    .formEntité2 input {
+        width: 100%;
+        position: unset;
+        height: 2em;
+        font-size: 1em;
+    }
+
+    form textarea {
+        font-size: 1em;
+        height: 6em;
+        width: 100%;
+    }
+
     .help-text {
-        font-size: 0.75em;
+        font-size: 1em;
     }
 
     /*Page d'accueil*/
@@ -587,6 +616,52 @@ div#preciserRaison {
     #btnModal {
         font-size: 1.5em;
         padding: 1em;
+    }
+
+    .fichierForm form{
+        flex-direction: column;
+    }
+
+    /*Formulaire de connexion*/
+
+    #formConnexion input {
+        height: unset;
+        font-size: 1em;
+    }
+
+    input#rememberMe {
+        width: 1em;
+        height: 25px;
+    }
+
+    #login #screenLeft a.btn.btn-info {
+        margin-top: 1em;
+        padding: 1em;
+        font-size: 1.75em;
+    }
+
+    #login h6 {
+        font-size: 1.5em;
+    }
+
+    #btnRegister {
+        padding: 1.25em;
+        font-size: 1.25em;
+        border-radius: 0.25rem;
+    }
+
+    /*Formulaire d'inscription*/
+    #formRegister input {
+        height: 3em;
+        font-size: 1.25em;
+    }
+
+    #formRegister input, #formResetMdp input {
+        width: 100%;
+    }
+
+    #formRegister #screenLeft{
+        align-items: flex-start;
     }
 
 }
@@ -796,9 +871,8 @@ div#preciserRaison {
 
     /*Formulaire de connexion*/
 
-    h6{
+    #login h6{
         font-size: 2em;
-        margin-bottom: 40px;
     }
 
     #login, #login div#screenLeft, #login div#screenRight {
