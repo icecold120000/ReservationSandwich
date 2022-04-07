@@ -9,7 +9,9 @@ use App\Form\AdulteType;
 use App\Form\FichierType;
 use App\Form\FilterOrSearch\FilterAdulteType;
 use App\Repository\AdulteRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -292,10 +294,15 @@ class AdulteController extends AbstractController
 
     /**
      * @Route("/{id}", name="adulte_delete", methods={"POST"})
+     * @throws NonUniqueResultException
      */
-    public function delete(Request $request, Adulte $adulte, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Adulte $adulte,
+                           EntityManagerInterface $entityManager,
+                           UserRepository $userRepo): Response
     {
         if ($this->isCsrfTokenValid('delete'.$adulte->getId(), $request->request->get('_token'))) {
+            $user = $userRepo->findOneByAdulte($adulte->getId());
+            $entityManager->remove($user);
             $entityManager->remove($adulte);
             $entityManager->flush();
             $this->addFlash(

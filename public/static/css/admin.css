@@ -422,13 +422,14 @@ table form button.btn-danger {
     }
 
     /*Page de profile*/
-    a#btnProfilAdmin {
-        padding: 1.5em;
-        font-size: 1.5em;
-    }
 
     #btnProfilAcces1 {
         padding: 15px 112px;
+    }
+
+    #btnProfilAdmin {
+        padding: 1.5em;
+        font-size: 1.5em;
     }
 
 }
@@ -451,6 +452,8 @@ table form button.btn-danger {
     #btnProfilAcces4 {
         padding: 15px 50px;
     }
+
+    /*Profil admin*/
 
     /*Espace administration*/
     table img {
@@ -594,8 +597,13 @@ table form button.btn-danger {
 
     /*Page de profil*/
 
-    #profilHeader p {
+    #profilHeader p, #infoProfil p {
         font-size: 2em;
+    }
+
+    #btnProfilAdmin {
+        padding: 1em;
+        font-size: 3.5em;
     }
 
     /*Formulaire d'ajout et de modification des adultes*/
@@ -646,6 +654,10 @@ table form button.btn-danger {
         display: flex;
         flex-direction: column;
         align-items: center;
+    }
+
+    span#helpCommandeGroupe {
+        font-size: 2em;
     }
 
 }

@@ -90,23 +90,50 @@ class UserController extends AbstractController
      * @Route("/new", name="user_new", methods={"GET", "POST"})
      */
     public function new(Request $request,UserPasswordHasherInterface $userPasswordHasher,
-                        EntityManagerInterface $entityManager): Response
+                        EntityManagerInterface $entityManager, UserRepository $userRepo): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
-            $user->setTokenHash(md5($user->getId().$user->getEmail()));
-            $entityManager->persist($user);
-            $entityManager->flush();
+
+            $userBirthday = $form->get('dateNaissance')->getData();
+
+            if($userBirthday != null){
+                $userRelated = $userRepo->findByNomPrenomAndBirthday($form->get('nomUser')->getData(),
+                    $form->get('prenomUser')->getData(), $userBirthday);
+            }
+            else{
+                $userRelated = $userRepo->findByNomAndPrenom($form->get('nomUser')->getData(),
+                    $form->get('prenomUser')->getData());
+            }
+
+            if($userRelated == null)
+            {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+
+                $user->setTokenHash(md5($user->getNomUser().$user->getEmail()));
+
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'SuccessUser',
+                    'L\'utilisateur a été sauvegardé !'
+                );
+            }
+            else{
+                $this->addFlash(
+                    'FailedUser',
+                    'L\'utilisateur existe déjà dans la base de données !'
+                );
+            }
 
             return $this->redirectToRoute('user_new', [], Response::HTTP_SEE_OTHER);
         }
@@ -325,6 +352,11 @@ class UserController extends AbstractController
                     )
                 );
             }
+
+            $this->addFlash(
+                'SuccessUser',
+                'L\'utilisateur a été modifié !'
+            );
 
             $user->setTokenHash(md5($user->getId().$user->getEmail()));
             $entityManager->flush();

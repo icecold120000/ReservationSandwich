@@ -60,7 +60,7 @@ class CommandeGroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeGroupe
-                ->setCommandeur($this->getUser()->getId())
+                ->setCommandeur($this->getUser())
                 ->setDateCreation($dateNow)
                 ->setBoissonChoisie($boisson)
                 ->setEstValide(true);

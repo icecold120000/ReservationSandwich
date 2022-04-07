@@ -11,6 +11,7 @@ use App\Form\FilterOrSearch\FilterEleveType;
 use App\Repository\ClasseRepository;
 use App\Repository\EleveRepository;
 use App\Repository\InscriptionCantineRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -448,15 +449,19 @@ class EleveController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
+     * @throws NonUniqueResultException
      */
     public function delete(Request $request, Eleve $eleve,
-                           EntityManagerInterface $entityManager): Response
+                           EntityManagerInterface $entityManager,
+                           UserRepository $userRepo): Response
     {
         if ($this->isCsrfTokenValid('delete'.$eleve->getId(), $request->request->get('_token'))) {
 
             if ($eleve->getPhotoEleve() != null) {
                 unlink($this->getParameter('photoEleve_directory').'/'.$eleve->getPhotoEleve());
             }
+            $user = $userRepo->findOneByEleve($eleve->getId());
+            $entityManager->remove($user);
             $entityManager->remove($eleve);
             $entityManager->flush();
             $this->addFlash(

@@ -108,6 +108,62 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByAdulte($adulteId): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.adultes','a')
+            ->andWhere('a.id = :val')
+            ->setParameter('val', $adulteId)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByEleve($eleveId): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.eleves','e')
+            ->andWhere('e.id = :val')
+            ->setParameter('val', $eleveId)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findByNomAndPrenom($nom, $prenom): array
+    {
+        $query = $this->createQueryBuilder('u');
+        $query->andWhere('u.nomUser Like :val')
+            ->andWhere('u.prenomUser Like :val2')
+            ->setParameters(array('val' =>'%'.$nom.'%', 'val2' =>'%'.$prenom.'%'));
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findByNomPrenomAndBirthday($nom, $prenom, $birthday): array
+    {
+        $query = $this->createQueryBuilder('u');
+        $query->andWhere('u.nomUser like :val')
+            ->andWhere('u.prenomUser like :val2')
+            ->setParameters(array('val' =>'%'.$nom.'%', 'val2' =>'%'.$prenom.'%'));
+        if($birthday != null){
+            $query->andWhere('u.dateNaissance = :birthday')
+                ->setParameter('birthday', $birthday);
+        }
+        return $query->getQuery()->getResult();
+    }
+
 
     // /**
     //  * @return User[] Returns an array of User objects

@@ -112,7 +112,7 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="lieu_livraison_delete", methods={"DELETE"})
+     * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
      */
     public function delete(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
                            CommandeGroupeRepository $comGroupeRepo, LieuLivraisonRepository $lieuRepository): Response

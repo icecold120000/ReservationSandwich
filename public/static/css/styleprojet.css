@@ -767,6 +767,10 @@ div#preciserRaison {
         padding-bottom: 1em;
     }
 
+    div#networkIcons {
+        float: unset;
+    }
+
     .coordonnees, .contact, .access, .networks {
         display: unset;
     }
@@ -788,6 +792,7 @@ div#preciserRaison {
 
     form div {
         padding-bottom: 1.5em;
+        width: 100%;
     }
 
     form textarea {
@@ -799,11 +804,6 @@ div#preciserRaison {
     #btnAjout, #btnRetour, .btn.btn-success {
         padding: 30px;
         font-size: 2.5em;
-        margin-bottom: 1em;
-    }
-
-    #btnProfilAdmin{
-        font-size: 3.5em;
     }
 
     label {
@@ -885,8 +885,9 @@ div#preciserRaison {
     }
 
     #login #screenLeft a.btn.btn-info{
+        margin: unset;
         padding: 30px;
-        font-size: 3.5em;
+        font-size: 2.5em;
     }
 
     #formConnexion label, #formRegister label{
@@ -895,7 +896,6 @@ div#preciserRaison {
 
     input#rememberMe {
         height: 40px;
-        transform: scale(3.5);
         margin-right: 20px;
     }
 
