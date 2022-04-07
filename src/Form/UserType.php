@@ -81,7 +81,7 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('el');
                 },
                 'choice_label' => function (?Eleve $eleve) {
-                    return $eleve ? $eleve->getPrenomEleve().' '. $eleve->getNomEleve() : '';
+                    return $eleve ? substr($eleve->getPrenomEleve(),0,4).'. '. $eleve->getNomEleve() : '';
                 },
                 'required' => false,
                 'placeholder' => 'Veuillez choisir un élève',
@@ -93,10 +93,10 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('ad');
                 },
                 'choice_label' => function (?Adulte $adulte) {
-                    return $adulte ? $adulte->getPrenomAdulte().' '. $adulte->getNomAdulte() : '';
+                    return $adulte ? substr($adulte->getPrenomAdulte(),0,4).'. '. $adulte->getNomAdulte() : '';
                 },
                 'required' => false,
-                'placeholder' => 'Veuillez choisir un adulte',
+        'placeholder' => 'Veuillez choisir un adulte',
             ])
         ;
     }

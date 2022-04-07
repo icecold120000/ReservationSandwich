@@ -287,7 +287,94 @@ table form button.btn-danger {
     color: green;
 }
 
-/* Responsive pour les téléphones */
+/*Responsive pour les tablettes/orientation paysage pour téléphones */
+@media screen and (max-device-width: 1100px){
+    /*Général*/
+    table img {
+        width: 5em;
+        height: 5em;
+    }
+
+    /*Espace Administration*/
+    #btnSuppr, #btnRetourSuppr {
+        padding: 1em;
+        font-size: 1.25em;
+    }
+
+    #btnAdmin0 ,#btnAdmin1, #btnAdmin2, #btnAdmin3, #btnAdmin4,
+    #btnAdmin5, #btnAdmin6, #btnAdmin7, #btnAdmin8, #btnAdmin9, #btnAdmin10 {
+        font-size: 1em;
+    }
+
+    #btnAdmin1 {
+        padding: 15px 110px;
+    }
+
+    #btnAdmin2 {
+        padding: 15px 112px;
+    }
+
+    #btnAdmin3 {
+        padding: 15px 91px;
+    }
+
+    #btnAdmin4 {
+        padding: 15px 118px;
+    }
+
+    #btnAdmin5 {
+        padding: 15px 117px;
+    }
+
+    #btnAdmin6 {
+        padding: 15px 122px;
+    }
+
+    #btnAdmin8 {
+        padding: 15px 104px;
+    }
+
+    #btnAdmin9 {
+        padding: 15px 98px;
+    }
+
+    #btnAdmin10 {
+        padding: 15px 132px;
+    }
+
+    /*Filtre*/
+    #filtre label {
+        font-size: 2em;
+    }
+    #filtre div {
+        margin: 0 1em 0.5em 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    #filtre select, #filtre input {
+        height: 2em;
+        font-size: 1em;
+    }
+
+    #filtre button {
+        padding: 1em 2em;
+        font-size: 1em;
+    }
+
+    /*Tableau*/
+
+    .tableAdmin th, .tableAdmin td {
+        font-size: 1.5em;
+    }
+
+    i.far.fa-edit, i.fas.fa-trash {
+        font-size: 1.25em;
+        padding: 1em;
+    }
+}
+/*Responsive pour les téléphones mode portrait*/
 @media screen and (max-device-width: 700px) {
     /*Page de profil élève*/
 

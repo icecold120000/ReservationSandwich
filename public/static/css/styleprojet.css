@@ -167,6 +167,11 @@ footer i{
     font-size: 26px;
 }
 
+div#footerContent {
+    display: flex;
+    justify-content: center;
+}
+
 .coordonnees, .contact, .access, .networks {
     display: inline-table;
     padding: 35px;
@@ -501,7 +506,92 @@ div#preciserRaison {
         flex-direction: column;
     }
 }
-/*Responsive pour les téléphones */
+
+/*Responsive pour les tablettes/orientation paysage pour téléphones */
+@media screen and (max-device-width: 1100px){
+    /*Générale*/
+    h1 {
+        font-size: 3em;
+    }
+
+    /*Navbar*/
+    .navbar-brand img {
+        height: 4em;
+    }
+
+    .nav-item,.nav-link, p{
+        font-size: 1.5em;
+    }
+
+    ul#connexion {
+        padding: 0;
+    }
+
+    #connexion i {
+        font-size: 2.5rem;
+    }
+
+    #dropdownProfile li a, #dropdownNav li a {
+        font-size: 2em;
+    }
+
+    /*Footer*/
+
+    .coordonnees h3, .contact h3, .access h3, .networks h3 {
+        font-size: 1.75em;
+    }
+
+    .coordonnees p, .contact p, .access p {
+        font-size: 1.25em;
+    }
+
+    footer i {
+        font-size: 2.5em;
+    }
+
+    div#columnLeftFooter {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div#columnRightFooter{
+        width: 45%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    div#networkIcons {
+        float: left;
+    }
+
+    /*Formulaire*/
+    label {
+        font-size: 2rem;
+    }
+
+    #btnAjout, #btnRetour, .btn.btn-success {
+        padding: 1em;
+        font-size: 1.75em;
+    }
+
+    .help-text {
+        font-size: 0.75em;
+    }
+
+    /*Page d'accueil*/
+    #fileInputUser input {
+        font-size: 1em;
+    }
+
+    #btnModal {
+        font-size: 1.5em;
+        padding: 1em;
+    }
+
+}
+
+/*Responsive pour les téléphones en mode portrait*/
 @media screen and (max-device-width: 700px) {
     /*Général*/
     h1{
@@ -592,6 +682,11 @@ div#preciserRaison {
     }
 
     /* Footer */
+
+    footer {
+        padding-bottom: 3em;
+    }
+
     footer i{
         font-size: 2.5em;
         padding-bottom: 1em;
@@ -695,7 +790,7 @@ div#preciserRaison {
     }
 
     .formEntité2 select, .formEntité select {
-        font-size: 3em;
+        font-size: 2em;
         justify-content: center;
     }
 

@@ -46,7 +46,6 @@ class AdulteController extends AbstractController
         $adultes = $adulteRepo->findByArchive(false);
 
         $form = $this->createForm(FilterAdulteType::class);
-
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
