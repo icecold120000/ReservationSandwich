@@ -567,6 +567,10 @@ div#preciserRaison {
         font-size: 2rem;
     }
 
+    .help-text{
+        font-size: 1.5em;
+    }
+
     #btnAjout, #btnRetour, .btn.btn-success {
         padding: 1em;
         font-size: 1.75em;

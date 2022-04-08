@@ -57,7 +57,7 @@ class OubliMdpController extends AbstractController
                     $error = "L'adresse mail n'est lié à aucun compte !";
                 else {
                     $email = (new TemplatedEmail())
-                        ->from('assocsportive.stvincent@gmail.com')
+                        ->from('cuisine.saintvincentsenlis@gmail.com')
                         ->to($data->getEmail())
                         ->subject('Votre réinitialisation de mot de passe')
                         ->htmlTemplate('email/send_oubli_mdp.html.twig')

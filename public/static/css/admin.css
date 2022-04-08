@@ -435,6 +435,11 @@ table form button.btn-danger {
 }
 /*Responsive pour les téléphones mode portrait*/
 @media screen and (max-device-width: 700px) {
+    /*Géneral*/
+     #btnRetour {
+         margin: 1em 0;
+     }
+
     /*Page de profil élève*/
 
     #btnProfilAcces1 {
