@@ -20,7 +20,7 @@ class Fichier
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileName;
+    private ?string $fileName;
 
     public function getId(): ?int
     {

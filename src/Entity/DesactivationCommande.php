@@ -20,7 +20,7 @@ class DesactivationCommande
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isDeactivated;
+    private ?bool $isDeactivated;
 
     public function getId(): ?int
     {

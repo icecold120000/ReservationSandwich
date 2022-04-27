@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
-use DateTimeInterface;
+use App\Repository\CommandeGroupeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=CommandeGroupeRepository::class)
@@ -33,7 +35,7 @@ class CommandeGroupe
     /**
      * @ORM\Column(type="boolean")
      */
-    private $prendreChips;
+    private ?bool $prendreChips;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -43,12 +45,12 @@ class CommandeGroupe
     /**
      * @ORM\Column(type="text")
      */
-    private $motifSortie;
+    private string $motifSortie;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateHeureLivraison;
+    private ?\DateTimeInterface $dateHeureLivraison;
 
 
     /**
@@ -59,7 +61,7 @@ class CommandeGroupe
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateCreation;
+    private ?\DateTimeInterface $dateCreation;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeGroupes", cascade={"persist"})
@@ -70,10 +72,10 @@ class CommandeGroupe
     /**
      * @ORM\Column(type="boolean")
      */
-    private $estValide;
+    private ?bool $estValide;
 
     /**
-     * @ORM\ManyToOne(targetEntity=LieuLivraison::class, inversedBy="CommandeGroupe")
+     * @ORM\ManyToOne(targetEntity=LieuLivraison::class, inversedBy="commandeGroupe")
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieuLivraison;
@@ -148,12 +150,12 @@ class CommandeGroupe
         return $this;
     }
 
-    public function getDateHeureLivraison(): ?DateTimeInterface
+    public function getDateHeureLivraison(): ?\DateTimeInterface
     {
         return $this->dateHeureLivraison;
     }
 
-    public function setDateHeureLivraison(?DateTimeInterface $dateHeureLivraison): self
+    public function setDateHeureLivraison(?\DateTimeInterface $dateHeureLivraison): self
     {
         $this->dateHeureLivraison = $dateHeureLivraison;
 
@@ -190,12 +192,12 @@ class CommandeGroupe
         return $this;
     }
 
-    public function getDateCreation(): ?DateTimeInterface
+    public function getDateCreation(): ?\DateTimeInterface
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(DateTimeInterface $dateCreation): self
+    public function setDateCreation(\DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
 

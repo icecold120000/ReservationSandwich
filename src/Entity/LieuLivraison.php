@@ -22,21 +22,21 @@ class LieuLivraison
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $libelleLieu;
+    private ?string $libelleLieu;
 
     /**
      * @ORM\OneToMany(targetEntity=CommandeGroupe::class, mappedBy="lieuLivraison")
      */
-    private $CommandeGroupe;
+    private $commandeGroupe;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $estActive;
+    private ?bool $estActive;
 
     public function __construct()
     {
-        $this->CommandeGroupe = new ArrayCollection();
+        $this->commandeGroupe = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -61,13 +61,13 @@ class LieuLivraison
      */
     public function getCommandeGroupe(): Collection
     {
-        return $this->CommandeGroupe;
+        return $this->commandeGroupe;
     }
 
     public function addCommandeGroupe(CommandeGroupe $commandeGroupe): self
     {
-        if (!$this->CommandeGroupe->contains($commandeGroupe)) {
-            $this->CommandeGroupe[] = $commandeGroupe;
+        if (!$this->commandeGroupe->contains($commandeGroupe)) {
+            $this->commandeGroupe[] = $commandeGroupe;
             $commandeGroupe->setLieuLivraison($this);
         }
 
@@ -76,7 +76,7 @@ class LieuLivraison
 
     public function removeCommandeGroupe(CommandeGroupe $commandeGroupe): self
     {
-        if ($this->CommandeGroupe->removeElement($commandeGroupe)) {
+        if ($this->commandeGroupe->removeElement($commandeGroupe)) {
             // set the owning side to null (unless already changed)
             if ($commandeGroupe->getLieuLivraison() === $this) {
                 $commandeGroupe->setLieuLivraison(null);

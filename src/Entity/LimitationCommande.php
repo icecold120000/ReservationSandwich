@@ -21,22 +21,22 @@ class LimitationCommande
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $libelleLimite;
+    private ?string $libelleLimite;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $is_active;
+    private ?bool $is_active;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $nbLimite;
+    private ?int $nbLimite;
 
     /**
      * @ORM\Column(type="time", nullable=true)
      */
-    private $heureLimite;
+    private ?DateTimeInterface $heureLimite;
 
     public function getId(): ?int
     {
