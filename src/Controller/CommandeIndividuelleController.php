@@ -220,7 +220,7 @@ class CommandeIndividuelleController extends AbstractController
                             $classe = "Adulte";
                         }
 
-                        if ($commande->getPrendreChips() == true) {
+                        if ($commande->getPrendreChips()) {
                             $chips = "Oui";
                         }
                         else {
@@ -388,7 +388,7 @@ class CommandeIndividuelleController extends AbstractController
                     }
 
                     foreach ($commandesExport as $commande) {
-                        if ($commande->getPrendreChips() == true) {
+                        if ($commande->getPrendreChips()) {
                             $nbChips++;
                         }
                     }
@@ -630,7 +630,7 @@ class CommandeIndividuelleController extends AbstractController
         $cantine = null;
         $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
 
-        if (in_array("ROLE_ELEVE",$roles) == true) {
+        if (in_array("ROLE_ELEVE", $roles)) {
             $cantine = $cantineRepository->findOneByEleve($user->getEleves());
         }
 
@@ -653,8 +653,8 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if (in_array("ROLE_ADMIN",$roles) == false &&
-                $limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+            if (!in_array("ROLE_ADMIN", $roles) &&
+                $limiteJourMeme->getIsActive() && $limite < $dateNow &&
                 $dateLivraison > new DateTime('now 00:00:00',
                     new DateTimeZone('Europe/Paris')) &&
                 $dateLivraison < new DateTime('now 23:59:59',
@@ -672,10 +672,10 @@ class CommandeIndividuelleController extends AbstractController
             }
             else {
                 $error = false;
-                if (in_array("ROLE_ELEVE",$roles) == true) {
+                if (in_array("ROLE_ELEVE", $roles)) {
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
-                            if($cantine->getRepasJ1() == false) {
+                            if(!$cantine->getRepasJ1()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le lundi à la cantine !'
@@ -684,7 +684,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Tuesday":
-                            if($cantine->getRepasJ2() == false) {
+                            if(!$cantine->getRepasJ2()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mardi à la cantine !'
@@ -693,7 +693,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Wednesday":
-                            if($cantine->getRepasJ3() == false) {
+                            if(!$cantine->getRepasJ3()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mercredi à la cantine !'
@@ -702,7 +702,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Thursday":
-                            if($cantine->getRepasJ4() == false) {
+                            if(!$cantine->getRepasJ4()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le jeudi à la cantine !'
@@ -711,7 +711,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Friday":
-                            if($cantine->getRepasJ5() == false) {
+                            if(!$cantine->getRepasJ5()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le vendredi à la cantine !'
@@ -721,7 +721,7 @@ class CommandeIndividuelleController extends AbstractController
                             break;
                     }
                 }
-                if ($error == false ) {
+                if (!$error) {
                     $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
                     if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                         $this->addFlash(
@@ -833,7 +833,7 @@ class CommandeIndividuelleController extends AbstractController
         $roles = $user->getRoles();
         $cantine = null;
 
-        if (in_array("ROLE_ELEVE",$roles) == true) {
+        if (in_array("ROLE_ELEVE", $roles)) {
             $cantine = $cantineRepository->findOneByEleve($user->getEleves());
         }
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
@@ -854,8 +854,8 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ( in_array("ROLE_ADMIN",$roles) == false &&
-                $limiteJourMeme->getIsActive() == true && $limite < $dateNow &&
+            if ( !in_array("ROLE_ADMIN", $roles) &&
+                $limiteJourMeme->getIsActive() && $limite < $dateNow &&
                 $dateLivraison > new DateTime('now 00:00:00',
                     new DateTimeZone('Europe/Paris')) &&
                 $dateLivraison < new DateTime('now 23:59:59',
@@ -873,10 +873,10 @@ class CommandeIndividuelleController extends AbstractController
             }
             else {
                 $error = false;
-                if (in_array("ROLE_ELEVE",$roles) == true) {
+                if (in_array("ROLE_ELEVE", $roles)) {
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
-                            if($cantine->getRepasJ1() == false) {
+                            if(!$cantine->getRepasJ1()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le lundi à la cantine !'
@@ -885,7 +885,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Tuesday":
-                            if($cantine->getRepasJ2() == false) {
+                            if(!$cantine->getRepasJ2()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mardi à la cantine !'
@@ -894,7 +894,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Wednesday":
-                            if($cantine->getRepasJ3() == false) {
+                            if(!$cantine->getRepasJ3()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mercredi à la cantine !'
@@ -903,7 +903,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Thursday":
-                            if($cantine->getRepasJ4() == false) {
+                            if(!$cantine->getRepasJ4()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le jeudi à la cantine !'
@@ -912,7 +912,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Friday":
-                            if($cantine->getRepasJ5() == false) {
+                            if(!$cantine->getRepasJ5()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le vendredi à la cantine !'
@@ -922,7 +922,7 @@ class CommandeIndividuelleController extends AbstractController
                             break;
                     }
                 }
-                if ($error == false ) {
+                if (!$error) {
                     $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
                     if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                         $this->addFlash(

@@ -46,7 +46,7 @@ class RegistrationController extends AbstractController
                 $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
 
-                if ($eleveFound != false || $adulteFound != false){
+                if ($eleveFound || $adulteFound){
                     // encode the plain password
                     $user->setPassword(
                         $userPasswordHasher->hashPassword(

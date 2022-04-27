@@ -45,7 +45,7 @@ class CommandeGroupeController extends AbstractController
         $desserts = $dessertRepo->findByDispo(true);
         $limiteDate = $limiteRepo->findOneByLibelle('sortie');
         $commandeGroupe = new CommandeGroupe();
-        if ($limiteDate->getIsActive() == true) {
+        if ($limiteDate->getIsActive()) {
             $form = $this->createForm(CommandeGroupeType::class,
                 $commandeGroupe,['limiteDateSortie' => $limiteDate->getNbLimite(),
                     'sandwichChoisi1' => null,'sandwichChoisi2' => null])
@@ -142,10 +142,9 @@ class CommandeGroupeController extends AbstractController
      * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
      */
     public function edit(Request $request, EntityManagerInterface $entityManager,
-                         SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
+                         SandwichRepository $sandwichRepo,
                          DessertRepository $dessertRepo,
                          DesactivationCommandeRepository $deactiveRepo,
-                         LimitationCommandeRepository $limiteRepo,
                          CommandeGroupe $commandeGroupe,
                          SandwichCommandeGroupeRepository $sandComRepo): Response
     {
