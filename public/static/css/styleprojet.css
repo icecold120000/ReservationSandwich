@@ -1,12 +1,12 @@
 /*Général*/
-*{
+* {
     margin: 0;
     padding: 0;
     font-family: Arial, serif;
     text-align: center;
 }
 
-h1{
+h1 {
     margin-top: 1em;
 }
 
@@ -14,78 +14,79 @@ li {
     list-style: none;
 }
 
-form{
+form {
     font-size: 30px;
     padding: 30px 0 10px 0;
     display: flex;
     justify-content: center;
 }
 
-label{
+label {
     font-size: 1.25rem;
     margin: 0;
 }
 
-a, a:hover{
+a, a:hover {
     text-decoration: none;
     color: white;
 }
 
-form div{
+form div {
     padding-bottom: 10px;
 }
 
-.help-text{
+.help-text {
     font-size: 13px;
     margin: 0;
     font-style: italic;
 }
 
-#screenLeft{
+#screenLeft {
     width: 50%;
     display: flex;
     flex-direction: column;
     padding: 0;
 }
 
-#screenRight{
+#screenRight {
     width: 45%;
     display: flex;
     flex-direction: column;
 }
 
-footer a, nav a, a.btn  {
+footer a, nav a, a.btn {
     color: white;
     text-decoration: none;
 }
 
-#warning{
+#warning {
     color: red;
     border: solid;
     position: relative;
 }
 
-#warning p{
+#warning p {
     font-size: 35px;
 }
 
-#btnAjout, #btnRetour, .btn.btn-success{
+#btnAjout, #btnRetour, .btn.btn-success {
     padding: 10px;
     font-size: 15px;
 }
 
-.flash-success{
+.flash-success {
     font-size: 25px;
     color: green;
 }
+
 /*Barre de navigation*/
 
-nav p , nav ul {
+nav p, nav ul {
     margin: 0;
 }
 
 .nav-link {
-    color: white!important;
+    color: white !important;
     margin: 0 0.5em;
 }
 
@@ -93,23 +94,23 @@ nav p , nav ul {
     flex-direction: row;
 }
 
-.dropdown-toggle::after{
+.dropdown-toggle::after {
     bottom: 5px;
     margin: 0;
     position: relative;
 }
 
-#connexion a:hover{
+#connexion a:hover {
     text-decoration: none;
 }
 
-#connexion p{
+#connexion p {
     display: inline;
     margin: 0 5px;
     position: relative;
 }
 
-#connexion i{
+#connexion i {
     font-size: 25px;
 }
 
@@ -122,12 +123,12 @@ li#dropdownNav {
     margin-left: 2rem;
 }
 
-#dropdownProfile li:hover{
+#dropdownProfile li:hover {
     color: white;
     background-color: gainsboro;
 }
 
-#dropdownProfile li a, #dropdownNav li a{
+#dropdownProfile li a, #dropdownNav li a {
     color: black;
     font-size: 15px;
 }
@@ -137,23 +138,23 @@ nav#mainNav {
     background-color: #1E2B47;
 }
 
-#mainNav div.container-fluid{
+#mainNav div.container-fluid {
     display: flex;
     flex-wrap: nowrap;
     justify-content: unset;
 }
 
-.navbar .navbar-item{
+.navbar .navbar-item {
     color: white;
 }
 
-.navbar-brand img{
+.navbar-brand img {
     height: 60px;
 }
 
 /** Footer  **/
 
-footer{
+footer {
     background-color: #1E2B47;
     color: white;
     list-style: none;
@@ -161,7 +162,7 @@ footer{
     text-align: -webkit-center;
 }
 
-footer i{
+footer i {
     font-size: 26px;
 }
 
@@ -175,13 +176,13 @@ div#footerContent {
     padding: 35px;
 }
 
-.coordonnees p, .contact p, .access p{
+.coordonnees p, .contact p, .access p {
     text-align: left;
     font-size: 15px;
     margin: 0;
 }
 
-.coordonnees h3, .contact h3, .access h3, .networks h3{
+.coordonnees h3, .contact h3, .access h3, .networks h3 {
     text-align: left;
     font-size: 15px;
     margin-bottom: 25px;
@@ -218,7 +219,7 @@ div#footerContent {
     padding: 20px;
 }
 
-#fileInputUser input{
+#fileInputUser input {
     font-size: 15px;
 }
 
@@ -230,12 +231,12 @@ img#errorPage {
 
 /*formulaire de connexion*/
 
-#login h6{
+#login h6 {
     font-size: 15px;
     margin-bottom: 40px;
 }
 
-#login, #login div#screenLeft, #login div#screenRight{
+#login, #login div#screenLeft, #login div#screenRight {
     display: flex;
     align-items: stretch;
     align-content: space-between;
@@ -250,15 +251,15 @@ img#errorPage {
     display: unset;
 }
 
-#formConnexion input{
+#formConnexion input {
     height: 25px;
 }
 
-#formConnexion label, #formRegister label{
+#formConnexion label, #formRegister label {
     float: left;
 }
 
-p#login{
+p#login {
     display: block;
     bottom: 0;
 }
@@ -267,7 +268,7 @@ input#rememberMe {
     height: unset;
 }
 
-#btnRegister{
+#btnRegister {
     background-color: dimgrey;
     color: #fff;
     border-style: none;
@@ -276,7 +277,7 @@ input#rememberMe {
     border-radius: 0.25rem;
 }
 
-#login #screenLeft a.btn.btn-info{
+#login #screenLeft a.btn.btn-info {
     padding: 10px;
     font-size: 15px;
 }
@@ -285,40 +286,39 @@ input#rememberMe {
     margin-top: 20px;
 }
 
-label span{
+label span {
     color: red;
 }
 
-.erreur{
+.erreur {
     color: red;
     font-size: 20px;
     font-weight: bold;
     padding: 5px;
 }
 
-.erreur li{
+.erreur li {
     list-style: none;
     position: relative;
 }
 
 /*formulaire d'inscription*/
 
-#formRegister form{
+#formRegister form {
     display: flex;
     justify-content: center;
 }
 
-#formRegister .divInput, #formResetMdp .divInput{
+#formRegister .divInput, #formResetMdp .divInput {
     font-size: 15px;
     width: 80%;
 }
 
-#formRegister input, #formResetMdp input{
+#formRegister input, #formResetMdp input {
     width: 85%;
 }
 
-#formRegister input
-{
+#formRegister input {
     display: flex;
 }
 
@@ -326,11 +326,11 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
     display: inline-block;
 }
 
-#formRegister input#registration_form_plainPassword_first{
+#formRegister input#registration_form_plainPassword_first {
     margin-bottom: 10px;
 }
 
-#formRegister ul{
+#formRegister ul {
     display: inline-block;
 }
 
@@ -338,62 +338,62 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
     display: none;
 }
 
-#formRegister .erreur{
+#formRegister .erreur {
     padding: 0 0 10px 0;
 }
 
-#formRegister .help-text{
+#formRegister .help-text {
     text-align: left;
 }
 
-.row{
+.row {
     justify-content: center;
 }
 
 /*CSS pour tout les formulaires de l'application*/
 
-div.erreur ul{
+div.erreur ul {
     margin: 0;
     padding: 0;
 }
 
-.formEntité div.container-fluid{
+.formEntité div.container-fluid {
     display: inline-block;
     position: relative;
     right: 20%;
 }
 
-.formEntité form{
+.formEntité form {
     display: flex;
     flex-direction: column;
 }
 
-.formEntité input{
+.formEntité input {
     width: 50%;
     height: 30px;
     font-size: 15px;
 }
 
-.formEntité div.fileInput input{
+.formEntité div.fileInput input {
     width: unset;
 }
 
-.formEntité select{
+.formEntité select {
     font-size: 20px;
 }
 
-.formEntité2 form{
+.formEntité2 form {
     display: flex;
     justify-content: center;
 }
 
-.formEntité2 .erreur li{
+.formEntité2 .erreur li {
     right: 1%;
     text-align: left;
     font-size: 15px;
 }
 
-.formEntité2 input{
+.formEntité2 input {
     width: 80%;
     position: relative;
     right: 10%;
@@ -401,16 +401,16 @@ div.erreur ul{
     font-size: 15px;
 }
 
-.formEntité2 select{
+.formEntité2 select {
     font-size: 20px;
     display: flex;
 }
 
-.formEntité2 label, .formEntité2 .help-text{
+.formEntité2 label, .formEntité2 .help-text {
     display: flex;
 }
 
-div.divInput ,#formUserProfile .divInput{
+div.divInput, #formUserProfile .divInput {
     width: 100%;
 }
 
@@ -421,18 +421,18 @@ form textarea {
 }
 
 /*Formulaire de réinitialisation de mot de passe */
-#formResetMdp form{
+#formResetMdp form {
     align-items: center;
 }
 
-#formResetMdp label, #formExport label{
+#formResetMdp label, #formExport label {
     display: flex;
     justify-content: center;
 }
 
 /*Listes des commandes*/
 
-.tableAdmin span{
+.tableAdmin span {
     display: block;
 }
 
@@ -448,12 +448,12 @@ form textarea {
     display: none;
 }
 
-#commande_groupe_sandwichChoisi1 , #commande_groupe_sandwichChoisi2,
-#commande_groupe_dessertChoisi{
+#commande_groupe_sandwichChoisi1, #commande_groupe_sandwichChoisi2,
+#commande_groupe_dessertChoisi {
     display: none;
 }
 
- #sandwichCarousel img, #dessertCarousel img,#sandwich1Carousel img, #sandwich2Carousel img {
+#sandwichCarousel img, #dessertCarousel img, #sandwich1Carousel img, #sandwich2Carousel img {
     height: 200px;
     width: 80%;
 }
@@ -463,13 +463,13 @@ form textarea {
     width: 80%;
 }
 
-.carousel-inner label{
+.carousel-inner label {
     flex-direction: column;
     align-items: center;
     border: solid;
 }
 
-.carousel-inner label span{
+.carousel-inner label span {
     color: black;
     font-style: italic;
 }
@@ -484,7 +484,7 @@ div#preciserRaison {
     display: none;
 }
 
-#commandeFormInd #screenRight, #commandeFormGroupe #screenRight{
+#commandeFormInd #screenRight, #commandeFormGroupe #screenRight {
     margin-left: 1em;
 }
 
@@ -505,7 +505,7 @@ div#preciserRaison {
 }
 
 /*Responsive pour les tablettes/orientation paysage pour téléphones */
-@media screen and (max-device-width: 1100px){
+@media screen and (max-device-width: 1100px) {
     /*Générale*/
     h1 {
         font-size: 3em;
@@ -520,7 +520,7 @@ div#preciserRaison {
         height: 4em;
     }
 
-    .nav-item,.nav-link, p{
+    .nav-item, .nav-link, p {
         font-size: 1.5em;
     }
 
@@ -537,7 +537,6 @@ div#preciserRaison {
     }
 
     /*Footer*/
-
     .coordonnees h3, .contact h3, .access h3, .networks h3 {
         font-size: 1.75em;
     }
@@ -556,7 +555,7 @@ div#preciserRaison {
         flex-direction: column;
     }
 
-    div#columnRightFooter{
+    div#columnRightFooter {
         width: 45%;
         display: flex;
         flex-direction: column;
@@ -571,7 +570,7 @@ div#preciserRaison {
         font-size: 2rem;
     }
 
-    .help-text{
+    .help-text {
         font-size: 1.5em;
     }
 
@@ -626,12 +625,11 @@ div#preciserRaison {
         padding: 1em;
     }
 
-    .fichierForm form{
+    .fichierForm form {
         flex-direction: column;
     }
 
     /*Formulaire de connexion*/
-
     #formConnexion input {
         height: unset;
         font-size: 1em;
@@ -668,7 +666,7 @@ div#preciserRaison {
         width: 100%;
     }
 
-    #formRegister #screenLeft{
+    #formRegister #screenLeft {
         align-items: flex-start;
     }
 
@@ -677,15 +675,15 @@ div#preciserRaison {
 /*Responsive pour les téléphones en mode portrait*/
 @media screen and (max-device-width: 700px) {
     /*Général*/
-    h1{
+    h1 {
         font-size: 4em;
     }
 
-    h2{
+    h2 {
         font-size: 3em;
     }
 
-    h3{
+    h3 {
         font-size: 2.5em
     }
 
@@ -693,12 +691,12 @@ div#preciserRaison {
         padding: 0;
     }
 
-    .flash-success , .erreur{
+    .flash-success, .erreur {
         font-size: 4em;
     }
 
     /*Navbar*/
-    nav#mainNav{
+    nav#mainNav {
         padding: 2em;
         flex-direction: column;
     }
@@ -711,7 +709,7 @@ div#preciserRaison {
         font-size: 5em;
     }
 
-    .nav-item,.nav-link, p{
+    .nav-item, .nav-link, p {
         font-size: 2em;
     }
 
@@ -734,7 +732,7 @@ div#preciserRaison {
         margin-bottom: 3em;
     }
 
-    #fileInputUser input{
+    #fileInputUser input {
         font-size: 1.5em;
         margin: 1em 0;
         border: unset;
@@ -765,12 +763,11 @@ div#preciserRaison {
     }
 
     /* Footer */
-
     footer {
         padding-bottom: 3em;
     }
 
-    footer i{
+    footer i {
         font-size: 2.5em;
         padding-bottom: 1em;
     }
@@ -783,12 +780,12 @@ div#preciserRaison {
         display: unset;
     }
 
-    .coordonnees p, .contact p, .access p{
+    .coordonnees p, .contact p, .access p {
         text-align: unset;
         font-size: 3em;
     }
 
-    .coordonnees h3, .contact h3, .access h3, .networks h3{
+    .coordonnees h3, .contact h3, .access h3, .networks h3 {
         text-align: unset;
         font-size: 3em;
     }
@@ -818,11 +815,11 @@ div#preciserRaison {
         font-size: 1.5em;
     }
 
-    .help-text{
+    .help-text {
         font-size: 1.5em;
     }
 
-    #screenLeft , #screenRight {
+    #screenLeft, #screenRight {
         width: 100%;
         align-items: center;
     }
@@ -837,7 +834,7 @@ div#preciserRaison {
         justify-content: center;
     }
 
-    div.fileInput input{
+    div.fileInput input {
         border: unset;
         font-size: 1em;
     }
@@ -858,12 +855,13 @@ div#preciserRaison {
         flex-direction: column;
         align-items: center;
     }
+
     .formEntité2 label, .formEntité2 .help-text {
         display: flex;
         justify-content: center;
     }
 
-    .formEntité2 input, .formEntité input{
+    .formEntité2 input, .formEntité input {
         width: 100%;
         height: 2em;
         font-size: 2em;
@@ -878,8 +876,7 @@ div#preciserRaison {
     }
 
     /*Formulaire de connexion*/
-
-    #login h6{
+    #login h6 {
         font-size: 2em;
     }
 
@@ -887,18 +884,18 @@ div#preciserRaison {
         flex-direction: column;
     }
 
-    #formConnexion input, #formRegister input, #formResetMdp input{
+    #formConnexion input, #formRegister input, #formResetMdp input {
         height: 4em;
         font-size: 1em;
     }
 
-    #login #screenLeft a.btn.btn-info{
+    #login #screenLeft a.btn.btn-info {
         margin: unset;
         padding: 30px;
         font-size: 2.5em;
     }
 
-    #formConnexion label, #formRegister label{
+    #formConnexion label, #formRegister label {
         float: unset;
     }
 
@@ -907,7 +904,7 @@ div#preciserRaison {
         margin-right: 20px;
     }
 
-    #btnRegister{
+    #btnRegister {
         padding: 30px;
         font-size: 2.5em;
     }
@@ -945,12 +942,11 @@ div#preciserRaison {
     }
 
     /*Formulaire de commande individuelle */
-
     #commandeFormInd label {
         font-size: 1.5em;
     }
 
-    #sandwichCarousel img, #dessertCarousel img,#sandwich1Carousel img, #sandwich2Carousel img {
+    #sandwichCarousel img, #dessertCarousel img, #sandwich1Carousel img, #sandwich2Carousel img {
         width: 100%;
         height: 400px;
     }
@@ -964,7 +960,7 @@ div#preciserRaison {
         height: 125px;
     }
 
-    #commandeFormInd #screenRight, #commandeFormGroupe #screenRight{
+    #commandeFormInd #screenRight, #commandeFormGroupe #screenRight {
         margin-left: unset;
     }
 

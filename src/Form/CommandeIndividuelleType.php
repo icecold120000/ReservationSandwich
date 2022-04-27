@@ -17,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -26,7 +25,7 @@ class CommandeIndividuelleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('sandwichChoisi', EntityType::class,[
+            ->add('sandwichChoisi', EntityType::class, [
                 'label' => 'Choisir un sandwich',
                 'class' => Sandwich::class,
                 'query_builder' => function (SandwichRepository $er) {
@@ -40,7 +39,7 @@ class CommandeIndividuelleType extends AbstractType
                 'multiple' => false,
                 'required' => true,
             ])
-            ->add('boissonChoisie', EntityType::class,[
+            ->add('boissonChoisie', EntityType::class, [
                 'label' => 'Choisir une boisson',
                 'class' => Boisson::class,
                 'query_builder' => function (BoissonRepository $er) {
@@ -54,7 +53,7 @@ class CommandeIndividuelleType extends AbstractType
                 'multiple' => false,
                 'required' => true,
             ])
-            ->add('dessertChoisi', EntityType::class,[
+            ->add('dessertChoisi', EntityType::class, [
                 'label' => 'Choisir un dessert',
                 'class' => Dessert::class,
                 'query_builder' => function (DessertRepository $er) {
@@ -85,7 +84,7 @@ class CommandeIndividuelleType extends AbstractType
                 'help' => 'Attention : Vous ne pouvez pas faire une commande pour le jour même après 9h30 !',
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
-                    new GreaterThanOrEqual("today",null,"Veuillez choisir une date et/ou heure future !"),
+                    new GreaterThanOrEqual("today", null, "Veuillez choisir une date et/ou heure future !"),
                     new NotNull([
                         'message' => 'Veuillez choisir une date et heure de livraison !',
                     ]),
@@ -100,9 +99,9 @@ class CommandeIndividuelleType extends AbstractType
                     'Autres (à préciser)' => 'Autre'
                 ],
                 'required' => true,
-                'attr' => [ 'onChange' => 'update()'],
+                'attr' => ['onChange' => 'update()'],
             ])
-            ->add('raisonCommandeAutre', TextareaType::class,[
+            ->add('raisonCommandeAutre', TextareaType::class, [
                 'label' => 'À préciser',
                 'required' => false,
                 'mapped' => false,
@@ -110,8 +109,7 @@ class CommandeIndividuelleType extends AbstractType
                     new NotBlank(['message' => 'Veuillez saisir une raison valable !'])
                 ],
                 'empty_data' => 'Ajouter text',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

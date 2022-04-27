@@ -47,10 +47,11 @@ class CommandeIndividuelleController extends AbstractController
     private EleveRepository $eleveRepo;
     private CommandeGroupeRepository $comGrRepo;
 
-    public function __construct(SandwichRepository $sandwichRepo,
-                                BoissonRepository $boissonRepo, DessertRepository $dessertRepo,
+    public function __construct(SandwichRepository             $sandwichRepo,
+                                BoissonRepository              $boissonRepo, DessertRepository $dessertRepo,
                                 CommandeIndividuelleRepository $comIndRepo,
-                                EleveRepository $eleveRepo, CommandeGroupeRepository $comGrRepo) {
+                                EleveRepository                $eleveRepo, CommandeGroupeRepository $comGrRepo)
+    {
         $this->sandwichRepo = $sandwichRepo;
         $this->boissonRepo = $boissonRepo;
         $this->dessertRepo = $dessertRepo;
@@ -65,9 +66,9 @@ class CommandeIndividuelleController extends AbstractController
      * @throws \Exception
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
-                          PaginatorInterface $paginator, Request $request,
-                          LimitationCommandeRepository $limiteRepo,
-                          CommandeGroupeRepository $comGrRepo): Response
+                          PaginatorInterface             $paginator, Request $request,
+                          LimitationCommandeRepository   $limiteRepo,
+                          CommandeGroupeRepository       $comGrRepo): Response
     {
         $affichageTableau = "les deux";
         $limiteGroupeCom = $limiteRepo->findOneByLibelle("sortie");
@@ -75,10 +76,10 @@ class CommandeIndividuelleController extends AbstractController
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
-        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
-        $limiteDate = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),
+        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
+        $limiteDate = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'),
             new DateTimeZone('Europe/Paris'));
         $commandes = $comIndRepo->findIndexAllNonCloture($this->getUser());
         $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($this->getUser());
@@ -102,13 +103,13 @@ class CommandeIndividuelleController extends AbstractController
 
         $commandes = $paginator->paginate(
             $commandes,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             25
         );
 
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             5
         );
 
@@ -119,10 +120,10 @@ class CommandeIndividuelleController extends AbstractController
             'limiteActive' => $limiteJourMeme->getIsActive(),
             'limiteNbJournalier' => $limiteNbJour->getNbLimite(),
             'limiteActiveNbJour' => $limiteNbJour->getIsActive(),
-            'limiteNbSemaine'=> $limiteNbSemaine->getNbLimite(),
-            'limiteActiveNbSemaine'=> $limiteNbSemaine->getIsActive(),
-            'limiteNbMois'=> $limiteNbMois->getNbLimite(),
-            'limiteActiveNbMois'=> $limiteNbMois->getIsActive(),
+            'limiteNbSemaine' => $limiteNbSemaine->getNbLimite(),
+            'limiteActiveNbSemaine' => $limiteNbSemaine->getIsActive(),
+            'limiteNbMois' => $limiteNbMois->getNbLimite(),
+            'limiteActiveNbMois' => $limiteNbMois->getIsActive(),
             'nbCommandeJournalier' => $nbCommandeJournalier,
             'nbCommandeSemaine' => $nbCommandeSemaine,
             'nbCommandeMois' => $nbCommandeMois,
@@ -146,8 +147,7 @@ class CommandeIndividuelleController extends AbstractController
                 'SuccessDeactivation',
                 'La page de réservation a été désactivée !'
             );
-        }
-        elseif ($desactiveId->getIsDeactivated() === true) {
+        } elseif ($desactiveId->getIsDeactivated() === true) {
             $desactiveId->setIsDeactivated(false);
             $this->addFlash(
                 'SuccessDeactivation',
@@ -169,8 +169,8 @@ class CommandeIndividuelleController extends AbstractController
      * @throws \Exception
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
-                          PaginatorInterface $paginator, Request $request,
-                          CommandeGroupeRepository $comGrRepo): Response
+                          PaginatorInterface             $paginator, Request $request,
+                          CommandeGroupeRepository       $comGrRepo): Response
     {
         $affichageTableau = "les deux";
         $commandes = $comIndRepo->findAllNonCloture();
@@ -188,8 +188,7 @@ class CommandeIndividuelleController extends AbstractController
                 $exportReq->get('affichageExport')->getData() == "individuelle") {
 
                 $commandesExport = $comIndRepo->exportationCommande($dateChoisi);
-            }
-            else {
+            } else {
                 $commandesExport = null;
             }
 
@@ -197,49 +196,44 @@ class CommandeIndividuelleController extends AbstractController
                 $exportReq->get('affichageExport')->getData() == "groupé") {
 
                 $commandesGroupeExport = $comGrRepo->exportationCommandeGroupe($dateChoisi);
-            }
-            else {
+            } else {
                 $commandesGroupeExport = null;
             }
 
             $methode = $exportReq->get('methodeExport')->getData();
             if ($methode == "PDF") {
-                CommandeIndividuelleController::pdfDownload($commandesExport,$commandesGroupeExport,$modalite,$exportReq->get('dateExport')->getData());
-            }
-            elseif ($methode == "Excel") {
+                CommandeIndividuelleController::pdfDownload($commandesExport, $commandesGroupeExport, $modalite, $exportReq->get('dateExport')->getData());
+            } elseif ($methode == "Excel") {
                 if ($modalite == "Séparé") {
                     $commandeRow = [];
                     $commandeGroupeRow = [];
                     foreach ($commandesExport as $commande) {
 
-                        if (in_array(User::ROLE_ELEVE,$commande->getCommandeur()->getRoles()) ) {
+                        if (in_array(User::ROLE_ELEVE, $commande->getCommandeur()->getRoles())) {
                             $eleve = $this->eleveRepo->findOneByCompte($commande->getCommandeur()->getId());
                             $classe = $eleve->getClasseEleve()->getCodeClasse();
-                        }
-                        else {
+                        } else {
                             $classe = "Adulte";
                         }
 
                         if ($commande->getPrendreChips()) {
                             $chips = "Oui";
-                        }
-                        else {
+                        } else {
                             $chips = "Non";
                         }
                         $commandeRow[] = [
                             'Date et heure de Livraison' => $commande->getDateHeureLivraison()->format('d/m/y h:i'),
-                            'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser().' '.$commande->getCommandeur()->getNomUser(),
+                            'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser() . ' ' . $commande->getCommandeur()->getNomUser(),
                             'Classe' => $classe,
-                            'Commande' => $commande->getSandwichChoisi()->getNomSandwich().', '.$commande->getBoissonChoisie()->getNomBoisson().', '.$commande->getDessertChoisi()->getNomDessert(),
+                            'Commande' => $commande->getSandwichChoisi()->getNomSandwich() . ', ' . $commande->getBoissonChoisie()->getNomBoisson() . ', ' . $commande->getDessertChoisi()->getNomDessert(),
                             'Chips' => $chips,
                         ];
                     }
                     foreach ($commandesGroupeExport as $commandeGroupe) {
-                        if (in_array(User::ROLE_ELEVE,$commandeGroupe->getCommandeur()->getRoles()) ) {
+                        if (in_array(User::ROLE_ELEVE, $commandeGroupe->getCommandeur()->getRoles())) {
                             $eleve = $this->eleveRepo->findOneByCompte($commandeGroupe->getCommandeur()->getId());
                             $classe = $eleve->getClasseEleve()->getCodeClasse();
-                        }
-                        else {
+                        } else {
                             $classe = "Adulte";
                         }
 
@@ -247,15 +241,15 @@ class CommandeIndividuelleController extends AbstractController
                         $nombreEleve = 0;
                         foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichChoisi) {
                             $nombreEleve = $nombreEleve + $sandwichChoisi->getNombreSandwich();
-                            $sandwichsGroupe[] = $sandwichChoisi->getNombreSandwich().' '.$sandwichChoisi->getSandwichChoisi()->getNomSandwich();
+                            $sandwichsGroupe[] = $sandwichChoisi->getNombreSandwich() . ' ' . $sandwichChoisi->getSandwichChoisi()->getNomSandwich();
                         }
 
                         $commandeGroupeRow[] = [
                             'Date et heure de Livraison' => $commandeGroupe->getDateHeureLivraison()->format('d/m/y h:i'),
-                            'Prénom et Nom' => $commandeGroupe->getCommandeur()->getPrenomUser().' '.$commandeGroupe->getCommandeur()->getNomUser(),
+                            'Prénom et Nom' => $commandeGroupe->getCommandeur()->getPrenomUser() . ' ' . $commandeGroupe->getCommandeur()->getNomUser(),
                             'Classe' => $classe,
-                            'Commande' => $sandwichsGroupe[0].', '.$sandwichsGroupe[1].', '.$nombreEleve.' '.$commandeGroupe->getBoissonChoisie()->getNomBoisson().', '.$nombreEleve.' '.$commandeGroupe->getDessertChoisi()->getNomDessert(),
-                            'Chips' => $nombreEleve.' Chips',
+                            'Commande' => $sandwichsGroupe[0] . ', ' . $sandwichsGroupe[1] . ', ' . $nombreEleve . ' ' . $commandeGroupe->getBoissonChoisie()->getNomBoisson() . ', ' . $nombreEleve . ' ' . $commandeGroupe->getDessertChoisi()->getNomDessert(),
+                            'Chips' => $nombreEleve . ' Chips',
                         ];
 
                     }
@@ -268,15 +262,13 @@ class CommandeIndividuelleController extends AbstractController
                             // Array by sheet
                             'Feuille 1' => $commandesRegroupe
                         ];
-                    }
-                    else {
+                    } else {
                         if ($commandeRow != []) {
                             $data = [
                                 // Array by sheet
                                 'Feuille 1' => $commandeRow
                             ];
-                        }
-                        else{
+                        } else {
                             $data = [
                                 // Array by sheet
                                 'Feuille 1' => $commandeGroupeRow
@@ -290,28 +282,28 @@ class CommandeIndividuelleController extends AbstractController
                     $dateChoisi = $exportReq->get('dateExport')->getData();
 
                     // Put the content in a file with format extension for example
-                    file_put_contents('commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
-                    $filename = 'commande_separé_'.$dateChoisi->format('d-m-y').'.xlsx';
+                    file_put_contents('commande_separé_' . $dateChoisi->format('d-m-y') . '.xlsx', $xls);
+                    $filename = 'commande_separé_' . $dateChoisi->format('d-m-y') . '.xlsx';
 
                     //Permet le téléchargement du fichier
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');
                     header("Cache-Control: no-cache, must-revalidate");
                     header("Expires: 0");
-                    header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+                    header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
 
                     // Déplace le fichier dans le dossier Uploads
-                    rename($filename,$this->getParameter('exportFile_directory').'/'.$filename);
+                    rename($filename, $this->getParameter('exportFile_directory') . '/' . $filename);
 
                 } elseif ($modalite == "Regroupé") {
                     $sandwichDispo = $this->sandwichRepo->findByDispo(true);
                     $boissonDispo = $this->boissonRepo->findByDispo(true);
                     $dessertDispo = $this->dessertRepo->findByDispo(true);
-                    $nomSandwich =[];
-                    $nbSandwich =[];
+                    $nomSandwich = [];
+                    $nbSandwich = [];
                     $nomBoisson = [];
                     $nbBoisson = [];
                     $nomDessert = [];
@@ -330,7 +322,7 @@ class CommandeIndividuelleController extends AbstractController
                                 }
                             }
                         }
-                        $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(),$dateChoisi)) + $nombreSandwich;
+                        $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(), $dateChoisi)) + $nombreSandwich;
                     }
 
                     foreach ($boissonDispo as $boisson) {
@@ -345,7 +337,7 @@ class CommandeIndividuelleController extends AbstractController
                                 }
                             }
                         }
-                        $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(),$dateChoisi)) + $nombreEleve;
+                        $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(), $dateChoisi)) + $nombreEleve;
                     }
 
                     foreach ($dessertDispo as $dessert) {
@@ -360,11 +352,11 @@ class CommandeIndividuelleController extends AbstractController
                                 }
                             }
                         }
-                        $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(),$dateChoisi)) + $nombreEleve;
+                        $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(), $dateChoisi)) + $nombreEleve;
                         $nbChips = $nbChips + $nombreEleve;
                     }
                     $dataRowSandwich = [];
-                    for ($i = 0 ; $i < count($nomSandwich);$i++) {
+                    for ($i = 0; $i < count($nomSandwich); $i++) {
                         $dataRowSandwich[$i] = [
                             'Nom de produit' => $nomSandwich[$i],
                             'Nombre de produit' => $nbSandwich[$i],
@@ -372,7 +364,7 @@ class CommandeIndividuelleController extends AbstractController
                     }
 
                     $dataRowBoisson = [];
-                    for ($i = 0 ; $i < count($nomBoisson);$i++) {
+                    for ($i = 0; $i < count($nomBoisson); $i++) {
                         $dataRowBoisson[$i] = [
                             'Nom de produit' => $nomBoisson[$i],
                             'Nombre de produit' => $nbBoisson[$i],
@@ -380,7 +372,7 @@ class CommandeIndividuelleController extends AbstractController
                     }
 
                     $dataRowDessert = [];
-                    for ($i = 0 ; $i < count($nomDessert);$i++) {
+                    for ($i = 0; $i < count($nomDessert); $i++) {
                         $dataRowDessert[$i] = [
                             'Nom de produit' => $nomDessert[$i],
                             'Nombre de produit' => $nbDessert[$i],
@@ -418,30 +410,28 @@ class CommandeIndividuelleController extends AbstractController
                     $dateChoisi = $exportReq->get('dateExport')->getData();
 
                     // Put the content in a file with format extension for example
-                    file_put_contents('commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx', $xls);
-                    $filename = 'commande_regroupé_'.$dateChoisi->format('d-m-y').'.xlsx';
+                    file_put_contents('commande_regroupé_' . $dateChoisi->format('d-m-y') . '.xlsx', $xls);
+                    $filename = 'commande_regroupé_' . $dateChoisi->format('d-m-y') . '.xlsx';
 
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');
                     header("Cache-Control: no-cache, must-revalidate");
                     header("Expires: 0");
-                    header('Content-Disposition: attachment; filename="'.basename($filename).'"');
+                    header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
 
-                    rename($filename,$this->getParameter('excelFile_directory').'/'.$filename);
+                    rename($filename, $this->getParameter('excelFile_directory') . '/' . $filename);
                 }
                 return new Response();
-            }
-            elseif ($methode == "Impression"){
+            } elseif ($methode == "Impression") {
                 return CommandeIndividuelleController::printPreview($modalite,
                     $exportReq->get('dateExport')->getData(),
                     $exportReq->get('affichageExport')->getData());
             }
 
-        }
-        elseif ($export->isSubmitted()) {
+        } elseif ($export->isSubmitted()) {
             $this->addFlash(
                 'failedExport',
                 'Votre export a échoué à la suite d\'une erreur !'
@@ -457,8 +447,7 @@ class CommandeIndividuelleController extends AbstractController
             $dateFilter = $filter->get('date')->getData();
             if ($dateFilter != null) {
                 $dateFilter->format('Y-m-d');
-            }
-            else {
+            } else {
                 $dateFilter = null;
             }
 
@@ -478,13 +467,13 @@ class CommandeIndividuelleController extends AbstractController
 
         $commandes = $paginator->paginate(
             $commandes,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             25
         );
 
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             5
         );
 
@@ -498,53 +487,6 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @param $modalite
-     * @param $dateChoisi
-     * @param $affichage
-     * @return Response
-     * @Route("/preview", name="commande_impression", methods={"GET","POST"})
-     */
-    public function printPreview($modalite, $dateChoisi, $affichage): Response
-    {
-
-        if ($affichage == "les deux" || $affichage == "individuelle") {
-            $commandes = $this->comIndRepo
-                ->exportationCommande($dateChoisi->format('y-m-d'));
-        }
-        else {
-            $commandes = null;
-        }
-
-        if ($affichage == "les deux" || $affichage == "groupé") {
-
-            $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
-        }
-        else {
-            $commandeGroupe = null;
-        }
-
-        if ($modalite == "Séparé") {
-            return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
-                'type' => "Impression",
-                'commandes' => $commandes,
-                'commandesGroupe' => $commandeGroupe,
-                'dateChoisi' => $dateChoisi,
-            ]);
-        }
-        else{
-            return $this->render('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
-                'commandes' => $commandes,
-                'dateChoisi' => $dateChoisi,
-                'commandesGroupe' => $commandeGroupe,
-                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
-                'boissonDispo' => $this->boissonRepo->findByDispo(true),
-                'dessertDispo' => $this->dessertRepo->findByDispo(true),
-            ]);
-        }
-    }
-
-
-    /**
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
      */
     public function pdfDownload($commandes, $commandesGroupe, $modalite, $dateChoisi): Response
@@ -553,7 +495,7 @@ class CommandeIndividuelleController extends AbstractController
         $optionsPdf = new OptionsPdf();
 
         // Donne une police par défaut
-        $optionsPdf->set('defaultFont','Arial');
+        $optionsPdf->set('defaultFont', 'Arial');
         $optionsPdf->setIsRemoteEnabled(true);
 
         // Instancie Dompdf
@@ -573,15 +515,14 @@ class CommandeIndividuelleController extends AbstractController
 
         // Génère le pdf et le rendu html à partir du TWIG
         if ($modalite == "Séparé") {
-            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig',[
+            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
                 'type' => "PDF",
                 'commandes' => $commandes,
                 'commandesGroupe' => $commandesGroupe,
                 'dateChoisi' => $dateChoisi,
             ]);
-        }
-        elseif ($modalite == "Regroupé") {
-            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_regroupe.html.twig',[
+        } else {
+            $html = $this->renderView('commande_individuelle/pdf/commande_pdf_regroupe.html.twig', [
                 'commandes' => $commandes,
                 'commandesGroupe' => $commandesGroupe,
                 'dateChoisi' => $dateChoisi,
@@ -593,13 +534,13 @@ class CommandeIndividuelleController extends AbstractController
 
         // Génère l'affichage du pdf dans un onglet
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4','portrait');
+        $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
         $date = $dateChoisi->format('d-m-Y');
 
         // Nomme le fichier PDF
-        $fichier = 'Commande_'.$modalite.'_'.$date.'.pdf';
+        $fichier = 'Commande_' . $modalite . '_' . $date . '.pdf';
 
         // Télécharge le pdf
         $dompdf->stream($fichier, [
@@ -612,37 +553,80 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * @param $modalite
+     * @param $dateChoisi
+     * @param $affichage
+     * @return Response
+     * @Route("/preview", name="commande_impression", methods={"GET","POST"})
+     */
+    public function printPreview($modalite, $dateChoisi, $affichage): Response
+    {
+
+        if ($affichage == "les deux" || $affichage == "individuelle") {
+            $commandes = $this->comIndRepo
+                ->exportationCommande($dateChoisi->format('y-m-d'));
+        } else {
+            $commandes = null;
+        }
+
+        if ($affichage == "les deux" || $affichage == "groupé") {
+
+            $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
+        } else {
+            $commandeGroupe = null;
+        }
+
+        if ($modalite == "Séparé") {
+            return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
+                'type' => "Impression",
+                'commandes' => $commandes,
+                'commandesGroupe' => $commandeGroupe,
+                'dateChoisi' => $dateChoisi,
+            ]);
+        } else {
+            return $this->render('commande_individuelle/pdf/commande_pdf_regroupe.html.twig', [
+                'commandes' => $commandes,
+                'dateChoisi' => $dateChoisi,
+                'commandesGroupe' => $commandeGroupe,
+                'sandwichDispo' => $this->sandwichRepo->findByDispo(true),
+                'boissonDispo' => $this->boissonRepo->findByDispo(true),
+                'dessertDispo' => $this->dessertRepo->findByDispo(true),
+            ]);
+        }
+    }
+
+    /**
      * @Route("/new", name="commande_individuelle_new", methods={"GET", "POST"})
      * @throws NonUniqueResultException
      * @throws \Exception
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,
-                        SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
-                        DessertRepository $dessertRepo,
+    public function new(Request                         $request, EntityManagerInterface $entityManager,
+                        SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+                        DessertRepository               $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
-                        LimitationCommandeRepository $limiteRepo,
-                        InscriptionCantineRepository $cantineRepository,
-                        UserRepository $userRepo): Response
+                        LimitationCommandeRepository    $limiteRepo,
+                        InscriptionCantineRepository    $cantineRepository,
+                        UserRepository                  $userRepo): Response
     {
 
         $user = $userRepo->find($this->getUser());
         $roles = $user->getRoles();
         $cantine = null;
-        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
+        $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
         if (in_array("ROLE_ELEVE", $roles)) {
             $cantine = $cantineRepository->findOneByEleve($user->getEleves());
         }
 
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
-        $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
+        $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
 
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
-        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -663,19 +647,17 @@ class CommandeIndividuelleController extends AbstractController
                     'limiteCloture',
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
-            }
-            elseif (in_array("ROLE_ADMIN",$roles) == false && $dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
+            } elseif (!in_array("ROLE_ADMIN", $roles) && $dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
                 $this->addFlash(
                     'limiteCloture',
                     'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
                 );
-            }
-            else {
+            } else {
                 $error = false;
                 if (in_array("ROLE_ELEVE", $roles)) {
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
-                            if(!$cantine->getRepasJ1()) {
+                            if (!$cantine->getRepasJ1()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le lundi à la cantine !'
@@ -684,7 +666,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Tuesday":
-                            if(!$cantine->getRepasJ2()) {
+                            if (!$cantine->getRepasJ2()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mardi à la cantine !'
@@ -693,7 +675,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Wednesday":
-                            if(!$cantine->getRepasJ3()) {
+                            if (!$cantine->getRepasJ3()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mercredi à la cantine !'
@@ -702,7 +684,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Thursday":
-                            if(!$cantine->getRepasJ4()) {
+                            if (!$cantine->getRepasJ4()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le jeudi à la cantine !'
@@ -711,7 +693,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Friday":
-                            if(!$cantine->getRepasJ5()) {
+                            if (!$cantine->getRepasJ5()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le vendredi à la cantine !'
@@ -731,8 +713,7 @@ class CommandeIndividuelleController extends AbstractController
                     } else {
                         if ($form->get('raisonCommande')->getData() == "Autre") {
                             $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                        }
-                        else {
+                        } else {
                             $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                         }
                         $commandeIndividuelle
@@ -755,8 +736,7 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
-        }
-        else {
+        } else {
             return $this->renderForm('commande_individuelle/new.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
                 'form' => $form,
@@ -766,10 +746,10 @@ class CommandeIndividuelleController extends AbstractController
                 'limiteJourMeme' => $dateNow->format('d-m-y H:i'),
                 'limiteNbJournalier' => $limiteNbJour->getNbLimite(),
                 'limiteActiveNbJour' => $limiteNbJour->getIsActive(),
-                'limiteNbSemaine'=> $limiteNbSemaine->getNbLimite(),
-                'limiteActiveNbSemaine'=> $limiteNbSemaine->getIsActive(),
-                'limiteNbMois'=> $limiteNbMois->getNbLimite(),
-                'limiteActiveNbMois'=> $limiteNbMois->getIsActive(),
+                'limiteNbSemaine' => $limiteNbSemaine->getNbLimite(),
+                'limiteActiveNbSemaine' => $limiteNbSemaine->getIsActive(),
+                'limiteNbMois' => $limiteNbMois->getNbLimite(),
+                'limiteActiveNbMois' => $limiteNbMois->getIsActive(),
                 'nbCommandeJournalier' => $nbCommandeJournalier,
                 'nbCommandeSemaine' => $nbCommandeSemaine,
                 'nbCommandeMois' => $nbCommandeMois,
@@ -794,8 +774,7 @@ class CommandeIndividuelleController extends AbstractController
     {
         if ($commande->getEstValide() === false) {
             $commande->setEstValide(true);
-        }
-        else {
+        } else {
             $commande->setEstValide(false);
         }
         $entityManager->persist($commande);
@@ -820,14 +799,14 @@ class CommandeIndividuelleController extends AbstractController
      * @throws NonUniqueResultException
      * @throws \Exception
      */
-    public function edit(Request $request, CommandeIndividuelle $commandeIndividuelle,
-                         EntityManagerInterface $entityManager,
-                         SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
-                         DessertRepository $dessertRepo,
+    public function edit(Request                         $request, CommandeIndividuelle $commandeIndividuelle,
+                         EntityManagerInterface          $entityManager,
+                         SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+                         DessertRepository               $dessertRepo,
                          DesactivationCommandeRepository $deactiveRepo,
-                         LimitationCommandeRepository $limiteRepo,
-                         InscriptionCantineRepository $cantineRepository,
-                         UserRepository $userRepo): Response
+                         LimitationCommandeRepository    $limiteRepo,
+                         InscriptionCantineRepository    $cantineRepository,
+                         UserRepository                  $userRepo): Response
     {
         $user = $userRepo->find($this->getUser());
         $roles = $user->getRoles();
@@ -837,14 +816,14 @@ class CommandeIndividuelleController extends AbstractController
             $cantine = $cantineRepository->findOneByEleve($user->getEleves());
         }
         $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
-        $limite = new DateTime('now '.$limiteJourMeme->getHeureLimite()->format('h:i'),new DateTimeZone('Europe/Paris'));
-        $dateNow = new DateTime('now',new DateTimeZone('Europe/Paris'));
+        $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
+        $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
         $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
         $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
         $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
-        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 week 23:59:00',new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(),new DateTime('now 00:00:00',new DateTimezone('Europe/Paris')),new DateTime('+1 month 23:59:00',new DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -854,7 +833,7 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ( !in_array("ROLE_ADMIN", $roles) &&
+            if (!in_array("ROLE_ADMIN", $roles) &&
                 $limiteJourMeme->getIsActive() && $limite < $dateNow &&
                 $dateLivraison > new DateTime('now 00:00:00',
                     new DateTimeZone('Europe/Paris')) &&
@@ -864,19 +843,17 @@ class CommandeIndividuelleController extends AbstractController
                     'limiteCloture',
                     'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                 );
-            }
-            elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday"){
+            } elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
                 $this->addFlash(
                     'limiteCloture',
                     'Vous ne pouvez pas faire une commande le samedi et le dimanche !'
                 );
-            }
-            else {
+            } else {
                 $error = false;
                 if (in_array("ROLE_ELEVE", $roles)) {
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
-                            if(!$cantine->getRepasJ1()) {
+                            if (!$cantine->getRepasJ1()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le lundi à la cantine !'
@@ -885,7 +862,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Tuesday":
-                            if(!$cantine->getRepasJ2()) {
+                            if (!$cantine->getRepasJ2()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mardi à la cantine !'
@@ -894,7 +871,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Wednesday":
-                            if(!$cantine->getRepasJ3()) {
+                            if (!$cantine->getRepasJ3()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le mercredi à la cantine !'
@@ -903,7 +880,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Thursday":
-                            if(!$cantine->getRepasJ4()) {
+                            if (!$cantine->getRepasJ4()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le jeudi à la cantine !'
@@ -912,7 +889,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                             break;
                         case "Friday":
-                            if(!$cantine->getRepasJ5()) {
+                            if (!$cantine->getRepasJ5()) {
                                 $this->addFlash(
                                     'limiteCloture',
                                     'Vous n\'êtes pas inscrit le vendredi à la cantine !'
@@ -955,8 +932,7 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
-        }
-        else {
+        } else {
             return $this->renderForm('commande_individuelle/edit.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
                 'form' => $form,
@@ -966,10 +942,10 @@ class CommandeIndividuelleController extends AbstractController
                 'limiteJourMeme' => $dateNow->format('d-m-y H:i'),
                 'limiteNbJournalier' => $limiteNbJour->getNbLimite(),
                 'limiteActiveNbJour' => $limiteNbJour->getIsActive(),
-                'limiteNbSemaine'=> $limiteNbSemaine->getNbLimite(),
-                'limiteActiveNbSemaine'=> $limiteNbSemaine->getIsActive(),
-                'limiteNbMois'=> $limiteNbMois->getNbLimite(),
-                'limiteActiveNbMois'=> $limiteNbMois->getIsActive(),
+                'limiteNbSemaine' => $limiteNbSemaine->getNbLimite(),
+                'limiteActiveNbSemaine' => $limiteNbSemaine->getIsActive(),
+                'limiteNbMois' => $limiteNbMois->getNbLimite(),
+                'limiteActiveNbMois' => $limiteNbMois->getIsActive(),
                 'nbCommandeJournalier' => $nbCommandeJournalier,
                 'nbCommandeSemaine' => $nbCommandeSemaine,
                 'nbCommandeMois' => $nbCommandeMois,
@@ -982,7 +958,7 @@ class CommandeIndividuelleController extends AbstractController
      */
     public function delete(Request $request, CommandeIndividuelle $commandeIndividuelle, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$commandeIndividuelle->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $commandeIndividuelle->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeIndividuelle);
             $entityManager->flush();
             $this->addFlash(

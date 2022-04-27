@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AdulteRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,7 +16,7 @@ class Adulte
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -30,7 +31,7 @@ class Adulte
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?\DateTime $dateNaissance;
+    private ?DateTime $dateNaissance;
 
     /**
      * @ORM\Column(type="boolean")
@@ -71,12 +72,12 @@ class Adulte
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTime
+    public function getDateNaissance(): ?DateTime
     {
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(\DateTime $dateNaissance): self
+    public function setDateNaissance(DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 

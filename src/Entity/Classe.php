@@ -69,7 +69,7 @@ class Classe
     }
 
     /**
-     * @return Collection|Eleve[]
+     * @return Collection
      */
     public function getEleves(): Collection
     {

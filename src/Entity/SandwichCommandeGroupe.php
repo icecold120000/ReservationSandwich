@@ -15,7 +15,7 @@ class SandwichCommandeGroupe
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="sandwichCommandeGroupes", cascade={"persist"})
@@ -26,7 +26,7 @@ class SandwichCommandeGroupe
     /**
      * @ORM\Column(type="integer")
      */
-    private $nombreSandwich;
+    private int $nombreSandwich;
 
     /**
      * @ORM\ManyToOne(targetEntity=CommandeGroupe::class,

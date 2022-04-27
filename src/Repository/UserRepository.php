@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use function get_class;
 
 /**
  * @method User|null find($id, $lockMode = null, $lockVersion = null)
@@ -29,7 +30,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         $user->setPassword($newHashedPassword);
@@ -44,12 +45,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function search($roleUser = null, $userVerifie = null, $ordreNom = null, $ordrePrenom = null): array
     {
         $query = $this->createQueryBuilder('u');
-        if($roleUser !== null){
+        if ($roleUser !== null) {
             $query->andWhere('u.roles like :role')
-                ->setParameter('role','%'.$roleUser.'%');
+                ->setParameter('role', '%' . $roleUser . '%');
         }
 
-        if($userVerifie !== null){
+        if ($userVerifie !== null) {
             $query->andWhere('u.isVerified = :userVerifie')
                 ->setParameter('userVerifie', $userVerifie);
         }
@@ -57,11 +58,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if ($ordreNom !== null && $ordrePrenom !== null) {
             $query->addOrderBy('u.nomUser', $ordreNom)
                 ->addOrderBy('u.prenomUser', $ordrePrenom);
-        }
-        elseif ($ordreNom == null && $ordrePrenom !== null) {
+        } elseif ($ordreNom == null && $ordrePrenom !== null) {
             $query->orderBy('u.prenomUser', $ordrePrenom);
-        }
-        elseif ($ordrePrenom == null && $ordreNom !== null) {
+        } elseif ($ordrePrenom == null && $ordreNom !== null) {
             $query->orderBy('u.nomUser', $ordreNom);
         }
 
@@ -77,8 +76,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.email = :val')
             ->setParameter('val', $email)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -91,8 +89,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.dateNaissanceUser = :val2')
             ->setParameters(array('val' => $email, 'val2' => $date))
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -104,8 +101,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.tokenHash = :val')
             ->setParameter('val', $tokenHash)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -114,12 +110,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findOneByAdulte($adulteId): ?User
     {
         return $this->createQueryBuilder('u')
-            ->leftJoin('u.adultes','a')
+            ->leftJoin('u.adultes', 'a')
             ->andWhere('a.id = :val')
             ->setParameter('val', $adulteId)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -128,12 +123,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findOneByEleve($eleveId): ?User
     {
         return $this->createQueryBuilder('u')
-            ->leftJoin('u.eleves','e')
+            ->leftJoin('u.eleves', 'e')
             ->andWhere('e.id = :val')
             ->setParameter('val', $eleveId)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -144,7 +138,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $query = $this->createQueryBuilder('u');
         $query->andWhere('u.nomUser Like :val')
             ->andWhere('u.prenomUser Like :val2')
-            ->setParameters(array('val' =>'%'.$nom.'%', 'val2' =>'%'.$prenom.'%'));
+            ->setParameters(array('val' => '%' . $nom . '%', 'val2' => '%' . $prenom . '%'));
         return $query->getQuery()->getResult();
     }
 
@@ -156,8 +150,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $query = $this->createQueryBuilder('u');
         $query->andWhere('u.nomUser like :val')
             ->andWhere('u.prenomUser like :val2')
-            ->setParameters(array('val' =>'%'.$nom.'%', 'val2' =>'%'.$prenom.'%'));
-        if($birthday != null){
+            ->setParameters(array('val' => '%' . $nom . '%', 'val2' => '%' . $prenom . '%'));
+        if ($birthday != null) {
             $query->andWhere('u.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
         }

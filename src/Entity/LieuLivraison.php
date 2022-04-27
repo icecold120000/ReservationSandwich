@@ -17,7 +17,7 @@ class LieuLivraison
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -57,7 +57,7 @@ class LieuLivraison
     }
 
     /**
-     * @return Collection|CommandeGroupe[]
+     * @return Collection
      */
     public function getCommandeGroupe(): Collection
     {

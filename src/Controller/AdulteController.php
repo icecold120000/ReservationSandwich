@@ -10,6 +10,8 @@ use App\Form\FichierType;
 use App\Form\FilterOrSearch\FilterAdulteType;
 use App\Repository\AdulteRepository;
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
@@ -33,17 +35,17 @@ class AdulteController extends AbstractController
     private AdulteRepository $adulteRepo;
 
     public function __construct(EntityManagerInterface $entityManager,
-                                AdulteRepository $adulteRepo)
+                                AdulteRepository       $adulteRepo)
     {
         $this->entityManager = $entityManager;
         $this->adulteRepo = $adulteRepo;
     }
-    
+
     /**
      * @Route("/", name="adulte_index", methods={"GET","POST"})
      */
     public function index(AdulteRepository $adulteRepo,
-                          Request $request, PaginatorInterface $paginator): Response
+                          Request          $request, PaginatorInterface $paginator): Response
     {
         $adultes = $adulteRepo->findByArchive(false);
 
@@ -61,7 +63,7 @@ class AdulteController extends AbstractController
 
         $adultes = $paginator->paginate(
             $adultes,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             20
         );
 
@@ -75,7 +77,7 @@ class AdulteController extends AbstractController
      * @Route("/file", name="adulte_file", methods={"GET","POST"})
      * @throws Exception
      */
-    public function fileSubmit(Request $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request, SluggerInterface $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $adulteFile = new Fichier();
@@ -91,7 +93,7 @@ class AdulteController extends AbstractController
                 $originalFilename = pathinfo($fichierUser->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierUser->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierUser->guessExtension();
 
                 try {
                     $fichierUser->move(
@@ -117,30 +119,10 @@ class AdulteController extends AbstractController
             return $this->redirectToRoute('adulte_file');
         }
 
-        return $this->render('adulte/adulteFile.html.twig',[
+        return $this->render('adulte/adulteFile.html.twig', [
             'fichierUser' => $adulteFile,
             'form' => $form->createView(),
         ]);
-    }
-
-    public function getDataFromFile(string $fileName): array
-    {
-        $file = $this->getParameter('adulteFile_directory') .'/'. $fileName;
-
-        $fileExtension =pathinfo($file, PATHINFO_EXTENSION);
-
-        $normalizers = [new ObjectNormalizer()];
-
-        $encoders=[
-            new ExcelEncoder($defaultContext = []),
-        ];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        /** @var string $fileString */
-        $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
     }
 
     /**
@@ -151,21 +133,19 @@ class AdulteController extends AbstractController
         $adulteCreated = 0;
         $adulteNonArchives = $this->adulteRepo->findByArchive(false);
         /* Parcours le tableau donné par le fichier Excel*/
-        while($adulteCreated < sizeof($this->getDataFromFile($fileName))) {
+        while ($adulteCreated < sizeof($this->getDataFromFile($fileName))) {
             /*Pour chaque Utilisateur*/
-            foreach($this->getDataFromFile($fileName) as $row) {
+            foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un adulte */
                 foreach ($row as $rowData) {
                     /*Vérifie s'il existe une colonne Nom et qu'elle n'est pas vide*/
-                    if(array_key_exists('Nom',$rowData)
-                        && !empty($rowData['Nom']))
-                    {
+                    if (array_key_exists('Nom', $rowData)
+                        && !empty($rowData['Nom'])) {
                         if (!empty($rowData['Date naissance JJ/MM/AAAA'])) {
                             $adulteRelated = $this->adulteRepo->findByNomPrenomDateNaissance($rowData['Nom'],
-                                $rowData['Prénom'], new \DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new \DateTimeZone('Europe/Paris')));
-                        }
-                        else{
+                                $rowData['Prénom'], new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
+                        } else {
                             $adulteRelated = $this->adulteRepo->findByNomPrenom($rowData['Nom'],
                                 $rowData['Prénom']);
                         }
@@ -180,20 +160,19 @@ class AdulteController extends AbstractController
                             }
                         }
 
-                        if($adulteRelated !== null) {
+                        if ($adulteRelated !== null) {
 
                             $adulteRelated->setPrenomAdulte($rowData['Prénom'])
                                 ->setNomAdulte($rowData['Nom'])
                                 ->setArchiveAdulte(false);
 
                             if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                $adulteRelated->setDateNaissance(new \DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new \DateTimeZone('Europe/Paris')));
+                                $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
                             }
 
                             $this->entityManager->persist($adulteRelated);
-                        }
-                        else{
+                        } else {
                             $adulte = new Adulte();
 
                             $adulte->setPrenomAdulte($rowData['Prénom'])
@@ -201,8 +180,8 @@ class AdulteController extends AbstractController
                                 ->setArchiveAdulte(false);
 
                             if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                $adulte->setDateNaissance(new \DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new \DateTimeZone('Europe/Paris')));
+                                $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
                             }
 
                             $this->entityManager->persist($adulte);
@@ -214,14 +193,33 @@ class AdulteController extends AbstractController
         }
 
         /*Reste que tous les adultes non archivés qui ont quitté l'établissement*/
-        foreach($adulteNonArchives as $adulte)
-        {
+        foreach ($adulteNonArchives as $adulte) {
             $adulte
                 ->setArchiveAdulte(true);
 
             $this->entityManager->persist($adulte);
         }
         $this->entityManager->flush();
+    }
+
+    public function getDataFromFile(string $fileName): array
+    {
+        $file = $this->getParameter('adulteFile_directory') . '/' . $fileName;
+
+        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+
+        $normalizers = [new ObjectNormalizer()];
+
+        $encoders = [
+            new ExcelEncoder($defaultContext = []),
+        ];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        /** @var string $fileString */
+        $fileString = file_get_contents($file);
+
+        return $serializer->decode($fileString, $fileExtension);
     }
 
     /**
@@ -296,11 +294,11 @@ class AdulteController extends AbstractController
      * @Route("/{id}", name="adulte_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request $request, Adulte $adulte,
+    public function delete(Request                $request, Adulte $adulte,
                            EntityManagerInterface $entityManager,
-                           UserRepository $userRepo): Response
+                           UserRepository         $userRepo): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$adulte->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $adulte->getId(), $request->request->get('_token'))) {
             $user = $userRepo->findOneByAdulte($adulte->getId());
             $entityManager->remove($user);
             $entityManager->remove($adulte);

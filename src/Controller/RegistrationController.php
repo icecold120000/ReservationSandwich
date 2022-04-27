@@ -7,6 +7,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\AdulteRepository;
 use App\Repository\EleveRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,14 +20,14 @@ class RegistrationController extends AbstractController
 {
     /**
      * @Route("/register", name="app_register")
-     * @throws \Exception
+     * @throws Exception
      */
-    public function register(Request $request,
+    public function register(Request                     $request,
                              UserPasswordHasherInterface $userPasswordHasher,
-                             EntityManagerInterface $entityManager,
-                             EleveRepository $eleveRepository,
-                             AdulteRepository $adulteRepository,
-                             RateLimiterFactory $anonymousApiLimiter): Response
+                             EntityManagerInterface      $entityManager,
+                             EleveRepository             $eleveRepository,
+                             AdulteRepository            $adulteRepository,
+                             RateLimiterFactory          $anonymousApiLimiter): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -36,9 +37,8 @@ class RegistrationController extends AbstractController
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
         if (false === $limiter->consume(1)->isAccepted()) {
-            $error = throw new TooManyRequestsHttpException('dans une heure','Vous avez fait trop de demande d\'inscription !');
-        }
-        else {
+            $error = throw new TooManyRequestsHttpException('dans une heure', 'Vous avez fait trop de demande d\'inscription !');
+        } else {
             if ($form->isSubmitted() && $form->isValid()) {
                 $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
@@ -46,7 +46,7 @@ class RegistrationController extends AbstractController
                 $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
 
-                if ($eleveFound || $adulteFound){
+                if ($eleveFound || $adulteFound) {
                     // encode the plain password
                     $user->setPassword(
                         $userPasswordHasher->hashPassword(
@@ -54,16 +54,14 @@ class RegistrationController extends AbstractController
                             $form->get('plainPassword')->getData()
                         )
                     );
-                    $user->setTokenHash(md5($user->getNomUser().$user->getEmail()));
+                    $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
                     $user->setIsVerified(true);
 
                     if ($eleveFound) {
                         $user->setRoles([User::ROLE_ELEVE]);
-                    }
-                    elseif ($adulteFound) {
+                    } elseif ($adulteFound) {
                         $user->setRoles([User::ROLE_ADULTES]);
-                    }
-                    else {
+                    } else {
                         $user->setRoles([User::ROLE_USER]);
                     }
 
@@ -75,8 +73,7 @@ class RegistrationController extends AbstractController
                     );
 
                     return $this->redirectToRoute('app_login');
-                } else
-                {
+                } else {
                     $this->addFlash(
                         'failedInscription',
                         'Votre demande d\'inscription a été refusée.

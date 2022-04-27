@@ -6,7 +6,6 @@ use App\Repository\BoissonRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=BoissonRepository::class)
@@ -123,7 +122,7 @@ class Boisson
     }
 
     /**
-     * @return Collection|CommandeGroupe[]
+     * @return Collection
      */
     public function getCommandeGroupes(): Collection
     {
@@ -134,7 +133,7 @@ class Boisson
     {
         if (!$this->commandeGroupes->contains($commandeGroupe)) {
             $this->commandeGroupes[] = $commandeGroupe;
-            $commandeGroupe->setBoissonChoisi($this);
+            $commandeGroupe->setBoissonChoisie($this);
         }
 
         return $this;
@@ -144,8 +143,8 @@ class Boisson
     {
         if ($this->commandeGroupes->removeElement($commandeGroupe)) {
             // set the owning side to null (unless already changed)
-            if ($commandeGroupe->getBoissonChoisi() === $this) {
-                $commandeGroupe->setBoissonChoisi(null);
+            if ($commandeGroupe->getBoissonChoisie() === $this) {
+                $commandeGroupe->setBoissonChoisie(null);
             }
         }
 

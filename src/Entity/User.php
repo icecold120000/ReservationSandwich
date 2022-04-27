@@ -4,11 +4,9 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTime;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const ROLE_ADULTES = "ROLE_ADULTES";
     const ROLE_ADMIN = "ROLE_ADMIN";
     const ROLE_ELEVE = "ROLE_ELEVE";
-    const ROLE_CUISINE ="ROLE_CUISINE";
+    const ROLE_CUISINE = "ROLE_CUISINE";
     const ROLE_USER = "ROLE_USER";
 
 
@@ -127,7 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -135,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     /**
@@ -167,7 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPassword(?string $password): self
     {
-        if($password === null){
+        if ($password === null) {
             $password = $this->getPassword();
         }
         $this->password = $password;
@@ -255,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Adulte[]
+     * @return Collection
      */
     public function getAdultes(): Collection
     {
@@ -285,7 +283,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Eleve[]
+     * @return Collection
      */
     public function getEleves(): Collection
     {
@@ -315,7 +313,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|CommandeIndividuelle[]
+     * @return Collection
      */
     public function getCommandeIndividuelles(): Collection
     {
@@ -345,7 +343,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|CommandeGroupe[]
+     * @return Collection
      */
     public function getCommandeGroupes(): Collection
     {

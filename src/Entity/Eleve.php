@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EleveRepository;
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,7 +32,7 @@ class Eleve
     /**
      * @ORM\Column(type="datetime")
      */
-    private ?\DateTime $dateNaissance;
+    private ?DateTime $dateNaissance;
 
     /**
      * @ORM\Column(type="boolean")
@@ -87,12 +89,12 @@ class Eleve
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getDateNaissance(): ?DateTimeInterface
     {
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(\DateTime $dateNaissance): self
+    public function setDateNaissance(DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 

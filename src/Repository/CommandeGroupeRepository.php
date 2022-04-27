@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\CommandeGroupe;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @method CommandeGroupe|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,11 +29,10 @@ class CommandeGroupeRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.dateHeureLivraison > :val')
             ->andWhere('c.commandeur = :val2')
-            ->setParameters(array('val' => new \DateTime('now 00:00:00'),'val2' => $user))
+            ->setParameters(array('val' => new DateTime('now 00:00:00'), 'val2' => $user))
             ->orderBy('c.dateHeureLivraison', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -41,11 +42,10 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.dateHeureLivraison > :val')
-            ->setParameter('val', new \DateTime('now 00:00:00'))
+            ->setParameter('val', new DateTime('now 00:00:00'))
             ->orderBy('c.dateHeureLivraison', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -58,8 +58,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
             ->andWhere('ci.dateHeureLivraison Like :date')
             ->andWhere('ci.estValide = 1')
             ->setParameter('date', '%' . $date . '%')
-            ->orderBy('ci.dateHeureLivraison', 'ASC')
-        ;
+            ->orderBy('ci.dateHeureLivraison', 'ASC');
 
         return $query->getQuery()->getResult();
     }
@@ -67,17 +66,16 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
-    public function findBySandwich($sandwich ,$date): array
+    public function findBySandwich($sandwich, $date): array
     {
         $query = $this->createQueryBuilder('ci');
         $query
-            ->leftJoin('ci.sandwichCommandeGroupe','sc')
+            ->leftJoin('ci.sandwichCommandeGroupe', 'sc')
             ->andWhere('ci.dateHeureLivraison Like :date')
             ->andWhere('ci.estValide = 1')
             ->andWhere('sc.sandwichChoisi = :sandwich')
-            ->setParameters(['sandwich' => $sandwich,'date'=>'%' . $date . '%'])
-            ->orderBy('ci.dateHeureLivraison', 'ASC')
-        ;
+            ->setParameters(['sandwich' => $sandwich, 'date' => '%' . $date . '%'])
+            ->orderBy('ci.dateHeureLivraison', 'ASC');
 
         return $query->getQuery()->getResult();
     }
@@ -89,10 +87,9 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('ci');
         $query
-            ->leftJoin('ci.lieuLivraison','ll')
+            ->leftJoin('ci.lieuLivraison', 'll')
             ->andWhere('ll.id = :lieu')
-            ->setParameter('lieu', $lieu)
-        ;
+            ->setParameter('lieu', $lieu);
 
         return $query->getQuery()->getResult();
     }
@@ -106,44 +103,40 @@ class CommandeGroupeRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('ci');
 
         if ($date != null) {
-            if ($date == new \DateTime('now')) {
+            if ($date == new DateTime('now')) {
                 $query
                     ->andWhere('ci.dateHeureLivraison Like :date')
                     ->andWhere('ci.commandeur = :val2')
-                    ->setParameters(array('date'=> '%'. $date->format('y-m-d') .'%', 'val2' => $user))
+                    ->setParameters(array('date' => '%' . $date->format('y-m-d') . '%', 'val2' => $user))
                     ->orderBy('ci.dateHeureLivraison', 'ASC');
             } else {
                 $query
                     ->andWhere('ci.dateHeureLivraison Between :dateNow and :dateThen')
                     ->andWhere('ci.commandeur = :val2')
-                    ->setParameters(array('dateNow' => new \DateTime('now 00:00:00'), 'dateThen' => $date->format('y-m-d h:i'),'val2' => $user))
-                    ->orderBy('ci.dateHeureLivraison', 'ASC')
-                ;
+                    ->setParameters(array('dateNow' => new DateTime('now 00:00:00'), 'dateThen' => $date->format('y-m-d h:i'), 'val2' => $user))
+                    ->orderBy('ci.dateHeureLivraison', 'ASC');
             }
         }
 
-        if ($cloture != false) {
+        if ($cloture !== false) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :date')
                 ->andWhere('ci.commandeur = :user')
-                ->setParameters(array('date' => new \DateTime('now'),'user' => $user))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
-        }
-        else {
+                ->setParameters(array('date' => new DateTime('now'), 'user' => $user))
+                ->orderBy('ci.dateHeureLivraison', 'ASC');
+        } else {
             $query
                 ->andWhere('ci.dateHeureLivraison > :date')
                 ->andWhere('ci.commandeur = :user')
-                ->setParameters(array('date' => new \DateTime('now'),'user' => $user))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
+                ->setParameters(array('date' => new DateTime('now'), 'user' => $user))
+                ->orderBy('ci.dateHeureLivraison', 'ASC');
         }
         return $query->getQuery()->getResult();
     }
 
     /**
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
-     * @throws \Exception
+     * @throws Exception
      */
     public function filterAdmin($nom = null, $date = null, $cloture = false): array
     {
@@ -155,37 +148,30 @@ class CommandeGroupeRepository extends ServiceEntityRepository
                 ->leftJoin('e.classeEleve', 'cl')
                 ->andWhere('u.nomUser LIKE :nom OR u.prenomUser LIKE :nom
                  OR cl.codeClasse LIKE :nom OR cl.libelleClasse LIKE :nom')
-                ->setParameter('nom', '%'. $nom .'%')
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
+                ->setParameter('nom', '%' . $nom . '%')
+                ->orderBy('ci.dateHeureLivraison', 'ASC');
         }
 
         if ($date != null) {
-            if (new \DateTime($date->format('y-m-d').' 00:00:00') == new \DateTime('now 00:00:00')) {
+            if (new DateTime($date->format('y-m-d') . ' 00:00:00') == new DateTime('now 00:00:00')) {
                 $query->andWhere('ci.dateHeureLivraison Like :date')
-                    ->setParameter('date', '%'.$date->format('y-m-d').'%')
-                    ->orderBy('ci.dateHeureLivraison', 'ASC')
-                ;
-            }
-            else {
+                    ->setParameter('date', '%' . $date->format('y-m-d') . '%')
+                    ->orderBy('ci.dateHeureLivraison', 'ASC');
+            } else {
                 $query->andWhere('ci.dateHeureLivraison Between :dateNow and :dateThen')
-                    ->setParameters(array('dateNow' => new \DateTime('now 00:00:00'),'dateThen' => $date))
-                    ->orderBy('ci.dateHeureLivraison', 'ASC')
-                ;
+                    ->setParameters(array('dateNow' => new DateTime('now 00:00:00'), 'dateThen' => $date))
+                    ->orderBy('ci.dateHeureLivraison', 'ASC');
             }
         }
 
-        if ($cloture != false) {
+        if ($cloture !== false) {
             $query->andWhere('ci.dateHeureLivraison < :date')
-                ->setParameter('date',  new \DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
-        }
-        else {
+                ->setParameter('date', new DateTime('now'))
+                ->orderBy('ci.dateHeureLivraison', 'ASC');
+        } else {
             $query->andWhere('ci.dateHeureLivraison > :date')
-                ->setParameter('date', new \DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC')
-            ;
+                ->setParameter('date', new DateTime('now'))
+                ->orderBy('ci.dateHeureLivraison', 'ASC');
         }
 
         return $query->getQuery()->getResult();

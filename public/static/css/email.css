@@ -1,49 +1,49 @@
-*{
+* {
     font-family: Calibri, Arial, Helvetica, sans-serif;
     color: rgb(0, 38, 81);
     font-size: 20px;
 }
 
-span{
+span {
     font-weight: bold;
 }
 
-body img{
+body img {
     height: 200px;
 }
 
-#aBtn{
+#aBtn {
     text-decoration: none;
 }
 
-.btn{
-    display:inline-block;
-    color:white;
-    padding:20px;
+.btn {
+    display: inline-block;
+    color: white;
+    padding: 20px;
     border: 1px solid transparent;
-    border-radius:.25rem;
-    transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-.btnInfo{
+.btnInfo {
     background-color: #17a2b8;
     border-color: #17a2b8;
 }
 
-.btnSuccess{
+.btnSuccess {
     background-color: #28a745;
     border-color: #28a745;
 }
 
-p:last-child{
+p:last-child {
     margin-bottom: 0;
 }
 
-footer{
+footer {
     font-size: 14px;
     display: block;
 }
 
-footer p{
+footer p {
     margin: 0;
 }

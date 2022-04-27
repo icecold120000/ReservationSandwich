@@ -15,12 +15,12 @@ class MenuAccueil
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $fileName;
+    private string $fileName;
 
     public function getId(): ?int
     {

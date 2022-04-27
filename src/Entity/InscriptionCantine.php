@@ -17,7 +17,7 @@ class InscriptionCantine
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\OneToOne(targetEntity=Eleve::class, cascade={"remove"})

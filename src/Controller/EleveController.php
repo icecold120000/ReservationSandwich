@@ -28,7 +28,6 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Ang3\Component\Serializer\Encoder\ExcelEncoder;
 use Knp\Component\Pager\PaginatorInterface;
-use function PHPUnit\Framework\fileExists;
 
 /**
  * @property EntityManagerInterface $entityManager
@@ -40,11 +39,21 @@ class EleveController extends AbstractController
     private ClasseRepository $classeRepo;
     private InscriptionCantineRepository $inscritCantRepo;
 
+    public function __construct(EntityManagerInterface       $entityManager
+        , EleveRepository                                    $eleveRepository, ClasseRepository $classeRepo,
+                                InscriptionCantineRepository $inscritCantRepo)
+    {
+        $this->entityManager = $entityManager;
+        $this->eleveRepository = $eleveRepository;
+        $this->classeRepo = $classeRepo;
+        $this->inscritCantRepo = $inscritCantRepo;
+    }
+
     /**
      * @Route("/", name="eleve_index", methods={"GET","POST"})
      */
-    public function index(EleveRepository $eleveRepo, Request $request,
-     PaginatorInterface $paginator): Response
+    public function index(EleveRepository    $eleveRepo, Request $request,
+                          PaginatorInterface $paginator): Response
     {
         $eleves = $eleveRepo->findByArchive(false);
         $form = $this->createForm(FilterEleveType::class);
@@ -63,32 +72,22 @@ class EleveController extends AbstractController
         $elevesTotal = $eleves;
         $eleves = $paginator->paginate(
             $eleves,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             40
         );
-        
+
         return $this->render('eleve/index.html.twig', [
             'eleves' => $eleves,
-            'elevesTotal' =>  $elevesTotal,
+            'elevesTotal' => $elevesTotal,
             'form' => $form->createView(),
         ]);
-    }
-
-    public function __construct(EntityManagerInterface $entityManager
-        , EleveRepository $eleveRepository, ClasseRepository $classeRepo,
-                                InscriptionCantineRepository $inscritCantRepo)
-    {
-        $this->entityManager = $entityManager;
-        $this->eleveRepository = $eleveRepository;
-        $this->classeRepo = $classeRepo;
-        $this->inscritCantRepo = $inscritCantRepo;
     }
 
     /**
      * @Route("/file", name="eleve_file", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function fileSubmit(Request $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request, SluggerInterface $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $eleveFile = new Fichier();
@@ -106,7 +105,7 @@ class EleveController extends AbstractController
                     PATHINFO_FILENAME);
                 // garantie que le nom du fichier soit dans l'URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierEleve->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierEleve->guessExtension();
 
                 // Déplace le fichier dans le directory où il sera stocké
                 try {
@@ -136,31 +135,10 @@ class EleveController extends AbstractController
             return $this->redirectToRoute('eleve_file');
         }
 
-        return $this->render('eleve/eleveFile.html.twig',[
+        return $this->render('eleve/eleveFile.html.twig', [
             'fichierUser' => $eleveFile,
             'form' => $form->createView(),
         ]);
-    }
-
-    public function getDataFromFile(string $fileName): array
-    {
-        $file = $this->getParameter('eleveFile_directory') .'/'. $fileName;
-
-        $fileExtension =pathinfo($file, PATHINFO_EXTENSION);
-
-        $normalizers = [new ObjectNormalizer()];
-
-        $encoders=[
-            new ExcelEncoder($defaultContext = []),
-        ];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        /** @var string $fileString */
-        $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
-
     }
 
     /**
@@ -176,18 +154,17 @@ class EleveController extends AbstractController
 
         /* Parcours le tableau donné par le fichier Excel*/
 
-        while($eleveCount < sizeof($this->getDataFromFile($fileName))){
+        while ($eleveCount < sizeof($this->getDataFromFile($fileName))) {
             /*Pour chaque élève*/
 
-            foreach($this->getDataFromFile($fileName) as $row) {
+            foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un élève*/
 
                 foreach ($row as $rowData) {
 
                     /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
-                    if(array_key_exists('Nom', $rowData)
-                     && !empty($rowData['Nom']))
-                    {
+                    if (array_key_exists('Nom', $rowData)
+                        && !empty($rowData['Nom'])) {
                         /*Recherche l'élève dans la base de donnée*/
                         $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
                             $rowData['Prénom'],
@@ -204,24 +181,21 @@ class EleveController extends AbstractController
                         }
 
                         /* Si l'élève est trouvé et doit être modifié*/
-                        if($eleveExcel !== Null)
-                        {
+                        if ($eleveExcel !== Null) {
                             $birthday = new DateTime($rowData['Date de naissance'],
-                             new DateTimeZone('Europe/Paris'));
+                                new DateTimeZone('Europe/Paris'));
 
                             if (array_key_exists('Code classe', $rowData)
-                             && !empty($rowData['Code classe'])) {
+                                && !empty($rowData['Code classe'])) {
                                 $classe = $this->classeRepo
-                                ->findOneByCode($rowData['Code classe']);
-                            }
-                            else{
+                                    ->findOneByCode($rowData['Code classe']);
+                            } else {
                                 $classe = null;
                             }
 
-                            if($rowData['Nombre de repas Midi'] === null) {
+                            if ($rowData['Nombre de repas Midi'] === null) {
                                 $nbRepas = 0;
-                            }
-                            else {
+                            } else {
                                 $nbRepas = $rowData['Nombre de repas Midi'];
                                 $inscription = $this->inscritCantRepo->findOneBy(['eleve_id' => $eleveExcel->getId()]);
                                 if ($inscription !== null) {
@@ -230,10 +204,8 @@ class EleveController extends AbstractController
                                         ->setRepasJ2(!empty($rowData['Repas Midi J2']))
                                         ->setRepasJ3(!empty($rowData['Repas Midi J3']))
                                         ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']))
-                                    ;
-                                }
-                                else {
+                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                } else {
                                     $inscription = new InscriptionCantine();
                                     $inscription
                                         ->setEleve($eleveExcel)
@@ -241,8 +213,7 @@ class EleveController extends AbstractController
                                         ->setRepasJ2(!empty($rowData['Repas Midi J2']))
                                         ->setRepasJ3(!empty($rowData['Repas Midi J3']))
                                         ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']))
-                                    ;
+                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
                                 }
                                 $inscription->setArchiveInscription(false);
                                 $this->entityManager->persist($inscription);
@@ -255,30 +226,25 @@ class EleveController extends AbstractController
                                 ->setDateNaissance($birthday)
                                 ->setArchiveEleve(false)
                                 ->setClasseEleve($classe)
-                                ->setNbRepas($nbRepas)
-                            ;
-                        }
-                        /*S'il n'existe pas alors on le crée
+                                ->setNbRepas($nbRepas);
+                        } /*S'il n'existe pas alors on le crée
                          en tant qu'un nouvel élève*/
-                        else
-                        {
+                        else {
                             $eleveExcel = new Eleve();
                             $birthday = new DateTime($rowData['Date de naissance'],
-                             new DateTimeZone('Europe/Paris'));
+                                new DateTimeZone('Europe/Paris'));
 
                             if (array_key_exists('Code classe', $rowData)
-                             && !empty($rowData['Code classe'])) {
+                                && !empty($rowData['Code classe'])) {
                                 $classe = $this->classeRepo
-                                ->findOneByCode($rowData['Code classe']);
-                            }
-                            else{
+                                    ->findOneByCode($rowData['Code classe']);
+                            } else {
                                 $classe = null;
                             }
 
-                            if($rowData['Nombre de repas Midi'] === null) {
+                            if ($rowData['Nombre de repas Midi'] === null) {
                                 $nbRepas = 0;
-                            }
-                            else {
+                            } else {
                                 $nbRepas = $rowData['Nombre de repas Midi'];
                                 $inscription = new InscriptionCantine();
                                 $inscription->setEleve($eleveExcel)
@@ -286,8 +252,7 @@ class EleveController extends AbstractController
                                     ->setRepasJ2(!empty($rowData['Repas Midi J2']))
                                     ->setRepasJ3(!empty($rowData['Repas Midi J3']))
                                     ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']))
-                                ;
+                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']));
                                 $inscription->setArchiveInscription(false);
                                 $this->entityManager->persist($inscription);
                             }
@@ -298,11 +263,10 @@ class EleveController extends AbstractController
                                 ->setDateNaissance($birthday)
                                 ->setArchiveEleve(false)
                                 ->setClasseEleve($classe)
-                                ->setNbRepas($nbRepas)
-                            ;
+                                ->setNbRepas($nbRepas);
                         }
 
-                        $fileNamePhoto = $rowData['Nom'].' '.$rowData['Prénom'].'.jpg';
+                        $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
                         $eleveExcel->setPhotoEleve($fileNamePhoto);
 
                         $this->entityManager->persist($eleveExcel);
@@ -313,13 +277,11 @@ class EleveController extends AbstractController
         }
         /*Reste que tous les élèves non archivés
         qui ont quitté l'établissement*/
-        foreach($elevesNonArchives as $eleve)
-        {
+        foreach ($elevesNonArchives as $eleve) {
             $eleve
                 ->setArchiveEleve(true)
                 ->setClasseEleve($this->classeRepo
-                    ->findOneByLibelle("Quitter l'établissement"))
-            ;
+                    ->findOneByLibelle("Quitter l'établissement"));
             $inscription = $this->inscritCantRepo->findOneBy(['eleve' => $eleve]);
             $inscription->setArchiveInscription(true);
             $this->entityManager->persist($eleve);
@@ -328,12 +290,32 @@ class EleveController extends AbstractController
         $this->entityManager->flush();
     }
 
+    public function getDataFromFile(string $fileName): array
+    {
+        $file = $this->getParameter('eleveFile_directory') . '/' . $fileName;
+
+        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+
+        $normalizers = [new ObjectNormalizer()];
+
+        $encoders = [
+            new ExcelEncoder($defaultContext = []),
+        ];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
+        /** @var string $fileString */
+        $fileString = file_get_contents($file);
+
+        return $serializer->decode($fileString, $fileExtension);
+
+    }
 
     /**
      * @Route("/new", name="eleve_new", methods={"GET","POST"})
      * @throws Exception
      */
-    public function new(Request $request, SluggerInterface $slugger,
+    public function new(Request                $request, SluggerInterface $slugger,
                         EntityManagerInterface $entityManager): Response
     {
         $eleve = new Eleve();
@@ -349,7 +331,7 @@ class EleveController extends AbstractController
                 $originalFilename = pathinfo($imgProfileEleve->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFileNameImg = $safeFilename.'.'.$imgProfileEleve->guessExtension();
+                $newFileNameImg = $safeFilename . '.' . $imgProfileEleve->guessExtension();
 
                 // Move the file to the directory where photos are stored
                 try {
@@ -386,7 +368,7 @@ class EleveController extends AbstractController
      * @Route("/{id}/edit", name="eleve_edit", methods={"GET","POST"})
      * @throws Exception
      */
-    public function edit(Request $request, Eleve $eleve, SluggerInterface $slugger,
+    public function edit(Request                $request, Eleve $eleve, SluggerInterface $slugger,
                          EntityManagerInterface $entityManager): Response
     {
         $anciennePhoto = $eleve->getPhotoEleve();
@@ -402,10 +384,10 @@ class EleveController extends AbstractController
                 $originalFilename = pathinfo($imgProfileEleve->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFileNameImg = $safeFilename.'.'.$imgProfileEleve->guessExtension();
+                $newFileNameImg = $safeFilename . '.' . $imgProfileEleve->guessExtension();
 
-                if($newFileNameImg != $anciennePhoto && $anciennePhoto != null){
-                    unlink($this->getParameter('photoEleve_directory').'/'.$anciennePhoto);
+                if ($newFileNameImg != $anciennePhoto && $anciennePhoto != null) {
+                    unlink($this->getParameter('photoEleve_directory') . '/' . $anciennePhoto);
                 }
 
                 // Move the file to the directory where brochures are stored
@@ -451,14 +433,14 @@ class EleveController extends AbstractController
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request $request, Eleve $eleve,
+    public function delete(Request                $request, Eleve $eleve,
                            EntityManagerInterface $entityManager,
-                           UserRepository $userRepo): Response
+                           UserRepository         $userRepo): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$eleve->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $eleve->getId(), $request->request->get('_token'))) {
 
             if ($eleve->getPhotoEleve() != null) {
-                unlink($this->getParameter('photoEleve_directory').'/'.$eleve->getPhotoEleve());
+                unlink($this->getParameter('photoEleve_directory') . '/' . $eleve->getPhotoEleve());
             }
             $user = $userRepo->findOneByEleve($eleve->getId());
             $entityManager->remove($user);

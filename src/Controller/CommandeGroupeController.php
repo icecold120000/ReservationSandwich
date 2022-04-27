@@ -6,12 +6,13 @@ use App\Entity\CommandeGroupe;
 use App\Entity\SandwichCommandeGroupe;
 use App\Form\CommandeGroupeType;
 use App\Repository\BoissonRepository;
-use App\Repository\CommandeGroupeRepository;
 use App\Repository\DesactivationCommandeRepository;
 use App\Repository\DessertRepository;
 use App\Repository\LimitationCommandeRepository;
 use App\Repository\SandwichCommandeGroupeRepository;
 use App\Repository\SandwichRepository;
+use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
@@ -31,13 +32,13 @@ class CommandeGroupeController extends AbstractController
      * @throws Exception
      * @Route("/new", name="commande_groupe_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,
-                        SandwichRepository $sandwichRepo, BoissonRepository $boissonRepo,
-                        DessertRepository $dessertRepo,
+    public function new(Request                         $request, EntityManagerInterface $entityManager,
+                        SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+                        DessertRepository               $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
-                        LimitationCommandeRepository $limiteRepo): Response
+                        LimitationCommandeRepository    $limiteRepo): Response
     {
-        $dateNow = new \DateTime('now',new \DateTimeZone('Europe/Paris'));
+        $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -47,13 +48,11 @@ class CommandeGroupeController extends AbstractController
         $commandeGroupe = new CommandeGroupe();
         if ($limiteDate->getIsActive()) {
             $form = $this->createForm(CommandeGroupeType::class,
-                $commandeGroupe,['limiteDateSortie' => $limiteDate->getNbLimite(),
-                    'sandwichChoisi1' => null,'sandwichChoisi2' => null])
-            ;
-        }
-        else {
+                $commandeGroupe, ['limiteDateSortie' => $limiteDate->getNbLimite(),
+                    'sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
+        } else {
             $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,
-                ['sandwichChoisi1' => null,'sandwichChoisi2' => null]);
+                ['sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
         }
 
         $form->handleRequest($request);
@@ -81,8 +80,7 @@ class CommandeGroupeController extends AbstractController
                 $groupeSandwich
                     ->setCommandeAffecte($commandeGroupe)
                     ->setSandwichChoisi($sandwichChoisi)
-                    ->setNombreSandwich($nbSandwich[$i])
-                ;
+                    ->setNombreSandwich($nbSandwich[$i]);
                 $entityManager->persist($groupeSandwich);
                 $entityManager->flush();
                 $i++;
@@ -99,8 +97,7 @@ class CommandeGroupeController extends AbstractController
 
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
-        }
-        else {
+        } else {
             return $this->renderForm('commande_groupe/new.html.twig', [
                 'commande_groupe' => $commandeGroupe,
                 'form' => $form,
@@ -127,8 +124,7 @@ class CommandeGroupeController extends AbstractController
     {
         if ($commande->getEstValide() === false) {
             $commande->setEstValide(true);
-        }
-        else {
+        } else {
             $commande->setEstValide(false);
         }
         $entityManager->persist($commande);
@@ -141,11 +137,11 @@ class CommandeGroupeController extends AbstractController
     /**
      * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, EntityManagerInterface $entityManager,
-                         SandwichRepository $sandwichRepo,
-                         DessertRepository $dessertRepo,
-                         DesactivationCommandeRepository $deactiveRepo,
-                         CommandeGroupe $commandeGroupe,
+    public function edit(Request                          $request, EntityManagerInterface $entityManager,
+                         SandwichRepository               $sandwichRepo,
+                         DessertRepository                $dessertRepo,
+                         DesactivationCommandeRepository  $deactiveRepo,
+                         CommandeGroupe                   $commandeGroupe,
                          SandwichCommandeGroupeRepository $sandComRepo): Response
     {
 
@@ -153,8 +149,8 @@ class CommandeGroupeController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
-        $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,['limiteDateSortie' => 0
-            ,'sandwichChoisi1' => $groupeSandwich[0],'sandwichChoisi2' => $groupeSandwich[1]]);
+        $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe, ['limiteDateSortie' => 0
+            , 'sandwichChoisi1' => $groupeSandwich[0], 'sandwichChoisi2' => $groupeSandwich[1]]);
 
         $form->handleRequest($request);
 
@@ -176,8 +172,7 @@ class CommandeGroupeController extends AbstractController
                 $groupeSandwich[$i]
                     ->setCommandeAffecte($commandeGroupe)
                     ->setSandwichChoisi($sandwichChoisi)
-                    ->setNombreSandwich($nbSandwich[$i])
-                ;
+                    ->setNombreSandwich($nbSandwich[$i]);
                 $entityManager->flush();
                 $i++;
             }
@@ -192,8 +187,7 @@ class CommandeGroupeController extends AbstractController
 
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
-        }
-        else {
+        } else {
             return $this->renderForm('commande_groupe/edit.html.twig', [
                 'commande_groupe' => $commandeGroupe,
                 'form' => $form,
@@ -208,7 +202,7 @@ class CommandeGroupeController extends AbstractController
      */
     public function delete(Request $request, CommandeGroupe $commandeGroupe, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$commandeGroupe->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $commandeGroupe->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeGroupe);
             $entityManager->flush();
             $this->addFlash(

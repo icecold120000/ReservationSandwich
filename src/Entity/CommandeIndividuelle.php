@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CommandeIndividuelleRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -118,12 +119,12 @@ class CommandeIndividuelle
         return $this;
     }
 
-    public function getDateHeureLivraison(): ?\DateTimeInterface
+    public function getDateHeureLivraison(): ?DateTimeInterface
     {
         return $this->dateHeureLivraison;
     }
 
-    public function setDateHeureLivraison(?\DateTimeInterface $dateHeureLivraison): self
+    public function setDateHeureLivraison(?DateTimeInterface $dateHeureLivraison): self
     {
         $this->dateHeureLivraison = $dateHeureLivraison;
 
@@ -154,12 +155,12 @@ class CommandeIndividuelle
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getDateCreation(): ?DateTimeInterface
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    public function setDateCreation(DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
 

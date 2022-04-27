@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\LimitationCommandeRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,7 +16,7 @@ class LimitationCommande
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -78,12 +79,12 @@ class LimitationCommande
         return $this;
     }
 
-    public function getHeureLimite(): ?\DateTimeInterface
+    public function getHeureLimite(): ?DateTimeInterface
     {
         return $this->heureLimite;
     }
 
-    public function setHeureLimite(?\DateTimeInterface $heureLimite): self
+    public function setHeureLimite(?DateTimeInterface $heureLimite): self
     {
         $this->heureLimite = $heureLimite;
 

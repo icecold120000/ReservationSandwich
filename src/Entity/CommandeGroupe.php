@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CommandeGroupeRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * @ORM\Entity(repositoryClass=CommandeGroupeRepository::class)
@@ -18,7 +16,7 @@ class CommandeGroupe
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeGroupes", cascade={"persist"})
@@ -150,12 +148,12 @@ class CommandeGroupe
         return $this;
     }
 
-    public function getDateHeureLivraison(): ?\DateTimeInterface
+    public function getDateHeureLivraison(): ?DateTimeInterface
     {
         return $this->dateHeureLivraison;
     }
 
-    public function setDateHeureLivraison(?\DateTimeInterface $dateHeureLivraison): self
+    public function setDateHeureLivraison(?DateTimeInterface $dateHeureLivraison): self
     {
         $this->dateHeureLivraison = $dateHeureLivraison;
 
@@ -163,7 +161,7 @@ class CommandeGroupe
     }
 
     /**
-     * @return Collection|SandwichCommandeGroupe[]
+     * @return Collection
      */
     public function getSandwichCommandeGroupes(): Collection
     {
@@ -192,12 +190,12 @@ class CommandeGroupe
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getDateCreation(): ?DateTimeInterface
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    public function setDateCreation(DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
 
