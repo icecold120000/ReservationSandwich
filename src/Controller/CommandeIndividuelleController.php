@@ -85,7 +85,6 @@ class CommandeIndividuelleController extends AbstractController
 
         $form = $this->createForm(FilterIndexCommandeType::class);
         $filter = $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $commandes = $this->comIndRepo->filterIndex(
                 $this->getUser(),

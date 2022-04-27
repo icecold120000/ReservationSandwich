@@ -64,7 +64,7 @@
                                             <a class="dropdown-item" href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
-                                        {% elseif is_granted('ROLE_ADULTE')%}
+                                        {% elseif is_granted('ROLE_ADULTES')%}
                                             <a class="dropdown-item" href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
                                                 Voir profil
                                             </a>
@@ -109,21 +109,21 @@
                                     <a href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
                                 {% endif %}
                             </p>
-                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED')%}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY')%}
                                 <p>
-                                    {% if is_granted('ROLE_ADMIN')%}
+                                    {% if is_granted('ROLE_ADMIN') %}
                                         <a href="{{path('profile_admin',{'userTokenHash': app.user.tokenHash})}}">
                                             Votre profil
                                         </a>
-                                    {% elseif is_granted('ROLE_ELEVE')%}
-                                        <a href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
-                                            Votre profil
-                                        </a>
-                                    {% elseif is_granted('ROLE_ADULTE')%}
+                                    {% elseif is_granted('ROLE_ADULTES') %}
                                         <a href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
                                             Votre profil
                                         </a>
-                                    {% elseif is_granted('ROLE_CUISINE')%}
+                                    {% elseif is_granted('ROLE_ELEVE') %}
+                                        <a href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
+                                            Votre profil
+                                        </a>
+                                    {% elseif is_granted('ROLE_CUISINE') %}
                                         <a href="{{path('profile_cuisine',{'userTokenHash': app.user.tokenHash})}}">
                                             Votre profil
                                         </a>

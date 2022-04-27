@@ -43,17 +43,17 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
-
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
-
         if (!$user) {
             throw new CustomUserMessageAuthenticationException('Erreur de saisie.
                 Veuillez vérifier votre email et votre mot de passe ou vous inscrire pour vous connecter !');
-        }elseif ($user->isVerified() === false) {
-            throw new CustomUserMessageAuthenticationException('Votre demande d\'inscription
-             n\'a pas encore été validée. Veuillez attendre la confirmation de l\'administrateur !');
+        }else{
+            if ($user->isVerified() === false) {
+                throw new CustomUserMessageAuthenticationException('Votre demande d\'inscription
+                 n\'a pas encore été validée. Veuillez attendre la confirmation de l\'administrateur !');
+            }
         }
 
         if (empty($request->request->get('password')) ||

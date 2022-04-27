@@ -159,14 +159,18 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         }
 
         if ($cloture != false) {
-            $query->andWhere('ci.dateHeureLivraison < :date')
-                ->setParameter('date',  new \DateTime('now'))
+            $query
+                ->andWhere('ci.dateHeureLivraison < :date')
+                ->andWhere('ci.commandeur = :user')
+                ->setParameters(array('date' => new \DateTime('now'),'user' => $user))
                 ->orderBy('ci.dateHeureLivraison', 'ASC')
             ;
         }
         else {
-            $query->andWhere('ci.dateHeureLivraison > :date')
-                ->setParameter('date', new \DateTime('now'))
+            $query
+                ->andWhere('ci.dateHeureLivraison > :date')
+                ->andWhere('ci.commandeur = :user')
+                ->setParameters(array('date' => new \DateTime('now'),'user' => $user))
                 ->orderBy('ci.dateHeureLivraison', 'ASC')
             ;
         }
