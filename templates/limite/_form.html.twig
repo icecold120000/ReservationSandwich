@@ -1,42 +1,66 @@
-{{form_start(form)}}
-    <div id="screenLeft">
-        {{form_label(form.libelleLimite)}}
-        {% if form_errors(form.libelleLimite) %}
-            <div class="erreur">
-                {{ form_errors(form.libelleLimite) }}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.libelleLimite) }}
+{{ form_start(form) }}
+<div id="screenLeft">
+    {{ form_label(form.libelleLimite) }}
+    {% if form_errors(form.libelleLimite) %}
+        <div class="erreur">
+            {{ form_errors(form.libelleLimite) }}
         </div>
-        {{ form_label(form.is_active) }}
-        {%if form_errors(form.is_active) %}
-            <div class="erreur">
-                {{ form_errors(form.is_active) }}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.is_active) }}
-        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.libelleLimite) }}
     </div>
-    <div id="screenRight">
-        {{ form_label(form.nbLimite) }}
-        {%if form_errors(form.nbLimite) %}
-            <div class="erreur">
-                {{ form_errors(form.nbLimite) }}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.nbLimite) }}
+    {{ form_label(form.is_active) }}
+    {% if form_errors(form.is_active) %}
+        <div class="erreur">
+            {{ form_errors(form.is_active) }}
         </div>
-        {{form_label(form.heureLimite)}}
-        {%if form_errors(form.heureLimite)%}
-            <div class="erreur">
-                {{ form_errors(form.heureLimite) }}
-            </div>
-        {% endif %}
-        <div id="selectClasse">
-            {{ form_widget(form.heureLimite) }}
-        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.is_active) }}
     </div>
-{{form_end(form)}}
+</div>
+<div id="screenRight">
+    {{ form_label(form.nbLimite) }}
+    {% if form_errors(form.nbLimite) %}
+        <div class="erreur">
+            {{ form_errors(form.nbLimite) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.nbLimite) }}
+    </div>
+    {{ form_label(form.heureLimite) }}
+    {% if form_errors(form.heureLimite) %}
+        <div class="erreur">
+            {{ form_errors(form.heureLimite) }}
+        </div>
+    {% endif %}
+    <div id="selectClasse">
+        {{ form_widget(form.heureLimite) }}
+    </div>
+</div>
+<script type="text/javascript">
+    const input = document.getElementById('limitation_commande_libelleLimite').value;
+
+    const toDisableNb = document.getElementById('limitation_commande_nbLimite');
+    toDisableNb.disabled = input.includes("Heure");
+
+    const toDisableHeure = document.getElementById('limitation_commande_heureLimite_hour');
+    toDisableHeure.disabled = input.includes("Nombre");
+
+    const toDisableMinute = document.getElementById('limitation_commande_heureLimite_minute');
+    toDisableMinute.disabled = input.includes("Nombre");
+
+    function update() {
+        const newInput = document.getElementById('limitation_commande_libelleLimite').value;
+        const toDisableNb = document.getElementById('limitation_commande_nbLimite');
+        toDisableNb.disabled = newInput.includes("Heure");
+
+        const toDisableHeure = document.getElementById('limitation_commande_heureLimite_hour');
+        toDisableHeure.disabled = newInput.includes("Nombre");
+
+        const toDisableMinute = document.getElementById('limitation_commande_heureLimite_minute');
+        toDisableMinute.disabled = newInput.includes("Nombre");
+    }
+</script>
+{{ form_end(form) }}

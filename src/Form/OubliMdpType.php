@@ -14,7 +14,7 @@ class OubliMdpType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('emailFirst', EmailType::class,[
+            ->add('emailFirst', EmailType::class, [
                 'label' => 'Votre adresse e-mail',
                 'required' => true,
                 'constraints' => [
@@ -24,7 +24,7 @@ class OubliMdpType extends AbstractType
                 ],
             ])
             ->add('dateAnniversaire', DateType::class, [
-                'label' => 'Votre date d\'anniversaire',
+                'label' => 'Votre date de naissance',
                 'html5' => false,
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
@@ -35,8 +35,7 @@ class OubliMdpType extends AbstractType
                         'message' => 'Veuillez saisir votre mot de passe !',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

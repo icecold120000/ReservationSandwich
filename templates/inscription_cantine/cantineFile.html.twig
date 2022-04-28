@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier les inscriptions à la cantine{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
 
 {% block body %}
     <main class="container-fluid">
@@ -14,20 +15,20 @@
             </div>
         {% endfor %}
         <div class="fichierForm">
-            {{form_start(form)}}
+            {{ form_start(form) }}
             <div>
-                <label>Liste des inscriptions (en XLSX) :</label>
+                <label>Liste des inscriptions :</label>
                 {{ form_help(form.fileSubmit) }}
                 {% if form_errors(form.fileSubmit) %}
                     <div class="erreur">
-                        {{form_errors(form.fileSubmit)}}
+                        {{ form_errors(form.fileSubmit) }}
                     </div>
                 {% endif %}
             </div>
             <div id="fileInputUser">
-                {{form_widget(form.fileSubmit)}}
+                {{ form_widget(form.fileSubmit) }}
             </div>
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
         <div class="row">
             <div id="divAjout">

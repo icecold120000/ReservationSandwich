@@ -7,7 +7,7 @@
 }
 
 h1 {
-    margin-top: 1em;
+    margin: 1em 0;
 }
 
 li {
@@ -257,6 +257,7 @@ img#errorPage {
 
 #formConnexion label, #formRegister label {
     float: left;
+    display: flex;
 }
 
 p#login {
@@ -265,7 +266,7 @@ p#login {
 }
 
 input#rememberMe {
-    height: unset;
+    margin-right: 1rem;
 }
 
 #btnRegister {
@@ -288,6 +289,11 @@ input#rememberMe {
 
 label span {
     color: red;
+}
+
+h3#italic {
+    font-style: italic;
+    margin-top: 1.5em;
 }
 
 .erreur {

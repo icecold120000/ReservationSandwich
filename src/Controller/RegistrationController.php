@@ -67,9 +67,16 @@ class RegistrationController extends AbstractController
 
                     $entityManager->persist($user);
                     $entityManager->flush();
+
+                    if ($eleveFound) {
+                        $eleveFound->setCompteEleve($user);
+                    } elseif ($adulteFound) {
+                        $adulteFound->setCompteAdulte($user);
+                    }
+
                     $this->addFlash(
                         'successInscription',
-                        'Votre inscription a été validé. Vous pouvez vous connecter.'
+                        'Votre inscription a été validée. Vous pouvez vous connecter.'
                     );
 
                     return $this->redirectToRoute('app_login');

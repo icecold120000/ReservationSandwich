@@ -1,102 +1,106 @@
 security:
-    enable_authenticator_manager: true
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
-    password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-        App\Entity\User:
-            algorithm: auto
+  enable_authenticator_manager: true
+  # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+  password_hashers:
+    Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    App\Entity\User:
+      algorithm: auto
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
-    providers:
-        # used to reload user from session & other features (e.g. switch_user)
-        app_user_provider:
-            entity:
-                class: App\Entity\User
-                property: email
-    firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        main:
-            lazy: true
-            provider: app_user_provider
-            custom_authenticator: App\Security\LoginAuthenticator
-            logout:
-                path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
-            remember_me:
-                secret: '%kernel.secret%' # required
-                always_remember_me: true
-            login_throttling:
-              max_attempts: 3
-              interval: '15 minutes'
+  # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+  providers:
+    # used to reload user from session & other features (e.g. switch_user)
+    app_user_provider:
+      entity:
+        class: App\Entity\User
+        property: email
+  firewalls:
+    dev:
+      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      security: false
+    main:
+      lazy: true
+      provider: app_user_provider
+      custom_authenticator: App\Security\LoginAuthenticator
+      logout:
+        path: app_logout
+        # where to redirect after logout
+        # target: app_any_route
+      remember_me:
+        secret: '%kernel.secret%' # required
+        always_remember_me: true
+      login_throttling:
+        max_attempts: 3
+        interval: '15 minutes'
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+      # activate different ways to authenticate
+      # https://symfony.com/doc/current/security.html#the-firewall
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+      # https://symfony.com/doc/current/security/impersonating_user.html
+      # switch_user: true
 
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
-    access_control:
-         - { path: ^/admin, roles:  [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/sandwich, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/sandwich/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/sandwich/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/sandwich/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/boisson, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/boisson/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/boisson/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/boisson/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/dessert, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/dessert/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/dessert/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/dessert/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/inscription/cantine, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/adulte, roles: ROLE_ADMIN }
-         - { path: ^/adulte/new, roles: ROLE_ADMIN }
-         - { path: ^/adulte/edit, roles: ROLE_ADMIN }
-         - { path: ^/adulte/file, roles: ROLE_ADMIN }
-         - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/classe, roles: [ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES] }
-         - { path: ^/classe/new, roles: ROLE_ADMIN }
-         - { path: ^/classe/edit, roles: ROLE_ADMIN }
-         - { path: ^/classe/show, roles: [ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES] }
-         - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/eleve, roles: ROLE_ADMIN }
-         - { path: ^/eleve/new, roles: ROLE_ADMIN }
-         - { path: ^/eleve/edit, roles: ROLE_ADMIN }
-         - { path: ^/eleve/file, roles: ROLE_ADMIN }
-         - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
-         - { path: ^/user, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/user/new, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/user/edit, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/user/delete_view, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/user/file, roles: [ROLE_ADMIN, ROLE_CUISINE] }
-         - { path: ^/profile/admin, roles: ROLE_ADMIN }
-         - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
-         - { path: ^/profile/adulte, roles: ROLE_ADULTES }
-         - { path: ^/profile/eleve, roles: ROLE_ELEVE }
-         - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/individuelle/admin, roles: ROLE_ADMIN }
-         - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/groupe/new, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/groupe/edit, roles: IS_AUTHENTICATED_FULLY }
-         - { path: ^/commande/groupe/delete_view, roles: IS_AUTHENTICATED_FULLY }
+  # Easy way to control access for large sections of your site
+  # Note: Only the *first* access control that matches will be used
+  access_control:
+    - { path: ^/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/inscription/cantine, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/adulte, roles: ROLE_ADMIN }
+    - { path: ^/adulte/new, roles: ROLE_ADMIN }
+    - { path: ^/adulte/edit, roles: ROLE_ADMIN }
+    - { path: ^/adulte/file, roles: ROLE_ADMIN }
+    - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/classe, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/classe/new, roles: ROLE_ADMIN }
+    - { path: ^/classe/edit, roles: ROLE_ADMIN }
+    - { path: ^/classe/show, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/eleve, roles: ROLE_ADMIN }
+    - { path: ^/eleve/new, roles: ROLE_ADMIN }
+    - { path: ^/eleve/edit, roles: ROLE_ADMIN }
+    - { path: ^/eleve/file, roles: ROLE_ADMIN }
+    - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/user, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/file, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/profile/admin, roles: ROLE_ADMIN }
+    - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
+    - { path: ^/profile/adulte, roles: ROLE_ADULTES }
+    - { path: ^/profile/eleve, roles: ROLE_ELEVE }
+    - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/individuelle/admin, roles: ROLE_ADMIN }
+    - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/groupe/new, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/groupe/edit, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/groupe/delete_view, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
-    security:
-        password_hashers:
-            # By default, password hashers are resource intensive and take time. This is
-            # important to generate secure password hashes. In tests however, secure hashes
-            # are not important, waste resources and increase test times. The following
-            # reduces the work factor to the lowest possible values.
-            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
-                algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+  security:
+    password_hashers:
+      # By default, password hashers are resource intensive and take time. This is
+      # important to generate secure password hashes. In tests however, secure hashes
+      # are not important, waste resources and increase test times. The following
+      # reduces the work factor to the lowest possible values.
+      Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+        algorithm: auto
+        cost: 4 # Lowest possible value for bcrypt
+        time_cost: 3 # Lowest possible value for argon
+        memory_cost: 10 # Lowest possible value for argon

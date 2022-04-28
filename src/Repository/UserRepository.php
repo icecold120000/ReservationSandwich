@@ -152,7 +152,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->andWhere('u.prenomUser like :val2')
             ->setParameters(array('val' => '%' . $nom . '%', 'val2' => '%' . $prenom . '%'));
         if ($birthday != null) {
-            $query->andWhere('u.dateNaissance = :birthday')
+            $query->andWhere('u.dateNaissanceUser = :birthday')
                 ->setParameter('birthday', $birthday);
         }
         return $query->getQuery()->getResult();

@@ -44,7 +44,7 @@ class CommandeGroupeController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boisson = $boissonRepo->findOneByNom('Eau');
         $desserts = $dessertRepo->findByDispo(true);
-        $limiteDate = $limiteRepo->findOneByLibelle('sortie');
+        $limiteDate = $limiteRepo->findOneById(4);
         $commandeGroupe = new CommandeGroupe();
         if ($limiteDate->getIsActive()) {
             $form = $this->createForm(CommandeGroupeType::class,
@@ -207,7 +207,7 @@ class CommandeGroupeController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteComGr',
-                'Votre commande groupée a été supprimée !'
+                'La commande groupée a été supprimée !'
             );
         }
 

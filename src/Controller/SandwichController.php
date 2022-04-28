@@ -41,7 +41,7 @@ class SandwichController extends AbstractController
 
         $sandwiches = $paginator->paginate(
             $sandwiches,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             10
         );
 
@@ -54,7 +54,7 @@ class SandwichController extends AbstractController
     /**
      * @Route("/new", name="sandwich_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,
+    public function new(Request          $request, EntityManagerInterface $entityManager,
                         SluggerInterface $slugger): Response
     {
         $sandwich = new Sandwich();
@@ -70,7 +70,7 @@ class SandwichController extends AbstractController
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierSandwich->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierSandwich->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -103,11 +103,11 @@ class SandwichController extends AbstractController
     /**
      * @Route("/{id}/edit", name="sandwich_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Sandwich $sandwich, EntityManagerInterface $entityManager,
+    public function edit(Request          $request, Sandwich $sandwich, EntityManagerInterface $entityManager,
                          SluggerInterface $slugger): Response
     {
         $oldSandwich = $sandwich->getImageSandwich();
-        $form = $this->createForm(SandwichType::class, $sandwich,['fichierRequired' => false]);
+        $form = $this->createForm(SandwichType::class, $sandwich, ['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -119,7 +119,7 @@ class SandwichController extends AbstractController
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierSandwich->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierSandwich->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -131,7 +131,7 @@ class SandwichController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('sandwich_directory').'/'.$oldSandwich);
+                unlink($this->getParameter('sandwich_directory') . '/' . $oldSandwich);
                 $sandwich->setImageSandwich($newFilename);
             }
 
@@ -164,13 +164,13 @@ class SandwichController extends AbstractController
      */
     public function delete(Request $request, Sandwich $sandwich, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sandwich->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('sandwich_directory').'/'.$sandwich->getImageSandwich());
+        if ($this->isCsrfTokenValid('delete' . $sandwich->getId(), $request->request->get('_token'))) {
+            unlink($this->getParameter('sandwich_directory') . '/' . $sandwich->getImageSandwich());
             $entityManager->remove($sandwich);
             $entityManager->flush();
             $this->addFlash(
-                'SuccessDeleteEleve',
-                'Votre sandwich a été supprimé !'
+                'SuccessDeleteSandwich',
+                'Le sandwich a été supprimé !'
             );
         }
 

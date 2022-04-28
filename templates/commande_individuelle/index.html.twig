@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Vos commandes{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
 
 {% block body %}
     <main class="container-fluid">
@@ -16,8 +17,8 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <p>Toutes les commandes qui sont invalidé par la cuisine seront <span class="invalidCommande">rouge et en gras</span>.</p>
-        <p>Nombre de commande effectuée aujourd'hui : {{ nbCommandeJournalier }}</p>
+        <p>Les commandes invalidées par le service de restauration seront indiquées en <span
+                    class="invalidCommande">rouge et en gras</span>.</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
             {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
                 {% if nbCommandeMois < limiteNbMois and limiteActiveNbMois == true %}
@@ -31,7 +32,7 @@
                         </a>
                     {% else %}
                         <button class="btn btn-primary" id="btnAjout" disabled>
-                            Vous avez dépassé le nombre limite mensuel de {{limiteNbMois}} commandes !
+                            Vous avez dépassé le nombre limite mensuel de {{ limiteNbMois }} commandes !
                         </button>
                     {% endif %}
                 {% endif %}
@@ -42,7 +43,7 @@
                     </a>
                 {% else %}
                     <button class="btn btn-primary" id="btnAjout" disabled>
-                        Vous avez dépassé le nombre limite hebdomadaire de {{limiteNbSemaine}} commandes !
+                        Vous avez dépassé le nombre limite hebdomadaire de {{ limiteNbSemaine }} commandes !
                     </button>
                 {% endif %}
             {% endif %}
@@ -53,7 +54,7 @@
                 </a>
             {% else %}
                 <button class="btn btn-primary" id="btnAjout" disabled>
-                    Vous avez dépassé le nombre limite journalier de {{limiteNbJournalier}} commandes !
+                    Vous avez dépassé le nombre limite journalier de {{ limiteNbJournalier }} commandes !
                 </button>
             {% endif %}
         {% endif %}
@@ -64,29 +65,29 @@
         {% endif %}
         <div id="formFilter">
             <div id="filtre">
-                {{form_start(form)}}
+                {{ form_start(form) }}
                 <div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.date)}}</span>
-                        {{form_widget(form.date)}}
+                        <span>{{ form_label(form.date) }}</span>
+                        {{ form_widget(form.date) }}
                     </div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.cloture)}}</span>
-                        {{form_widget(form.cloture)}}
+                        <span>{{ form_label(form.cloture) }}</span>
+                        {{ form_widget(form.cloture) }}
                     </div>
                 </div>
-                {% if is_granted('ROLE_ELEVE')%}
+                {% if is_granted('ROLE_ELEVE') %}
                     <div id="afficheTabFilter">
                         <div class="selectFiltre">
-                            <span>{{form_label(form.affichageTableau)}}</span>
-                            {{form_widget(form.affichageTableau)}}
+                            <span>{{ form_label(form.affichageTableau) }}</span>
+                            {{ form_widget(form.affichageTableau) }}
                         </div>
                     </div>
                 {% else %}
                     <div>
                         <div class="selectFiltre">
-                            <span>{{form_label(form.affichageTableau)}}</span>
-                            {{form_widget(form.affichageTableau)}}
+                            <span>{{ form_label(form.affichageTableau) }}</span>
+                            {{ form_widget(form.affichageTableau) }}
                         </div>
                     </div>
                 {% endif %}
@@ -95,13 +96,13 @@
                         Afficher
                     </button>
                 </div>
-                {{form_end(form)}}
+                {{ form_end(form) }}
             </div>
         </div>
         {% if not is_granted('ROLE_ELEVE') %}
             {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
                 <div class="table-responsive-lg">
-                    <h2>Commandes groupées :</h2>
+                    <h2>Historique des commandes groupées :</h2>
                     <div>
                         {{ knp_pagination_render(commande_groupes) }}
                     </div>
@@ -197,24 +198,24 @@
                     </div>
                 </div>
             {% endif %}
-        {% endif%}
+        {% endif %}
         {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
             <div class="table-responsive-lg">
-                <h2>Commandes individuelles :</h2>
+                <h2>Historique de commandes :</h2>
                 <div>
                     {{ knp_pagination_render(commandes_ind) }}
                 </div>
                 <table class="table tableAdmin">
                     <thead>
-                        <tr>
-                            <th>Date de Livraison</th>
-                            <th>Sandwich choisi</th>
-                            <th>Boisson choisie</th>
-                            <th>Dessert choisi</th>
-                            <th>Chips</th>
-                            <th>Modifier</th>
-                            <th>Annuler</th>
-                        </tr>
+                    <tr>
+                        <th>Date de livraison</th>
+                        <th>Sandwich choisi</th>
+                        <th>Boisson choisie</th>
+                        <th>Dessert choisi</th>
+                        <th>Chips</th>
+                        <th>Modifier</th>
+                        <th>Annuler</th>
+                    </tr>
                     </thead>
                     <tbody>
                     {% for commande in commandes_ind %}
@@ -229,7 +230,7 @@
                                     '<i class="fas fa-times"></i>' }}
                                 </td>
                                 {% if limite|date('d/m/Y H:i') > "now"|date('d/m/Y h:i', 'Europe/Paris') and limiteActive == true
-                                    and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y', 'Europe/Paris')%}
+                                    and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y', 'Europe/Paris') %}
                                     <td>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
                                         Vous avez dépassé l'heure
@@ -273,7 +274,7 @@
                                     '<i class="fas fa-times"></i>' }}
                                 </td>
                                 {% if limite|date('d/m/Y H:i', 'Europe/Paris') > "now"|date('d/m/Y h:i', 'Europe/Paris') and limiteActive == true
-                                    and commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') == "now"|date('d/m/Y', 'Europe/Paris')%}
+                                    and commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') == "now"|date('d/m/Y', 'Europe/Paris') %}
                                     <td class="invalidCommande">
                                         Vous ne pouvez plus <span>modifier votre commande.</span>
                                         Vous avez dépassé l'heure
@@ -284,7 +285,7 @@
                                         Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
-                                {% elseif commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') < "now"|date('d/m/Y', 'Europe/Paris') or commande.dateHeureLivraison|date('m', 'Europe/Paris') < "now"|date('m', 'Europe/Paris')%}
+                                {% elseif commande.dateHeureLivraison|date('d/m/Y', 'Europe/Paris') < "now"|date('d/m/Y', 'Europe/Paris') or commande.dateHeureLivraison|date('m', 'Europe/Paris') < "now"|date('m', 'Europe/Paris') %}
                                     <td class="invalidCommande">
                                         <span>Cette commande est clôturée.</span>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>

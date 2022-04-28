@@ -18,7 +18,7 @@ class FichierType extends AbstractType
             ->add('fileSubmit', FileType::class, [
                 'mapped' => false,
                 'required' => true,
-                'help' => 'Type de fichier supporté : Excel(xlsx).',
+                'help' => 'Type de fichier supporté : Excel (.xlsx).',
                 'constraints' => [
                     new File([
                         'maxSize' => '8192k',
@@ -32,8 +32,7 @@ class FichierType extends AbstractType
                         'message' => 'Veuillez sélectionner un fichier !'
                     ])
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

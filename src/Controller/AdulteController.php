@@ -300,12 +300,14 @@ class AdulteController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $adulte->getId(), $request->request->get('_token'))) {
             $user = $userRepo->findOneByAdulte($adulte->getId());
-            $entityManager->remove($user);
+            if ($user) {
+                $entityManager->remove($user);
+            }
             $entityManager->remove($adulte);
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteAdulte',
-                'Votre adulte a été supprimé !'
+                'L\'adulte a été supprimé !'
             );
         }
 

@@ -17,7 +17,7 @@ class SandwichType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomSandwich', TextType::class,[
+            ->add('nomSandwich', TextType::class, [
                 'label' => 'Nom du sandwich',
                 'required' => true,
             ])
@@ -38,16 +38,16 @@ class SandwichType extends AbstractType
                     ])
                 ],
             ])
-            ->add('ingredientSandwich', TextareaType::class,[
+            ->add('ingredientSandwich', TextareaType::class, [
                 'label' => 'Liste d\'ingrédients du sandwich',
                 'required' => false,
             ])
-            ->add('commentaireSandwich', TextareaType::class,[
+            ->add('commentaireSandwich', TextareaType::class, [
                 'label' => 'Commentaire sur le sandwich',
-                'help' => 'Spécifié des allergies ou le groupe d\'individus.',
+                'help' => 'Ex : spécifier des allergènes, régime particuliers.',
                 'required' => false,
             ])
-            ->add('dispoSandwich',ChoiceType::class, [
+            ->add('dispoSandwich', ChoiceType::class, [
                 'label' => 'Disponibilité du sandwich',
                 'choices' => [
                     'Oui' => true,
@@ -55,8 +55,7 @@ class SandwichType extends AbstractType
                 ],
                 'required' => true,
                 'empty_data' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -24,7 +24,7 @@ class DessertController extends AbstractController
     /**
      * @Route("/", name="dessert_index", methods={"GET","POST"})
      */
-    public function index(DessertRepository $dessertRepo,Request $request,
+    public function index(DessertRepository  $dessertRepo, Request $request,
                           PaginatorInterface $paginator): Response
     {
         $desserts = $dessertRepo->findAll();
@@ -41,7 +41,7 @@ class DessertController extends AbstractController
 
         $desserts = $paginator->paginate(
             $desserts,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             10
         );
 
@@ -54,7 +54,7 @@ class DessertController extends AbstractController
     /**
      * @Route("/new", name="dessert_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,
+    public function new(Request          $request, EntityManagerInterface $entityManager,
                         SluggerInterface $slugger): Response
     {
         $dessert = new Dessert();
@@ -65,13 +65,13 @@ class DessertController extends AbstractController
 
             /** @var UploadedFile $fichierDessert */
             $fichierDessert = $form->get('imageDessert')->getData();
-            
+
             if ($fichierDessert) {
                 $originalFilename = pathinfo($fichierDessert
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierDessert->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierDessert->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -107,11 +107,11 @@ class DessertController extends AbstractController
     /**
      * @Route("/{id}/edit", name="dessert_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Dessert $dessert, EntityManagerInterface $entityManager,
-                        SluggerInterface $slugger): Response
+    public function edit(Request          $request, Dessert $dessert, EntityManagerInterface $entityManager,
+                         SluggerInterface $slugger): Response
     {
         $oldDessert = $dessert->getImageDessert();
-        $form = $this->createForm(DessertType::class, $dessert,['fichierRequired' => false]);
+        $form = $this->createForm(DessertType::class, $dessert, ['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -123,7 +123,7 @@ class DessertController extends AbstractController
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierDessert->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierDessert->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -135,7 +135,7 @@ class DessertController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('dessert_directory').'/'.$oldDessert);
+                unlink($this->getParameter('dessert_directory') . '/' . $oldDessert);
                 $dessert->setImageDessert($newFilename);
             }
 
@@ -170,13 +170,13 @@ class DessertController extends AbstractController
      */
     public function delete(Request $request, Dessert $dessert, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$dessert->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('dessert_directory').'/'.$dessert->getImageDessert());
+        if ($this->isCsrfTokenValid('delete' . $dessert->getId(), $request->request->get('_token'))) {
+            unlink($this->getParameter('dessert_directory') . '/' . $dessert->getImageDessert());
             $entityManager->remove($dessert);
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteDessert',
-                'Votre dessert a été supprimé !'
+                'Le dessert a été supprimé !'
             );
         }
 

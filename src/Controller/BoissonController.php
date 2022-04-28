@@ -26,7 +26,7 @@ class BoissonController extends AbstractController
      * @Route("/", name="boisson_index", methods={"GET","POST"})
      */
     public function index(BoissonRepository $boissonRepo,
-                          Request $request, PaginatorInterface $paginator): Response
+                          Request           $request, PaginatorInterface $paginator): Response
     {
         $boissons = $boissonRepo->findAll();
 
@@ -42,7 +42,7 @@ class BoissonController extends AbstractController
 
         $boissons = $paginator->paginate(
             $boissons,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             10
         );
 
@@ -55,7 +55,7 @@ class BoissonController extends AbstractController
     /**
      * @Route("/new", name="boisson_new", methods={"GET", "POST"})
      */
-    public function new(Request $request, EntityManagerInterface $entityManager,
+    public function new(Request          $request, EntityManagerInterface $entityManager,
                         SluggerInterface $slugger): Response
     {
         $boisson = new Boisson();
@@ -72,7 +72,7 @@ class BoissonController extends AbstractController
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierBoisson->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -108,11 +108,11 @@ class BoissonController extends AbstractController
     /**
      * @Route("/{id}/edit", name="boisson_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Boisson $boisson, EntityManagerInterface $entityManager,
+    public function edit(Request          $request, Boisson $boisson, EntityManagerInterface $entityManager,
                          SluggerInterface $slugger): Response
     {
         $oldImgBoisson = $boisson->getImageBoisson();
-        $form = $this->createForm(BoissonType::class, $boisson,['fichierRequired' => false]);
+        $form = $this->createForm(BoissonType::class, $boisson, ['fichierRequired' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -124,7 +124,7 @@ class BoissonController extends AbstractController
                     ->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierBoisson->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
 
                 // Move the file to the directory where boissons are stored
                 try {
@@ -136,7 +136,7 @@ class BoissonController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('boisson_directory').'/'.$oldImgBoisson);
+                unlink($this->getParameter('boisson_directory') . '/' . $oldImgBoisson);
                 $boisson->setImageBoisson($newFilename);
 
             }
@@ -171,13 +171,13 @@ class BoissonController extends AbstractController
      */
     public function delete(Request $request, Boisson $boisson, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$boisson->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('boisson_directory').'/'.$boisson->getImageBoisson());
+        if ($this->isCsrfTokenValid('delete' . $boisson->getId(), $request->request->get('_token'))) {
+            unlink($this->getParameter('boisson_directory') . '/' . $boisson->getImageBoisson());
             $entityManager->remove($boisson);
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteBoisson',
-                'Votre boisson a été supprimée !'
+                'La boisson a été supprimée !'
             );
         }
 

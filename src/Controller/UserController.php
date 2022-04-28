@@ -39,11 +39,11 @@ class UserController extends AbstractController
     private UserPasswordHasherInterface $userPasswordHasher;
     private AdulteRepository $adulteRepository;
 
-    public function __construct(EntityManagerInterface $entityManager,
-                                UserRepository $userRepository,
-                                EleveRepository $eleveRepository,
-                                AdulteRepository $adulteRepository,
-                                UserPasswordHasherInterface  $userPasswordHasher)
+    public function __construct(EntityManagerInterface      $entityManager,
+                                UserRepository              $userRepository,
+                                EleveRepository             $eleveRepository,
+                                AdulteRepository            $adulteRepository,
+                                UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->entityManager = $entityManager;
         $this->adulteRepository = $adulteRepository;
@@ -55,7 +55,7 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(Request $request, UserRepository $userRepository,
+    public function index(Request            $request, UserRepository $userRepository,
                           PaginatorInterface $paginator): Response
     {
         $users = $userRepository->findAll();
@@ -75,7 +75,7 @@ class UserController extends AbstractController
         $usersTotal = $users;
         $users = $paginator->paginate(
             $users,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             30
         );
 
@@ -89,7 +89,7 @@ class UserController extends AbstractController
     /**
      * @Route("/new", name="user_new", methods={"GET", "POST"})
      */
-    public function new(Request $request,UserPasswordHasherInterface $userPasswordHasher,
+    public function new(Request                $request, UserPasswordHasherInterface $userPasswordHasher,
                         EntityManagerInterface $entityManager, UserRepository $userRepo): Response
     {
         $user = new User();
@@ -98,19 +98,17 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $userBirthday = $form->get('dateNaissance')->getData();
+            $userBirthday = $form->get('dateNaissanceUser')->getData();
 
-            if($userBirthday != null){
+            if ($userBirthday != null) {
                 $userRelated = $userRepo->findByNomPrenomAndBirthday($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $userBirthday);
-            }
-            else{
+            } else {
                 $userRelated = $userRepo->findByNomAndPrenom($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData());
             }
 
-            if($userRelated == null)
-            {
+            if ($userRelated == null) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -118,7 +116,7 @@ class UserController extends AbstractController
                     )
                 );
 
-                $user->setTokenHash(md5($user->getNomUser().$user->getEmail()));
+                $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
                 $entityManager->persist($user);
                 $entityManager->flush();
@@ -127,8 +125,7 @@ class UserController extends AbstractController
                     'SuccessUser',
                     'L\'utilisateur a été sauvegardé !'
                 );
-            }
-            else{
+            } else {
                 $this->addFlash(
                     'FailedUser',
                     'L\'utilisateur existe déjà dans la base de données !'
@@ -148,7 +145,7 @@ class UserController extends AbstractController
      * @Route("/file", name="user_file", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function fileSubmit(Request $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request, SluggerInterface $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $userFile = new Fichier();
@@ -163,7 +160,7 @@ class UserController extends AbstractController
                 $originalFilename = pathinfo($fichierUser->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierUser->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierUser->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -188,27 +185,10 @@ class UserController extends AbstractController
             return $this->redirectToRoute('user_file');
         }
 
-        return $this->render('user/userFile.html.twig',[
+        return $this->render('user/userFile.html.twig', [
             'fichierUser' => $userFile,
             'form' => $form->createView(),
         ]);
-    }
-
-    public function getDataFromFile(string $fileName): array
-    {
-        $file = $this->getParameter('userfile_directory').'/'.$fileName;
-        $fileExtension =pathinfo($file, PATHINFO_EXTENSION);
-
-        $normalizers = [new ObjectNormalizer()];
-        $encoders=[
-            new ExcelEncoder($defaultContext = []),
-        ];
-        $serializer = new Serializer($normalizers, $encoders);
-
-        /** @var string $fileString */
-        $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
     }
 
     /**
@@ -219,23 +199,21 @@ class UserController extends AbstractController
     {
         $userCreated = 0;
         /* Parcours le tableau donné par le fichier Excel*/
-        while($userCreated < sizeof($this->getDataFromFile($fileName))) {
+        while ($userCreated < sizeof($this->getDataFromFile($fileName))) {
             /*Pour chaque Utilisateur*/
-            foreach($this->getDataFromFile($fileName) as $row) {
+            foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un utilisateur*/
                 foreach ($row as $rowData) {
                     /*Vérifie s'il existe une colonne email et qu'elle n'est pas vide*/
-                    if(array_key_exists('Email',$rowData)
-                        && !empty($rowData['Email']))
-                    {
+                    if (array_key_exists('Email', $rowData)
+                        && !empty($rowData['Email'])) {
                         /*Recherche l'utilisateur dans la base de donnée*/
                         $userRelated = $this->userRepository->findOneByEmail([
                             'Email' => $rowData['Email']
                         ]);
                         /*S'il n'existe pas alors on le crée
                          en tant qu'un nouvel utilisateur*/
-                        if($userRelated === null)
-                        {
+                        if ($userRelated === null) {
                             $user = new User();
 
                             $roleUser = $rowData['Fonction'];
@@ -244,20 +222,19 @@ class UserController extends AbstractController
 
                             $eleve = $this->eleveRepository
                                 ->findByNomPrenomDateNaissance($rowData['Nom']
-                                    ,$rowData['Prénom'],
+                                    , $rowData['Prénom'],
                                     $birthday
                                 );
 
                             $adulte = $this->adulteRepository
                                 ->findByNomPrenomDateNaissance($rowData['Nom']
-                                ,$rowData['Prénom'],
-                                $birthday
-                            );
+                                    , $rowData['Prénom'],
+                                    $birthday
+                                );
 
-                            if ($eleve != null)
-                            {
+                            if ($eleve != null) {
                                 $user->addEleve($eleve);
-                            }else {
+                            } else {
                                 $user->addAdulte($adulte);
                             }
 
@@ -266,8 +243,7 @@ class UserController extends AbstractController
                                 ->setNomUser($rowData['Nom'])
                                 ->setPrenomUser($rowData['Prénom'])
                                 ->setDateNaissanceUser($birthday)
-                                ->setIsVerified(true)
-                            ;
+                                ->setIsVerified(true);
 
                             switch ($roleUser) {
                                 case "Admin":
@@ -293,11 +269,10 @@ class UserController extends AbstractController
                                     $rowData['Mot de passe']
                                 )
                             );
-                            $user->setTokenHash(md5($user->getNomUser().$user->getEmail()));
+                            $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
                             $this->entityManager->persist($user);
-                        }
-                        else{
+                        } else {
                             $userRelated->setPassword(
                                 $this->userPasswordHasher->hashPassword(
                                     $userRelated,
@@ -310,8 +285,7 @@ class UserController extends AbstractController
                                 ->setNomUser($rowData['Nom'])
                                 ->setPrenomUser($rowData['Prénom'])
                                 ->setIsVerified(true)
-                                ->setTokenHash(md5($userRelated->getNomUser().$userRelated->getEmail()))
-                            ;
+                                ->setTokenHash(md5($userRelated->getNomUser() . $userRelated->getEmail()));
                             $this->entityManager->persist($userRelated);
                         }
                         $userCreated++;
@@ -319,8 +293,25 @@ class UserController extends AbstractController
                 }
             }
         }
-        unlink($this->getParameter('userFile_directory').'/'.$fileName);
+        unlink($this->getParameter('userFile_directory') . '/' . $fileName);
         $this->entityManager->flush();
+    }
+
+    public function getDataFromFile(string $fileName): array
+    {
+        $file = $this->getParameter('userfile_directory') . '/' . $fileName;
+        $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
+
+        $normalizers = [new ObjectNormalizer()];
+        $encoders = [
+            new ExcelEncoder($defaultContext = []),
+        ];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        /** @var string $fileString */
+        $fileString = file_get_contents($file);
+
+        return $serializer->decode($fileString, $fileExtension);
     }
 
     /**
@@ -336,15 +327,15 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, User $user,
+    public function edit(Request                     $request, User $user,
                          UserPasswordHasherInterface $userPasswordHasher,
-                         EntityManagerInterface $entityManager): Response
+                         EntityManagerInterface      $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user,['password_required' => false]);
+        $form = $this->createForm(UserType::class, $user, ['password_required' => false]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('password')->getData() != null){
+            if ($form->get('password')->getData() != null) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -358,7 +349,7 @@ class UserController extends AbstractController
                 'L\'utilisateur a été modifié !'
             );
 
-            $user->setTokenHash(md5($user->getId().$user->getEmail()));
+            $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $entityManager->flush();
             return $this->redirectToRoute('user_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
@@ -374,7 +365,7 @@ class UserController extends AbstractController
      */
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
             $this->addFlash(

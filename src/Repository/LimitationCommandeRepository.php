@@ -25,14 +25,13 @@ class LimitationCommandeRepository extends ServiceEntityRepository
      * @return LimitationCommande|null
      * @throws NonUniqueResultException
      */
-    public function findOneByLibelle($value): ?LimitationCommande
+    public function findOneById($value): ?LimitationCommande
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.libelleLimite Like :val')
-            ->setParameter('val', '%'.$value.'%')
+            ->andWhere('l.id = :val')
+            ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     // /**

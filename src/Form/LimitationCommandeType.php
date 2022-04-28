@@ -17,9 +17,11 @@ class LimitationCommandeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelleLimite', TextType::class,[
-                'label' => 'Libelle de la limitation',
+            ->add('libelleLimite', TextType::class, [
+                'label' => 'Libellé de la limitation',
                 'required' => true,
+                'attr' => ['oninput' => 'update()'],
+                'label_attr' => ['oninput' => 'update()'],
             ])
             ->add('is_active', ChoiceType::class, [
                 'label' => 'Limitation activée',
@@ -29,7 +31,7 @@ class LimitationCommandeType extends AbstractType
                 ],
                 'required' => true,
             ])
-            ->add('nbLimite', NumberType::class,[
+            ->add('nbLimite', NumberType::class, [
                 'label' => 'Nombre limite',
                 'invalid_message' => 'Veuillez saisir un nombre !',
                 'required' => false,
@@ -41,12 +43,11 @@ class LimitationCommandeType extends AbstractType
                     ])
                 ],
             ])
-            ->add('heureLimite', TimeType::class,[
+            ->add('heureLimite', TimeType::class, [
                 'label' => 'Heure limite',
                 'required' => false,
                 'invalid_message' => 'Veuillez saisir une heure réelle !',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

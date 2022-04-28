@@ -29,10 +29,10 @@ class CommandeGroupeType extends AbstractType
     {
 
         $builder
-            ->add('sandwichChoisi1', EntityType::class,[
+            ->add('sandwichChoisi1', EntityType::class, [
                 'label' => 'Choisir un premier sandwich',
                 'class' => Sandwich::class,
-                'mapped' =>false,
+                'mapped' => false,
                 'query_builder' => function (SandwichRepository $er) {
                     return $er->createQueryBuilder('s')
                         ->where('s.dispoSandwich = :dispo')
@@ -45,9 +45,9 @@ class CommandeGroupeType extends AbstractType
                 'required' => true,
                 'data' => $options['sandwichChoisi1']?->getSandwichChoisi(),
             ])
-            ->add('nbSandwichChoisi1', NumberType::class,[
+            ->add('nbSandwichChoisi1', NumberType::class, [
                 'label' => 'Nombre du premier sandwich choisi',
-                'mapped' =>false,
+                'mapped' => false,
                 'invalid_message' => 'Veuillez saisir un nombre !',
                 'required' => true,
                 'constraints' => [
@@ -59,10 +59,10 @@ class CommandeGroupeType extends AbstractType
                 ],
                 'data' => $options['sandwichChoisi1']?->getNombreSandwich(),
             ])
-            ->add('sandwichChoisi2', EntityType::class,[
+            ->add('sandwichChoisi2', EntityType::class, [
                 'label' => 'Choisir un deuxième sandwich',
                 'class' => Sandwich::class,
-                'mapped' =>false,
+                'mapped' => false,
                 'query_builder' => function (SandwichRepository $er) {
                     return $er->createQueryBuilder('s')
                         ->where('s.dispoSandwich = :dispo')
@@ -75,10 +75,10 @@ class CommandeGroupeType extends AbstractType
                 'required' => true,
                 'data' => $options['sandwichChoisi2']?->getSandwichChoisi(),
             ])
-            ->add('nbSandwichChoisi2', NumberType::class,[
+            ->add('nbSandwichChoisi2', NumberType::class, [
                 'label' => 'Nombre du deuxième sandwich choisi',
                 'invalid_message' => 'Veuillez saisir un nombre !',
-                'mapped' =>false,
+                'mapped' => false,
                 'required' => true,
                 'constraints' => [
                     new Regex([
@@ -98,15 +98,15 @@ class CommandeGroupeType extends AbstractType
                 'required' => true,
                 'empty_data' => false,
             ])
-            ->add('commentaireCommande', TextareaType::class,[
+            ->add('commentaireCommande', TextareaType::class, [
                 'label' => 'Commentaire sur la commande',
-                'help' => 'Nombre d\'élève, allergies, d\'autres contraintes...',
+                'help' => 'Ex : nombre d\'élève, allergies, d\'autres contraintes...',
                 'required' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez saisir un commentaire'])
                 ],
             ])
-            ->add('motifSortie', TextareaType::class,[
+            ->add('motifSortie', TextareaType::class, [
                 'label' => 'Motif de la sortie',
                 'help' => 'Description de la sortie, nombre de participant...',
                 'required' => true,
@@ -119,29 +119,29 @@ class CommandeGroupeType extends AbstractType
                 'html5' => true,
                 'widget' => 'single_text',
                 'required' => true,
-                'help' => "Attention : Veuillez sélectionner une date d'au moins ".$options['limiteDateSortie']." jours minimum après aujourd'hui !",
+                'help' => "Attention : Veuillez sélectionner une date d'au moins " . $options['limiteDateSortie'] . " jours minimum après aujourd'hui !",
                 'invalid_message' => 'Votre saisie n\'est pas une date et heure !',
                 'constraints' => [
-                    new GreaterThanOrEqual("+".$options['limiteDateSortie']."days 00:00:00",
-                        null,"Veuillez choisir une date d'au moins ".$options['limiteDateSortie']." jours minimum !"),
+                    new GreaterThanOrEqual("+" . $options['limiteDateSortie'] . "days 00:00:00",
+                        null, "Veuillez choisir une date d'au moins " . $options['limiteDateSortie'] . " jours minimum !"),
                     new NotNull([
                         'message' => 'Veuillez choisir une date et heure de livraison !',
                     ]),
                 ],
             ])
-            ->add('lieuLivraison', EntityType::class,[
+            ->add('lieuLivraison', EntityType::class, [
                 'label' => 'Choisir un lieu de livraison',
                 'class' => LieuLivraison::class,
                 'query_builder' => function (LieuLivraisonRepository $er) {
                     return $er->createQueryBuilder('l')
                         ->andWhere('l.estActive = :active')
-                        ->setParameter('active',true)
+                        ->setParameter('active', true)
                         ->orderBy('l.libelleLieu', 'ASC');
                 },
                 'choice_label' => 'libelleLieu',
                 'required' => true,
             ])
-            ->add('dessertChoisi', EntityType::class,[
+            ->add('dessertChoisi', EntityType::class, [
                 'label' => 'Choisir un dessert',
                 'class' => Dessert::class,
                 'query_builder' => function (DessertRepository $er) {
@@ -154,15 +154,14 @@ class CommandeGroupeType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => CommandeGroupe::class,
-            'attr' => ['id'=>'formCommandeGroupe'],
+            'attr' => ['id' => 'formCommandeGroupe'],
             'limiteDateSortie' => 7,
             'sandwichChoisi1' => SandwichCommandeGroupe::class,
             'sandwichChoisi2' => SandwichCommandeGroupe::class,

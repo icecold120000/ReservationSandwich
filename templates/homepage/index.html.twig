@@ -7,22 +7,29 @@
         <h1>Bienvenue</h1>
         <h2>Présentation du site :</h2>
         <p>
-            Le paragraphe enchaîne ensuite les informations d’appui (raisons, preuves, explications) en les reliant par des transitions. Cet enchaînement est la base de la construction d’un argument.
-            Les transitions sont des phrases, des parties de phrase, des expressions, des mots de liaison et des signes de ponctuation. Vous les utiliser pour lier des objets ou des idées dans le temps ou dans l’espace, pour établir des liens logiques, pour indiquer le rapport entre les idées (cause, conséquence, explication, illustration, ressemblance, opposition, alternative, extension).
+            Le paragraphe enchaîne ensuite les informations d’appui (raisons, preuves, explications) en les reliant par
+            des transitions. Cet enchaînement est la base de la construction d’un argument.
+            Les transitions sont des phrases, des parties de phrase, des expressions, des mots de liaison et des signes
+            de ponctuation. Vous les utiliser pour lier des objets ou des idées dans le temps ou dans l’espace, pour
+            établir des liens logiques, pour indiquer le rapport entre les idées (cause, conséquence, explication,
+            illustration, ressemblance, opposition, alternative, extension).
         </p>
         <div>
             <h3>Voici le menu de la semaine : </h3>
             {% if menu.fileName %}
                 <img id="menuImg" src="{{ asset('uploads/menu/' ~ menu.fileName) }}" alt="Menu de la semaine">
             {% else %}
-                <img id="menuImg" src="{{ asset('/static/images/placeholder.png') }}" alt="Placeholder menu de la semaine">
+                <img id="menuImg" src="{{ asset('/static/images/placeholder.png') }}"
+                     alt="Placeholder menu de la semaine">
             {% endif %}
         </div>
         <div class="container">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btnModal">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    id="btnModal">
                 Zoomer sur le menu
             </button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
                 <div class="modal-dialog modal-fullscreen">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -30,41 +37,44 @@
                         </div>
                         <div class="modal-body">
                             {% if menu.fileName %}
-                                <img id="menuImgModal" src="{{ asset('uploads/menu/' ~ menu.fileName) }}" alt="Menu de la semaine">
+                                <img id="menuImgModal" src="{{ asset('uploads/menu/' ~ menu.fileName) }}"
+                                     alt="Menu de la semaine">
                             {% else %}
-                                <img id="menuImgModal" src="{{ asset('static/images/placeholder.png') }}" alt="Placeholder menu de la semaine">
+                                <img id="menuImgModal" src="{{ asset('static/images/placeholder.png') }}"
+                                     alt="Placeholder menu de la semaine">
                             {% endif %}
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                         </div>
                     </div>
                 </div>
             </div>
             {% if menu.fileName %}
-                <a href="{{ asset('uploads/menu/'~ menu.fileName) }}" download="{{ menu.fileName }}" class="btn btn-info" id="btnModal">
+                <a href="{{ asset('uploads/menu/'~ menu.fileName) }}" download="{{ menu.fileName }}"
+                   class="btn btn-info" id="btnModal">
                     Télécharger le menu
                 </a>
             {% endif %}
         </div>
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
             {% for message in app.flashes('SuccessMenu') %}
                 <div class="flash-success">
                     {{ message }}
                 </div>
             {% endfor %}
             <div id="formMenu">
-                {{form_start(form)}}
+                {{ form_start(form) }}
                 {{ form_help(form.fileSubmit) }}
                 <div id="fileInputUser">
-                    {{form_widget(form.fileSubmit)}}
+                    {{ form_widget(form.fileSubmit) }}
                 </div>
-                {% if form_errors(form.fileSubmit)%}
+                {% if form_errors(form.fileSubmit) %}
                     <div class="erreur">
-                        {{form_errors(form.fileSubmit)}}
+                        {{ form_errors(form.fileSubmit) }}
                     </div>
                 {% endif %}
-                {{form_end(form)}}
+                {{ form_end(form) }}
             </div>
             <div>
                 <button class="btn btn-success" form="menuForm">

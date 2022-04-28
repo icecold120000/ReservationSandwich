@@ -606,6 +606,7 @@ class CommandeIndividuelleController extends AbstractController
                         DesactivationCommandeRepository $deactiveRepo,
                         LimitationCommandeRepository    $limiteRepo,
                         InscriptionCantineRepository    $cantineRepository,
+                        EleveRepository                 $eleveRepository,
                         UserRepository                  $userRepo): Response
     {
 
@@ -615,15 +616,16 @@ class CommandeIndividuelleController extends AbstractController
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
         if (in_array("ROLE_ELEVE", $roles)) {
-            $cantine = $cantineRepository->findOneByEleve($user->getEleves());
+            $eleve = $eleveRepository->findOneByCompte($user);
+            $cantine = $cantineRepository->findOneByEleve($eleve->getId());
         }
 
-        $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
+        $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
 
-        $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
-        $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
-        $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
+        $limiteNbJour = $limiteRepo->findOneById(2);
+        $limiteNbSemaine = $limiteRepo->findOneById(3);
+        $limiteNbMois = $limiteRepo->findOneById(4);
         $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
@@ -815,12 +817,12 @@ class CommandeIndividuelleController extends AbstractController
         if (in_array("ROLE_ELEVE", $roles)) {
             $cantine = $cantineRepository->findOneByEleve($user->getEleves());
         }
-        $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
+        $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
-        $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
-        $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
-        $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
+        $limiteNbJour = $limiteRepo->findOneById(2);
+        $limiteNbSemaine = $limiteRepo->findOneById(3);
+        $limiteNbMois = $limiteRepo->findOneById(4);
         $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
@@ -963,7 +965,7 @@ class CommandeIndividuelleController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteComInd',
-                'Votre commande individuelle a été supprimée !'
+                'La commande individuelle a été supprimée !'
             );
         }
 

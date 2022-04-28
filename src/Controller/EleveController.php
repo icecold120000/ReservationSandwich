@@ -443,12 +443,14 @@ class EleveController extends AbstractController
                 unlink($this->getParameter('photoEleve_directory') . '/' . $eleve->getPhotoEleve());
             }
             $user = $userRepo->findOneByEleve($eleve->getId());
-            $entityManager->remove($user);
+            if ($user) {
+                $entityManager->remove($user);
+            }
             $entityManager->remove($eleve);
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteEleve',
-                'Votre élève a été supprimé !'
+                'L\'élève a été supprimé !'
             );
         }
 

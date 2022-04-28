@@ -1,28 +1,29 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ classe.libelleClasse }}{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
 
 {% block body %}
     <main class="container-fluid">
-        <h1>Liste des élèves des {{classe.libelleClasse}}</h1>
+        <h1>Liste des élèves de la classe {{ classe.libelleClasse }}</h1>
         <div>
             <a href="{{ path('classe_index') }}"
                class="btn btn-secondary" id="btnRetour">
                 Retourner à la liste
             </a>
         </div>
-        <div >
+        <div>
             <div id="filtre">
-                {{form_start(form)}}
+                {{ form_start(form) }}
                 <div class="selectFiltre">
                     <div>
-                        <span>{{form_label(form.ordrePrenom)}}</span>
-                        {{form_widget(form.ordrePrenom)}}
+                        <span>{{ form_label(form.ordrePrenom) }}</span>
+                        {{ form_widget(form.ordrePrenom) }}
                     </div>
                     <div>
-                        <span>{{form_label(form.ordreNom)}}</span>
-                        {{form_widget(form.ordreNom)}}
+                        <span>{{ form_label(form.ordreNom) }}</span>
+                        {{ form_widget(form.ordreNom) }}
                     </div>
                     <div>
                         <button type="submit" class="btn btn-info">
@@ -30,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                {{form_end(form)}}
+                {{ form_end(form) }}
             </div>
         </div>
         <table class="table tableAdmin">
@@ -56,15 +57,19 @@
                     <td>{{ eleve.nomEleve }}</td>
                     <td>
                         <div class="container">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal{{ eleve.id }}" id="btnModal">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal{{ eleve.id }}" id="btnModal">
                                 Voir détail
                             </button>
-                            <div class="modal fade" id="exampleModal{{ eleve.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal{{ eleve.id }}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-fullscreen">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="formExportLabel">Inscription cantine de {{ eleve.prenomEleve }} {{ eleve.nomEleve }} </h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h5 class="modal-title" id="formExportLabel">Inscription cantine
+                                                de {{ eleve.prenomEleve }} {{ eleve.nomEleve }} </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <table class="table tableAdmin">
@@ -103,14 +108,18 @@
                                                     </tr>
                                                 {% else %}
                                                     <tr>
-                                                        <td colspan="5" class="erreur">L'élève n'est pas inscrit(e) à la cantine !</td>
+                                                        <td colspan="5" class="erreur">L'élève n'est pas inscrit(e) à la
+                                                            cantine !
+                                                        </td>
                                                     </tr>
                                                 {% endfor %}
                                                 </tbody>
                                             </table>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Fermer
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +131,7 @@
                 <tr>
                     <td colspan="2" class="erreur">Aucun élève n'a été trouvé !</td>
                 </tr>
-            {% endfor%}
+            {% endfor %}
             </tbody>
         </table>
     </main>

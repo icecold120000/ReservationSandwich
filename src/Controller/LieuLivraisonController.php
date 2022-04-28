@@ -23,7 +23,7 @@ class LieuLivraisonController extends AbstractController
      * @Route("/", name="lieu_livraison_index", methods={"GET","POST"})
      */
     public function index(LieuLivraisonRepository $lieuLivraisonRepo,
-                          PaginatorInterface $paginator, Request $request): Response
+                          PaginatorInterface      $paginator, Request $request): Response
     {
         $lieux = $lieuLivraisonRepo->findAll();
 
@@ -39,7 +39,7 @@ class LieuLivraisonController extends AbstractController
 
         $lieux = $paginator->paginate(
             $lieux,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             10
         );
 
@@ -114,10 +114,10 @@ class LieuLivraisonController extends AbstractController
     /**
      * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
      */
-    public function delete(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
+    public function delete(Request                  $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
                            CommandeGroupeRepository $comGroupeRepo, LieuLivraisonRepository $lieuRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$lieuLivraison->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
 
             $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());
 
@@ -127,6 +127,10 @@ class LieuLivraisonController extends AbstractController
 
             $entityManager->remove($lieuLivraison);
             $entityManager->flush();
+            $this->addFlash(
+                'SuccessDeleteLieu',
+                'Le lieu a été supprimé !'
+            );
         }
 
         return $this->redirectToRoute('lieu_livraison_index', [], Response::HTTP_SEE_OTHER);

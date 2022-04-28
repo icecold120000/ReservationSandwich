@@ -22,19 +22,19 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', TextType::class,[
+            ->add('email', TextType::class, [
                 'label' => 'E-mail de l\'utilisateur',
                 'required' => true,
             ])
             ->add('roles', CollectionType::class, [
                 'label' => 'Fonction de l\'utilisateur',
-                'entry_type'   => ChoiceType::class,
-                'entry_options'  => [
+                'entry_type' => ChoiceType::class,
+                'entry_options' => [
                     'choices' => [
-                        'Utilisateur'=> '[]',
+                        'Utilisateur' => '[]',
                         'Admin' => User::ROLE_ADMIN,
                         'Élève' => User::ROLE_ELEVE,
-                        'Cuisinier' => User::ROLE_CUISINE,
+                        'Cuisinie' => User::ROLE_CUISINE,
                         'Adulte' => User::ROLE_ADULTES,
                     ],
                     'required' => false,
@@ -43,15 +43,15 @@ class UserType extends AbstractType
                     'label_attr' => ['onChange' => 'update()'],
                 ],
             ])
-            ->add('password', PasswordType::class,[
+            ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe de l\'utilisateur',
                 'required' => $options['password_required'],
             ])
-            ->add('nomUser', TextType::class,[
+            ->add('nomUser', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
                 'required' => true,
             ])
-            ->add('prenomUser', TextType::class,[
+            ->add('prenomUser', TextType::class, [
                 'label' => 'Prénom de l\'utilisateur',
                 'required' => true,
             ])
@@ -73,7 +73,7 @@ class UserType extends AbstractType
                 ],
                 'required' => false,
             ])
-            ->add('eleve', EntityType::class,[
+            ->add('eleve', EntityType::class, [
                 'label' => 'Compte auquel l\'utilisateur est rattaché',
                 'mapped' => false,
                 'class' => Eleve::class,
@@ -81,32 +81,29 @@ class UserType extends AbstractType
                     return $er
                         ->createQueryBuilder('el')
                         ->andWhere('el.archiveEleve = :archive')
-                        ->setParameter('archive',false)
-                        ;
+                        ->setParameter('archive', false);
                 },
                 'choice_label' => function (?Eleve $eleve) {
-                    return $eleve ? substr($eleve->getPrenomEleve(),0,4).'. '. $eleve->getNomEleve() : '';
+                    return $eleve ? substr($eleve->getPrenomEleve(), 0, 4) . '. ' . $eleve->getNomEleve() : '';
                 },
                 'required' => false,
                 'placeholder' => 'Veuillez choisir un élève',
             ])
-            ->add('adulte', EntityType::class,[
+            ->add('adulte', EntityType::class, [
                 'mapped' => false,
                 'class' => Adulte::class,
                 'query_builder' => function (AdulteRepository $er) {
                     return $er
                         ->createQueryBuilder('ad')
                         ->andWhere('ad.archiveAdulte = :archive')
-                        ->setParameter('archive',false)
-                        ;
+                        ->setParameter('archive', false);
                 },
                 'choice_label' => function (?Adulte $adulte) {
-                    return $adulte ? substr($adulte->getPrenomAdulte(),0,4).'. '. $adulte->getNomAdulte() : '';
+                    return $adulte ? substr($adulte->getPrenomAdulte(), 0, 4) . '. ' . $adulte->getNomAdulte() : '';
                 },
                 'required' => false,
-        'placeholder' => 'Veuillez choisir un adulte',
-            ])
-        ;
+                'placeholder' => 'Veuillez choisir un adulte',
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -95,7 +95,7 @@ class CommandeIndividuelleType extends AbstractType
                 'choices' => [
                     'AS' => 'AS',
                     'Réunion' => 'Réunion',
-                    'Pastoral' => 'Pastoral',
+                    'Pastoral' => 'Pastorale',
                     'Autres (à préciser)' => 'Autre'
                 ],
                 'required' => true,

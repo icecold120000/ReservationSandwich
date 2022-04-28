@@ -17,7 +17,7 @@ class DessertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomDessert', TextType::class,[
+            ->add('nomDessert', TextType::class, [
                 'label' => 'Nom du dessert',
                 'required' => true,
             ])
@@ -38,16 +38,16 @@ class DessertType extends AbstractType
                     ])
                 ],
             ])
-            ->add('ingredientDessert', TextareaType::class,[
+            ->add('ingredientDessert', TextareaType::class, [
                 'label' => 'Liste d\'ingrédients du dessert',
                 'required' => false,
             ])
-            ->add('commentaireDessert', TextareaType::class,[
+            ->add('commentaireDessert', TextareaType::class, [
                 'label' => 'Commentaire sur le dessert',
-                'help' => 'Spécifié des allergies ou le groupe d\'individus.',
+                'help' => 'Ex : spécifier des allergènes, régime particuliers.',
                 'required' => false,
             ])
-            ->add('dispoDessert',ChoiceType::class, [
+            ->add('dispoDessert', ChoiceType::class, [
                 'label' => 'Disponibilité du dessert',
                 'choices' => [
                     'Oui' => true,
@@ -55,8 +55,7 @@ class DessertType extends AbstractType
                 ],
                 'required' => true,
                 'empty_data' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

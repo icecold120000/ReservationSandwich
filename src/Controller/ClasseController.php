@@ -25,7 +25,7 @@ class ClasseController extends AbstractController
     /**
      * @Route("/", name="classe_index", methods={"GET","POST"})
      */
-    public function index(ClasseRepository $classeRepos,
+    public function index(ClasseRepository   $classeRepos,
                           PaginatorInterface $paginator, Request $request): Response
     {
         $classes = $classeRepos->filterClasse('ASC');
@@ -42,7 +42,7 @@ class ClasseController extends AbstractController
 
         $classes = $paginator->paginate(
             $classes,
-            $request->query->getInt('page',1),
+            $request->query->getInt('page', 1),
             10
         );
 
@@ -83,7 +83,7 @@ class ClasseController extends AbstractController
      * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function show(Classe $classe,Request $request, EleveRepository $eleveRepo,
+    public function show(Classe                       $classe, Request $request, EleveRepository $eleveRepo,
                          InscriptionCantineRepository $cantineRepository): Response
     {
         $eleves = $classe->getEleves();
@@ -152,12 +152,12 @@ class ClasseController extends AbstractController
     /**
      * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
      */
-    public function delete(Request $request, Classe $classe, EleveRepository $eleveRepo,
+    public function delete(Request                $request, Classe $classe, EleveRepository $eleveRepo,
                            EntityManagerInterface $entityManager): Response
     {
-        $eleveRelated = $eleveRepo->findByClasse($classe->getId());
-
-        if($eleveRelated){
+        $eleveRelated = $eleveRepo->findByClasse(null, $classe->getId());
+        
+        if ($eleveRelated) {
             $this->addFlash(
                 'deleteDangerClasse',
                 'Erreur, impossible de supprimer cette classe.
@@ -165,9 +165,8 @@ class ClasseController extends AbstractController
             );
             return $this->redirectToRoute('classe_delete_view',
                 array('id' => $classe->getId()));
-        }
-        else{
-            if ($this->isCsrfTokenValid('delete'.$classe->getId(),
+        } else {
+            if ($this->isCsrfTokenValid('delete' . $classe->getId(),
                 $request->request->get('_token'))) {
                 $entityManager->remove($classe);
                 $entityManager->flush();

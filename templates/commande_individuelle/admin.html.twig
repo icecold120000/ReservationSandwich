@@ -1,6 +1,7 @@
-{% extends 'base.html.twig'%}
+{% extends 'base.html.twig' %}
 {% block title %}Liste des commandes à venir{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
 
 {% block body %}
     <main class="container-fluid">
@@ -30,21 +31,24 @@
                 </a>
             </div>
             <div id="divRetour">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf" id="btnAjout">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf"
+                        id="btnAjout">
                     Choisir votre mode d'exportation
                 </button>
-                <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel" aria-hidden="true">
+                <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel"
+                     aria-hidden="true">
                     <div class="modal-dialog modal-fullscreen">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <h1>Choisir les modalités de votre export</h1>
                                 {{ form_start(exportForm) }}
                                 <div id="screenLeft">
-                                    {{form_label(exportForm.methodeExport)}}
+                                    {{ form_label(exportForm.methodeExport) }}
                                     {% if form_errors(exportForm.methodeExport) %}
                                         <div class="erreur">
                                             {{ form_errors(exportForm.methodeExport) }}
@@ -54,7 +58,7 @@
                                         {{ form_widget(exportForm.methodeExport) }}
                                     </div>
                                     {{ form_label(exportForm.affichageExport) }}
-                                    {%if form_errors(exportForm.affichageExport) %}
+                                    {% if form_errors(exportForm.affichageExport) %}
                                         <div class="erreur">
                                             {{ form_errors(exportForm.affichageExport) }}
                                         </div>
@@ -65,7 +69,7 @@
                                 </div>
                                 <div id="screenRight">
                                     {{ form_label(exportForm.modaliteCommande) }}
-                                    {%if form_errors(exportForm.modaliteCommande) %}
+                                    {% if form_errors(exportForm.modaliteCommande) %}
                                         <div class="erreur">
                                             {{ form_errors(exportForm.modaliteCommande) }}
                                         </div>
@@ -73,8 +77,8 @@
                                     <div>
                                         {{ form_widget(exportForm.modaliteCommande) }}
                                     </div>
-                                    {{form_label(exportForm.dateExport)}}
-                                    {%if form_errors(exportForm.dateExport)%}
+                                    {{ form_label(exportForm.dateExport) }}
+                                    {% if form_errors(exportForm.dateExport) %}
                                         <div class="erreur">
                                             {{ form_errors(exportForm.dateExport) }}
                                         </div>
@@ -103,25 +107,25 @@
         </div>
         <div id="formFilter">
             <div id="filtre">
-                {{form_start(form)}}
+                {{ form_start(form) }}
                 <div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.nom)}} </span>
-                        {{form_widget(form.nom)}}
+                        <span>{{ form_label(form.nom) }} </span>
+                        {{ form_widget(form.nom) }}
                     </div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.date)}}</span>
-                        {{form_widget(form.date)}}
+                        <span>{{ form_label(form.date) }}</span>
+                        {{ form_widget(form.date) }}
                     </div>
                 </div>
                 <div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.cloture)}}</span>
-                        {{form_widget(form.cloture)}}
+                        <span>{{ form_label(form.cloture) }}</span>
+                        {{ form_widget(form.cloture) }}
                     </div>
                     <div class="selectFiltre">
-                        <span>{{form_label(form.affichageTableau)}}</span>
-                        {{form_widget(form.affichageTableau)}}
+                        <span>{{ form_label(form.affichageTableau) }}</span>
+                        {{ form_widget(form.affichageTableau) }}
                     </div>
                 </div>
                 <div>
@@ -129,7 +133,7 @@
                         Afficher
                     </button>
                 </div>
-                {{form_end(form)}}
+                {{ form_end(form) }}
             </div>
         </div>
         {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
@@ -182,11 +186,15 @@
                                 {{ commande_groupe.estValide ? '<i class="fas fa-check"></i>' :
                                 '<i class="fas fa-times"></i>' }}
                                 {% if commande_groupe.estValide %}
-                                    <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande groupée ?');">
+                                    <form method="post"
+                                          action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}"
+                                          onsubmit="return confirm('Voulez-vous vraiment invalider cette commande groupée ?');">
                                         <button class="btn btn-danger">Non validée</button>
                                     </form>
                                 {% else %}
-                                    <form method="post" action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande groupé ?');">
+                                    <form method="post"
+                                          action="{{ path('validate_commande_groupe',{'id': commande_groupe.id}) }}"
+                                          onsubmit="return confirm('Voulez-vous vraiment valider cette commande groupé ?');">
                                         <button class="btn btn-success">Validée</button>
                                     </form>
                                 {% endif %}
@@ -225,7 +233,7 @@
                 <table class="table tableAdmin">
                     <thead>
                     <tr>
-                        <th>Date de Livraison</th>
+                        <th>Date de livraison</th>
                         <th>Prénom et Nom</th>
                         <th>Classe</th>
                         <th>Commande</th>
@@ -267,11 +275,13 @@
                                 {{ commande.estValide ? '<i class="fas fa-check"></i>' :
                                 '<i class="fas fa-times"></i>' }}
                                 {% if commande.estValide %}
-                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment invalider cette commande ?');">
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}"
+                                          onsubmit="return confirm('Voulez-vous vraiment invalider cette commande ?');">
                                         <button class="btn btn-danger">Non validée</button>
                                     </form>
                                 {% else %}
-                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}" onsubmit="return confirm('Voulez-vous vraiment valider cette commande ?');">
+                                    <form method="post" action="{{ path('validate_commande',{'id': commande.id}) }}"
+                                          onsubmit="return confirm('Voulez-vous vraiment valider cette commande ?');">
                                         <button class="btn btn-success">Validée</button>
                                     </form>
                                 {% endif %}

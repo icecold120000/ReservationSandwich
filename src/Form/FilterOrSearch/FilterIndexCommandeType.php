@@ -32,7 +32,7 @@ class FilterIndexCommandeType extends AbstractType
                 'required' => false,
             ])
             ->add('affichageTableau', ChoiceType::class, [
-                'label' => 'Affichage de la page',
+                'label' => 'Type de commande',
                 'choices' => [
                     'Les deux' => 'les deux',
                     'Commandes individuelles seulement' => 'individuelle',
