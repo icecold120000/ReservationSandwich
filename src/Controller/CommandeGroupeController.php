@@ -44,7 +44,7 @@ class CommandeGroupeController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boisson = $boissonRepo->findOneByNom('Eau');
         $desserts = $dessertRepo->findByDispo(true);
-        $limiteDate = $limiteRepo->findOneById(4);
+        $limiteDate = $limiteRepo->findOneById(5);
         $commandeGroupe = new CommandeGroupe();
         if ($limiteDate->getIsActive()) {
             $form = $this->createForm(CommandeGroupeType::class,

@@ -74,6 +74,8 @@ class RegistrationController extends AbstractController
                         $adulteFound->setCompteAdulte($user);
                     }
 
+                    $entityManager->flush();
+
                     $this->addFlash(
                         'successInscription',
                         'Votre inscription a été validée. Vous pouvez vous connecter.'

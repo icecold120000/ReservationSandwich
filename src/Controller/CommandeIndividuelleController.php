@@ -71,11 +71,11 @@ class CommandeIndividuelleController extends AbstractController
                           CommandeGroupeRepository       $comGrRepo): Response
     {
         $affichageTableau = "les deux";
-        $limiteGroupeCom = $limiteRepo->findOneByLibelle("sortie");
-        $limiteJourMeme = $limiteRepo->findOneByLibelle("clôture");
-        $limiteNbJour = $limiteRepo->findOneByLibelle("journalier");
-        $limiteNbSemaine = $limiteRepo->findOneByLibelle("hebdomadaire");
-        $limiteNbMois = $limiteRepo->findOneByLibelle("mensuel");
+        $limiteGroupeCom = $limiteRepo->findOneById(5);
+        $limiteJourMeme = $limiteRepo->findOneById(1);
+        $limiteNbJour = $limiteRepo->findOneById(2);
+        $limiteNbSemaine = $limiteRepo->findOneById(3);
+        $limiteNbMois = $limiteRepo->findOneById(4);
         $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
