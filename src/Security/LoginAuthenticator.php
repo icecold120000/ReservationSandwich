@@ -31,8 +31,8 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
     private UrlGeneratorInterface $urlGenerator;
     private UserPasswordHasherInterface $userPasswordHasher;
 
-    public function __construct(EntityManagerInterface $entityManager,
-                                UrlGeneratorInterface $urlGenerator,
+    public function __construct(EntityManagerInterface      $entityManager,
+                                UrlGeneratorInterface       $urlGenerator,
                                 UserPasswordHasherInterface $userPasswordHasher)
     {
         $this->urlGenerator = $urlGenerator;
@@ -49,7 +49,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         if (!$user) {
             throw new CustomUserMessageAuthenticationException('Erreur de saisie.
                 Veuillez vérifier votre email et votre mot de passe ou vous inscrire pour vous connecter !');
-        }else{
+        } else {
             if ($user->isVerified() === false) {
                 throw new CustomUserMessageAuthenticationException('Votre demande d\'inscription
                  n\'a pas encore été validée. Veuillez attendre la confirmation de l\'administrateur !');
@@ -57,7 +57,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         if (empty($request->request->get('password')) ||
-            $this->userPasswordHasher->isPasswordValid($user,$request->request->get('password')) === false) {
+            $this->userPasswordHasher->isPasswordValid($user, $request->request->get('password')) === false) {
             throw new CustomUserMessageAuthenticationException('Erreur de saisie.
                 Veuillez vérifier votre email et votre mot de passe ou vous inscrire pour vous connecter !');
         }

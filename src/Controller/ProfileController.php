@@ -20,17 +20,17 @@ class ProfileController extends AbstractController
     /**
      * @Route("profile/{id}/edit", name="profile_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, User $user,
+    public function edit(Request                     $request,
+                         User                        $user,
                          UserPasswordHasherInterface $userPasswordHasher,
-                         EntityManagerInterface $em): Response
+                         EntityManagerInterface      $em): Response
     {
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if($form->get('plainPassword')->getData())
-            {
+            if ($form->get('plainPassword')->getData()) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -39,7 +39,7 @@ class ProfileController extends AbstractController
                 );
             }
 
-            $user->setTokenHash(md5($user->getId().$user->getEmail()));
+            $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $em->flush();
 
             $this->addFlash(
@@ -54,6 +54,7 @@ class ProfileController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
     /**
      * @Route("/profile/admin/{userTokenHash}", name="profile_admin")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
@@ -68,11 +69,12 @@ class ProfileController extends AbstractController
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      * @throws NonUniqueResultException
      */
-    public function eleve(EleveRepository $eleveRepository, User $user,
+    public function eleve(EleveRepository              $eleveRepository,
+                          User                         $user,
                           InscriptionCantineRepository $cantineRepository): Response
     {
         $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($user->getNomUser(),
-            $user->getPrenomUser(),$user->getDateNaissanceUser());
+            $user->getPrenomUser(), $user->getDateNaissanceUser());
 
         $inscrit = $cantineRepository->findOneByEleve($eleveFound->getId());
 

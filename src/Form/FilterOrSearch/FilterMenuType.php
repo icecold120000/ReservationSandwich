@@ -28,8 +28,7 @@ class FilterMenuType extends AbstractType
                     'Non' => false,
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

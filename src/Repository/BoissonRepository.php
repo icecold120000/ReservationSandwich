@@ -20,16 +20,15 @@ class BoissonRepository extends ServiceEntityRepository
         parent::__construct($registry, Boisson::class);
     }
 
-     /**
-      * @return Boisson[] Returns an array of Boisson objects
-      */
-    public function filter(bool $dispo = null , string $order = 'ASC'): array
+    /**
+     * @return Boisson[] Returns an array of Boisson objects
+     */
+    public function filter(bool $dispo = null, string $order = 'ASC'): array
     {
         $query = $this->createQueryBuilder('b');
         if ($dispo !== null) {
             $query->andWhere('b.dispoBoisson = :val')
-                ->setParameter('val', $dispo)
-            ;
+                ->setParameter('val', $dispo);
         }
         return $query->orderBy('b.nomBoisson', $order)->getQuery()->getResult();
     }
@@ -43,8 +42,7 @@ class BoissonRepository extends ServiceEntityRepository
             ->andWhere('b.dispoBoisson = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -58,8 +56,7 @@ class BoissonRepository extends ServiceEntityRepository
             ->andWhere('b.nomBoisson = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     // /**

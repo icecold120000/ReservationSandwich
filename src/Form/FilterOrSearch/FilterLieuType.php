@@ -21,15 +21,14 @@ class FilterLieuType extends AbstractType
                 'required' => false,
                 'empty_data' => 'ASC',
             ])
-            ->add('lieuActive', ChoiceType::class,[
+            ->add('lieuActive', ChoiceType::class, [
                 'label' => 'Activé',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -22,13 +22,12 @@ class LieuLivraisonRepository extends ServiceEntityRepository
     /**
      * @return LieuLivraison[] Returns an array of Boisson objects
      */
-    public function filter(bool $active = null , string $order = 'ASC'): array
+    public function filter(bool $active = null, string $order = 'ASC'): array
     {
         $query = $this->createQueryBuilder('l');
         if ($active !== null) {
             $query->andWhere('l.estActive = :val')
-                ->setParameter('val', $active)
-            ;
+                ->setParameter('val', $active);
         }
         return $query->orderBy('l.libelleLieu', $order)->getQuery()->getResult();
     }

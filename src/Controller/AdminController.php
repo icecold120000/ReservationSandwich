@@ -14,7 +14,7 @@ class AdminController extends AbstractController
      */
     public function index(DesactivationCommandeRepository $repository): Response
     {
-        return $this->render('admin/admin.html.twig',[
+        return $this->render('admin/admin.html.twig', [
             'desactivation' => $repository->findOneBy(['id' => 1]),
         ]);
     }

@@ -25,13 +25,12 @@ class SandwichRepository extends ServiceEntityRepository
      * @param string $order
      * @return Sandwich[] Returns an array of sandwich objects
      */
-    public function filter(int $dispo = null , string $order = 'ASC'): array
+    public function filter(int $dispo = null, string $order = 'ASC'): array
     {
         $query = $this->createQueryBuilder('s');
         if ($dispo !== null) {
             $query->andWhere('s.dispoSandwich = :val')
-                ->setParameter('val', $dispo)
-            ;
+                ->setParameter('val', $dispo);
         }
         return $query->orderBy('s.nomSandwich', $order)->getQuery()->getResult();
     }
@@ -45,8 +44,7 @@ class SandwichRepository extends ServiceEntityRepository
             ->andWhere('s.dispoSandwich = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     // /**

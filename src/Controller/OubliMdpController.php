@@ -31,10 +31,10 @@ class OubliMdpController extends AbstractController
      * @throws TransportExceptionInterface
      * @throws NonUniqueResultException
      */
-    public function forgottenPassword(Request $request,
-                                      MailerInterface $mailer,
+    public function forgottenPassword(Request            $request,
+                                      MailerInterface    $mailer,
                                       RateLimiterFactory $anonymousApiLimiter,
-                                      UserRepository $userRepo): Response
+                                      UserRepository     $userRepo): Response
     {
         $form = $this->createForm(OubliMdpType::class);
         $email = $form->handleRequest($request);
@@ -43,9 +43,8 @@ class OubliMdpController extends AbstractController
         // the argument of consume() is the number of tokens to consume
         // and returns an object of type Limit
         if (false === $limiter->consume(1)->isAccepted()) {
-            $error = throw new TooManyRequestsHttpException('dans une heure','Vous avez fait trop de demande d\'oubli de mot de passe !');
-        }
-        else {
+            $error = throw new TooManyRequestsHttpException('dans une heure', 'Vous avez fait trop de demande d\'oubli de mot de passe !');
+        } else {
             if ($form->isSubmitted() && $form->isValid()) {
 
                 $user = $email->get("emailFirst")->getData();
@@ -63,8 +62,7 @@ class OubliMdpController extends AbstractController
                         ->htmlTemplate('email/send_oubli_mdp.html.twig')
                         ->context([
                             'user' => $data
-                        ])
-                    ;
+                        ]);
 
                     $mailer->send($email);
                     $this->addFlash(
@@ -89,7 +87,10 @@ class OubliMdpController extends AbstractController
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      * @throws NonUniqueResultException
      */
-    public function resetPassword(EntityManagerInterface $em,User $user, UserRepository $userRepo, Request $request,
+    public function resetPassword(EntityManagerInterface      $em,
+                                  User                        $user,
+                                  UserRepository              $userRepo,
+                                  Request                     $request,
                                   UserPasswordHasherInterface $userPasswordHasher): ?Response
     {
         $form = $this->createForm(UserMdpType::class);
@@ -97,10 +98,9 @@ class OubliMdpController extends AbstractController
 
         $userFound = $userRepo->findOneByEmail($user->getEmail());
 
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-            if($form->get('plainPassword')->getData())
-            {
+            if ($form->get('plainPassword')->getData()) {
                 $userFound->setPassword(
                     $userPasswordHasher->hashPassword(
                         $userFound,
@@ -115,7 +115,7 @@ class OubliMdpController extends AbstractController
                 'Votre mot de passe a été modifié !'
             );
 
-             new Passport(
+            new Passport(
                 new UserBadge($userFound->getEmail()),
                 new PasswordCredentials($request->request->get('plainPassword', '')),
                 [

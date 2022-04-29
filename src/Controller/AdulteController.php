@@ -44,8 +44,9 @@ class AdulteController extends AbstractController
     /**
      * @Route("/", name="adulte_index", methods={"GET","POST"})
      */
-    public function index(AdulteRepository $adulteRepo,
-                          Request          $request, PaginatorInterface $paginator): Response
+    public function index(AdulteRepository   $adulteRepo,
+                          Request            $request,
+                          PaginatorInterface $paginator): Response
     {
         $adultes = $adulteRepo->findByArchive(false);
 
@@ -77,7 +78,8 @@ class AdulteController extends AbstractController
      * @Route("/file", name="adulte_file", methods={"GET","POST"})
      * @throws Exception
      */
-    public function fileSubmit(Request                $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request,
+                               SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $adulteFile = new Fichier();
@@ -260,7 +262,9 @@ class AdulteController extends AbstractController
     /**
      * @Route("/{id}/edit", name="adulte_edit", methods={"GET", "POST"})
      */
-    public function edit(Request $request, Adulte $adulte, EntityManagerInterface $entityManager): Response
+    public function edit(Request                $request,
+                         Adulte                 $adulte,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(AdulteType::class, $adulte);
         $form->handleRequest($request);
@@ -294,7 +298,8 @@ class AdulteController extends AbstractController
      * @Route("/{id}", name="adulte_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request                $request, Adulte $adulte,
+    public function delete(Request                $request,
+                           Adulte                 $adulte,
                            EntityManagerInterface $entityManager,
                            UserRepository         $userRepo): Response
     {

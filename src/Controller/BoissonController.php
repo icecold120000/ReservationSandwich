@@ -25,8 +25,9 @@ class BoissonController extends AbstractController
     /**
      * @Route("/", name="boisson_index", methods={"GET","POST"})
      */
-    public function index(BoissonRepository $boissonRepo,
-                          Request           $request, PaginatorInterface $paginator): Response
+    public function index(BoissonRepository  $boissonRepo,
+                          Request            $request,
+                          PaginatorInterface $paginator): Response
     {
         $boissons = $boissonRepo->findAll();
 
@@ -55,8 +56,9 @@ class BoissonController extends AbstractController
     /**
      * @Route("/new", name="boisson_new", methods={"GET", "POST"})
      */
-    public function new(Request          $request, EntityManagerInterface $entityManager,
-                        SluggerInterface $slugger): Response
+    public function new(Request                $request,
+                        EntityManagerInterface $entityManager,
+                        SluggerInterface       $slugger): Response
     {
         $boisson = new Boisson();
         $form = $this->createForm(BoissonType::class, $boisson);
@@ -108,8 +110,10 @@ class BoissonController extends AbstractController
     /**
      * @Route("/{id}/edit", name="boisson_edit", methods={"GET", "POST"})
      */
-    public function edit(Request          $request, Boisson $boisson, EntityManagerInterface $entityManager,
-                         SluggerInterface $slugger): Response
+    public function edit(Request                $request,
+                         Boisson                $boisson,
+                         EntityManagerInterface $entityManager,
+                         SluggerInterface       $slugger): Response
     {
         $oldImgBoisson = $boisson->getImageBoisson();
         $form = $this->createForm(BoissonType::class, $boisson, ['fichierRequired' => false]);
@@ -169,7 +173,9 @@ class BoissonController extends AbstractController
     /**
      * @Route("/{id}", name="boisson_delete", methods={"POST"})
      */
-    public function delete(Request $request, Boisson $boisson, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           Boisson                $boisson,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $boisson->getId(), $request->request->get('_token'))) {
             unlink($this->getParameter('boisson_directory') . '/' . $boisson->getImageBoisson());

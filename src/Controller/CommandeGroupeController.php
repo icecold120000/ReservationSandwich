@@ -32,8 +32,10 @@ class CommandeGroupeController extends AbstractController
      * @throws Exception
      * @Route("/new", name="commande_groupe_new", methods={"GET", "POST"})
      */
-    public function new(Request                         $request, EntityManagerInterface $entityManager,
-                        SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+    public function new(Request                         $request,
+                        EntityManagerInterface          $entityManager,
+                        SandwichRepository              $sandwichRepo,
+                        BoissonRepository               $boissonRepo,
                         DessertRepository               $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
                         LimitationCommandeRepository    $limiteRepo): Response
@@ -137,7 +139,8 @@ class CommandeGroupeController extends AbstractController
     /**
      * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
      */
-    public function edit(Request                          $request, EntityManagerInterface $entityManager,
+    public function edit(Request                          $request,
+                         EntityManagerInterface           $entityManager,
                          SandwichRepository               $sandwichRepo,
                          DessertRepository                $dessertRepo,
                          DesactivationCommandeRepository  $deactiveRepo,
@@ -200,7 +203,9 @@ class CommandeGroupeController extends AbstractController
     /**
      * @Route("/{id}", name="commande_groupe_delete", methods={"POST"})
      */
-    public function delete(Request $request, CommandeGroupe $commandeGroupe, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           CommandeGroupe         $commandeGroupe,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $commandeGroupe->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeGroupe);

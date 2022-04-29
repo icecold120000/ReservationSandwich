@@ -31,8 +31,7 @@ class MenuAccueilRepository extends ServiceEntityRepository
             ->andWhere('m.id = :val')
             ->setParameter('val', $id)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     // /**

@@ -29,8 +29,7 @@ class InscriptionCantineRepository extends ServiceEntityRepository
             ->andWhere('ic.archiveInscription = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -44,8 +43,7 @@ class InscriptionCantineRepository extends ServiceEntityRepository
             ->andWhere('i.eleve = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     // /**

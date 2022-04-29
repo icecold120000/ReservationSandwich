@@ -15,11 +15,11 @@ class AdulteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomAdulte', TextType::class,[
+            ->add('nomAdulte', TextType::class, [
                 'label' => 'Nom de l\'adulte',
                 'required' => true,
             ])
-            ->add('prenomAdulte', TextType::class,[
+            ->add('prenomAdulte', TextType::class, [
                 'label' => 'Prénom de l\'adulte',
                 'required' => true,
             ])
@@ -39,15 +39,14 @@ class AdulteType extends AbstractType
                 ],
                 'required' => true,
                 'empty_data' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Adulte::class,
-            'attr' => ['id' =>'adulteForm'],
+            'attr' => ['id' => 'adulteForm'],
         ]);
     }
 }

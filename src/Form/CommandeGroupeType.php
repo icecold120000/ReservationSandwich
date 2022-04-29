@@ -27,7 +27,6 @@ class CommandeGroupeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $builder
             ->add('sandwichChoisi1', EntityType::class, [
                 'label' => 'Choisir un premier sandwich',

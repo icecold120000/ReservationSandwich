@@ -28,36 +28,32 @@ class EleveRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('e')
             ->andWhere('e.archiveEleve = :val')
             ->setParameter('val', $value)
-            ->orderBy('e.nomEleve','ASC')
+            ->orderBy('e.nomEleve', 'ASC')
             ->addOrderBy('e.prenomEleve', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function orderByEleve($ordreNom = null, $ordrePrenom = null, $classe = null) : array
+    public function orderByEleve($ordreNom = null, $ordrePrenom = null, $classe = null): array
     {
         $query = $this->createQueryBuilder('el');
         if ($ordreNom != null && $ordrePrenom != null) {
-            $query->addOrderBy('el.nomEleve',$ordreNom)
+            $query->addOrderBy('el.nomEleve', $ordreNom)
                 ->addOrderBy('el.prenomEleve', $ordrePrenom);
-        }
-        elseif ($ordreNom == null && $ordrePrenom != null) {
+        } elseif ($ordreNom == null && $ordrePrenom != null) {
             $query->orderBy('el.prenomEleve', $ordrePrenom);
-        }
-        elseif ($ordrePrenom == null && $ordreNom != null) {
+        } elseif ($ordrePrenom == null && $ordreNom != null) {
             $query->orderBy('el.nomEleve', $ordreNom);
         }
 
         if ($classe != null) {
             $query
-                ->leftJoin('el.classeEleve' ,'c')
+                ->leftJoin('el.classeEleve', 'c')
                 ->andWhere('c.id = :classe')
-                ->setParameter('classe',$classe)
-            ;
+                ->setParameter('classe', $classe);
         }
 
         return $query->getQuery()->getResult();
@@ -73,8 +69,7 @@ class EleveRepository extends ServiceEntityRepository
             ->andWhere('cl.libelleClasse != :val')
             ->setParameter('val', "Quitter l'établissement")
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
@@ -84,13 +79,13 @@ class EleveRepository extends ServiceEntityRepository
                                  $ordreNom = null, $ordrePrenom = null): array
     {
         $query = $this->createQueryBuilder('el');
-        if($nom != null){
+        if ($nom != null) {
             $query->andWhere('el.nomEleve LIKE :nom OR el.prenomEleve LIKE :nom
                 OR el.id LIKE :nom')
-                ->setParameter('nom', '%'.$nom.'%');
+                ->setParameter('nom', '%' . $nom . '%');
         }
 
-        if($classe != null){
+        if ($classe != null) {
             $query->leftJoin('el.classeEleve', 'cl');
             $query->andWhere('cl.id = :id')
                 ->setParameter('id', $classe);
@@ -98,18 +93,15 @@ class EleveRepository extends ServiceEntityRepository
 
         if ($archive !== null) {
             $query->andWhere('el.archiveEleve = :archive')
-                ->setParameter('archive',$archive)
-            ;
+                ->setParameter('archive', $archive);
         }
 
         if ($ordreNom != null && $ordrePrenom != null) {
             $query->addOrderBy('el.nomEleve', $ordreNom)
                 ->addOrderBy('el.prenomEleve', $ordrePrenom);
-        }
-        elseif ($ordreNom == null && $ordrePrenom != null) {
+        } elseif ($ordreNom == null && $ordrePrenom != null) {
             $query->orderBy('el.prenomEleve', $ordrePrenom);
-        }
-        elseif ($ordrePrenom == null && $ordreNom != null) {
+        } elseif ($ordrePrenom == null && $ordreNom != null) {
             $query->orderBy('el.nomEleve', $ordreNom);
         }
 
@@ -129,7 +121,7 @@ class EleveRepository extends ServiceEntityRepository
         $query->andWhere('e.nomEleve = :val')
             ->andWhere('e.prenomEleve = :val2')
             ->setParameters(array('val' => $nom, 'val2' => $prenom));
-        if($birthday != null){
+        if ($birthday != null) {
             $query->andWhere('e.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
         }
@@ -148,8 +140,7 @@ class EleveRepository extends ServiceEntityRepository
             ->andWhere('e.compteEleve = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
 

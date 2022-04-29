@@ -31,30 +31,27 @@ class AdulteRepository extends ServiceEntityRepository
             ->orderBy('a.prenomAdulte', 'ASC')
             ->addGroupBy('a.nomAdulte')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     /**
      * @return Adulte[] Returns an array of Adulte objects
      */
-    public function filter($nom = null ,$ordreNom = null, $ordrePrenom = null, $archive = null) : array
+    public function filter($nom = null, $ordreNom = null, $ordrePrenom = null, $archive = null): array
     {
         $query = $this->createQueryBuilder('a');
-        if($nom != null){
+        if ($nom != null) {
             $query->andWhere('a.nomAdulte LIKE :nom OR a.prenomAdulte LIKE :nom
                 OR a.id LIKE :nom')
-                ->setParameter('nom', '%'.$nom.'%');
+                ->setParameter('nom', '%' . $nom . '%');
         }
 
         if ($ordreNom !== null && $ordrePrenom !== null) {
-            $query->addOrderBy('a.nomAdulte',$ordreNom)
+            $query->addOrderBy('a.nomAdulte', $ordreNom)
                 ->addOrderBy('a.prenomAdulte', $ordrePrenom);
-        }
-        elseif ($ordreNom == null && $ordrePrenom !== null) {
+        } elseif ($ordreNom == null && $ordrePrenom !== null) {
             $query->orderBy('a.prenomAdulte', $ordrePrenom);
-        }
-        elseif ($ordrePrenom == null && $ordreNom !== null) {
+        } elseif ($ordrePrenom == null && $ordreNom !== null) {
             $query->orderBy('a.nomAdulte', $ordreNom);
         }
 
@@ -78,9 +75,8 @@ class AdulteRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('a');
         $query->andWhere('a.nomAdulte = :val')
             ->andWhere('a.prenomAdulte = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom))
-        ;
-        if($birthday != null){
+            ->setParameters(array('val' => $nom, 'val2' => $prenom));
+        if ($birthday != null) {
             $query->andWhere('a.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
         }

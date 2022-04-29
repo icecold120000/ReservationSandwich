@@ -28,6 +28,7 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/new", name="limite_new", methods={"GET", "POST"})
+     * À Garder pour les développeurs
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -53,6 +54,7 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="limite_delete_view", methods={"GET"})
+     * À Garder pour les développeurs
      */
     public function delete_view(LimitationCommande $limitationCommande): Response
     {
@@ -87,10 +89,11 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/{id}", name="limite_delete", methods={"POST"})
+     * À Garder pour les développeurs
      */
     public function delete(Request $request, LimitationCommande $limitationCommande, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$limitationCommande->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $limitationCommande->getId(), $request->request->get('_token'))) {
             $entityManager->remove($limitationCommande);
             $entityManager->flush();
             $this->addFlash(

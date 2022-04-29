@@ -21,8 +21,10 @@ class HomepageController extends AbstractController
      * @Route("/", name="homepage", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function index(Request $request, SluggerInterface $slugger,
-                          ManagerRegistry $doctrine, MenuAccueilRepository $menuRepo): Response
+    public function index(Request               $request,
+                          SluggerInterface      $slugger,
+                          ManagerRegistry       $doctrine,
+                          MenuAccueilRepository $menuRepo): Response
     {
         $entityManager = $doctrine->getManager();
         $menuAccueil = new MenuAccueil();
@@ -39,7 +41,7 @@ class HomepageController extends AbstractController
                 $originalFilename = pathinfo($fichierEleve->getClientOriginalName(), PATHINFO_FILENAME);
                 // garantie que le nom du fichier soit dans l'URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'.'.$fichierEleve->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierEleve->guessExtension();
 
                 // Déplace le fichier dans le directory où il sera stocké
                 try {
@@ -65,7 +67,7 @@ class HomepageController extends AbstractController
             return $this->redirectToRoute('homepage');
         }
 
-        return $this->render('homepage/index.html.twig',[
+        return $this->render('homepage/index.html.twig', [
             'form' => $form->createView(),
             'menu' => $menuRepo->findCurrentOne(count($menuRepo->findAll())),
         ]);

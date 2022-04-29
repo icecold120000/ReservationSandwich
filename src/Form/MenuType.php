@@ -34,8 +34,7 @@ class MenuType extends AbstractType
                         'message' => 'Veuillez sélectionner un fichier !'
                     ])
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

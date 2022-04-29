@@ -79,8 +79,7 @@ class RegistrationFormType extends AbstractType
                         'maxMessage' => 'Vos mot de passe doit être limité à 4096 caractères !',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

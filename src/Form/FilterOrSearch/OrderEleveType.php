@@ -27,8 +27,7 @@ class OrderEleveType extends AbstractType
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

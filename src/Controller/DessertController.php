@@ -24,7 +24,8 @@ class DessertController extends AbstractController
     /**
      * @Route("/", name="dessert_index", methods={"GET","POST"})
      */
-    public function index(DessertRepository  $dessertRepo, Request $request,
+    public function index(DessertRepository  $dessertRepo,
+                          Request            $request,
                           PaginatorInterface $paginator): Response
     {
         $desserts = $dessertRepo->findAll();
@@ -54,8 +55,9 @@ class DessertController extends AbstractController
     /**
      * @Route("/new", name="dessert_new", methods={"GET", "POST"})
      */
-    public function new(Request          $request, EntityManagerInterface $entityManager,
-                        SluggerInterface $slugger): Response
+    public function new(Request                $request,
+                        EntityManagerInterface $entityManager,
+                        SluggerInterface       $slugger): Response
     {
         $dessert = new Dessert();
         $form = $this->createForm(DessertType::class, $dessert);
@@ -107,8 +109,10 @@ class DessertController extends AbstractController
     /**
      * @Route("/{id}/edit", name="dessert_edit", methods={"GET", "POST"})
      */
-    public function edit(Request          $request, Dessert $dessert, EntityManagerInterface $entityManager,
-                         SluggerInterface $slugger): Response
+    public function edit(Request                $request,
+                         Dessert                $dessert,
+                         EntityManagerInterface $entityManager,
+                         SluggerInterface       $slugger): Response
     {
         $oldDessert = $dessert->getImageDessert();
         $form = $this->createForm(DessertType::class, $dessert, ['fichierRequired' => false]);
@@ -168,7 +172,9 @@ class DessertController extends AbstractController
     /**
      * @Route("/{id}", name="dessert_delete", methods={"POST"})
      */
-    public function delete(Request $request, Dessert $dessert, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           Dessert                $dessert,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $dessert->getId(), $request->request->get('_token'))) {
             unlink($this->getParameter('dessert_directory') . '/' . $dessert->getImageDessert());

@@ -16,15 +16,15 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nomUser', TextType::class,[
+            ->add('nomUser', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
                 'required' => true,
             ])
-            ->add('prenomUser', TextType::class,[
+            ->add('prenomUser', TextType::class, [
                 'label' => 'Prénom de l\'utilisateur',
                 'required' => true,
             ])
-            ->add('email', TextType::class,[
+            ->add('email', TextType::class, [
                 'label' => 'E-mail de l\'utilisateur',
                 'required' => true,
             ])
@@ -44,8 +44,7 @@ class ProfileType extends AbstractType
                         'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

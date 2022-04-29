@@ -13,12 +13,12 @@ class FilterClasseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('searchClasse',TextType::class, [
+            ->add('searchClasse', TextType::class, [
                 'label' => 'Rechercher une classe',
                 'help' => 'Saisie possible : Code ou Libellé',
                 'required' => false,
             ])
-             ->add('ordreAlphabet', ChoiceType::class, [
+            ->add('ordreAlphabet', ChoiceType::class, [
                 'label' => 'Ordre',
                 'choices' => [
                     'Croissant' => 'ASC',
@@ -26,14 +26,13 @@ class FilterClasseType extends AbstractType
                 ],
                 'required' => false,
                 'empty_data' => 'ASC',
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'attr' => ['id'=> 'filterOrder'],
+            'attr' => ['id' => 'filterOrder'],
         ]);
     }
 }

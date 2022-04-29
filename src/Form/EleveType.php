@@ -21,11 +21,11 @@ class EleveType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nomEleve', TextType::class,[
+            ->add('nomEleve', TextType::class, [
                 'label' => 'Nom de l\'élève',
                 'required' => true,
             ])
-            ->add('prenomEleve', TextType::class,[
+            ->add('prenomEleve', TextType::class, [
                 'label' => 'Prénom de l\'élève',
                 'required' => true,
             ])
@@ -62,7 +62,7 @@ class EleveType extends AbstractType
                 'required' => false,
                 'empty_data' => false,
             ])
-            ->add('classeEleve', EntityType::class,[
+            ->add('classeEleve', EntityType::class, [
                 'label' => 'Classe de l\'élève',
                 'class' => Classe::class,
                 'query_builder' => function (ClasseRepository $er) {
@@ -76,8 +76,7 @@ class EleveType extends AbstractType
                         'message' => 'Veuillez sélectionner une classe !'
                     ])
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

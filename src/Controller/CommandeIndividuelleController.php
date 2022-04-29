@@ -48,9 +48,11 @@ class CommandeIndividuelleController extends AbstractController
     private CommandeGroupeRepository $comGrRepo;
 
     public function __construct(SandwichRepository             $sandwichRepo,
-                                BoissonRepository              $boissonRepo, DessertRepository $dessertRepo,
+                                BoissonRepository              $boissonRepo,
+                                DessertRepository              $dessertRepo,
                                 CommandeIndividuelleRepository $comIndRepo,
-                                EleveRepository                $eleveRepo, CommandeGroupeRepository $comGrRepo)
+                                EleveRepository                $eleveRepo,
+                                CommandeGroupeRepository       $comGrRepo)
     {
         $this->sandwichRepo = $sandwichRepo;
         $this->boissonRepo = $boissonRepo;
@@ -66,7 +68,8 @@ class CommandeIndividuelleController extends AbstractController
      * @throws \Exception
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
-                          PaginatorInterface             $paginator, Request $request,
+                          PaginatorInterface             $paginator,
+                          Request                        $request,
                           LimitationCommandeRepository   $limiteRepo,
                           CommandeGroupeRepository       $comGrRepo): Response
     {
@@ -138,7 +141,8 @@ class CommandeIndividuelleController extends AbstractController
      * @Route("/desactivation/{desactiveId}", name="commande_ind_desactive", methods={"GET","POST"})
      * @Entity("desactivationCommande", expr="repository.find(desactiveId)")
      */
-    public function deactivation(DesactivationCommande $desactiveId, EntityManagerInterface $manager): RedirectResponse
+    public function deactivation(DesactivationCommande  $desactiveId,
+                                 EntityManagerInterface $manager): RedirectResponse
     {
 
         if ($desactiveId->getIsDeactivated() === false) {
@@ -169,7 +173,8 @@ class CommandeIndividuelleController extends AbstractController
      * @throws \Exception
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
-                          PaginatorInterface             $paginator, Request $request,
+                          PaginatorInterface             $paginator,
+                          Request                        $request,
                           CommandeGroupeRepository       $comGrRepo): Response
     {
         $affichageTableau = "les deux";
@@ -600,8 +605,10 @@ class CommandeIndividuelleController extends AbstractController
      * @throws NonUniqueResultException
      * @throws \Exception
      */
-    public function new(Request                         $request, EntityManagerInterface $entityManager,
-                        SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+    public function new(Request                         $request,
+                        EntityManagerInterface          $entityManager,
+                        SandwichRepository              $sandwichRepo,
+                        BoissonRepository               $boissonRepo,
                         DessertRepository               $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
                         LimitationCommandeRepository    $limiteRepo,
@@ -801,9 +808,11 @@ class CommandeIndividuelleController extends AbstractController
      * @throws NonUniqueResultException
      * @throws \Exception
      */
-    public function edit(Request                         $request, CommandeIndividuelle $commandeIndividuelle,
+    public function edit(Request                         $request,
+                         CommandeIndividuelle            $commandeIndividuelle,
                          EntityManagerInterface          $entityManager,
-                         SandwichRepository              $sandwichRepo, BoissonRepository $boissonRepo,
+                         SandwichRepository              $sandwichRepo,
+                         BoissonRepository               $boissonRepo,
                          DessertRepository               $dessertRepo,
                          DesactivationCommandeRepository $deactiveRepo,
                          LimitationCommandeRepository    $limiteRepo,
@@ -958,7 +967,9 @@ class CommandeIndividuelleController extends AbstractController
     /**
      * @Route("/{id}", name="commande_individuelle_delete", methods={"POST"})
      */
-    public function delete(Request $request, CommandeIndividuelle $commandeIndividuelle, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           CommandeIndividuelle   $commandeIndividuelle,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $commandeIndividuelle->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeIndividuelle);

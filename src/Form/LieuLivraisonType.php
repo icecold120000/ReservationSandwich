@@ -14,7 +14,7 @@ class LieuLivraisonType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelleLieu', TextType::class,[
+            ->add('libelleLieu', TextType::class, [
                 'label' => 'Libellé du lieu',
                 'required' => true,
             ])
@@ -25,8 +25,7 @@ class LieuLivraisonType extends AbstractType
                     'Non' => false,
                 ],
                 'required' => true,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

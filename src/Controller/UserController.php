@@ -55,7 +55,8 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="user_index", methods={"GET","POST"})
      */
-    public function index(Request            $request, UserRepository $userRepository,
+    public function index(Request            $request,
+                          UserRepository     $userRepository,
                           PaginatorInterface $paginator): Response
     {
         $users = $userRepository->findAll();
@@ -89,8 +90,10 @@ class UserController extends AbstractController
     /**
      * @Route("/new", name="user_new", methods={"GET", "POST"})
      */
-    public function new(Request                $request, UserPasswordHasherInterface $userPasswordHasher,
-                        EntityManagerInterface $entityManager, UserRepository $userRepo): Response
+    public function new(Request                     $request,
+                        UserPasswordHasherInterface $userPasswordHasher,
+                        EntityManagerInterface      $entityManager,
+                        UserRepository              $userRepo): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -145,7 +148,8 @@ class UserController extends AbstractController
      * @Route("/file", name="user_file", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function fileSubmit(Request                $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request,
+                               SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $userFile = new Fichier();
@@ -327,7 +331,8 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
      */
-    public function edit(Request                     $request, User $user,
+    public function edit(Request                     $request,
+                         User                        $user,
                          UserPasswordHasherInterface $userPasswordHasher,
                          EntityManagerInterface      $entityManager): Response
     {
@@ -363,7 +368,9 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_delete", methods={"POST"})
      */
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           User                   $user,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);

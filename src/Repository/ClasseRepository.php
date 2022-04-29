@@ -23,17 +23,16 @@ class ClasseRepository extends ServiceEntityRepository
     /**
      * @return Classe[]
      */
-    public function filterClasse($order, $search = null):array
+    public function filterClasse($order, $search = null): array
     {
         $query = $this->createQueryBuilder('c');
         if ($search != null) {
             $query
                 ->andWhere('c.codeClasse Like :search or c.libelleClasse Like :search')
-                ->setParameter('search', '%'.$search .'%')
-            ;
+                ->setParameter('search', '%' . $search . '%');
         }
 
-        $query->orderBy('c.codeClasse',$order);
+        $query->orderBy('c.codeClasse', $order);
         return $query->getQuery()->getResult();
     }
 
@@ -46,8 +45,7 @@ class ClasseRepository extends ServiceEntityRepository
             ->andWhere('c.libelleClasse = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -59,8 +57,7 @@ class ClasseRepository extends ServiceEntityRepository
             ->andWhere('c.codeClasse = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
     // /**
     //  * @return Classe[] Returns an array of Classe objects

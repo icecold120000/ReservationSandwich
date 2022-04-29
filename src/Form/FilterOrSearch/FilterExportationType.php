@@ -15,7 +15,7 @@ class FilterExportationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('methodeExport',ChoiceType::class,[
+            ->add('methodeExport', ChoiceType::class, [
                 'label' => 'Méthode d\'exportation',
                 'required' => true,
                 'choices' => [
@@ -29,7 +29,7 @@ class FilterExportationType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('affichageExport', ChoiceType::class,[
+            ->add('affichageExport', ChoiceType::class, [
                 'label' => 'Affichage de l\'export',
                 'choices' => [
                     'Les deux' => 'les deux',
@@ -52,20 +52,19 @@ class FilterExportationType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('dateExport', DateType::class,[
+            ->add('dateExport', DateType::class, [
                 'label' => 'Choisir la date',
                 'html5' => true,
                 'widget' => 'single_text',
                 'required' => true,
                 'constraints' => [
                     new GreaterThanOrEqual("-1 month 00:00:00",
-                        null,"Vous ne pouvez plus exporter les commandes qui ont plus un mois !"),
+                        null, "Vous ne pouvez plus exporter les commandes qui ont plus un mois !"),
                     new NotNull([
                         'message' => 'Veuillez choisir une date !',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

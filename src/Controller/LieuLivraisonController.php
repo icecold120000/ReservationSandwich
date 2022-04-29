@@ -23,7 +23,8 @@ class LieuLivraisonController extends AbstractController
      * @Route("/", name="lieu_livraison_index", methods={"GET","POST"})
      */
     public function index(LieuLivraisonRepository $lieuLivraisonRepo,
-                          PaginatorInterface      $paginator, Request $request): Response
+                          PaginatorInterface      $paginator,
+                          Request                 $request): Response
     {
         $lieux = $lieuLivraisonRepo->findAll();
 
@@ -89,7 +90,9 @@ class LieuLivraisonController extends AbstractController
     /**
      * @Route("/{id}/edit", name="lieu_livraison_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager): Response
+    public function edit(Request                $request,
+                         LieuLivraison          $lieuLivraison,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(LieuLivraisonType::class, $lieuLivraison);
         $form->handleRequest($request);
@@ -114,8 +117,11 @@ class LieuLivraisonController extends AbstractController
     /**
      * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
      */
-    public function delete(Request                  $request, LieuLivraison $lieuLivraison, EntityManagerInterface $entityManager,
-                           CommandeGroupeRepository $comGroupeRepo, LieuLivraisonRepository $lieuRepository): Response
+    public function delete(Request                  $request,
+                           LieuLivraison            $lieuLivraison,
+                           EntityManagerInterface   $entityManager,
+                           CommandeGroupeRepository $comGroupeRepo,
+                           LieuLivraisonRepository  $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
 

@@ -16,7 +16,7 @@ class UserFilterType extends AbstractType
             ->add('roleUser', ChoiceType::class, [
                 'label' => 'Fonction',
                 'choices' => [
-                    'Utilisateur'=> '[]',
+                    'Utilisateur' => '[]',
                     'Admin' => User::ROLE_ADMIN,
                     'Élève' => User::ROLE_ELEVE,
                     'Cuisine' => User::ROLE_CUISINE,
@@ -34,7 +34,7 @@ class UserFilterType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Tous',
             ])
-             ->add('ordreNom', ChoiceType::class, [
+            ->add('ordreNom', ChoiceType::class, [
                 'label' => 'Ordre par nom',
                 'choices' => [
                     'Croissant' => 'ASC',
@@ -42,15 +42,14 @@ class UserFilterType extends AbstractType
                 ],
                 'required' => false,
             ])
-             ->add('ordrePrenom', ChoiceType::class, [
+            ->add('ordrePrenom', ChoiceType::class, [
                 'label' => 'Ordre par prénom',
                 'choices' => [
                     'Croissant' => 'ASC',
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

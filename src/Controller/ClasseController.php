@@ -26,7 +26,8 @@ class ClasseController extends AbstractController
      * @Route("/", name="classe_index", methods={"GET","POST"})
      */
     public function index(ClasseRepository   $classeRepos,
-                          PaginatorInterface $paginator, Request $request): Response
+                          PaginatorInterface $paginator,
+                          Request            $request): Response
     {
         $classes = $classeRepos->filterClasse('ASC');
 
@@ -83,7 +84,9 @@ class ClasseController extends AbstractController
      * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function show(Classe                       $classe, Request $request, EleveRepository $eleveRepo,
+    public function show(Classe                       $classe,
+                         Request                      $request,
+                         EleveRepository              $eleveRepo,
                          InscriptionCantineRepository $cantineRepository): Response
     {
         $eleves = $classe->getEleves();
@@ -117,7 +120,9 @@ class ClasseController extends AbstractController
     /**
      * @Route("/{id}/edit", name="classe_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Classe $classe, EntityManagerInterface $entityManager): Response
+    public function edit(Request                $request,
+                         Classe                 $classe,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ClasseType::class, $classe);
         $form->handleRequest($request);
@@ -152,11 +157,13 @@ class ClasseController extends AbstractController
     /**
      * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
      */
-    public function delete(Request                $request, Classe $classe, EleveRepository $eleveRepo,
+    public function delete(Request                $request,
+                           Classe                 $classe,
+                           EleveRepository        $eleveRepo,
                            EntityManagerInterface $entityManager): Response
     {
         $eleveRelated = $eleveRepo->findByClasse(null, $classe->getId());
-        
+
         if ($eleveRelated) {
             $this->addFlash(
                 'deleteDangerClasse',

@@ -25,13 +25,12 @@ class DessertRepository extends ServiceEntityRepository
      * @param string $order
      * @return Dessert[] Returns an array of Dessert objects
      */
-    public function filter(int $dispo = null , string $order = 'ASC'): array
+    public function filter(int $dispo = null, string $order = 'ASC'): array
     {
         $query = $this->createQueryBuilder('d');
         if ($dispo !== null) {
             $query->andWhere('d.dispoDessert = :val')
-                ->setParameter('val', $dispo)
-            ;
+                ->setParameter('val', $dispo);
         }
         return $query->orderBy('d.nomDessert', $order)->getQuery()->getResult();
     }
@@ -45,8 +44,7 @@ class DessertRepository extends ServiceEntityRepository
             ->andWhere('d.dispoDessert = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 
     // /**

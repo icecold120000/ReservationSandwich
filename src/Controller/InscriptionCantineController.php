@@ -31,8 +31,9 @@ class InscriptionCantineController extends AbstractController
     private EleveRepository $eleveRepository;
     private InscriptionCantineRepository $inscritCantRepo;
 
-    public function __construct(EntityManagerInterface $entityManager
-        , EleveRepository                              $eleveRepository, InscriptionCantineRepository $inscritCantRepo)
+    public function __construct(EntityManagerInterface       $entityManager,
+                                EleveRepository              $eleveRepository,
+                                InscriptionCantineRepository $inscritCantRepo)
     {
         $this->entityManager = $entityManager;
         $this->eleveRepository = $eleveRepository;
@@ -43,7 +44,8 @@ class InscriptionCantineController extends AbstractController
      * @Route("/", name="inscription_cantine_index", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function fileSubmit(Request                $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request,
+                               SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $cantineFile = new Fichier();

@@ -39,8 +39,9 @@ class EleveController extends AbstractController
     private ClasseRepository $classeRepo;
     private InscriptionCantineRepository $inscritCantRepo;
 
-    public function __construct(EntityManagerInterface       $entityManager
-        , EleveRepository                                    $eleveRepository, ClasseRepository $classeRepo,
+    public function __construct(EntityManagerInterface       $entityManager,
+                                EleveRepository              $eleveRepository,
+                                ClasseRepository             $classeRepo,
                                 InscriptionCantineRepository $inscritCantRepo)
     {
         $this->entityManager = $entityManager;
@@ -52,7 +53,8 @@ class EleveController extends AbstractController
     /**
      * @Route("/", name="eleve_index", methods={"GET","POST"})
      */
-    public function index(EleveRepository    $eleveRepo, Request $request,
+    public function index(EleveRepository    $eleveRepo,
+                          Request            $request,
                           PaginatorInterface $paginator): Response
     {
         $eleves = $eleveRepo->findByArchive(false);
@@ -87,7 +89,8 @@ class EleveController extends AbstractController
      * @Route("/file", name="eleve_file", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function fileSubmit(Request                $request, SluggerInterface $slugger,
+    public function fileSubmit(Request                $request,
+                               SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
         $eleveFile = new Fichier();
@@ -315,7 +318,8 @@ class EleveController extends AbstractController
      * @Route("/new", name="eleve_new", methods={"GET","POST"})
      * @throws Exception
      */
-    public function new(Request                $request, SluggerInterface $slugger,
+    public function new(Request                $request,
+                        SluggerInterface       $slugger,
                         EntityManagerInterface $entityManager): Response
     {
         $eleve = new Eleve();
@@ -368,7 +372,9 @@ class EleveController extends AbstractController
      * @Route("/{id}/edit", name="eleve_edit", methods={"GET","POST"})
      * @throws Exception
      */
-    public function edit(Request                $request, Eleve $eleve, SluggerInterface $slugger,
+    public function edit(Request                $request,
+                         Eleve                  $eleve,
+                         SluggerInterface       $slugger,
                          EntityManagerInterface $entityManager): Response
     {
         $anciennePhoto = $eleve->getPhotoEleve();
@@ -433,7 +439,8 @@ class EleveController extends AbstractController
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request                $request, Eleve $eleve,
+    public function delete(Request                $request,
+                           Eleve                  $eleve,
                            EntityManagerInterface $entityManager,
                            UserRepository         $userRepo): Response
     {

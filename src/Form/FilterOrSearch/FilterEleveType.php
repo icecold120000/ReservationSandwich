@@ -16,11 +16,11 @@ class FilterEleveType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom', TextType::class,[
+            ->add('nom', TextType::class, [
                 'label' => 'Rechercher un élève',
                 'required' => false,
             ])
-            ->add('classe', EntityType::class,[
+            ->add('classe', EntityType::class, [
                 'label' => 'Classe',
                 'class' => Classe::class,
                 'query_builder' => function (ClasseRepository $er) {
@@ -58,8 +58,7 @@ class FilterEleveType extends AbstractType
                     'Décroissant' => 'DESC',
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
 }

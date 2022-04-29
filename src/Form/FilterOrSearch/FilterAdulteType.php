@@ -13,7 +13,7 @@ class FilterAdulteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomAdulte', TextType::class,[
+            ->add('nomAdulte', TextType::class, [
                 'label' => 'Rechercher un adulte',
                 'required' => false,
             ])
@@ -42,8 +42,7 @@ class FilterAdulteType extends AbstractType
                     'Oui' => true,
                 ],
                 'required' => false,
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

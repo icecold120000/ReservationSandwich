@@ -24,7 +24,8 @@ class SandwichController extends AbstractController
     /**
      * @Route("/", name="sandwich_index", methods={"GET","POST"})
      */
-    public function index(SandwichRepository $sandwichRepo, Request $request,
+    public function index(SandwichRepository $sandwichRepo,
+                          Request            $request,
                           PaginatorInterface $paginator): Response
     {
         $sandwiches = $sandwichRepo->findAll();
@@ -54,8 +55,9 @@ class SandwichController extends AbstractController
     /**
      * @Route("/new", name="sandwich_new", methods={"GET", "POST"})
      */
-    public function new(Request          $request, EntityManagerInterface $entityManager,
-                        SluggerInterface $slugger): Response
+    public function new(Request                $request,
+                        EntityManagerInterface $entityManager,
+                        SluggerInterface       $slugger): Response
     {
         $sandwich = new Sandwich();
         $form = $this->createForm(SandwichType::class, $sandwich);
@@ -103,8 +105,10 @@ class SandwichController extends AbstractController
     /**
      * @Route("/{id}/edit", name="sandwich_edit", methods={"GET", "POST"})
      */
-    public function edit(Request          $request, Sandwich $sandwich, EntityManagerInterface $entityManager,
-                         SluggerInterface $slugger): Response
+    public function edit(Request                $request,
+                         Sandwich               $sandwich,
+                         EntityManagerInterface $entityManager,
+                         SluggerInterface       $slugger): Response
     {
         $oldSandwich = $sandwich->getImageSandwich();
         $form = $this->createForm(SandwichType::class, $sandwich, ['fichierRequired' => false]);
@@ -162,7 +166,9 @@ class SandwichController extends AbstractController
     /**
      * @Route("/{id}", name="sandwich_delete", methods={"POST"})
      */
-    public function delete(Request $request, Sandwich $sandwich, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           Sandwich               $sandwich,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $sandwich->getId(), $request->request->get('_token'))) {
             unlink($this->getParameter('sandwich_directory') . '/' . $sandwich->getImageSandwich());
