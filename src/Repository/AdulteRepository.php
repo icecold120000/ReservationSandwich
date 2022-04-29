@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Adulte;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -96,30 +97,16 @@ class AdulteRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getOneOrNullResult();
     }
-    /*
-    public function findByExampleField($value)
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByCompte(User $user): ?Adulte
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('a.compteAdulte = :val')
+            ->setParameter('val', $user)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Adulte
-    {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
-
 }

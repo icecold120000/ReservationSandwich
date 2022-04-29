@@ -208,35 +208,6 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                 ->setParameter('date', new DateTime('now'))
                 ->orderBy('ci.dateHeureLivraison', 'ASC');
         }
-
-
         return $query->getQuery()->getResult();
     }
-
-
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?CommandeIndividuelle
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

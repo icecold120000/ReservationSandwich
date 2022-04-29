@@ -439,10 +439,11 @@ class EleveController extends AbstractController
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request                $request,
-                           Eleve                  $eleve,
-                           EntityManagerInterface $entityManager,
-                           UserRepository         $userRepo): Response
+    public function delete(Request                      $request,
+                           Eleve                        $eleve,
+                           EntityManagerInterface       $entityManager,
+                           UserRepository               $userRepo,
+                           InscriptionCantineRepository $cantineRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $eleve->getId(), $request->request->get('_token'))) {
 
@@ -450,8 +451,12 @@ class EleveController extends AbstractController
                 unlink($this->getParameter('photoEleve_directory') . '/' . $eleve->getPhotoEleve());
             }
             $user = $userRepo->findOneByEleve($eleve->getId());
+            $cantine = $cantineRepository->findOneByEleve($eleve);
             if ($user) {
                 $entityManager->remove($user);
+            }
+            if ($cantine) {
+                $entityManager->remove($cantine);
             }
             $entityManager->remove($eleve);
             $entityManager->flush();

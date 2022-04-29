@@ -2,29 +2,39 @@
 
 {% block title %}Suppression d'un utilisateur {% endblock %}
 {% block stylesheets %}
-	<link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
 {% endblock %}
 
 {% block body %}
-	<main class="container-fluid">
-		<h1>Suppression d'un utilisateur</h1>
-		<h2>
-			Appuyer sur le bouton Supprimer pour supprimer l'utilisateur choisi
-			: {{ user.prenomUser }} {{ user.nomUser }}.
-		</h2>
+    <main class="container-fluid">
+        <h1>Suppression d'un utilisateur</h1>
+        <h2>
+            Appuyer sur le bouton Supprimer pour supprimer l'utilisateur choisi
+            : {{ user.prenomUser }} {{ user.nomUser }}.
+        </h2>
 
-		{% for message in app.flashes('FailedDeleteUser') %}
-			<div class="flash-danger" id="warning">
-				<p>{{ message|replace({".":".</br>"})|raw }}</p>
-			</div>
-		{% endfor %}
+        <div id="warning">
+            <p>
+                <i class="fas fa-exclamation-triangle"></i> Attention : Votre action supprimera uniquement
+                le compte utilisateur !
+            </p>
+            <p>
+                Si un élève ou un adulte est associé à ce compte, alors il ne sera pas supprimé !
+            </p>
+        </div>
 
-		{{ include('user/_delete_form.html.twig') }}
-		<div>
-			<a href="{{ path('user_index') }}"
-			   class="btn btn-secondary" id="btnRetourSuppr">
-				Revenir à la liste
-			</a>
-		</div>
-	</main>
+        {% for message in app.flashes('FailedDeleteUser') %}
+            <div class="flash-danger" id="warning">
+                <p>{{ message|replace({".":".</br>"})|raw }}</p>
+            </div>
+        {% endfor %}
+
+        {{ include('user/_delete_form.html.twig') }}
+        <div>
+            <a href="{{ path('user_index') }}"
+               class="btn btn-secondary" id="btnRetourSuppr">
+                Revenir à la liste
+            </a>
+        </div>
+    </main>
 {% endblock %}

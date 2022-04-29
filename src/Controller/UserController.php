@@ -367,12 +367,31 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="user_delete", methods={"POST"})
+     * @throws NonUniqueResultException
      */
     public function delete(Request                $request,
                            User                   $user,
-                           EntityManagerInterface $entityManager): Response
+                           EntityManagerInterface $entityManager,
+                           AdulteRepository       $adulteRepository,
+                           EleveRepository        $eleveRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+
+            $eleveFound = $eleveRepository->findOneByCompte($user);
+            $adulteFound = $adulteRepository->findOneByCompte($user);
+
+            if ($eleveFound) {
+                $eleveFound->setCompteEleve(Null);
+                $entityManager->persist($eleveFound);
+                $entityManager->flush();
+            }
+
+            if ($adulteFound) {
+                $adulteFound->setCompteAdulte(Null);
+                $entityManager->persist($adulteFound);
+                $entityManager->flush();
+            }
+
             $entityManager->remove($user);
             $entityManager->flush();
             $this->addFlash(

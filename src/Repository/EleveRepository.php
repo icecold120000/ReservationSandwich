@@ -62,19 +62,6 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function findAllWithClasse(): array
-    {
-        return $this->createQueryBuilder('el')
-            ->leftJoin('el.classeEleve', 'cl')
-            ->andWhere('cl.libelleClasse != :val')
-            ->setParameter('val', "Quitter l'établissement")
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Eleve[] Returns an array of Eleve objects
-     */
     public function findByClasse($nom = null, $classe = null, $archive = null,
                                  $ordreNom = null, $ordrePrenom = null): array
     {
@@ -142,34 +129,4 @@ class EleveRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
-
-    // /**
-    //  * @return Eleve[] Returns an array of Eleve objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Eleve
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

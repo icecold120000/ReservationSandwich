@@ -159,17 +159,17 @@
                                         '<i class="fas fa-times"></i>' }}
                                     </td>
                                 {% endif %}
-                                {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('d/m/Y', 'Europe/Paris') %}
+                                {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('m/d/Y', 'Europe/Paris') %}
                                 {% if dateLimiteGroupe|date('m/d/Y') < "now"|date('m/d/Y') %}
                                     <td>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
                                         Vous avez dépassé la date
-                                        <span>limite de modification : {{ dateLimiteGroupe }}</span>
+                                        <span>limite de modification : {{ dateLimiteGroupe|date('d/m/Y') }}</span>
                                     </td>
                                     <td>
                                         Vous ne pouvez plus <span>annuler cette commande.</span>
                                         Vous avez dépassé la date
-                                        <span>limite de modification : {{ dateLimiteGroupe }}</span>
+                                        <span>limite de modification : {{ dateLimiteGroupe|date('d/m/Y') }}</span>
                                     </td>
                                 {% else %}
                                     <td>
