@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des desserts{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Liste des desserts</h1>
@@ -22,23 +23,23 @@
             </a>
         </div>
         <div>
-            {{form_start(form)}}
+            {{ form_start(form) }}
             <div id="filtre" class="filtre form-row align-items-end">
                 <div class="selectFiltre">
                     <div>
-                        <span>{{form_label(form.ordre)}}</span>
-                        {{form_widget(form.ordre)}}
-                        <span>{{form_label(form.dispo)}}</span>
-                        {{form_widget(form.dispo)}}
+                        <span>{{ form_label(form.ordre) }}</span>
+                        {{ form_widget(form.ordre) }}
+                        <span>{{ form_label(form.dispo) }}</span>
+                        {{ form_widget(form.dispo) }}
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-info" >
+                        <button type="submit" class="btn btn-info">
                             Afficher
                         </button>
                     </div>
                 </div>
             </div>
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
         <div>
             {{ knp_pagination_render(desserts) }}
@@ -61,14 +62,15 @@
                     <tr>
                         <td>
                             {% if dessert.imageDessert %}
-                                <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" alt="photo d'un dessert">
+                                <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}"
+                                     alt="photo d'un dessert">
                             {% else %}
                                 <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="placeholder">
                             {% endif %}
                         </td>
                         <td>{{ dessert.nomDessert }}</td>
                         <td>{{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisée.' }}</td>
-                        <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.'}}</td>
+                        <td>{{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.' }}</td>
                         <td>
                             {{ dessert.dispoDessert ? '<i class="fas fa-check"></i>' :
                             '<i class="fas fa-times"></i>' }}

@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Inscription{% endblock %}
-
 {% block body %}
     <main class="container-fluid">
         <div>
@@ -28,57 +27,57 @@
             <section id="formRegister">
                 <div class="container-fluid">
                     <div>
-                        {{form_start(registrationForm)}}
+                        {{ form_start(registrationForm) }}
                         <div id="screenLeft">
-                            {{form_label(registrationForm.prenomUser)}}
+                            {{ form_label(registrationForm.prenomUser) }}
                             {% if form_errors(registrationForm.prenomUser) %}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.prenomUser)}}
+                                    {{ form_errors(registrationForm.prenomUser) }}
                                 </div>
                             {% endif %}
                             <div class="divInput">
-                                {{form_widget(registrationForm.prenomUser)}}
+                                {{ form_widget(registrationForm.prenomUser) }}
                             </div>
-                            {{form_label(registrationForm.nomUser)}}
+                            {{ form_label(registrationForm.nomUser) }}
                             {% if form_errors(registrationForm.nomUser) %}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.nomUser)}}
+                                    {{ form_errors(registrationForm.nomUser) }}
                                 </div>
                             {% endif %}
                             <div class="divInput">
-                                {{form_widget(registrationForm.nomUser)}}
+                                {{ form_widget(registrationForm.nomUser) }}
                             </div>
-                            {{form_label(registrationForm.email)}}
+                            {{ form_label(registrationForm.email) }}
                             {% if form_errors(registrationForm.email) %}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.email)}}
+                                    {{ form_errors(registrationForm.email) }}
                                 </div>
                             {% endif %}
                             <div class="divInput">
-                                {{form_widget(registrationForm.email)}}
+                                {{ form_widget(registrationForm.email) }}
                             </div>
-                            {{form_label(registrationForm.dateNaissanceUser)}}
+                            {{ form_label(registrationForm.dateNaissanceUser) }}
                             {% if form_errors(registrationForm.dateNaissanceUser) %}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.dateNaissanceUser)}}
+                                    {{ form_errors(registrationForm.dateNaissanceUser) }}
                                 </div>
                             {% endif %}
                             <div class="divInput">
-                                {{form_widget(registrationForm.dateNaissanceUser)}}
+                                {{ form_widget(registrationForm.dateNaissanceUser) }}
                             </div>
                         </div>
                         <div id="screenRight">
-                            {% if form_errors(registrationForm.plainPassword.first)%}
+                            {% if form_errors(registrationForm.plainPassword.first) %}
                                 <div class="erreur">
-                                    {{form_errors(registrationForm.plainPassword.first)}}
+                                    {{ form_errors(registrationForm.plainPassword.first) }}
                                 </div>
                             {% endif %}
                             <div class="divInput">
-                                {{form_help(registrationForm.plainPassword)}}
-                                {{form_widget(registrationForm.plainPassword)}}
+                                {{ form_help(registrationForm.plainPassword) }}
+                                {{ form_widget(registrationForm.plainPassword) }}
                             </div>
                         </div>
-                        {{form_end(registrationForm)}}
+                        {{ form_end(registrationForm) }}
                     </div>
                     <div class="row">
                         <div id="divAjout">

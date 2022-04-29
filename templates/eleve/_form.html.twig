@@ -1,63 +1,63 @@
-    {{form_start(form)}}
-        <div id="screenLeft">
-            {{form_label(form.nomEleve)}}
-            {% if form_errors(form.nomEleve) %}
-                <div class="erreur">
-                    {{ form_errors(form.nomEleve) }}
-                </div>
-            {% endif %}
-            <div>
-                {{ form_widget(form.nomEleve) }}
-            </div>
-            {{ form_label(form.prenomEleve) }}
-            {%if form_errors(form.prenomEleve) %}
-                <div class="erreur">
-                    {{ form_errors(form.prenomEleve) }}
-                </div>
-            {% endif %}
-            <div>
-                {{ form_widget(form.prenomEleve) }}
-            </div>
-            {{ form_label(form.photoEleve) }}
-            {{ form_help(form.photoEleve) }}
-            {%if form_errors(form.photoEleve) %}
-                <div class="erreur">
-                    {{ form_errors(form.photoEleve) }}
-                </div>
-            {% endif %}
-            <div id="inputFile">
-                {{ form_widget(form.photoEleve) }}
-            </div>
+{{ form_start(form) }}
+<div id="screenLeft">
+    {{ form_label(form.nomEleve) }}
+    {% if form_errors(form.nomEleve) %}
+        <div class="erreur">
+            {{ form_errors(form.nomEleve) }}
         </div>
-        <div id="screenRight">
-            {{ form_label(form.dateNaissance) }}
-            {%if form_errors(form.dateNaissance) %}
-                <div class="erreur">
-                    {{ form_errors(form.dateNaissance) }}
-                </div>
-            {% endif %}
-            <div>
-                {{ form_widget(form.dateNaissance) }}
-            </div>
-            {{form_label(form.classeEleve)}}
-            {%if form_errors(form.classeEleve)%}
-                <div class="erreur">
-                    {{ form_errors(form.classeEleve) }}
-                </div>
-            {% endif %}
-            <div id="selectClasse">
-                {{ form_widget(form.classeEleve) }}
-            </div>
-            {{ form_label(form.archiveEleve) }}
-            {%if form_errors(form.archiveEleve) %}
-                <div class="erreur">
-                    {{ form_errors(form.archiveEleve) }}
-                </div>
-            {% endif %}
-            <div id="selectClasse">
-                {{ form_widget(form.archiveEleve) }}
-            </div>
+    {% endif %}
+    <div>
+        {{ form_widget(form.nomEleve) }}
+    </div>
+    {{ form_label(form.prenomEleve) }}
+    {% if form_errors(form.prenomEleve) %}
+        <div class="erreur">
+            {{ form_errors(form.prenomEleve) }}
         </div>
-    {{form_end(form)}}
+    {% endif %}
+    <div>
+        {{ form_widget(form.prenomEleve) }}
+    </div>
+    {{ form_label(form.photoEleve) }}
+    {{ form_help(form.photoEleve) }}
+    {% if form_errors(form.photoEleve) %}
+        <div class="erreur">
+            {{ form_errors(form.photoEleve) }}
+        </div>
+    {% endif %}
+    <div id="inputFile">
+        {{ form_widget(form.photoEleve) }}
+    </div>
+</div>
+<div id="screenRight">
+    {{ form_label(form.dateNaissance) }}
+    {% if form_errors(form.dateNaissance) %}
+        <div class="erreur">
+            {{ form_errors(form.dateNaissance) }}
+        </div>
+    {% endif %}
+    <div>
+        {{ form_widget(form.dateNaissance) }}
+    </div>
+    {{ form_label(form.classeEleve) }}
+    {% if form_errors(form.classeEleve) %}
+        <div class="erreur">
+            {{ form_errors(form.classeEleve) }}
+        </div>
+    {% endif %}
+    <div id="selectClasse">
+        {{ form_widget(form.classeEleve) }}
+    </div>
+    {{ form_label(form.archiveEleve) }}
+    {% if form_errors(form.archiveEleve) %}
+        <div class="erreur">
+            {{ form_errors(form.archiveEleve) }}
+        </div>
+    {% endif %}
+    <div id="selectClasse">
+        {{ form_widget(form.archiveEleve) }}
+    </div>
+</div>
+{{ form_end(form) }}
 
 

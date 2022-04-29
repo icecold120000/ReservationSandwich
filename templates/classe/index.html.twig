@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des classes{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Liste des classes</h1>
@@ -12,7 +13,7 @@
             </div>
         {% endfor %}
         <div>
-            {% if is_granted('ROLE_ADMIN')%}
+            {% if is_granted('ROLE_ADMIN') %}
                 <a href="{{ path('classe_new') }}"
                    class="btn btn-info" id="btnAjout">
                     Ajouter une nouvelle classe
@@ -24,19 +25,19 @@
             </a>
         </div>
         <div>
-            {{form_start(form)}}
+            {{ form_start(form) }}
             <div id="filtre">
                 <div class="selectFiltre">
-                    <span>{{form_label(form.searchClasse)}}</span>
-                    {{form_widget(form.searchClasse)}}
-                    <span>{{form_label(form.ordreAlphabet)}}</span>
-                    {{form_widget(form.ordreAlphabet)}}
-                    <button type="submit" class="btn btn-info" >
+                    <span>{{ form_label(form.searchClasse) }}</span>
+                    {{ form_widget(form.searchClasse) }}
+                    <span>{{ form_label(form.ordreAlphabet) }}</span>
+                    {{ form_widget(form.ordreAlphabet) }}
+                    <button type="submit" class="btn btn-info">
                         Afficher
                     </button>
                 </div>
             </div>
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
         <div>
             {{ knp_pagination_render(classes) }}
@@ -47,7 +48,7 @@
                 <th>Code de la classe</th>
                 <th>Libellé de la classe</th>
                 <th>Détail</th>
-                {% if is_granted('ROLE_ADMIN')%}
+                {% if is_granted('ROLE_ADMIN') %}
                     <th>Éditer</th>
                     <th>Supprimer</th>
                 {% endif %}
@@ -56,15 +57,15 @@
             <tbody>
             {% for classe in classes %}
                 <tr>
-                    <td>{{classe.codeClasse}}</td>
-                    <td>{{classe.libelleClasse}}</td>
+                    <td>{{ classe.codeClasse }}</td>
+                    <td>{{ classe.libelleClasse }}</td>
                     <td>
                         <a href="{{ path('classe_show',
                             {'id': classe.id}) }}" class="btn btn-info">
                             Voir détail
                         </a>
                     </td>
-                    {% if is_granted('ROLE_ADMIN')%}
+                    {% if is_granted('ROLE_ADMIN') %}
                         <td>
                             <a href="{{ path('classe_edit',
                                 {'id': classe.id}) }}" class="btn btn-primary">
@@ -80,13 +81,13 @@
                     {% endif %}
                 </tr>
             {% else %}
-                {% if is_granted('ROLE_ADMIN')%}
+                {% if is_granted('ROLE_ADMIN') %}
                     <tr>
-                        <td colspan="5">Aucune donnée n'a été trouvée</td>
+                        <td colspan="5">Aucune donnée n'a été trouvée !</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="3">Aucune donnée n'a été trouvée</td>
+                        <td colspan="3">Aucune donnée n'a été trouvée !</td>
                     </tr>
                 {% endif %}
             {% endfor %}

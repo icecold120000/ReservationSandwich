@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Faire une commande individuelle{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Faire une commande individuelle</h1>
@@ -18,7 +19,7 @@
         {% endfor %}
         <div>
             <div class="container-fluid formEntité2" id="commandeFormInd">
-               {{ include('commande_individuelle/_form.html.twig') }}
+                {{ include('commande_individuelle/_form.html.twig') }}
             </div>
         </div>
         <div class="row">
@@ -39,7 +40,7 @@
                                     </button>
                                 {% else %}
                                     <button class="btn btn-success" id="btnAjout" disabled>
-                                        Vous avez dépassé le nombre limite mensuel de {{limiteNbMois}} commandes !
+                                        Vous avez dépassé le nombre limite mensuel de {{ limiteNbMois }} commandes !
                                     </button>
                                 {% endif %}
                             {% endif %}
@@ -51,7 +52,7 @@
                                 </button>
                             {% else %}
                                 <button class="btn btn-success" id="btnAjout" disabled>
-                                    Vous avez dépassé le nombre limite hebdomadaire de {{limiteNbSemaine}} commandes !
+                                    Vous avez dépassé le nombre limite hebdomadaire de {{ limiteNbSemaine }} commandes !
                                 </button>
                             {% endif %}
                         {% endif %}
@@ -63,7 +64,7 @@
                             </button>
                         {% else %}
                             <button class="btn btn-success" id="btnAjout" disabled>
-                                Vous avez dépassé le nombre limite journalier de {{limiteNbJournalier}} commandes !
+                                Vous avez dépassé le nombre limite journalier de {{ limiteNbJournalier }} commandes !
                             </button>
                         {% endif %}
                     {% endif %}

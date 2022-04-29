@@ -1,20 +1,20 @@
 {{ form_start(form) }}
-        {{form_label(form.libelleLieu)}}
-        {% if form_errors(form.libelleLieu) %}
-            <div class="erreur">
-                {{ form_errors(form.libelleLieu) }}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.libelleLieu) }}
+    {{ form_label(form.libelleLieu) }}
+    {% if form_errors(form.libelleLieu) %}
+        <div class="erreur">
+            {{ form_errors(form.libelleLieu) }}
         </div>
-        {{ form_label(form.estActive) }}
-        {%if form_errors(form.estActive) %}
-            <div class="erreur">
-                {{ form_errors(form.estActive) }}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.estActive) }}
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.libelleLieu) }}
+    </div>
+    {{ form_label(form.estActive) }}
+    {% if form_errors(form.estActive) %}
+        <div class="erreur">
+            {{ form_errors(form.estActive) }}
         </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.estActive) }}
+    </div>
 {{ form_end(form) }}

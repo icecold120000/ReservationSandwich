@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Espace administration{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <div>
@@ -13,11 +14,13 @@
                 </div>
             {% endfor %}
             {% if desactivation.isDeactivated == false %}
-                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}" onsubmit="return confirm('Voulez-vous vraiment désactivé les page de réservation ?');">
+                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
+                      onsubmit="return confirm('Voulez-vous vraiment désactivé les page de réservation ?');">
                     <button class="btn btn-danger" id="btnSuppr">Désactivation des pages de réservations</button>
                 </form>
             {% else %}
-                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}" onsubmit="return confirm('Voulez-vous vraiment réactivé les page de réservation ?');">
+                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
+                      onsubmit="return confirm('Voulez-vous vraiment réactivé les page de réservation ?');">
                     <button class="btn btn-success" id="btnSuppr">Réactivation des pages de réservations</button>
                 </form>
             {% endif %}
@@ -34,108 +37,108 @@
                 </tr>
                 </thead>
                 <tbody>
+                <tr>
+                    <td>Les sandwichs</td>
+                    <td>
+                        <a href="{{ path('sandwich_index') }}"
+                           class="btn btn-info" id="btnAdmin0">
+                            Gestion des sandwichs
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Les boissons</td>
+                    <td>
+                        <a href="{{ path('boisson_index') }}"
+                           class="btn btn-info" id="btnAdmin1">
+                            Gestion des boissons
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Les desserts</td>
+                    <td>
+                        <a href="{{ path('dessert_index') }}"
+                           class="btn btn-info" id="btnAdmin2">
+                            Gestion des desserts
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Les inscriptions <span>à la cantine</span></td>
+                    <td>
+                        <a href="{{ path('inscription_cantine_index') }}"
+                           class="btn btn-info" id="btnAdmin9">
+                            Gestion des inscriptions <span>à la cantine</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Les lieux <span>de livraison</span></td>
+                    <td>
+                        <a href="{{ path('lieu_livraison_index') }}"
+                           class="btn btn-info" id="btnAdmin10">
+                            Gestion des lieux <span>de livraison</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Les commandes</td>
+                    <td>
+                        <a href="{{ path('commande_individuelle_admin') }}"
+                           class="btn btn-info" id="btnAdmin3">
+                            Gestion des commandes
+                        </a>
+                    </td>
+                </tr>
+                {% if is_granted('ROLE_ADMIN') %}
                     <tr>
-                        <td>Les sandwichs</td>
+                        <td>Les adultes</td>
                         <td>
-                            <a href="{{path('sandwich_index')}}"
-                               class="btn btn-info" id="btnAdmin0">
-                                Gestion des sandwichs
+                            <a href="{{ path('adulte_index') }}" class="btn btn-info" id="btnAdmin4">
+                                Gestion des adultes
+                            </a>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td>Les classes</td>
+                    <td>
+                        <a href="{{ path('classe_index') }}"
+                           class="btn btn-info" id="btnAdmin5">
+                            Gestion des classes
+                        </a>
+                    </td>
+                </tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <td>Les élèves</td>
+                        <td>
+                            <a href="{{ path('eleve_index') }}"
+                               class="btn btn-info" id="btnAdmin6">
+                                Gestion des élèves
                             </a>
                         </td>
                     </tr>
                     <tr>
-                        <td>Les boissons</td>
+                        <td>Les limitations</td>
                         <td>
-                            <a href="{{path('boisson_index')}}"
-                               class="btn btn-info" id="btnAdmin1">
-                                Gestion des boissons
+                            <a href="{{ path('limite_index') }}"
+                               class="btn btn-info" id="btnAdmin8">
+                                Gestion des limitations
                             </a>
                         </td>
                     </tr>
-                    <tr>
-                        <td>Les desserts</td>
-                        <td>
-                            <a href="{{path('dessert_index')}}"
-                               class="btn btn-info" id="btnAdmin2">
-                                Gestion des desserts
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Les inscriptions <span>à la cantine</span></td>
-                        <td>
-                            <a href="{{ path('inscription_cantine_index') }}"
-                               class="btn btn-info" id="btnAdmin9">
-                                Gestion des inscriptions <span>à la cantine</span>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Les lieux <span>de livraison</span></td>
-                        <td>
-                            <a href="{{ path('lieu_livraison_index') }}"
-                               class="btn btn-info" id="btnAdmin10">
-                                Gestion des lieux <span>de livraison</span>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Les commandes</td>
-                        <td>
-                            <a href="{{ path('commande_individuelle_admin') }}"
-                               class="btn btn-info" id="btnAdmin3">
-                                Gestion des commandes
-                            </a>
-                        </td>
-                    </tr>
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <tr>
-                            <td>Les adultes</td>
-                            <td>
-                                <a href="{{ path('adulte_index') }}" class="btn btn-info" id="btnAdmin4">
-                                    Gestion des adultes
-                                </a>
-                            </td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>Les classes</td>
-                        <td>
-                            <a href="{{path('classe_index')}}"
-                               class="btn btn-info" id="btnAdmin5">
-                                Gestion des classes
-                            </a>
-                        </td>
-                    </tr>
-                    {% if is_granted('ROLE_ADMIN')%}
-                        <tr>
-                            <td>Les élèves</td>
-                            <td>
-                                <a href="{{ path('eleve_index') }}"
-                                   class="btn btn-info" id="btnAdmin6">
-                                    Gestion des élèves
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Les limitations</td>
-                            <td>
-                                <a href="{{path('limite_index')}}"
-                                   class="btn btn-info" id="btnAdmin8">
-                                    Gestion des limitations
-                                </a>
-                            </td>
-                        </tr>
-                    {% endif %}
-                    <tr>
-                        <td>Les utilisateurs</td>
-                        <td>
-                            <a href="{{ path('user_index') }}"
-                               class="btn btn-info" id="btnAdmin7">
-                                Gestion des utilisateurs
-                            </a>
-                        </td>
-                    </tr>
+                {% endif %}
+                <tr>
+                    <td>Les utilisateurs</td>
+                    <td>
+                        <a href="{{ path('user_index') }}"
+                           class="btn btn-info" id="btnAdmin7">
+                            Gestion des utilisateurs
+                        </a>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

@@ -1,5 +1,4 @@
-{% extends 'base_pdf.html.twig'%}
-
+{% extends 'base_pdf.html.twig' %}
 {% block title %}PDF du {{ dateChoisi|date('d/m/Y') }}{% endblock %}
 {% block body %}
     <main>
@@ -23,7 +22,7 @@
                             {% if commande.sandwichChoisi.id == sandwich.id %}
                                 {% set nbSandwich = nbSandwich + 1 %}
                             {% endif %}
-                        {% endfor%}
+                        {% endfor %}
                         {% for commandeGroupe in commandesGroupe %}
                             {% for sandwichCommande in commandeGroupe.sandwichCommandeGroupes %}
                                 {% if sandwichCommande.sandwichChoisi.id == sandwich.id %}
@@ -87,7 +86,7 @@
                             {% if commande.dessertChoisi.id == dessert.id %}
                                 {% set nbDessert = nbDessert + 1 %}
                             {% endif %}
-                        {% endfor%}
+                        {% endfor %}
                         {% for commandeGroupe in commandesGroupe %}
                             {% set nombreEleve = 0 %}
                             {% for sandwichCommande in commandeGroupe.sandwichCommandeGroupes %}
@@ -122,7 +121,7 @@
                     {% endfor %}
                     {% for commandeGroupe in commandesGroupe %}
                         {% for sandwichCommande in commandeGroupe.sandwichCommandeGroupes %}
-                            {% set nbChips = nbChips + sandwichCommande.nombreSandwich  %}
+                            {% set nbChips = nbChips + sandwichCommande.nombreSandwich %}
                         {% endfor %}
                     {% endfor %}
                     {% if nbChips != 0 %}

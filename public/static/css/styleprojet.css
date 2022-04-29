@@ -54,11 +54,6 @@ form div {
     flex-direction: column;
 }
 
-footer a, nav a, a.btn {
-    color: white;
-    text-decoration: none;
-}
-
 #warning {
     color: red;
     border: solid;
@@ -162,8 +157,18 @@ footer {
     text-align: -webkit-center;
 }
 
+footer a, nav a, a.btn {
+    color: white;
+    text-decoration: none;
+}
+
 footer i {
     font-size: 26px;
+}
+
+footer ol {
+    margin: 0;
+    padding: 0;
 }
 
 div#footerContent {
@@ -255,9 +260,10 @@ img#errorPage {
     height: 25px;
 }
 
-#formConnexion label, #formRegister label {
-    float: left;
+#formConnexion label {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 p#login {
@@ -313,6 +319,11 @@ h3#italic {
 #formRegister form {
     display: flex;
     justify-content: center;
+}
+
+#formRegister label {
+    float: left;
+    display: flex;
 }
 
 #formRegister .divInput, #formResetMdp .divInput {

@@ -3,42 +3,42 @@
 {% block title %}Ajouter une liste d'adultes{% endblock %}
 
 {% block body %}
-	<main class="container-fluid">
-		<h1>Ajouter une liste d'utilisateur</h1>
+    <main class="container-fluid">
+        <h1>Ajouter une liste d'utilisateur</h1>
 
-		<h2>Veuillez sélectionner un fichier contenant une liste d'adultes</h2>
+        <h2>Veuillez sélectionner un fichier contenant une liste d'adultes !</h2>
 
-		{% for message in app.flashes('SuccessFileSubmit') %}
-	        <div class="flash-success">
-	            {{ message }}
-	        </div>
-	    {% endfor %}
-		<div class="fichierForm">
-			{{form_start(form)}}
-			<div>
-				<label>Liste d'adultes (en XLSX) :</label>
-				{{ form_help(form.fileSubmit) }}
-				{% if form_errors(form.fileSubmit) %}
-					<div class="erreur">
-						{{form_errors(form.fileSubmit)}}
-					</div>
-				{% endif %}
-			</div>
-			<div id="fileInputUser">
-				{{form_widget(form.fileSubmit)}}
-			</div>
-			{{form_end(form)}}
-		</div>
-        <div class="row">
-          <div id="divAjout">
-              <button type="submit" class="btn btn-success" form="formFichier">
-                  Envoyer votre liste d'adultes
-              </button>
-              <a href="{{ path('adulte_index') }}"
-               id="btnRetour" class="btn btn-secondary">
-                  Revenir à la liste
-              </a>
-          </div>
+        {% for message in app.flashes('SuccessFileSubmit') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <div class="fichierForm">
+            {{ form_start(form) }}
+            <div>
+                <label>Liste d'adultes :</label>
+                {{ form_help(form.fileSubmit) }}
+                {% if form_errors(form.fileSubmit) %}
+                    <div class="erreur">
+                        {{ form_errors(form.fileSubmit) }}
+                    </div>
+                {% endif %}
+            </div>
+            <div id="fileInputUser">
+                {{ form_widget(form.fileSubmit) }}
+            </div>
+            {{ form_end(form) }}
         </div>
-	</main>
+        <div class="row">
+            <div id="divAjout">
+                <button type="submit" class="btn btn-success" form="formFichier">
+                    Envoyer votre liste d'adultes
+                </button>
+                <a href="{{ path('adulte_index') }}"
+                   id="btnRetour" class="btn btn-secondary">
+                    Revenir à la liste
+                </a>
+            </div>
+        </div>
+    </main>
 {% endblock %}

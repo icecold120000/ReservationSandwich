@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste d'élèves{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Liste d'élèves</h1>
@@ -31,31 +32,31 @@
             </a>
         </div>
         <div id="filtreEleve" class="filtre form-row align-items-end">
-            {{form_start(form)}}
+            {{ form_start(form) }}
             <div id="left">
-                <span>{{ form_label(form.nom)}}</span>
-                {{form_widget(form.nom)}}
+                <span>{{ form_label(form.nom) }}</span>
+                {{ form_widget(form.nom) }}
             </div>
             <div>
-                <span>{{ form_label(form.classe)}}</span>
-                {{form_widget(form.classe)}}
-                <span>{{ form_label(form.archiveEleve)}}</span>
-                {{form_widget(form.archiveEleve)}}
+                <span>{{ form_label(form.classe) }}</span>
+                {{ form_widget(form.classe) }}
+                <span>{{ form_label(form.archiveEleve) }}</span>
+                {{ form_widget(form.archiveEleve) }}
             </div>
             <div>
-                <span>{{ form_label(form.ordrePrenom)}}</span>
-                {{form_widget(form.ordrePrenom)}}
+                <span>{{ form_label(form.ordrePrenom) }}</span>
+                {{ form_widget(form.ordrePrenom) }}
             </div>
             <div>
-                <span>{{ form_label(form.ordreNom)}}</span>
-                {{form_widget(form.ordreNom)}}
+                <span>{{ form_label(form.ordreNom) }}</span>
+                {{ form_widget(form.ordreNom) }}
             </div>
             <div id="submitFiltre">
                 <button type="submit" class="btn btn-info">
                     Afficher
                 </button>
             </div>
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
         <div>
             {{ knp_pagination_render(eleves) }}
@@ -101,7 +102,7 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="11" class="erreur">Aucun élève n'a été trouvé</td>
+                    <td colspan="11" class="erreur">Aucun élève n'a été trouvé !</td>
                 </tr>
             {% endfor %}
             </tbody>

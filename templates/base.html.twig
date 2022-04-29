@@ -1,162 +1,188 @@
 <!DOCTYPE html>
-<!--suppress ALL -->
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}{% endblock %} - Réservation Snack St-Vincent</title>
-        <link rel="apple-touch-icon" sizes="180x180" href="{{asset('favicon_io/apple-touch-icon.png')}}">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{asset('favicon_io/favicon-32x32.png')}}">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{asset('favicon_io/favicon-16x16.png')}}">
-        <link rel="manifest" href="{{asset('favicon_io/site.webmanifest')}}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon_io/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon_io/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon_io/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('favicon_io/site.webmanifest') }}">
         <link href="https://fonts.googleapis.com
-			/css?family=Open+Sans&display=swap" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
-        <link rel="stylesheet" type="text/css" href="{{asset('static/css/styleprojet.css')}}">
+                /css?family=Open+Sans&display=swap" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+                integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+                crossorigin="anonymous">
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+                integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+                crossorigin="anonymous">
+        </script>
+        <link rel="stylesheet" type="text/css" href="{{ asset('static/css/styleprojet.css') }}">
         {% block stylesheets %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
-            <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('static/images/StVincent.png') }}" alt="Logo Saint-Vincent"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">Accueil</a>
-                    </li>
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
-                            <li class="nav-item">
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
-                                    <a class="nav-link" href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
-                                {% else %}
-                                    <a class="nav-link" href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
-                                {% endif %}
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ path('espace_admin') }}">Espace Administration</a>
-                            </li>
-                        {% else %}
-                            <li class="nav-item">
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
+        <a class="navbar-brand" href="{{ path('homepage') }}"><img src="{{ asset('static/images/StVincent.png') }}"
+                                                                   alt="Logo Saint-Vincent"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">Accueil</a>
+                </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
+                        <li class="nav-item">
+                            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
+                                <a class="nav-link" href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
+                            {% else %}
                                 <a class="nav-link" href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
-                            </li>
-                        {% endif %}
+                            {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('espace_admin') }}">Espace Administration</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
+                        </li>
                     {% endif %}
-                </ul>
-                <ul class="nav-item ml-auto dropdown" id="connexion">
-                    <li>
-                        {% if is_granted('IS_AUTHENTICATED_FULLY')%}
-                            <div class="dropdown" id="dropdownProfile">
-                                <a class="nav-link dropdown-toggle" href="#" role="link" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user-circle"> Mon Profil</i>
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="accesProfile">
-                                    <li>
-                                        {% if is_granted('ROLE_ADMIN')%}
-                                            <a class="dropdown-item" href="{{path('profile_admin',{'userTokenHash': app.user.tokenHash})}}">
-                                                Voir profil
-                                            </a>
-                                        {% elseif is_granted('ROLE_ELEVE')%}
-                                            <a class="dropdown-item" href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
-                                                Voir profil
-                                            </a>
-                                        {% elseif is_granted('ROLE_ADULTES')%}
-                                            <a class="dropdown-item" href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
-                                                Voir profil
-                                            </a>
-                                        {% elseif is_granted('ROLE_CUISINE')%}
-                                            <a class="dropdown-item" href="{{path('profile_cuisine',{'userTokenHash': app.user.tokenHash})}}">
-                                                Voir profil
-                                            </a>
-                                        {% endif %}
-                                    </li>
-                                    <li><a class="dropdown-item" href="{{path('profile_edit',{'id': app.user.id})}}">Éditer votre profil</a></li>
-                                    <li><a class="dropdown-item" href="{{path('app_logout')}}" >Se déconnecter</a></li>
-                                </ul>
-                            </div>
-                        {% else %}
-                            <a href="{{path('app_login')}}">
-                                <i class="fas fa-user-circle">Se connecter</i>
+                {% endif %}
+            </ul>
+            <ul class="nav-item ml-auto dropdown" id="connexion">
+                <li>
+                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                        <div class="dropdown" id="dropdownProfile">
+                            <a class="nav-link dropdown-toggle" href="#" role="link" id="dropdownMenuLink"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"> Mon Profil</i>
                             </a>
-                        {% endif %}
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        {% block body %}{% endblock %}
-        <footer>
-            <div id="footerContent">
-                <div id="columnLeftFooter">
-                    <div class="coordonnees">
-                        <h3>Réservation sandwich Saint-Vincent</h3>
+                            <ul class="dropdown-menu" aria-labelledby="accesProfile">
+                                <li>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a class="dropdown-item"
+                                           href="{{ path('profile_admin',{'userTokenHash': app.user.tokenHash}) }}">
+                                            Voir profil
+                                        </a>
+                                    {% elseif is_granted('ROLE_ELEVE') %}
+                                        <a class="dropdown-item"
+                                           href="{{ path('profile_eleve',{'userTokenHash': app.user.tokenHash}) }}">
+                                            Voir profil
+                                        </a>
+                                    {% elseif is_granted('ROLE_ADULTES') %}
+                                        <a class="dropdown-item"
+                                           href="{{ path('profile_adulte',{'userTokenHash': app.user.tokenHash}) }}">
+                                            Voir profil
+                                        </a>
+                                    {% elseif is_granted('ROLE_CUISINE') %}
+                                        <a class="dropdown-item"
+                                           href="{{ path('profile_cuisine',{'userTokenHash': app.user.tokenHash}) }}">
+                                            Voir profil
+                                        </a>
+                                    {% endif %}
+                                </li>
+                                <li><a class="dropdown-item" href="{{ path('profile_edit',{'id': app.user.id}) }}">Éditer
+                                        votre profil</a></li>
+                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">
+                            <i class="fas fa-user-circle">Se connecter</i>
+                        </a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+    {% block body %}{% endblock %}
+    <footer>
+        <div id="footerContent">
+            <div id="columnLeftFooter">
+                <div class="coordonnees">
+                    <h3>Réservation sandwich Saint-Vincent</h3>
+                    <ol>
                         <li>
                             <p>30 Rue de Meaux</p>
                             <p>60300 Senlis</p>
                         </li>
-                    </div>
-                    <div class="access">
-                        <h3>Accès rapide</h3>
+                    </ol>
+                </div>
+                <div class="access">
+                    <h3>Accès rapide</h3>
+                    <ol>
                         <li>
-                            <p><a href="{{path('homepage')}}">Accueil</a></p>
+                            <p><a href="{{ path('homepage') }}">Accueil</a></p>
                             <p>
-                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE')%}
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
                                     <a href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
                                 {% else %}
                                     <a href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
                                 {% endif %}
                             </p>
-                            {% if is_granted('IS_AUTHENTICATED_FULLY')%}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 <p>
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{path('profile_admin',{'userTokenHash': app.user.tokenHash})}}">
+                                        <a href="{{ path('profile_admin',{'userTokenHash': app.user.tokenHash}) }}">
                                             Votre profil
                                         </a>
                                     {% elseif is_granted('ROLE_ADULTES') %}
-                                        <a href="{{path('profile_adulte',{'userTokenHash': app.user.tokenHash})}}">
+                                        <a href="{{ path('profile_adulte',{'userTokenHash': app.user.tokenHash}) }}">
                                             Votre profil
                                         </a>
                                     {% elseif is_granted('ROLE_ELEVE') %}
-                                        <a href="{{path('profile_eleve',{'userTokenHash': app.user.tokenHash})}}">
+                                        <a href="{{ path('profile_eleve',{'userTokenHash': app.user.tokenHash}) }}">
                                             Votre profil
                                         </a>
                                     {% elseif is_granted('ROLE_CUISINE') %}
-                                        <a href="{{path('profile_cuisine',{'userTokenHash': app.user.tokenHash})}}">
+                                        <a href="{{ path('profile_cuisine',{'userTokenHash': app.user.tokenHash}) }}">
                                             Votre profil
                                         </a>
                                     {% endif %}
                                 </p>
-                                <p><a href="{{path('profile_edit',{'id': app.user.id})}}">Éditer votre profil</a></p>
+                                <p><a href="{{ path('profile_edit',{'id': app.user.id}) }}">Éditer votre profil</a></p>
                             {% endif %}
                         </li>
-                    </div>
+                    </ol>
                 </div>
-                <div id="columnRightFooter">
-                    <div class="contact">
-                        <h3>Nous contacter</h3>
+            </div>
+            <div id="columnRightFooter">
+                <div class="contact">
+                    <h3>Nous contacter</h3>
+                    <ol>
                         <li>
                             <p>Tel : 03.44.53.96.40</p>
                             <p>Fax : 03.44.53.58.96</p>
-                            <p>Web : <a href="https://www.lycee-stvincent.fr/" target="_blank">https://www.lycee-stvincent.fr/</a></p>
+                            <p>
+                                Web :
+                                <a href="https://www.lycee-stvincent.fr/"
+                                         target="_blank">https://www.lycee-stvincent.fr/
+                                </a>
+                            </p>
                         </li>
-                    </div>
-                    <div class="networks">
-                        <h3>Suivez-nous</h3>
-                        <div id="networkIcons">
-                            <a href="https://twitter.com/?lang=en">
-                                <i class="fab fa-twitter-square"></i></a>
-                            <a href="https://www.facebook.com/">
-                                <i class="fab fa-facebook-square"></i></a>
-                        </div>
+                    </ol>
+                </div>
+                <div class="networks">
+                    <h3>Suivez-nous</h3>
+                    <div id="networkIcons">
+                        <a href="https://twitter.com/?lang=en">
+                            <i class="fab fa-twitter-square"></i>
+                        </a>
+                        <a href="https://www.facebook.com/">
+                            <i class="fab fa-facebook-square"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-
-            <script src="https://kit.fontawesome.com/b33430525b.js" crossorigin="anonymous"></script>
-            {% block footer %}{% endblock %}
-        </footer>
+        </div>
+        <script src="https://kit.fontawesome.com/b33430525b.js" crossorigin="anonymous"></script>
+        {% block footer %}{% endblock %}
+    </footer>
     </body>
 </html>

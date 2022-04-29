@@ -2,12 +2,12 @@
 
 {% block title %}Votre Profile{% endblock %}
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <div id="profilHeader">
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                 <h1>Bienvenue {{ app.user.getPrenomUser }} {{ app.user.getNomUser }}.</h1>
             {% endif %}
             <p>Vous êtes enregistré en tant <span id="typeUser">qu'élève</span> sur cette plateforme.</p>

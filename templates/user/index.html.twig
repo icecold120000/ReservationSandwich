@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main id="userIndex" class="container-fluid">
         <h1>Liste des utilisateurs</h1>
@@ -13,49 +14,49 @@
         {% endfor %}
         <div>
             <a href="{{ path('user_new') }}"
-             class="btn btn-primary" id="btnAjout">
+               class="btn btn-primary" id="btnAjout">
                 Ajouter un nouvel utilisateur
             </a>
             <a href="{{ path('user_file') }}"
-             class="btn btn-info" id="btnAjout">
+               class="btn btn-info" id="btnAjout">
                 Ajouter une liste d'utilisateur
             </a>
         </div>
         <div id="divRetour">
             <a href="{{ path('espace_admin') }}"
-             class="btn btn-secondary" id="btnRetour">
+               class="btn btn-secondary" id="btnRetour">
                 Retourner à la liste des fonctionnalités
             </a>
         </div>
         <div id="formFilter">
             <div id="filtre">
-                {{form_start(form)}}
-                    <div>
-                        <div class="selectFiltre">
-                            <span>{{form_label(form.roleUser)}} </span>
-                            {{form_widget(form.roleUser)}}
-                        </div>
-                        <div class="selectFiltre">
-                            <span>{{form_label(form.userVerifie)}}</span>
-                            {{form_widget(form.userVerifie)}}
-                        </div>
+                {{ form_start(form) }}
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{ form_label(form.roleUser) }} </span>
+                        {{ form_widget(form.roleUser) }}
                     </div>
-                    <div>
-                        <div class="selectFiltre">
-                            <span>{{form_label(form.ordrePrenom)}}</span>
-                            {{form_widget(form.ordrePrenom)}}
-                        </div>
-                        <div class="selectFiltre">
-                            <span>{{form_label(form.ordreNom)}}</span>
-                            {{form_widget(form.ordreNom)}}
-                        </div>
+                    <div class="selectFiltre">
+                        <span>{{ form_label(form.userVerifie) }}</span>
+                        {{ form_widget(form.userVerifie) }}
                     </div>
-                    <div>
-                        <button type="submit" class="btn btn-info">
-                            Afficher
-                        </button>
+                </div>
+                <div>
+                    <div class="selectFiltre">
+                        <span>{{ form_label(form.ordrePrenom) }}</span>
+                        {{ form_widget(form.ordrePrenom) }}
                     </div>
-                {{form_end(form)}}
+                    <div class="selectFiltre">
+                        <span>{{ form_label(form.ordreNom) }}</span>
+                        {{ form_widget(form.ordreNom) }}
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-info">
+                        Afficher
+                    </button>
+                </div>
+                {{ form_end(form) }}
             </div>
         </div>
         <div class="table-responsive-lg">
@@ -63,11 +64,11 @@
                 {% if users|length == 0 %}
                     <h2>Aucun utilisateur n'a été trouvé</h2>
                 {% elseif users|length == 1 %}
-                    <h2>{{users|length }} utilisateur trouvé</h2>
+                    <h2>{{ users|length }} utilisateur trouvé</h2>
                 {% elseif users|length > 1 and users|length < 30 %}
-                    <h2>{{users|length }} utilisateurs trouvés</h2>
+                    <h2>{{ users|length }} utilisateurs trouvés</h2>
                 {% else %}
-                    <h2>{{usersTotal|length }} utilisateurs trouvés</h2>
+                    <h2>{{ usersTotal|length }} utilisateurs trouvés</h2>
                 {% endif %}
             </div>
             <div>
@@ -75,14 +76,14 @@
             </div>
             <table class="table tableAdmin">
                 <thead>
-                    <tr>
-                        <th>Prénom et Nom</th>
-                        <th>Email</th>
-                        <th>Fonction</th>
-                        <th>Utilisateur vérifié</th>
-                        <th>Éditer</th>
-                        <th>Supprimer</th>
-                    </tr>
+                <tr>
+                    <th>Prénom et Nom</th>
+                    <th>Email</th>
+                    <th>Fonction</th>
+                    <th>Utilisateur vérifié</th>
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                </tr>
                 </thead>
                 <tbody>
                 {% for user in users %}
@@ -91,16 +92,16 @@
                         <td>{{ user.email|replace({"@":"<br/>@"})| raw }}</td>
                         <td>
                             {% switch user.roles|json_encode %}
-                                {% case '["ROLE_ADMIN","ROLE_USER"]' %}
-                                    Admin
-                                {% case '["ROLE_CUISINE","ROLE_USER"]' %}
-                                    Cuisinier
-                                {% case '["ROLE_ELEVE","ROLE_USER"]' %}
-                                    Élève
-                                {% case '["ROLE_ADULTES","ROLE_USER"]' %}
-                                    Adulte
-                                {% default %}
-                                    Utilisateur
+                            {% case '["ROLE_ADMIN","ROLE_USER"]' %}
+                                Admin
+                            {% case '["ROLE_CUISINE","ROLE_USER"]' %}
+                                Cuisinier
+                            {% case '["ROLE_ELEVE","ROLE_USER"]' %}
+                                Élève
+                            {% case '["ROLE_ADULTES","ROLE_USER"]' %}
+                                Adulte
+                            {% default %}
+                                Utilisateur
                             {% endswitch %}
                         </td>
                         <td>
@@ -110,7 +111,7 @@
                         <td>
                             {% if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('user_edit',
-                                {'id': user.id}) }}" class="btn btn-primary">
+                                    {'id': user.id}) }}" class="btn btn-primary">
                                     <i class="far fa-edit"></i>
                                 </a>
                             {% else %}
@@ -118,9 +119,9 @@
                             {% endif %}
                         </td>
                         <td>
-                            {%if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' or is_granted('ROLE_ADMIN') %}
+                            {% if user.roles|json_encode != '["ROLE_ADMIN","ROLE_USER"]' or is_granted('ROLE_ADMIN') %}
                                 <a href="{{ path('user_delete_view', {'id': user.id}) }}"
-                                 class="btn btn-danger">
+                                   class="btn btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             {% else %}

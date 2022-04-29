@@ -1,16 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste de boissons{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Liste de boissons</h1>
+
         {% for message in app.flashes('SuccessDeleteBoisson') %}
             <div class="flash-success">
                 {{ message }}
             </div>
         {% endfor %}
+
         <div>
             <a href="{{ path('boisson_new') }}"
                class="btn btn-primary" id="btnAjout">
@@ -22,23 +25,23 @@
             </a>
         </div>
         <div>
-            {{form_start(form)}}
+            {{ form_start(form) }}
             <div id="filtre" class="filtre form-row align-items-end">
                 <div class="selectFiltre">
                     <div>
-                        <span>{{form_label(form.ordre)}}</span>
-                        {{form_widget(form.ordre)}}
-                        <span>{{form_label(form.dispo)}}</span>
-                        {{form_widget(form.dispo)}}
+                        <span>{{ form_label(form.ordre) }}</span>
+                        {{ form_widget(form.ordre) }}
+                        <span>{{ form_label(form.dispo) }}</span>
+                        {{ form_widget(form.dispo) }}
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-info" >
+                        <button type="submit" class="btn btn-info">
                             Afficher
                         </button>
                     </div>
                 </div>
             </div>
-            {{form_end(form)}}
+            {{ form_end(form) }}
         </div>
         <div>
             {{ knp_pagination_render(boissons) }}
@@ -58,7 +61,8 @@
                 <tr>
                     <td>
                         {% if boisson.imageBoisson %}
-                            <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}" alt="Photo d'une boisson">
+                            <img src="{{ asset('/uploads/imgBoisson/' ~ boisson.imageBoisson) }}"
+                                 alt="Photo d'une boisson">
                         {% else %}
                             <img src="{{ asset('/static/images/placeholder.jpg') }}" alt="Placeholder">
                         {% endif %}

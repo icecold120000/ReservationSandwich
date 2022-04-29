@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Oubli de mot de passe{% endblock %}
-
 {% block body %}
     <main class="container-fluid">
         <h1>Oubli de mot de passe</h1>
-
         <h2>Veuillez saisir votre email pour envoyer une demande de réinitialisation de votre mot de passe.</h2>
+
         {% for message in app.flashes('SuccessOubli') %}
             <div class="flash-success">
-                {{  message|replace({".":".</br>"})|raw }}
+                {{ message|replace({".":".</br>"})|raw }}
             </div>
         {% endfor %}
         {% if error %}
@@ -24,27 +23,27 @@
         <div class="container-fluid formEntité">
             {{ form_start(form) }}
             <div>
-                {{form_label(form.emailFirst)}}
+                {{ form_label(form.emailFirst) }}
                 {% if form_errors(form.emailFirst) %}
                     <div class="erreur">
                         <p>{{ form_errors(form.emailFirst) }}<p>
                     </div>
                 {% endif %}
                 <div>
-                    {{form_widget(form.emailFirst)}}
+                    {{ form_widget(form.emailFirst) }}
                 </div>
-                {{form_label(form.dateAnniversaire)}}
-                {{form_help(form.dateAnniversaire)}}
+                {{ form_label(form.dateAnniversaire) }}
+                {{ form_help(form.dateAnniversaire) }}
                 {% if form_errors(form.dateAnniversaire) %}
                     <div class="erreur">
                         <p>{{ form_errors(form.dateAnniversaire) }}<p>
                     </div>
                 {% endif %}
                 <div>
-                    {{form_widget(form.dateAnniversaire)}}
+                    {{ form_widget(form.dateAnniversaire) }}
                 </div>
             </div>
-            {{form_end(form) }}
+            {{ form_end(form) }}
         </div>
         <div class="row">
             <div id="divAjout">

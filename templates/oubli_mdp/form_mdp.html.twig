@@ -1,31 +1,30 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Oubli de mot de passe{% endblock %}
-
 {% block body %}
-	<main class="container-fluid">
-		<h1>Veuillez saisir votre mot de passe pour le réinitialiser</h1>
-		<section id="formResetMdp">
-			<div class="container-fluid formEntité">
-				{{form_start(form)}}
-					{% if form_errors(form.plainPassword.first)%}
-						<div class="erreur">
-							{{form_errors(form.plainPassword.first)}}
-						</div>
-					{% endif %}
-					<div class="divInput">
-						{{form_help(form.plainPassword)}}
-						{{form_widget(form.plainPassword)}}
-					</div>
-					<div>
-						<div id="divAjout" class="form-actions">
-							<button type="submit" name="submit" class="btn btn-success" form="resetMdpForm">
-								Réinitialiser votre mot de passe
-							</button>
-						</div>
-					</div>
-				{{form_end(form)}}
-			</div>
-		</section>
-	</main>
+    <main class="container-fluid">
+        <h1>Veuillez saisir votre mot de passe pour le réinitialiser</h1>
+        <section id="formResetMdp">
+            <div class="container-fluid formEntité">
+                {{ form_start(form) }}
+                {% if form_errors(form.plainPassword.first) %}
+                    <div class="erreur">
+                        {{ form_errors(form.plainPassword.first) }}
+                    </div>
+                {% endif %}
+                <div class="divInput">
+                    {{ form_help(form.plainPassword) }}
+                    {{ form_widget(form.plainPassword) }}
+                </div>
+                <div>
+                    <div id="divAjout" class="form-actions">
+                        <button type="submit" name="submit" class="btn btn-success" form="resetMdpForm">
+                            Réinitialiser votre mot de passe
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </section>
+    </main>
 {% endblock %}

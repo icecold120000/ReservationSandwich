@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier une classe{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Modifier une classe</h1>
@@ -21,14 +22,14 @@
         <div class="row">
             <div id="divAjout">
                 <button type="submit"
-                 class="btn btn-success" form="formClasse">
+                        class="btn btn-success" form="formClasse">
                     Modifier la classe
                 </button>
                 <a href="{{ path('classe_index') }}"
-                 class="btn btn-secondary" id="btnRetour">
+                   class="btn btn-secondary" id="btnRetour">
                     Revenir à la liste
                 </a>
             </div>
         </div>
-    </main>    
+    </main>
 {% endblock %}

@@ -1,5 +1,4 @@
-{% extends 'base_pdf.html.twig'%}
-
+{% extends 'base_pdf.html.twig' %}
 {% block title %}
     {% if type == "PDF" %}
         PDF du {{ dateChoisi|date('d/m/Y') }}
@@ -22,7 +21,8 @@
                                     {% if commande.commandeur.eleves %}
                                         {% for eleve in commande.commandeur.eleves %}
                                             {% if eleve.photoEleve %}
-                                                <img alt="Photo de l'élève" style="width: 160px; height: 160px" src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
+                                                <img alt="Photo de l'élève" style="width: 160px; height: 160px"
+                                                     src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
                                             {% endif %}
                                         {% else %}
                                             <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
@@ -64,7 +64,7 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"])%}
+            {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
                 <p style="margin: 0 0 5em 0">
                     <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                 </p>

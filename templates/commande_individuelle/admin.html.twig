@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 {% block title %}Liste des commandes à venir{% endblock %}
 {% block stylesheets %}
-    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">{% endblock %}
-
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Liste des commandes à venir</h1>
@@ -42,7 +42,8 @@
                             <div class="modal-header">
                                 <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="Close">
+                                </button>
                             </div>
                             <div class="modal-body">
                                 <h1>Choisir les modalités de votre export</h1>

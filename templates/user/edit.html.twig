@@ -1,8 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier un utilisateur{% endblock %}
-{% block stylesheets %}<link rel="stylesheet" type="text/css" href="{{asset('static/css/admin.css')}}">{% endblock %}
-
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Modifier un utilisateur</h1>
@@ -18,15 +19,15 @@
             </div>
         </div>
         <div class="row">
-          <div id="divAjout">
-              <button type="submit" class="btn btn-success" form="userForm">
-                  Modifier votre utilisateur
-              </button>
-              <a href="{{ path('user_index') }}"
-               id="btnRetour" class="btn btn-secondary">
-                  Revenir à la liste
-              </a>
-          </div>
+            <div id="divAjout">
+                <button type="submit" class="btn btn-success" form="userForm">
+                    Modifier votre utilisateur
+                </button>
+                <a href="{{ path('user_index') }}"
+                   id="btnRetour" class="btn btn-secondary">
+                    Revenir à la liste
+                </a>
+            </div>
         </div>
     </main>
 {% endblock %}

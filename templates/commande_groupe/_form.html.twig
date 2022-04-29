@@ -1,188 +1,191 @@
 {{ form_start(form) }}
-    <div id="screenLeft">
-        {{ form_label(form.sandwichChoisi1) }}
-        {% if form_errors(form.sandwichChoisi1) %}
+<div id="screenLeft">
+    {{ form_label(form.sandwichChoisi1) }}
+    {% if form_errors(form.sandwichChoisi1) %}
+        <div class="erreur">
+            {{ form_errors(form.sandwichChoisi1) }}
+        </div>
+    {% endif %}
+    {{ form_widget(form.sandwichChoisi1) }}
+    <div id="sandwich1Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for sandwich in sandwichs %}
+                <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
+                    <label for="input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}">
+                        <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block "
+                             alt="{{ sandwich.nomSandwich }}-image">
+                        <span>{{ sandwich.nomSandwich }}</span>
+                        <span>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.' }}</span>
+                        <span>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.' }}</span>
+                        <input type="radio" id="input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}"
+                               name="commande_groupe[sandwichChoisi1]" value="{{ sandwich.id }}">
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#sandwich1Carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#sandwich1Carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    {{ form_label(form.nbSandwichChoisi1) }}
+    {% if form_errors(form.nbSandwichChoisi1) %}
+        <div class="erreur">
+            {{ form_errors(form.nbSandwichChoisi1) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.nbSandwichChoisi1) }}
+    </div>
+    <div>
+        {{ form_label(form.dessertChoisi) }}
+        {% if form_errors(form.dessertChoisi) %}
             <div class="erreur">
-                {{form_errors(form.sandwichChoisi1)}}
+                {{ form_errors(form.dessertChoisi) }}
             </div>
         {% endif %}
-        {{ form_widget(form.sandwichChoisi1) }}
-        <div id="sandwich1Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        {{ form_widget(form.dessertChoisi) }}
+        <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
-                {% for sandwich in sandwichs %}
+                {% for dessert in desserts %}
                     <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                        <label for="input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}">
-                            <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
-                            <span>{{ sandwich.nomSandwich }}</span>
-                            <span>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.'}}</span>
-                            <span>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.'}}</span>
-                            <input type="radio" id="input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}"
-                                   name="commande_groupe[sandwichChoisi1]" value="{{ sandwich.id }}" >
+                        <label for="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
+                            <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block"
+                                 alt="{{ dessert.nomDessert }}-image">
+                            <span>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisé.' }}</span>
+                            <span>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire précisé.' }}</span>
+                            <input type="radio" name="commande_groupe[dessertChoisi]" value="{{ dessert.id }}"
+                                   id="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
                         </label>
                     </div>
                 {% endfor %}
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#sandwich1Carousel" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#dessertCarousel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#sandwich1Carousel" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#dessertCarousel" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
         </div>
-        {{ form_label(form.nbSandwichChoisi1) }}
-        {% if form_errors(form.nbSandwichChoisi1) %}
-            <div class="erreur">
-                {{form_errors(form.nbSandwichChoisi1)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.nbSandwichChoisi1) }}
-        </div>
-        <div>
-            {{ form_label(form.dessertChoisi) }}
-            {% if form_errors(form.dessertChoisi) %}
-                <div class="erreur">
-                    {{form_errors(form.dessertChoisi)}}
-                </div>
-            {% endif %}
-            {{ form_widget(form.dessertChoisi) }}
-            <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for dessert in desserts %}
-                        <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                            <label for="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
-                                <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block" alt="{{ dessert.nomDessert }}-image">
-                                <span>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisé.'}}</span>
-                                <span>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentataire précisé.'}}</span>
-                                <input type="radio" name="commande_groupe[dessertChoisi]" value="{{ dessert.id }}"
-                                       id="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
-                            </label>
-                        </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#dessertCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#dessertCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
-            </div>
-        </div>
-        {{form_label(form.motifSortie)}}
-        {{ form_help(form.motifSortie) }}
-        {% if form_errors(form.motifSortie) %}
-            <div class="erreur">
-                {{form_errors(form.motifSortie)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{form_widget(form.motifSortie)}}
-        </div>
     </div>
-    <div id="screenRight">
-        {{ form_label(form.sandwichChoisi2) }}
-        {% if form_errors(form.sandwichChoisi2) %}
-            <div class="erreur">
-                {{form_errors(form.sandwichChoisi2)}}
-            </div>
-        {% endif %}
-        {{ form_widget(form.sandwichChoisi2) }}
-        <div id="sandwich2Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                {% for sandwich in sandwichs %}
-                    <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
-                        <label for="input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}">
-                            <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block " alt="{{ sandwich.nomSandwich }}-image">
-                            <span>{{ sandwich.nomSandwich }}</span>
-                            <span>Ingredients : {{ sandwich.ingredientSandwich }}</span>
-                            <span>Commentaire : {{ sandwich.commentaireSandwich }}</span>
-                            <input type="radio" id="input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}"
-                                   name="commande_groupe[sandwichChoisi2]" value="{{ sandwich.id }}" >
-                        </label>
-                    </div>
-                {% endfor %}
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#sandwich2Carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#sandwich2Carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    {{ form_label(form.motifSortie) }}
+    {{ form_help(form.motifSortie) }}
+    {% if form_errors(form.motifSortie) %}
+        <div class="erreur">
+            {{ form_errors(form.motifSortie) }}
         </div>
-        {{ form_label(form.nbSandwichChoisi2) }}
-        {% if form_errors(form.nbSandwichChoisi2) %}
-            <div class="erreur">
-                {{form_errors(form.nbSandwichChoisi2)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{ form_widget(form.nbSandwichChoisi2) }}
-        </div>
-        {{form_label(form.prendreChips)}}
-        {% if form_errors(form.prendreChips) %}
-            <div class="erreur">
-                {{form_errors(form.prendreChips)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{form_widget(form.prendreChips)}}
-        </div>
-        {{form_label(form.dateHeureLivraison)}}
-        {{ form_help(form.dateHeureLivraison) }}
-        {% if form_errors(form.dateHeureLivraison) %}
-            <div class="erreur">
-                {{form_errors(form.dateHeureLivraison)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{form_widget(form.dateHeureLivraison)}}
-        </div>
-        {{form_label(form.lieuLivraison)}}
-        {% if form_errors(form.lieuLivraison) %}
-            <div class="erreur">
-                {{form_errors(form.lieuLivraison)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{form_widget(form.lieuLivraison)}}
-        </div>
-        {{form_label(form.commentaireCommande)}}
-        {{ form_help(form.commentaireCommande) }}
-        {% if form_errors(form.commentaireCommande) %}
-            <div class="erreur">
-                {{form_errors(form.commentaireCommande)}}
-            </div>
-        {% endif %}
-        <div class="divInput">
-            {{form_widget(form.commentaireCommande)}}
-        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.motifSortie) }}
     </div>
-    <script>
-        {% for sandwich in sandwichs %}
-            const firstSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi1_{{ sandwich.id }}');
-            if (firstSelectedSandwich{{ sandwich.id }}.checked === true) {
-                const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}')
-                inputSandwich.checked = true;
-            }
+</div>
+<div id="screenRight">
+    {{ form_label(form.sandwichChoisi2) }}
+    {% if form_errors(form.sandwichChoisi2) %}
+        <div class="erreur">
+            {{ form_errors(form.sandwichChoisi2) }}
+        </div>
+    {% endif %}
+    {{ form_widget(form.sandwichChoisi2) }}
+    <div id="sandwich2Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for sandwich in sandwichs %}
+                <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
+                    <label for="input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}">
+                        <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block "
+                             alt="{{ sandwich.nomSandwich }}-image">
+                        <span>{{ sandwich.nomSandwich }}</span>
+                        <span>Ingredients : {{ sandwich.ingredientSandwich }}</span>
+                        <span>Commentaire : {{ sandwich.commentaireSandwich }}</span>
+                        <input type="radio" id="input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}"
+                               name="commande_groupe[sandwichChoisi2]" value="{{ sandwich.id }}">
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#sandwich2Carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#sandwich2Carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    {{ form_label(form.nbSandwichChoisi2) }}
+    {% if form_errors(form.nbSandwichChoisi2) %}
+        <div class="erreur">
+            {{ form_errors(form.nbSandwichChoisi2) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.nbSandwichChoisi2) }}
+    </div>
+    {{ form_label(form.prendreChips) }}
+    {% if form_errors(form.prendreChips) %}
+        <div class="erreur">
+            {{ form_errors(form.prendreChips) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.prendreChips) }}
+    </div>
+    {{ form_label(form.dateHeureLivraison) }}
+    {{ form_help(form.dateHeureLivraison) }}
+    {% if form_errors(form.dateHeureLivraison) %}
+        <div class="erreur">
+            {{ form_errors(form.dateHeureLivraison) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.dateHeureLivraison) }}
+    </div>
+    {{ form_label(form.lieuLivraison) }}
+    {% if form_errors(form.lieuLivraison) %}
+        <div class="erreur">
+            {{ form_errors(form.lieuLivraison) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.lieuLivraison) }}
+    </div>
+    {{ form_label(form.commentaireCommande) }}
+    {{ form_help(form.commentaireCommande) }}
+    {% if form_errors(form.commentaireCommande) %}
+        <div class="erreur">
+            {{ form_errors(form.commentaireCommande) }}
+        </div>
+    {% endif %}
+    <div class="divInput">
+        {{ form_widget(form.commentaireCommande) }}
+    </div>
+</div>
+<script>
+    {% for sandwich in sandwichs %}
+    const firstSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi1_{{ sandwich.id }}');
+    if (firstSelectedSandwich{{ sandwich.id }}.checked === true) {
+        const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi1_{{ sandwich.id }}')
+        inputSandwich.checked = true;
+    }
+    const secondSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi2_{{ sandwich.id }}');
+    if (secondSelectedSandwich{{ sandwich.id }}.checked === true) {
+        const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}')
+        inputSandwich.checked = true;
+    }
+    {% endfor %}
 
-            const secondSelectedSandwich{{ sandwich.id }} = document.getElementById('commande_groupe_sandwichChoisi2_{{ sandwich.id }}');
-            if (secondSelectedSandwich{{ sandwich.id }}.checked === true) {
-                const inputSandwich = document.getElementById('input_commande_groupe_sandwichChoisi2_{{ sandwich.id }}')
-                inputSandwich.checked = true;
-            }
-        {% endfor %}
-        {% for dessert in desserts %}
-            const selectedDessert{{ dessert.id }} = document.getElementById('commande_groupe_dessertChoisi_{{ dessert.id }}');
-            if (selectedDessert{{ dessert.id }}.checked === true) {
-                const inputDessert = document.getElementById('input_commande_groupe_dessertChoisi_{{ dessert.id }}')
-                inputDessert.checked = true;
-            }
-        {% endfor %}
-    </script>
+    {% for dessert in desserts %}
+    const selectedDessert{{ dessert.id }} = document.getElementById('commande_groupe_dessertChoisi_{{ dessert.id }}');
+    if (selectedDessert{{ dessert.id }}.checked === true) {
+        const inputDessert = document.getElementById('input_commande_groupe_dessertChoisi_{{ dessert.id }}')
+        inputDessert.checked = true;
+    }
+    {% endfor %}
+</script>
 {{ form_end(form) }}
