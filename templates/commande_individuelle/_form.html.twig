@@ -7,16 +7,23 @@
         </div>
     {% endif %}
     {{ form_widget(form.sandwichChoisi) }}
+    {# Carrousel des sandwich #}
     <div id="sandwichCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        {# Contenu du carrousel #}
         <div class="carousel-inner">
+            {# Pour chaque sandwich #}
             {% for sandwich in sandwichs %}
+                {# Un sandwich pour une slide du carrousel qui change tous les 8 secondes #}
                 <div class="carousel-item {% if loop.index0 == 0 %} active {% endif %}" data-bs-interval="8000">
                     <label for="input_commande_individuelle_sandwichChoisi_{{ sandwich.id }}">
+                        {# Image d'un sandwich #}
                         <img src="{{ asset('uploads/imgSandwich/' ~ sandwich.imageSandwich) }}" class="d-block "
                              alt="{{ sandwich.nomSandwich }}-image">
+                        {# Affichage d'une description d'un sandwich (Nom, Ingrédient, Commentaire) #}
                         <span>{{ sandwich.nomSandwich }}</span>
                         <span>Ingrédients : {{ sandwich.ingredientSandwich ? sandwich.ingredientSandwich : 'Aucune description précisé.' }}</span>
                         <span>Commentaires : {{ sandwich.commentaireSandwich ? sandwich.commentaireSandwich : 'Aucun commentataire précisé.' }}</span>
+                        {# Case à cocher #}
                         <input type="radio" id="input_commande_individuelle_sandwichChoisi_{{ sandwich.id }}"
                                name="commande_individuelle[sandwichChoisi]" value="{{ sandwich.id }}">
                     </label>
@@ -47,6 +54,7 @@
                         <label for="input_commande_individuelle_dessertChoisi_{{ dessert.id }}">
                             <img src="{{ asset('uploads/imgDessert/' ~ dessert.imageDessert) }}" class="d-block"
                                  alt="{{ dessert.nomDessert }}-image">
+                            <span>{{ dessert.nomDessert }}</span>
                             <span>Ingrédients : {{ dessert.ingredientDessert ? dessert.ingredientDessert : 'Aucune description précisée.' }}</span>
                             <span>Commentaires : {{ dessert.commentaireDessert ? dessert.commentaireDessert : 'Aucun commentaire précisé.' }}</span>
                             <input type="radio" name="commande_individuelle[dessertChoisi]" value="{{ dessert.id }}"

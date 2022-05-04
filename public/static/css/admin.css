@@ -1,9 +1,9 @@
 /*Général*/
-#btnRetour{
+#btnRetour {
     margin: 0 0 0 15px;
 }
 
-#btnSuppr, #btnRetourSuppr{
+#btnSuppr, #btnRetourSuppr {
     padding: 10px;
     font-size: 20px;
 }
@@ -12,14 +12,14 @@ td span {
     display: block;
 }
 
-ul.pagination{
+ul.pagination {
     margin-top: 20px;
     position: relative;
     justify-content: center;
     font-size: 15px;
 }
 
-#divRetour{
+#divRetour {
     margin-top: 20px;
 }
 
@@ -29,91 +29,91 @@ ul.pagination{
     padding: 0 0 10px 0;
 }
 
-.tableAdmin{
+.tableAdmin {
     margin: 30px 0;
     border: solid black;
 }
 
-.tableAdmin span{
+.tableAdmin span {
     display: block;
 }
 
-.tableAdmin button a{
+.tableAdmin button a {
     font-size: 30px;
 }
 
-.tableAdmin th, .tableAdmin td{
+.tableAdmin th, .tableAdmin td {
     border: solid black;
     font-size: 17px;
     padding: 0.25rem;
-    vertical-align: middle!important;
+    vertical-align: middle !important;
 }
 
-.tableAdmin p{
+.tableAdmin p {
     font-size: 25px;
     margin-bottom: 0;
 }
 
-i.far.fa-edit, i.fas.fa-trash{
+i.far.fa-edit, i.fas.fa-trash {
     font-size: 15px;
     padding: 10px;
 }
 
-table img{
+table img {
     width: 80px;
     height: 80px;
 }
 
-table a.btn.btn-info{
+table a.btn.btn-info {
     margin: 12px 0;
     font-size: 15px;
 }
 
-#btnAdmin0{
+#btnAdmin0 {
     padding: 15px 100px;
 }
 
-#btnAdmin1{
+#btnAdmin1 {
     padding: 15px 105px;
 }
 
-#btnAdmin2{
+#btnAdmin2 {
     padding: 15px 107px;
 }
 
-#btnAdmin3{
+#btnAdmin3 {
     padding: 15px 94px;
 }
 
-#btnAdmin4{
+#btnAdmin4 {
     padding: 15px 111px;
 }
 
-#btnAdmin5{
+#btnAdmin5 {
     padding: 15px 113px;
 }
 
-#btnAdmin6{
+#btnAdmin6 {
     padding: 15px 114px;
 }
 
-#btnAdmin7{
+#btnAdmin7 {
     padding: 15px 100px;
 }
 
-#btnAdmin8{
+#btnAdmin8 {
     padding: 15px 101px;
 }
 
-#btnAdmin9{
+#btnAdmin9 {
     padding: 15px 99px;
 }
 
-#btnAdmin10{
+#btnAdmin10 {
     padding: 15px 120px;
 }
 
-#warning{
+#warning {
     color: red;
     border: solid;
     position: relative;
@@ -121,7 +121,7 @@ table a.btn.btn-info{
 
 /*Page de suppression*/
 
-#warning p{
+#warning p {
     font-size: 35px;
 }
 
@@ -132,7 +132,7 @@ table a.btn.btn-info{
 
 /*Filtre des pages de gestions et listes*/
 
-#filtre{
+#filtre {
     display: flex;
     justify-content: center
 }
@@ -145,26 +145,26 @@ table a.btn.btn-info{
     align-items: center;
 }
 
-#filtre span{
+#filtre span {
     font-size: 20px;
 }
 
-#filtre select, #filtre input{
+#filtre select, #filtre input {
     height: 30px;
     font-size: 15px;
 }
 
-#filtre button{
+#filtre button {
     padding: 5px 10px;
     font-size: 15px;
 }
 
-#filtre div{
+#filtre div {
     margin: 0 10px 0 0;
     float: left;
 }
 
-#filtre #left p{
+#filtre #left p {
     font-size: 30px;
     margin: 8px 0 0 0;
 }
@@ -175,7 +175,7 @@ table a.btn.btn-info{
 
 /*Filtre de gestion des élèves*/
 
-#filtreEleve form{
+#filtreEleve form {
     font-size: 22px;
     padding: 0;
     display: flex;
@@ -184,40 +184,40 @@ table a.btn.btn-info{
     flex-wrap: wrap;
 }
 
-div#filtreEleve{
+div#filtreEleve {
     padding-top: 30px;
 }
 
-div#filtreEleve.filtre label{
+div#filtreEleve.filtre label {
     margin: 0 0 0 20px;
 }
 
-#filtreEleve.filtre select , #filtreEleve.filtre input{
+#filtreEleve.filtre select, #filtreEleve.filtre input {
     font-size: 20px;
 }
 
 /*Formulaire d'ajout par une liste*/
-.fichierForm form{
+.fichierForm form {
     flex-direction: column;
 }
 
 /*Les Formulaires d'ajout et de modification des utilisateurs*/
 
 #formUser.formEntité2 div#user_roles label, #formUser select#user_roles_1,
-#formUser select#user_roles_2{
+#formUser select#user_roles_2 {
     display: none;
 }
 
-#formUser.formEntité2 div#screenRight div:first-child, div#user_roles div{
+#formUser.formEntité2 div#screenRight div:first-child, div#user_roles div {
     padding-bottom: 0;
 }
 
-#formUser.formEntité2 div#screenRight div:first-child{
+#formUser.formEntité2 div#screenRight div:first-child {
     display: contents;
 }
 
 #formUser.formEntité2 ul li,
-#formResetMdp ul li,#formRegister ul li, #formUserProfile ul li{
+#formResetMdp ul li, #formRegister ul li, #formUserProfile ul li {
     font-size: 15px;
     font-weight: bold;
     color: red;
@@ -230,6 +230,11 @@ div#limitation_commande_heureLimite {
 }
 
 /*Liste des commandes admin*/
+
+div#afficheTabFilter {
+    display: none;
+}
+
 table form {
     padding: unset;
 }
@@ -240,19 +245,19 @@ table form button.btn-danger {
 
 /*Page de profil*/
 
-#profilHeader{
+#profilHeader {
     margin: 5% 0 3% 10%;
 }
 
-#profilHeader p, #infoProfil p{
+#profilHeader p, #infoProfil p {
     font-size: 20px;
 }
 
-#profilHeader h1,#profilHeader p{
+#profilHeader h1, #profilHeader p {
     text-align: left;
 }
 
-#typeUser{
+#typeUser {
     font-weight: bold;
     font-style: italic;
 }
@@ -288,9 +293,8 @@ table form button.btn-danger {
 }
 
 /*Responsive pour les tablettes/orientation paysage pour téléphones */
-@media screen and (max-device-width: 1100px){
+@media screen and (max-device-width: 1100px) {
     /*Général*/
-
     #btnRetour {
         margin: 1rem 0;
     }
@@ -300,7 +304,6 @@ table form button.btn-danger {
     }
 
     /*Tableau*/
-
     .tableAdmin th, .tableAdmin td {
         font-size: 1.5em;
     }
@@ -330,7 +333,7 @@ table form button.btn-danger {
         font-size: 1.25em;
     }
 
-    #btnAdmin0 ,#btnAdmin1, #btnAdmin2, #btnAdmin3, #btnAdmin4,
+    #btnAdmin0, #btnAdmin1, #btnAdmin2, #btnAdmin3, #btnAdmin4,
     #btnAdmin5, #btnAdmin6, #btnAdmin7, #btnAdmin8, #btnAdmin9, #btnAdmin10 {
         font-size: 1em;
     }
@@ -375,6 +378,7 @@ table form button.btn-danger {
     #filtre label {
         font-size: 2em;
     }
+
     #filtre div {
         margin: 0 1em 0.5em 0;
         display: flex;
@@ -410,6 +414,10 @@ table form button.btn-danger {
     }
 
     /*Gestion des commandes individuelles et groupées*/
+    div#afficheTabFilter {
+        display: none;
+    }
+
     form#formExport {
         font-size: 2em;
         padding: 0 0 1em 0;
@@ -422,7 +430,6 @@ table form button.btn-danger {
     }
 
     /*Page de profile*/
-
     #btnProfilAcces1 {
         padding: 15px 112px;
     }
@@ -433,15 +440,15 @@ table form button.btn-danger {
     }
 
 }
+
 /*Responsive pour les téléphones mode portrait*/
 @media screen and (max-device-width: 700px) {
     /*Géneral*/
-     #btnRetour {
-         margin: 1em 0;
-     }
+    #btnRetour {
+        margin: 1em 0;
+    }
 
     /*Page de profil élève*/
-
     #btnProfilAcces1 {
         padding: 15px 140px;
     }
@@ -458,8 +465,6 @@ table form button.btn-danger {
         padding: 15px 50px;
     }
 
-    /*Profil admin*/
-
     /*Espace administration*/
     table img {
         width: 6em;
@@ -470,47 +475,47 @@ table form button.btn-danger {
         font-size: 2em;
     }
 
-    table a.btn.btn-info, table form .btn.btn-danger, table .btn.btn-success{
+    table a.btn.btn-info, table form .btn.btn-danger, table .btn.btn-success {
         font-size: 1em;
     }
 
-    #btnAdmin1{
+    #btnAdmin1 {
         padding: 15px 111px;
     }
 
-    #btnAdmin2{
+    #btnAdmin2 {
         padding: 15px 113px;
     }
 
-    #btnAdmin3{
+    #btnAdmin3 {
         padding: 15px 88px;
     }
 
-    #btnAdmin4{
+    #btnAdmin4 {
         padding: 15px 124px;
     }
 
-    #btnAdmin5{
+    #btnAdmin5 {
         padding: 15px 123px;
     }
 
-    #btnAdmin6{
+    #btnAdmin6 {
         padding: 15px 130px;
     }
 
-    #btnAdmin7{
+    #btnAdmin7 {
         padding: 15px 99px;
     }
 
-    #btnAdmin8{
+    #btnAdmin8 {
         padding: 15px 105px;
     }
 
-    #btnAdmin9{
+    #btnAdmin9 {
         padding: 15px 93px;
     }
 
-    #btnAdmin10{
+    #btnAdmin10 {
         padding: 15px 142px;
     }
 
@@ -529,7 +534,7 @@ table form button.btn-danger {
     }
 
     /*Filtre*/
-    #filtre{
+    #filtre {
         display: flex;
         justify-content: center;
         padding-bottom: 0;
@@ -543,13 +548,13 @@ table form button.btn-danger {
         padding: 0;
     }
 
-    #filtre select, #filtre input{
+    #filtre select, #filtre input {
         height: 3em;
         font-size: 1em;
         width: 100%;
     }
 
-    #submitFiltre button{
+    #submitFiltre button {
         padding: 1em 2em;
         font-size: 1em;
         margin-top: 1em;
@@ -564,14 +569,13 @@ table form button.btn-danger {
         margin: 0 1em 0 2em;
     }
 
-    #filtre #left p{
+    #filtre #left p {
         font-size: 30px;
         margin: 8px 0 0 0;
     }
 
     /*Filtre de gestion des élèves*/
-
-    #filtreEleve form{
+    #filtreEleve form {
         font-size: 2em;
         padding: 0;
         display: flex;
@@ -580,16 +584,15 @@ table form button.btn-danger {
         flex-wrap: wrap;
     }
 
-    div#filtreEleve{
+    div#filtreEleve {
         padding-top: 3em;
     }
 
-    #filtreEleve.filtre select , #filtreEleve.filtre input{
+    #filtreEleve.filtre select, #filtreEleve.filtre input {
         font-size: 2em;
     }
 
     /*Formulaire d'ajout + modification*/
-
     #warning p {
         font-size: 4em;
     }
@@ -601,7 +604,6 @@ table form button.btn-danger {
     }
 
     /*Page de profil*/
-
     #profilHeader p, #infoProfil p {
         font-size: 2em;
     }
@@ -612,20 +614,19 @@ table form button.btn-danger {
     }
 
     /*Formulaire d'ajout et de modification des adultes*/
-
     #btnAdulte {
         margin: 0;
     }
 
     /*Formulaire d'ajout et de modification des utilisateurs*/
-    #formUser #user_eleve, #formUser #user_adulte{
+    #formUser #user_eleve, #formUser #user_adulte {
         width: 80%;
         left: 10%;
         position: relative;
     }
 
     /*Filtre classe */
-    #filterOrder button{
+    #filterOrder button {
         margin-left: 2em;
     }
 
@@ -642,7 +643,11 @@ table form button.btn-danger {
     }
 
     /*Filtre gestion de commande*/
-    #filterAdminCom div, #filterUser div{
+    div#afficheTabFilter {
+        display: none;
+    }
+
+    #filterAdminCom div, #filterUser div {
         margin: 0 0.5rem 0.5em 0;
     }
 
@@ -650,6 +655,7 @@ table form button.btn-danger {
     .modal h1 {
         margin: 0;
     }
+
     .modal form select, .modal form input {
         font-size: 1.75em;
         margin-top: 0.5em;

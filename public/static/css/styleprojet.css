@@ -505,10 +505,6 @@ div#preciserRaison {
     margin-left: 1em;
 }
 
-#afficheTabFilter {
-    display: none;
-}
-
 /*Responsive de la barre de navigation*/
 @media screen and (max-width: 990px) {
     /*Navbar*/
@@ -826,6 +822,7 @@ div#preciserRaison {
     #btnAjout, #btnRetour, .btn.btn-success {
         padding: 30px;
         font-size: 2.5em;
+        margin: 1em 0;
     }
 
     label {
