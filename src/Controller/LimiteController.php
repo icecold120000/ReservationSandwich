@@ -98,7 +98,7 @@ class LimiteController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteEleve',
-                'Votre limitation a été supprimée !'
+                'La limitation a été supprimée !'
             );
         }
 

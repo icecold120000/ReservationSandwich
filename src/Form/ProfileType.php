@@ -25,7 +25,7 @@ class ProfileType extends AbstractType
                 'required' => true,
             ])
             ->add('email', TextType::class, [
-                'label' => 'E-mail de l\'utilisateur',
+                'label' => 'Email de l\'utilisateur',
                 'required' => true,
             ])
             ->add('plainPassword', RepeatedType::class, [

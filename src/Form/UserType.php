@@ -23,7 +23,7 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email', TextType::class, [
-                'label' => 'E-mail de l\'utilisateur',
+                'label' => 'Email de l\'utilisateur',
                 'required' => true,
             ])
             ->add('roles', CollectionType::class, [

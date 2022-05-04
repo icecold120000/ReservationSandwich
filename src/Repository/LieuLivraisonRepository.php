@@ -26,8 +26,8 @@ class LieuLivraisonRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('l');
         if ($active !== null) {
-            $query->andWhere('l.estActive = :val')
-                ->setParameter('val', $active);
+            $query->andWhere('l.estActive = :active')
+                ->setParameter('active', $active);
         }
         return $query->orderBy('l.libelleLieu', $order)->getQuery()->getResult();
     }

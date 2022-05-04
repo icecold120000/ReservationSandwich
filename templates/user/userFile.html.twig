@@ -13,9 +13,9 @@
             Télécharger modèle
         </a>
 
-        <h2>Veuillez sélectionner un fichier contenant une liste d'utilisateur</h2>
+        <h2>Veuillez sélectionner un fichier contenant une liste d'utilisateur !</h2>
 
-        {% for message in app.flashes('SuccessFileSubmit') %}
+        {% for message in app.flashes('SuccessUserFileSubmit') %}
             <div class="flash-success">
                 {{ message }}
             </div>

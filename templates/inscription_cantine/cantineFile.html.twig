@@ -7,9 +7,9 @@
 {% block body %}
     <main class="container-fluid">
         <h1>Modifier les inscriptions à la cantine.</h1>
-        <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine.</h2>
+        <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine !</h2>
 
-        {% for message in app.flashes('SuccessFileSubmit') %}
+        {% for message in app.flashes('SuccessCantineFileSubmit') %}
             <div class="flash-success">
                 {{ message }}
             </div>

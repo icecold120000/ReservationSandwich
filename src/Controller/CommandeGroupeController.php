@@ -11,6 +11,7 @@ use App\Repository\DessertRepository;
 use App\Repository\LimitationCommandeRepository;
 use App\Repository\SandwichCommandeGroupeRepository;
 use App\Repository\SandwichRepository;
+use App\Repository\UserRepository;
 use DateTime;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -38,7 +39,8 @@ class CommandeGroupeController extends AbstractController
                         BoissonRepository               $boissonRepo,
                         DessertRepository               $dessertRepo,
                         DesactivationCommandeRepository $deactiveRepo,
-                        LimitationCommandeRepository    $limiteRepo): Response
+                        LimitationCommandeRepository    $limiteRepo,
+                        UserRepository                  $userRepository): Response
     {
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
@@ -61,7 +63,7 @@ class CommandeGroupeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeGroupe
-                ->setCommandeur($this->getUser())
+                ->setCommandeur($userRepository->find($this->getUser()))
                 ->setDateCreation($dateNow)
                 ->setBoissonChoisie($boisson)
                 ->setEstValide(true);
@@ -212,7 +214,7 @@ class CommandeGroupeController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteComGr',
-                'La commande groupée a été supprimée !'
+                'La commande groupée a été annulée !'
             );
         }
 

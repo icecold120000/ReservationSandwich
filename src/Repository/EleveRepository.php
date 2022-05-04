@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Classe;
 use App\Entity\Eleve;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -23,11 +25,11 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function findByArchive($value): array
+    public function findByArchive(bool $archive): array
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.archiveEleve = :val')
-            ->setParameter('val', $value)
+            ->andWhere('e.archiveEleve = :archive')
+            ->setParameter('archive', $archive)
             ->orderBy('e.nomEleve', 'ASC')
             ->addOrderBy('e.prenomEleve', 'ASC')
             ->getQuery()
@@ -37,7 +39,8 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function orderByEleve($ordreNom = null, $ordrePrenom = null, $classe = null): array
+    public function orderByEleve(string $ordreNom = null, string $ordrePrenom = null,
+                                 Classe $classe = null): array
     {
         $query = $this->createQueryBuilder('el');
         if ($ordreNom != null && $ordrePrenom != null) {
@@ -62,14 +65,14 @@ class EleveRepository extends ServiceEntityRepository
     /**
      * @return Eleve[] Returns an array of Eleve objects
      */
-    public function findByClasse($nom = null, $classe = null, $archive = null,
-                                 $ordreNom = null, $ordrePrenom = null): array
+    public function findByClasse(string $search = null, Classe $classe = null, bool $archive = null,
+                                 string $ordreNom = null, string $ordrePrenom = null): array
     {
         $query = $this->createQueryBuilder('el');
-        if ($nom != null) {
-            $query->andWhere('el.nomEleve LIKE :nom OR el.prenomEleve LIKE :nom
-                OR el.id LIKE :nom')
-                ->setParameter('nom', '%' . $nom . '%');
+        if ($search != null) {
+            $query->andWhere('el.nomEleve LIKE :search OR el.prenomEleve LIKE :search
+                OR el.id LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
         }
 
         if ($classe != null) {
@@ -96,18 +99,19 @@ class EleveRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $nom
-     * @param $prenom
-     * @param null $birthday
+     * @param string $nom
+     * @param string $prenom
+     * @param \DateTime|null $birthday
      * @return Eleve|null
      * @throws NonUniqueResultException
      */
-    public function findByNomPrenomDateNaissance($nom, $prenom, $birthday = null): ?Eleve
+    public function findByNomPrenomDateNaissance(string    $nom, string $prenom,
+                                                 \DateTime $birthday = null): ?Eleve
     {
         $query = $this->createQueryBuilder('e');
-        $query->andWhere('e.nomEleve = :val')
-            ->andWhere('e.prenomEleve = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom));
+        $query->andWhere('e.nomEleve = :nom')
+            ->andWhere('e.prenomEleve = :prenom')
+            ->setParameters(array('nom' => $nom, 'prenom' => $prenom));
         if ($birthday != null) {
             $query->andWhere('e.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
@@ -117,15 +121,15 @@ class EleveRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $value
+     * @param User $user
      * @return Eleve|null
      * @throws NonUniqueResultException
      */
-    public function findOneByCompte($value): ?Eleve
+    public function findOneByCompte(User $user): ?Eleve
     {
         return $this->createQueryBuilder('e')
-            ->andWhere('e.compteEleve = :val')
-            ->setParameter('val', $value)
+            ->andWhere('e.compteEleve = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult();
     }

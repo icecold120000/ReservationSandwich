@@ -23,7 +23,7 @@ class ClasseRepository extends ServiceEntityRepository
     /**
      * @return Classe[]
      */
-    public function filterClasse($order, $search = null): array
+    public function filterClasse(string $order, string $search = null): array
     {
         $query = $this->createQueryBuilder('c');
         if ($search != null) {
@@ -39,11 +39,11 @@ class ClasseRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByLibelle($value): ?Classe
+    public function findOneByLibelle(string $libelle): ?Classe
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.libelleClasse = :val')
-            ->setParameter('val', $value)
+            ->andWhere('c.libelleClasse = :libelle')
+            ->setParameter('libelle', $libelle)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -51,11 +51,11 @@ class ClasseRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByCode($value): ?Classe
+    public function findOneByCode(string $code): ?Classe
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.codeClasse = :val')
-            ->setParameter('val', $value)
+            ->andWhere('c.codeClasse = :code')
+            ->setParameter('code', $code)
             ->getQuery()
             ->getOneOrNullResult();
     }

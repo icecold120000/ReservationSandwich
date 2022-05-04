@@ -131,8 +131,8 @@ class EleveController extends AbstractController
 
             // Affiche le message de validation
             $this->addFlash(
-                'SuccessFileSubmit',
-                'Vos élèves ont été sauvegardés ou modifiés !'
+                'SuccessEleveFileSubmit',
+                'Les élèves ont été sauvegardés ou modifiés !'
             );
 
             return $this->redirectToRoute('eleve_file');

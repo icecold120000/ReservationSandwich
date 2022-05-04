@@ -114,8 +114,8 @@ class AdulteController extends AbstractController
             AdulteController::creerAdulte($adulteFile->getFileName());
 
             $this->addFlash(
-                'SuccessFileSubmit',
-                'Vos adultes ont été sauvegardés !'
+                'SuccessAdulteFileSubmit',
+                'Les adultes ont été sauvegardés !'
             );
 
             return $this->redirectToRoute('adulte_file');

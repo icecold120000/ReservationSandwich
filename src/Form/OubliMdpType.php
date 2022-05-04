@@ -15,11 +15,11 @@ class OubliMdpType extends AbstractType
     {
         $builder
             ->add('emailFirst', EmailType::class, [
-                'label' => 'Votre adresse e-mail',
+                'label' => 'Votre adresse email',
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir un e-mail !',
+                        'message' => 'Veuillez saisir un email !',
                     ]),
                 ],
             ])
@@ -32,7 +32,7 @@ class OubliMdpType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez saisir votre mot de passe !',
+                        'message' => 'Veuillez saisir votre date de naissance !',
                     ]),
                 ],
             ]);

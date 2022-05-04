@@ -99,7 +99,7 @@ class ClasseController extends AbstractController
             $eleves = $eleveRepo->orderByEleve(
                 $search->get('ordreNom')->getData(),
                 $search->get('ordrePrenom')->getData(),
-                $classe->getId()
+                $classe
             );
         }
 
@@ -162,7 +162,7 @@ class ClasseController extends AbstractController
                            EleveRepository        $eleveRepo,
                            EntityManagerInterface $entityManager): Response
     {
-        $eleveRelated = $eleveRepo->findByClasse(null, $classe->getId());
+        $eleveRelated = $eleveRepo->findByClasse(null, $classe);
 
         if ($eleveRelated) {
             $this->addFlash(
@@ -179,7 +179,7 @@ class ClasseController extends AbstractController
                 $entityManager->flush();
                 $this->addFlash(
                     'SuccessDeleteClasse',
-                    'Votre classe a été supprimée !'
+                    'La classe a été supprimée !'
                 );
             }
         }

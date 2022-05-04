@@ -21,15 +21,15 @@ class LimitationCommandeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $value
+     * @param int $idLimite
      * @return LimitationCommande|null
      * @throws NonUniqueResultException
      */
-    public function findOneById($value): ?LimitationCommande
+    public function findOneById(int $idLimite): ?LimitationCommande
     {
         return $this->createQueryBuilder('l')
-            ->andWhere('l.id = :val')
-            ->setParameter('val', $value)
+            ->andWhere('l.id = :limite')
+            ->setParameter('limite', $idLimite)
             ->getQuery()
             ->getOneOrNullResult();
     }

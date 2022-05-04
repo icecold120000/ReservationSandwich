@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Eleve;
 use App\Entity\InscriptionCantine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -23,25 +24,25 @@ class InscriptionCantineRepository extends ServiceEntityRepository
     /**
      * @return InscriptionCantine[] Returns an array of InscriptionCantine objects
      */
-    public function findByArchive($value): array
+    public function findByArchive(bool $archive): array
     {
         return $this->createQueryBuilder('ic')
-            ->andWhere('ic.archiveInscription = :val')
-            ->setParameter('val', $value)
+            ->andWhere('ic.archiveInscription = :archive')
+            ->setParameter('archive', $archive)
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * @param $value
+     * @param Eleve $eleve
      * @return InscriptionCantine|null Returns an InscriptionCantine object
      * @throws NonUniqueResultException
      */
-    public function findOneByEleve($value): ?InscriptionCantine
+    public function findOneByEleve(Eleve $eleve): ?InscriptionCantine
     {
         return $this->createQueryBuilder('i')
-            ->andWhere('i.eleve = :val')
-            ->setParameter('val', $value)
+            ->andWhere('i.eleve = :eleve')
+            ->setParameter('eleve', $eleve)
             ->getQuery()
             ->getOneOrNullResult();
     }

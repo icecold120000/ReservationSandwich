@@ -21,15 +21,15 @@ class MenuAccueilRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $id
+     * @param int $idMenu
      * @return MenuAccueil|null
      * @throws NonUniqueResultException
      */
-    public function findCurrentOne($id): ?MenuAccueil
+    public function findCurrentOne(int $idMenu): ?MenuAccueil
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.id = :val')
-            ->setParameter('val', $id)
+            ->andWhere('m.id = :id')
+            ->setParameter('id', $idMenu)
             ->getQuery()
             ->getOneOrNullResult();
     }

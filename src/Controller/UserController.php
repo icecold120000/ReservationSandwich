@@ -10,6 +10,7 @@ use App\Form\FilterOrSearch\UserFilterType;
 use App\Form\UserType;
 use App\Repository\AdulteRepository;
 use App\Repository\EleveRepository;
+use App\Repository\InscriptionCantineRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeZone;
@@ -183,8 +184,8 @@ class UserController extends AbstractController
 
             UserController::creerUsers($userFile->getFileName());
             $this->addFlash(
-                'SuccessFileSubmit',
-                'Vos utilisateurs ont été sauvegardés !'
+                'SuccessUserFileSubmit',
+                'Les utilisateurs ont été sauvegardés !'
             );
             return $this->redirectToRoute('user_file');
         }
@@ -212,9 +213,9 @@ class UserController extends AbstractController
                     if (array_key_exists('Email', $rowData)
                         && !empty($rowData['Email'])) {
                         /*Recherche l'utilisateur dans la base de donnée*/
-                        $userRelated = $this->userRepository->findOneByEmail([
-                            'Email' => $rowData['Email']
-                        ]);
+                        $userRelated = $this->userRepository->findOneByEmail(
+                            $rowData['Email']
+                        );
                         /*S'il n'existe pas alors on le crée
                          en tant qu'un nouvel utilisateur*/
                         if ($userRelated === null) {
@@ -369,11 +370,12 @@ class UserController extends AbstractController
      * @Route("/{id}", name="user_delete", methods={"POST"})
      * @throws NonUniqueResultException
      */
-    public function delete(Request                $request,
-                           User                   $user,
-                           EntityManagerInterface $entityManager,
-                           AdulteRepository       $adulteRepository,
-                           EleveRepository        $eleveRepository): Response
+    public function delete(Request                      $request,
+                           User                         $user,
+                           EntityManagerInterface       $entityManager,
+                           AdulteRepository             $adulteRepository,
+                           EleveRepository              $eleveRepository,
+                           InscriptionCantineRepository $cantineRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
 
@@ -381,14 +383,15 @@ class UserController extends AbstractController
             $adulteFound = $adulteRepository->findOneByCompte($user);
 
             if ($eleveFound) {
-                $eleveFound->setCompteEleve(Null);
-                $entityManager->persist($eleveFound);
+                $cantine = $cantineRepository->findOneByEleve($eleveFound);
+                $entityManager->remove($cantine);
+                $entityManager->flush();
+                $entityManager->remove($eleveFound);
                 $entityManager->flush();
             }
 
             if ($adulteFound) {
-                $adulteFound->setCompteAdulte(Null);
-                $entityManager->persist($adulteFound);
+                $entityManager->remove($adulteFound);
                 $entityManager->flush();
             }
 
@@ -396,7 +399,7 @@ class UserController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteUser',
-                'Votre utilisateur a été supprimé !'
+                'L\'utilisateur a été supprimé !'
             );
         }
 

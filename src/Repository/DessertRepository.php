@@ -29,8 +29,8 @@ class DessertRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('d');
         if ($dispo !== null) {
-            $query->andWhere('d.dispoDessert = :val')
-                ->setParameter('val', $dispo);
+            $query->andWhere('d.dispoDessert = :dispo')
+                ->setParameter('dispo', $dispo);
         }
         return $query->orderBy('d.nomDessert', $order)->getQuery()->getResult();
     }
@@ -38,11 +38,11 @@ class DessertRepository extends ServiceEntityRepository
     /**
      * @return Dessert[] Returns an array of Dessert objects
      */
-    public function findByDispo($value): array
+    public function findByDispo(bool $dispo): array
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.dispoDessert = :val')
-            ->setParameter('val', $value)
+            ->andWhere('d.dispoDessert = :dispo')
+            ->setParameter('dispo', $dispo)
             ->getQuery()
             ->getResult();
     }

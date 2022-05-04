@@ -29,8 +29,8 @@ class SandwichRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('s');
         if ($dispo !== null) {
-            $query->andWhere('s.dispoSandwich = :val')
-                ->setParameter('val', $dispo);
+            $query->andWhere('s.dispoSandwich = :dispo')
+                ->setParameter('dispo', $dispo);
         }
         return $query->orderBy('s.nomSandwich', $order)->getQuery()->getResult();
     }
@@ -38,11 +38,11 @@ class SandwichRepository extends ServiceEntityRepository
     /**
      * @return Sandwich[] Returns an array of sandwich objects
      */
-    public function findByDispo($value): array
+    public function findByDispo(bool $dispo): array
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.dispoSandwich = :val')
-            ->setParameter('val', $value)
+            ->andWhere('s.dispoSandwich = :dispo')
+            ->setParameter('dispo', $dispo)
             ->getQuery()
             ->getResult();
     }

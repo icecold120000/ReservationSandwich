@@ -41,7 +41,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @return User[]
      */
-    public function search($roleUser = null, $userVerifie = null, $ordreNom = null, $ordrePrenom = null): array
+    public function search(string $roleUser = null, bool $userVerifie = null,
+                           string $ordreNom = null, string $ordrePrenom = null): array
     {
         $query = $this->createQueryBuilder('u');
         if ($roleUser !== null) {
@@ -69,11 +70,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByEmail($email): ?User
+    public function findOneByEmail(string $email): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.email = :val')
-            ->setParameter('val', $email)
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -81,12 +82,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByEmailAndDate($email, $date): ?User
+    public function findOneByEmailAndDate(string $email, \DateTime $date): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.email = :val')
-            ->andWhere('u.dateNaissanceUser = :val2')
-            ->setParameters(array('val' => $email, 'val2' => $date))
+            ->andWhere('u.email = :email')
+            ->andWhere('u.dateNaissanceUser = :date')
+            ->setParameters(array('email' => $email, 'date' => $date))
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -94,12 +95,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByAdulte($adulteId): ?User
+    public function findOneByAdulte(int $adulteId): ?User
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.adultes', 'a')
-            ->andWhere('a.id = :val')
-            ->setParameter('val', $adulteId)
+            ->andWhere('a.id = :idAdulte')
+            ->setParameter('idAdulte', $adulteId)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -107,12 +108,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @throws NonUniqueResultException
      */
-    public function findOneByEleve($eleveId): ?User
+    public function findOneByEleve(int $eleveId): ?User
     {
         return $this->createQueryBuilder('u')
             ->leftJoin('u.eleves', 'e')
-            ->andWhere('e.id = :val')
-            ->setParameter('val', $eleveId)
+            ->andWhere('e.id = :idEleve')
+            ->setParameter('idEleve', $eleveId)
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -120,28 +121,42 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * @return User[]
      */
-    public function findByNomAndPrenom($nom, $prenom): array
+    public function findByNomAndPrenom(string $nom, string $prenom): array
     {
         $query = $this->createQueryBuilder('u');
-        $query->andWhere('u.nomUser Like :val')
-            ->andWhere('u.prenomUser Like :val2')
-            ->setParameters(array('val' => '%' . $nom . '%', 'val2' => '%' . $prenom . '%'));
+        $query->andWhere('u.nomUser Like :nom')
+            ->andWhere('u.prenomUser Like :prenom')
+            ->setParameters(array('nom' => '%' . $nom . '%', 'prenom' => '%' . $prenom . '%'));
         return $query->getQuery()->getResult();
     }
 
     /**
      * @return User[]
      */
-    public function findByNomPrenomAndBirthday($nom, $prenom, $birthday): array
+    public function findByNomPrenomAndBirthday(string    $nom,
+                                               string    $prenom,
+                                               \DateTime $birthday): array
     {
         $query = $this->createQueryBuilder('u');
-        $query->andWhere('u.nomUser like :val')
-            ->andWhere('u.prenomUser like :val2')
-            ->setParameters(array('val' => '%' . $nom . '%', 'val2' => '%' . $prenom . '%'));
-        if ($birthday != null) {
-            $query->andWhere('u.dateNaissanceUser = :birthday')
-                ->setParameter('birthday', $birthday);
-        }
+        $query->andWhere('u.nomUser like :nom')
+            ->andWhere('u.prenomUser like :prenom')
+            ->andWhere('u.dateNaissanceUser = :birthday')
+            ->setParameters(array('nom' => '%' . $nom . '%',
+                'prenom' => '%' . $prenom . '%', 'birthday' => $birthday));
+
         return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Utilisé dans ProfileController
+     * @throws NonUniqueResultException
+     */
+    public function findOneByToken(string $tokenHash): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.tokenHash = :token')
+            ->setParameter('token', $tokenHash)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

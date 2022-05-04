@@ -27,8 +27,8 @@ class BoissonRepository extends ServiceEntityRepository
     {
         $query = $this->createQueryBuilder('b');
         if ($dispo !== null) {
-            $query->andWhere('b.dispoBoisson = :val')
-                ->setParameter('val', $dispo);
+            $query->andWhere('b.dispoBoisson = :dispo')
+                ->setParameter('dispo', $dispo);
         }
         return $query->orderBy('b.nomBoisson', $order)->getQuery()->getResult();
     }
@@ -36,25 +36,25 @@ class BoissonRepository extends ServiceEntityRepository
     /**
      * @return Boisson[] Returns an array of Boisson objects
      */
-    public function findByDispo($value): array
+    public function findByDispo(bool $dispo): array
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.dispoBoisson = :val')
-            ->setParameter('val', $value)
+            ->andWhere('b.dispoBoisson = :dispo')
+            ->setParameter('dispo', $dispo)
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * @param $value
+     * @param string $nom
      * @return Boisson|null
      * @throws NonUniqueResultException
      */
-    public function findOneByNom($value): ?Boisson
+    public function findOneByNom(string $nom): ?Boisson
     {
         return $this->createQueryBuilder('b')
-            ->andWhere('b.nomBoisson = :val')
-            ->setParameter('val', $value)
+            ->andWhere('b.nomBoisson = :nom')
+            ->setParameter('nom', $nom)
             ->getQuery()
             ->getOneOrNullResult();
     }

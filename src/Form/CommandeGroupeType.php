@@ -107,7 +107,7 @@ class CommandeGroupeType extends AbstractType
             ])
             ->add('motifSortie', TextareaType::class, [
                 'label' => 'Motif de la sortie',
-                'help' => 'Description de la sortie, nombre de participant...',
+                'help' => 'Ex : Description de la sortie, nombre de participant...',
                 'required' => true,
                 'constraints' => [
                     new NotBlank(['message' => 'Veuillez saisir un motif.'])

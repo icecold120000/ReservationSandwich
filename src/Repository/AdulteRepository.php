@@ -24,11 +24,11 @@ class AdulteRepository extends ServiceEntityRepository
     /**
      * @return Adulte[] Returns an array of Adulte objects
      */
-    public function findByArchive($value): array
+    public function findByArchive(bool $archive): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.archiveAdulte = :val')
-            ->setParameter('val', $value)
+            ->andWhere('a.archiveAdulte = :archive')
+            ->setParameter('archive', $archive)
             ->orderBy('a.prenomAdulte', 'ASC')
             ->addGroupBy('a.nomAdulte')
             ->getQuery()
@@ -38,13 +38,14 @@ class AdulteRepository extends ServiceEntityRepository
     /**
      * @return Adulte[] Returns an array of Adulte objects
      */
-    public function filter($nom = null, $ordreNom = null, $ordrePrenom = null, $archive = null): array
+    public function filter(string $search = null, string $ordreNom = null,
+                           string $ordrePrenom = null, bool $archive = null): array
     {
         $query = $this->createQueryBuilder('a');
-        if ($nom != null) {
-            $query->andWhere('a.nomAdulte LIKE :nom OR a.prenomAdulte LIKE :nom
-                OR a.id LIKE :nom')
-                ->setParameter('nom', '%' . $nom . '%');
+        if ($search != null) {
+            $query->andWhere('a.nomAdulte LIKE :search OR a.prenomAdulte LIKE :search
+                OR a.id LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
         }
 
         if ($ordreNom !== null && $ordrePrenom !== null) {
@@ -65,18 +66,19 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param $nom
-     * @param $prenom
-     * @param null $birthday
+     * @param string $nom
+     * @param string $prenom
+     * @param \DateTime|null $birthday
      * @return Adulte|null
      * @throws NonUniqueResultException
      */
-    public function findByNomPrenomDateNaissance($nom, $prenom, $birthday = null): ?Adulte
+    public function findByNomPrenomDateNaissance(string    $nom, string $prenom,
+                                                 \DateTime $birthday = null): ?Adulte
     {
         $query = $this->createQueryBuilder('a');
-        $query->andWhere('a.nomAdulte = :val')
-            ->andWhere('a.prenomAdulte = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom));
+        $query->andWhere('a.nomAdulte = :nom')
+            ->andWhere('a.prenomAdulte = :prenom')
+            ->setParameters(array('nom' => $nom, 'prenom' => $prenom));
         if ($birthday != null) {
             $query->andWhere('a.dateNaissance = :birthday')
                 ->setParameter('birthday', $birthday);
@@ -88,12 +90,12 @@ class AdulteRepository extends ServiceEntityRepository
     /**
      * @throws NonUniqueResultException
      */
-    public function findByNomPrenom($nom, $prenom): ?Adulte
+    public function findByNomPrenom(string $nom, string $prenom): ?Adulte
     {
         $query = $this->createQueryBuilder('a');
-        $query->andWhere('a.nomAdulte = :val')
-            ->andWhere('a.prenomAdulte = :val2')
-            ->setParameters(array('val' => $nom, 'val2' => $prenom));
+        $query->andWhere('a.nomAdulte = :nom')
+            ->andWhere('a.prenomAdulte = :prenom')
+            ->setParameters(array('nom' => $nom, 'prenom' => $prenom));
 
         return $query->getQuery()->getOneOrNullResult();
     }
@@ -104,8 +106,8 @@ class AdulteRepository extends ServiceEntityRepository
     public function findOneByCompte(User $user): ?Adulte
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.compteAdulte = :val')
-            ->setParameter('val', $user)
+            ->andWhere('a.compteAdulte = :user')
+            ->setParameter('user', $user)
             ->getQuery()
             ->getOneOrNullResult();
     }

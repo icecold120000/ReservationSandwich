@@ -71,34 +71,36 @@ class CommandeIndividuelleController extends AbstractController
                           PaginatorInterface             $paginator,
                           Request                        $request,
                           LimitationCommandeRepository   $limiteRepo,
-                          CommandeGroupeRepository       $comGrRepo): Response
+                          CommandeGroupeRepository       $comGrRepo,
+                          UserRepository                 $userRepo): Response
     {
+        $user = $userRepo->find($this->getUser());
         $affichageTableau = "les deux";
         $limiteGroupeCom = $limiteRepo->findOneById(5);
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limiteNbJour = $limiteRepo->findOneById(2);
         $limiteNbSemaine = $limiteRepo->findOneById(3);
         $limiteNbMois = $limiteRepo->findOneById(4);
-        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
         $limiteDate = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'),
             new DateTimeZone('Europe/Paris'));
-        $commandes = $comIndRepo->findIndexAllNonCloture($this->getUser());
-        $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($this->getUser());
+        $commandes = $comIndRepo->findIndexAllNonCloture($user);
+        $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($user);
 
         $form = $this->createForm(FilterIndexCommandeType::class);
         $filter = $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $commandes = $this->comIndRepo->filterIndex(
-                $this->getUser(),
+                $user,
                 $filter->get('date')->getData(),
                 $filter->get('cloture')->getData()
             );
 
             $affichageTableau = $filter->get('affichageTableau')->getData();
             $commandesGroupe = $comGrRepo->filterIndex(
-                $this->getUser(),
+                $user,
                 $filter->get('date')->getData(),
                 $filter->get('cloture')->getData()
             );
@@ -144,24 +146,22 @@ class CommandeIndividuelleController extends AbstractController
     public function deactivation(DesactivationCommande  $desactiveId,
                                  EntityManagerInterface $manager): RedirectResponse
     {
-
         if ($desactiveId->getIsDeactivated() === false) {
             $desactiveId->setIsDeactivated(true);
             $this->addFlash(
                 'SuccessDeactivation',
-                'La page de réservation a été désactivée !'
+                'Les pages de réservations ont été désactivées !'
             );
         } elseif ($desactiveId->getIsDeactivated() === true) {
             $desactiveId->setIsDeactivated(false);
             $this->addFlash(
                 'SuccessDeactivation',
-                'La page de réservation a été réactivée !'
+                'Les pages de réservations ont été réactivées !'
             );
         }
 
         $manager->persist($desactiveId);
         $manager->flush();
-
 
         return $this->redirectToRoute('espace_admin', [], Response::HTTP_SEE_OTHER);
     }
@@ -215,7 +215,7 @@ class CommandeIndividuelleController extends AbstractController
                     foreach ($commandesExport as $commande) {
 
                         if (in_array(User::ROLE_ELEVE, $commande->getCommandeur()->getRoles())) {
-                            $eleve = $this->eleveRepo->findOneByCompte($commande->getCommandeur()->getId());
+                            $eleve = $this->eleveRepo->findOneByCompte($commande->getCommandeur());
                             $classe = $eleve->getClasseEleve()->getCodeClasse();
                         } else {
                             $classe = "Adulte";
@@ -236,7 +236,7 @@ class CommandeIndividuelleController extends AbstractController
                     }
                     foreach ($commandesGroupeExport as $commandeGroupe) {
                         if (in_array(User::ROLE_ELEVE, $commandeGroupe->getCommandeur()->getRoles())) {
-                            $eleve = $this->eleveRepo->findOneByCompte($commandeGroupe->getCommandeur()->getId());
+                            $eleve = $this->eleveRepo->findOneByCompte($commandeGroupe->getCommandeur());
                             $classe = $eleve->getClasseEleve()->getCodeClasse();
                         } else {
                             $classe = "Adulte";
@@ -624,7 +624,7 @@ class CommandeIndividuelleController extends AbstractController
 
         if (in_array("ROLE_ELEVE", $roles)) {
             $eleve = $eleveRepository->findOneByCompte($user);
-            $cantine = $cantineRepository->findOneByEleve($eleve->getId());
+            $cantine = $cantineRepository->findOneByEleve($eleve);
         }
 
         $limiteJourMeme = $limiteRepo->findOneById(1);
@@ -633,9 +633,9 @@ class CommandeIndividuelleController extends AbstractController
         $limiteNbJour = $limiteRepo->findOneById(2);
         $limiteNbSemaine = $limiteRepo->findOneById(3);
         $limiteNbMois = $limiteRepo->findOneById(4);
-        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -824,7 +824,7 @@ class CommandeIndividuelleController extends AbstractController
         $cantine = null;
 
         if (in_array("ROLE_ELEVE", $roles)) {
-            $cantine = $cantineRepository->findOneByEleve($user->getEleves());
+            $cantine = $cantineRepository->findOneByEleve($user->getEleves()->first());
         }
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
@@ -832,9 +832,9 @@ class CommandeIndividuelleController extends AbstractController
         $limiteNbJour = $limiteRepo->findOneById(2);
         $limiteNbSemaine = $limiteRepo->findOneById(3);
         $limiteNbMois = $limiteRepo->findOneById(4);
-        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
-        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($this->getUser(), new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeJournalier = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
+        $nbCommandeMois = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
 
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -976,7 +976,7 @@ class CommandeIndividuelleController extends AbstractController
             $entityManager->flush();
             $this->addFlash(
                 'SuccessDeleteComInd',
-                'La commande individuelle a été supprimée !'
+                'La commande a été annulée !'
             );
         }
 

@@ -85,8 +85,8 @@ class InscriptionCantineController extends AbstractController
 
             // Affiche le message de validation
             $this->addFlash(
-                'SuccessFileSubmit',
-                'Vos inscriptions ont été sauvegardées ou modifiées !'
+                'SuccessCantineFileSubmit',
+                'Les inscriptions ont été sauvegardées ou modifiées !'
             );
 
             return $this->redirectToRoute('inscription_cantine_file');
