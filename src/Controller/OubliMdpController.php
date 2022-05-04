@@ -13,11 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
@@ -31,50 +29,43 @@ class OubliMdpController extends AbstractController
      * @throws TransportExceptionInterface
      * @throws NonUniqueResultException
      */
-    public function forgottenPassword(Request            $request,
-                                      MailerInterface    $mailer,
-                                      RateLimiterFactory $anonymousApiLimiter,
-                                      UserRepository     $userRepo): Response
+    public function forgottenPassword(Request         $request,
+                                      MailerInterface $mailer,
+                                      UserRepository  $userRepo): Response
     {
         $form = $this->createForm(OubliMdpType::class);
         $email = $form->handleRequest($request);
-        $limiter = $anonymousApiLimiter->create($request->getClientIp());
 
-        // the argument of consume() is the number of tokens to consume
-        // and returns an object of type Limit
-        if (false === $limiter->consume(1)->isAccepted()) {
-            $error = throw new TooManyRequestsHttpException('dans une heure', 'Vous avez fait trop de demande d\'oubli de mot de passe !');
-        } else {
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
 
-                $user = $email->get("emailFirst")->getData();
-                $dateNaissance = $email->get("dateAnniversaire")->getData();
+            $user = $email->get("emailFirst")->getData();
+            $dateNaissance = $email->get("dateAnniversaire")->getData();
 
-                $data = $userRepo->findOneByEmailAndDate($user, $dateNaissance);
+            $data = $userRepo->findOneByEmailAndDate($user, $dateNaissance);
 
-                if (empty($data))
-                    $error = "L'adresse mail n'est lié à aucun compte !";
-                else {
-                    $email = (new TemplatedEmail())
-                        ->from('cuisine.saintvincentsenlis@gmail.com')
-                        ->to($data->getEmail())
-                        ->subject('Votre réinitialisation de mot de passe')
-                        ->htmlTemplate('email/send_oubli_mdp.html.twig')
-                        ->context([
-                            'user' => $data
-                        ]);
+            if (empty($data))
+                $error = "L'adresse mail n'est lié à aucun compte !";
+            else {
+                $email = (new TemplatedEmail())
+                    ->from('cuisine.saintvincentsenlis@gmail.com')
+                    ->to($data->getEmail())
+                    ->subject('Votre réinitialisation de mot de passe')
+                    ->htmlTemplate('email/send_oubli_mdp.html.twig')
+                    ->context([
+                        'user' => $data
+                    ]);
 
-                    $mailer->send($email);
-                    $this->addFlash(
-                        'SuccessOubli',
-                        'Votre demande a été envoyée.
-                        Vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.'
-                    );
+                $mailer->send($email);
+                $this->addFlash(
+                    'SuccessOubli',
+                    'Votre demande a été envoyée.
+                    Vous allez recevoir un email vous permettant de réinitialiser votre mot de passe.'
+                );
 
-                    return $this->redirectToRoute("oubli_mdp");
-                }
+                return $this->redirectToRoute("oubli_mdp");
             }
         }
+
 
         return $this->render('oubli_mdp/index.html.twig', [
             'error' => $error ?? null,
