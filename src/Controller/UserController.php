@@ -383,7 +383,7 @@ class UserController extends AbstractController
             $adulteFound = $adulteRepository->findOneByCompte($user);
 
             if ($eleveFound) {
-                $cantine = $cantineRepository->findOneByEleve($eleveFound);
+                $cantine = $cantineRepository->findOneByEleve($eleveFound->getId());
                 $entityManager->remove($cantine);
                 $entityManager->flush();
                 $entityManager->remove($eleveFound);

@@ -33,4 +33,30 @@ class LimitationCommandeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function filter(string $ordreLibelle = null, bool $isActive = null,
+                           string $ordreNombre = null, string $ordreHeure = null): array
+    {
+        $query = $this->createQueryBuilder('lc');
+
+        if ($ordreLibelle != null) {
+            $query->addOrderBy('lc.libelleLimite ', $ordreLibelle);
+        }
+
+        if ($isActive !== null) {
+            $query
+                ->andWhere('lc.is_active = :active')
+                ->setParameter('active', $isActive);
+        }
+
+        if ($ordreNombre != null) {
+            $query->addOrderBy('lc.nbLimite ', $ordreNombre);
+        }
+
+        if ($ordreHeure != null) {
+            $query->addOrderBy('lc.heureLimite ', $ordreHeure);
+        }
+
+        return $query->getQuery()->getResult();
+    }
 }

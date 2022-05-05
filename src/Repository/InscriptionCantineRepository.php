@@ -34,11 +34,11 @@ class InscriptionCantineRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param Eleve $eleve
+     * @param int $eleve
      * @return InscriptionCantine|null Returns an InscriptionCantine object
      * @throws NonUniqueResultException
      */
-    public function findOneByEleve(Eleve $eleve): ?InscriptionCantine
+    public function findOneByEleve(int $eleve): ?InscriptionCantine
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.eleve = :eleve')

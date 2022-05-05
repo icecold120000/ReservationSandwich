@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\LimitationCommande;
+use App\Form\FilterOrSearch\FilterLimitationType;
 use App\Form\LimitationCommandeType;
 use App\Repository\LimitationCommandeRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,12 +18,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class LimiteController extends AbstractController
 {
     /**
-     * @Route("/", name="limite_index", methods={"GET"})
+     * @Route("/", name="limite_index", methods={"GET","POST"})
      */
-    public function index(LimitationCommandeRepository $limitationCommandeRepository): Response
+    public function index(Request $request, LimitationCommandeRepository $limitationCommandeRepository): Response
     {
+        $limites = $limitationCommandeRepository->findAll();
+
+        $form = $this->createForm(FilterLimitationType::class);
+        $filter = $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $limites = $limitationCommandeRepository->filter(
+                $filter->get('ordreLibelle')->getData(),
+                $filter->get('limiteActive')->getData(),
+                $filter->get('ordreNombre')->getData(),
+                $filter->get('ordreHeure')->getData()
+            );
+        }
+
         return $this->render('limite/index.html.twig', [
-            'limitations' => $limitationCommandeRepository->findAll(),
+            'limitations' => $limites,
+            'form' => $form->createView()
         ]);
     }
 

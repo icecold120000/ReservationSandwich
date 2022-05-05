@@ -18,6 +18,35 @@
                 Retourner à l'espace administration
             </a>
         </div>
+        <div id="filtre">
+            {{ form_start(form) }}
+            <div>
+                <div class="selectFiltre">
+                    <span>{{ form_label(form.ordreLibelle) }}</span>
+                    {{ form_widget(form.ordreLibelle) }}
+                </div>
+                <div class="selectFiltre">
+                    <span>{{ form_label(form.limiteActive) }}</span>
+                    {{ form_widget(form.limiteActive) }}
+                </div>
+            </div>
+            <div>
+                <div class="selectFiltre">
+                    <span>{{ form_label(form.ordreNombre) }}</span>
+                    {{ form_widget(form.ordreNombre) }}
+                </div>
+                <div class="selectFiltre">
+                    <span>{{ form_label(form.ordreHeure) }}</span>
+                    {{ form_widget(form.ordreHeure) }}
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="btn btn-info">
+                    Afficher
+                </button>
+            </div>
+            {{ form_end(form) }}
+        </div>
         <table class="table tableAdmin">
             <thead>
             <tr>

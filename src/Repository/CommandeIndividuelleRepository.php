@@ -157,14 +157,13 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                         'dateThen' => $date->format('Y-m-d h:i'), 'user' => $user->getId()));
             }
         }
-
         if ($cloture === false) {
             $query
-                ->andWhere('ci.dateHeureLivraison < :dateNow')
+                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         } elseif ($cloture === true) {
             $query
-                ->andWhere('ci.dateHeureLivraison > :dateNow')
+                ->andWhere('ci.dateHeureLivraison < :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 
@@ -175,44 +174,45 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      * @throws Exception
      */
-    public function filterAdmin(string $search = null, DateTime $date = null, bool $cloture = null): array
+    public function filterAdmin(string $search = null, DateTime $date = null, ?bool $cloture = null): array
     {
         $query = $this->createQueryBuilder('ci');
+        $query->orderBy('ci.dateHeureLivraison', 'ASC');
+
         if ($search != null) {
             $query
                 ->leftJoin('ci.commandeur', 'u')
                 ->leftJoin('u.eleves', 'e')
+                ->leftJoin('u.adultes', 'a')
                 ->leftJoin('e.classeEleve', 'cl')
-                ->andWhere('u.nomUser LIKE :search OR u.prenomUser LIKE :search
+                ->andWhere('u.nomUser LIKE :search OR u.prenomUser LIKE :search 
                  OR cl.codeClasse LIKE :search OR cl.libelleClasse LIKE :search')
-                ->setParameter('search', '%' . $search . '%')
-                ->orderBy('ci.dateHeureLivraison', 'ASC');
+                ->setParameter('search', '%' . $search . '%');
         }
 
         if ($date != null) {
             if (new DateTime($date->format('y-m-d') . ' 00:00:00') == new DateTime('now 00:00:00')) {
                 $query->andWhere('ci.dateHeureLivraison Like :date')
-                    ->setParameter('date', '%' . $date->format('y-m-d') . '%')
-                    ->orderBy('ci.dateHeureLivraison', 'ASC');
+                    ->setParameter('date', '%' . $date->format('y-m-d') . '%');
             } else {
                 $query
                     ->andWhere('ci.dateHeureLivraison > :dateNow')
                     ->andWhere('ci.dateHeureLivraison < :dateThen')
                     ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d h:i'),
-                        'dateThen' => $date->format('Y-m-d h:i')))
-                    ->orderBy('ci.dateHeureLivraison', 'ASC');
+                        'dateThen' => $date->format('Y-m-d h:i'), 'search' => '%' . $search . '%'));
             }
         }
 
         if ($cloture === false) {
-            $query->andWhere('ci.dateHeureLivraison < :dateNow')
-                ->setParameter('dateNow', new DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC');
-        } elseif ($cloture !== null) {
-            $query->andWhere('ci.dateHeureLivraison > :dateNow')
-                ->setParameter('dateNow', new DateTime('now'))
-                ->orderBy('ci.dateHeureLivraison', 'ASC');
+            $query
+                ->andWhere('ci.dateHeureLivraison >= :dateNow')
+                ->setParameter('dateNow', new DateTime('now'));
+        } elseif ($cloture === true) {
+            $query
+                ->andWhere('ci.dateHeureLivraison < :dateNow')
+                ->setParameter('dateNow', new DateTime('now'));
         }
+
         return $query->getQuery()->getResult();
     }
 }
