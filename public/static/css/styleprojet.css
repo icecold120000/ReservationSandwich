@@ -200,14 +200,12 @@ div#footerContent {
 }
 
 #menuImg {
-    height: 400px;
-    width: 85%;
+    height: 25em;
     margin-bottom: 3em;
 }
 
 #menuImgModal {
-    height: 600px;
-    width: 100%;
+    height: 30em;
 }
 
 #btnModal {
@@ -471,13 +469,13 @@ form textarea {
 }
 
 #sandwichCarousel img, #dessertCarousel img, #sandwich1Carousel img, #sandwich2Carousel img {
-    height: 200px;
-    width: 80%;
+    height: 13em;
+    width: 100%;
 }
 
 #boissonCarousel img {
-    height: 290px;
-    width: 80%;
+    height: 16em;
+    width: 100%;
 }
 
 .carousel-inner label {
@@ -962,12 +960,12 @@ div#preciserRaison {
 
     #sandwichCarousel img, #dessertCarousel img, #sandwich1Carousel img, #sandwich2Carousel img {
         width: 100%;
-        height: 400px;
+        height: 15em;
     }
 
     #boissonCarousel img {
         width: 100%;
-        height: 700px;
+        height: 15em;
     }
 
     .carousel-inner input {

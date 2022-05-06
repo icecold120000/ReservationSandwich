@@ -56,7 +56,7 @@
                 </a>
             {% endif %}
         </div>
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') and is_granted('IS_AUTHENTICATED_FULLY') %}
             {% for message in app.flashes('SuccessMenu') %}
                 <div class="flash-success">
                     {{ message }}

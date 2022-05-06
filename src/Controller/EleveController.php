@@ -200,7 +200,7 @@ class EleveController extends AbstractController
                                 $nbRepas = 0;
                             } else {
                                 $nbRepas = $rowData['Nombre de repas Midi'];
-                                $inscription = $this->inscritCantRepo->findOneBy(['eleve_id' => $eleveExcel->getId()]);
+                                $inscription = $this->inscritCantRepo->findOneByEleve($eleveExcel->getId());
                                 if ($inscription !== null) {
                                     $inscription
                                         ->setRepasJ1(!empty($rowData['Repas Midi J1']))
@@ -285,10 +285,9 @@ class EleveController extends AbstractController
                 ->setArchiveEleve(true)
                 ->setClasseEleve($this->classeRepo
                     ->findOneByLibelle("Quitter l'établissement"));
-            $inscription = $this->inscritCantRepo->findOneBy(['eleve' => $eleve]);
-            $inscription->setArchiveInscription(true);
-            $this->entityManager->persist($eleve);
-            $this->entityManager->persist($inscription);
+            $inscription = $this->inscritCantRepo->findOneByEleve($eleve->getId());
+            $inscription?->setArchiveInscription(true);
+
         }
         $this->entityManager->flush();
     }
@@ -451,7 +450,7 @@ class EleveController extends AbstractController
                 unlink($this->getParameter('photoEleve_directory') . '/' . $eleve->getPhotoEleve());
             }
             $user = $userRepo->findOneByEleve($eleve->getId());
-            $cantine = $cantineRepository->findOneByEleve($eleve);
+            $cantine = $cantineRepository->findOneByEleve($eleve->getId());
             if ($user) {
                 $entityManager->remove($user);
             }

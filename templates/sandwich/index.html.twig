@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste de sandwichs{% endblock %}
+{% block title %}Liste de formules de sandwichs{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
 {% endblock %}
 
 {% block body %}
     <main class="container-fluid">
-        <h1>Liste de sandwichs</h1>
+        <h1>Liste de formules de sandwichs</h1>
         {% for message in app.flashes('SuccessDeleteSandwich') %}
             <div class="flash-success">
                 {{ message }}

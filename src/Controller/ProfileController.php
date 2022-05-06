@@ -76,7 +76,7 @@ class ProfileController extends AbstractController
         $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($user->getNomUser(),
             $user->getPrenomUser(), $user->getDateNaissanceUser());
 
-        $inscrit = $cantineRepository->findOneByEleve($eleveFound);
+        $inscrit = $cantineRepository->findOneByEleve($eleveFound->getId());
 
         return $this->render('profile/eleve.html.twig', [
             'eleve' => $eleveFound,

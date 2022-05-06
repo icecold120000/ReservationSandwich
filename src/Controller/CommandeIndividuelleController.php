@@ -624,7 +624,7 @@ class CommandeIndividuelleController extends AbstractController
 
         if (in_array("ROLE_ELEVE", $roles)) {
             $eleve = $eleveRepository->findOneByCompte($user);
-            $cantine = $cantineRepository->findOneByEleve($eleve);
+            $cantine = $cantineRepository->findOneByEleve($eleve->getId());
         }
 
         $limiteJourMeme = $limiteRepo->findOneById(1);
