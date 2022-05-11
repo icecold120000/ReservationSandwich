@@ -189,6 +189,9 @@
             "./tests/bootstrap.php"
         ]
     },
+    "picqer/php-barcode-generator": {
+        "version": "v2.2.2"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },

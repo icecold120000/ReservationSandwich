@@ -16,30 +16,28 @@
                     <table style="border: solid; width: 100%; margin: 0 0 3em 0">
                         <tbody>
                         <tr>
-                            {% if type == "Impression" %}
-                                <td style="text-align: center; font-size: 1.5em">
-                                    {% if commande.commandeur.eleves %}
-                                        {% for eleve in commande.commandeur.eleves %}
-                                            {% if eleve.photoEleve %}
-                                                <img alt="Photo de l'élève" style="width: 160px; height: 160px"
-                                                     src="{{ asset('uploads/photoFile/' ~ eleve.photoEleve) }}">
-                                            {% endif %}
-                                        {% else %}
-                                            <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
-                                        {% endfor %}
-                                    {% endif %}
-                                </td>
-                            {% endif %}
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
+                                {% if commande.commandeur.eleves %}
+                                    {% for eleve in commande.commandeur.eleves %}
+                                        {% if eleve.photoEleve %}
+                                            <img alt="Photo de l'élève" style="width: 120px; height: 120px"
+                                                 src="{{ absolute_url(asset('uploads/photoFile/' ~ eleve.photoEleve)) }}">
+                                        {% endif %}
+                                    {% else %}
+                                        <img alt="Placeholder" src="{{ asset('/static/images/avatar.jpg') }}">
+                                    {% endfor %}
+                                {% endif %}
+                            </td>
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Heure de livraison :</span>
                                 <span style="display: block">{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                             </td>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Élève :</span>
                                 {{ commande.commandeur.prenomUser }}
                                 <span>{{ commande.commandeur.nomUser }}</span>
                             </td>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Classe :</span>
                                 {% if commande.commandeur.eleves %}
                                     {% for eleve in commande.commandeur.eleves %}
@@ -47,12 +45,22 @@
                                     {% endfor %}
                                 {% endif %}
                             </td>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Commande :</span>
                                 <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                                 <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
                                 <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
+                            </td>
+                            <td>
+                                {% if commande.commandeur.eleves %}
+                                    {% for eleve in commande.commandeur.eleves %}
+                                        {% if eleve.codeBarreEleve %}
+                                            <img alt="Code barre de l'élève" style="width: 120px; height: 120px"
+                                                 src="{{ absolute_url(asset('uploads/codeBarreEleve/' ~ eleve.codeBarreEleve)) }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                             </td>
                         </tr>
                         </tbody>
@@ -73,21 +81,31 @@
                     <table style="border: solid; width: 100%; margin: 0 0 3em 0">
                         <tbody>
                         <tr>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Heure de livraison :</span>
                                 <span style="display: block">{{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                             </td>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Adulte :</span>
                                 {{ commande.commandeur.prenomUser }}
                                 <span>{{ commande.commandeur.nomUser }}</span>
                             </td>
-                            <td style="text-align: center; font-size: 1.5em">
+                            <td style="text-align: center; font-size: 1.25em">
                                 <span style="display: block">Commande :</span>
                                 <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                                 <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
                                 <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
+                            </td>
+                            <td>
+                                {% if commande.commandeur.adultes %}
+                                    {% for adulte in commande.commandeur.adultes %}
+                                        {% if adulte.codeBarreAdulte %}
+                                            <img alt="Code barre de l'adulte" style="width: 120px; height: 120px"
+                                                 src="{{ absolute_url(asset('uploads/codeBarreAdulte/' ~ adulte.codeBarreAdulte)) }}">
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                             </td>
                         </tr>
                         </tbody>
@@ -109,16 +127,16 @@
                 <tbody>
                 {% for commande in commandesGroupe %}
                     <tr>
-                        <td style="text-align: center; font-size: 1.5em">
+                        <td style="text-align: center; font-size: 1.25em">
                             <span style="display: block">Lieu et heure</span>
                             <span style="display: block">de livraison :</span>
                             <span style="display: block">{{ commande.lieuLivraison.libelleLieu }} à {{ commande.dateHeureLivraison ? commande.dateHeureLivraison|date('H:i') : '' }}</span>
                         </td>
-                        <td style="text-align: center; font-size: 1.5em">
+                        <td style="text-align: center; font-size: 1.25em">
                             <span style="display: block">Enseignant :</span>
                             {{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span>
                         </td>
-                        <td style="text-align: center; font-size: 1.5em">
+                        <td style="text-align: center; font-size: 1.25em">
                             <span style="display: block">Commande :</span>
                             {% set nombreEleve = 0 %}
                             {% for sandwichCommande in commande.sandwichCommandeGroupes %}

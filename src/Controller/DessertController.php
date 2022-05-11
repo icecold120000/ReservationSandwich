@@ -139,7 +139,7 @@ class DessertController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('dessert_directory') . '/' . $oldDessert);
+                unlink($this->getParameter('dessert_directory') . $oldDessert);
                 $dessert->setImageDessert($newFilename);
             }
 
@@ -177,7 +177,7 @@ class DessertController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $dessert->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('dessert_directory') . '/' . $dessert->getImageDessert());
+            unlink($this->getParameter('dessert_directory') . $dessert->getImageDessert());
             $entityManager->remove($dessert);
             $entityManager->flush();
             $this->addFlash(

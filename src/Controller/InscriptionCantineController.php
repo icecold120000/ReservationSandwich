@@ -179,7 +179,7 @@ class InscriptionCantineController extends AbstractController
 
     public function getDataFromFile(string $fileName): array
     {
-        $file = $this->getParameter('cantineFile_directory') . '/' . $fileName;
+        $file = $this->getParameter('cantineFile_directory') . $fileName;
 
         $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 

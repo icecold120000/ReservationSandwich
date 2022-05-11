@@ -17,6 +17,7 @@ use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -159,12 +160,9 @@ class EleveController extends AbstractController
 
         while ($eleveCount < sizeof($this->getDataFromFile($fileName))) {
             /*Pour chaque élève*/
-
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un élève*/
-
                 foreach ($row as $rowData) {
-
                     /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
                     if (array_key_exists('Nom', $rowData)
                         && !empty($rowData['Nom'])) {
@@ -269,6 +267,12 @@ class EleveController extends AbstractController
                                 ->setNbRepas($nbRepas);
                         }
 
+                        $generator = new BarcodeGeneratorPNG();
+                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                        file_put_contents($codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
+                        rename($codeBar, $this->getParameter('codeBarEleveFile_directory') . $codeBar);
+                        $eleveExcel->setCodeBarreEleve($codeBar);
+
                         $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
                         $eleveExcel->setPhotoEleve($fileNamePhoto);
 
@@ -294,7 +298,7 @@ class EleveController extends AbstractController
 
     public function getDataFromFile(string $fileName): array
     {
-        $file = $this->getParameter('eleveFile_directory') . '/' . $fileName;
+        $file = $this->getParameter('eleveFile_directory') . $fileName;
 
         $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
@@ -392,7 +396,7 @@ class EleveController extends AbstractController
                 $newFileNameImg = $safeFilename . '.' . $imgProfileEleve->guessExtension();
 
                 if ($newFileNameImg != $anciennePhoto && $anciennePhoto != null) {
-                    unlink($this->getParameter('photoEleve_directory') . '/' . $anciennePhoto);
+                    unlink($this->getParameter('photoEleve_directory') . $anciennePhoto);
                 }
 
                 // Move the file to the directory where brochures are stored
@@ -445,9 +449,11 @@ class EleveController extends AbstractController
                            InscriptionCantineRepository $cantineRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $eleve->getId(), $request->request->get('_token'))) {
-
             if ($eleve->getPhotoEleve() != null) {
-                unlink($this->getParameter('photoEleve_directory') . '/' . $eleve->getPhotoEleve());
+                unlink($this->getParameter('photoEleve_directory') . $eleve->getPhotoEleve());
+            }
+            if ($eleve->getCodeBarreEleve() != null) {
+                unlink($this->getParameter('codeBarEleveFile_directory') . $eleve->getCodeBarreEleve());
             }
             $user = $userRepo->findOneByEleve($eleve->getId());
             $cantine = $cantineRepository->findOneByEleve($eleve->getId());
@@ -464,7 +470,6 @@ class EleveController extends AbstractController
                 'L\'élève a été supprimé !'
             );
         }
-
         return $this->redirectToRoute('eleve_index');
     }
 }

@@ -298,13 +298,13 @@ class UserController extends AbstractController
                 }
             }
         }
-        unlink($this->getParameter('userFile_directory') . '/' . $fileName);
+        unlink($this->getParameter('userFile_directory') . $fileName);
         $this->entityManager->flush();
     }
 
     public function getDataFromFile(string $fileName): array
     {
-        $file = $this->getParameter('userfile_directory') . '/' . $fileName;
+        $file = $this->getParameter('userfile_directory') . $fileName;
         $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 
         $normalizers = [new ObjectNormalizer()];

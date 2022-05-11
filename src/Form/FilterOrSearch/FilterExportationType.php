@@ -19,9 +19,9 @@ class FilterExportationType extends AbstractType
                 'label' => 'Méthode d\'exportation',
                 'required' => true,
                 'choices' => [
-                    'PDF' => 'PDF',
-                    'Excel' => 'Excel',
                     'Impression' => 'Impression',
+                    'Excel' => 'Excel',
+                    'PDF' => 'PDF',
                 ],
                 'constraints' => [
                     new NotNull([
@@ -59,7 +59,7 @@ class FilterExportationType extends AbstractType
                 'required' => true,
                 'constraints' => [
                     new GreaterThanOrEqual("-1 month 00:00:00",
-                        null, "Vous ne pouvez plus exporter les commandes qui ont plus un mois !"),
+                        null, "Vous ne pouvez plus exporter de commandes qui ont plus d\'un mois !"),
                     new NotNull([
                         'message' => 'Veuillez choisir une date !',
                     ]),

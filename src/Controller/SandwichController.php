@@ -135,7 +135,7 @@ class SandwichController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
-                unlink($this->getParameter('sandwich_directory') . '/' . $oldSandwich);
+                unlink($this->getParameter('sandwich_directory') . $oldSandwich);
                 $sandwich->setImageSandwich($newFilename);
             }
 
@@ -171,7 +171,7 @@ class SandwichController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $sandwich->getId(), $request->request->get('_token'))) {
-            unlink($this->getParameter('sandwich_directory') . '/' . $sandwich->getImageSandwich());
+            unlink($this->getParameter('sandwich_directory') . $sandwich->getImageSandwich());
             $entityManager->remove($sandwich);
             $entityManager->flush();
             $this->addFlash(

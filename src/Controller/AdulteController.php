@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -88,17 +89,16 @@ class AdulteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            /** @var UploadedFile $fichierUser */
-            $fichierUser = $form->get('fileSubmit')->getData();
+            /** @var UploadedFile $fichierAdulte */
+            $fichierAdulte = $form->get('fileSubmit')->getData();
 
-            if ($fichierUser) {
-                $originalFilename = pathinfo($fichierUser->getClientOriginalName(), PATHINFO_FILENAME);
+            if ($fichierAdulte) {
+                $originalFilename = pathinfo($fichierAdulte->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '.' . $fichierUser->guessExtension();
-
+                $newFilename = $safeFilename . '.' . $fichierAdulte->guessExtension();
                 try {
-                    $fichierUser->move(
+                    $fichierAdulte->move(
                         $this->getParameter('adulteFile_directory'),
                         $newFilename
                     );
@@ -122,7 +122,7 @@ class AdulteController extends AbstractController
         }
 
         return $this->render('adulte/adulteFile.html.twig', [
-            'fichierUser' => $adulteFile,
+            'fichierAdulte' => $adulteFile,
             'form' => $form->createView(),
         ]);
     }
@@ -161,7 +161,8 @@ class AdulteController extends AbstractController
                                 unset($adulteNonArchives[$key]);
                             }
                         }
-
+                        $generator = new BarcodeGeneratorPNG();
+                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
                         if ($adulteRelated !== null) {
 
                             $adulteRelated->setPrenomAdulte($rowData['Prénom'])
@@ -172,7 +173,7 @@ class AdulteController extends AbstractController
                                 $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
                                     new DateTimeZone('Europe/Paris')));
                             }
-
+                            $adulteRelated->setCodeBarreAdulte($codeBar);
                             $this->entityManager->persist($adulteRelated);
                         } else {
                             $adulte = new Adulte();
@@ -185,9 +186,13 @@ class AdulteController extends AbstractController
                                 $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
                                     new DateTimeZone('Europe/Paris')));
                             }
-
+                            $adulte->setCodeBarreAdulte($codeBar);
                             $this->entityManager->persist($adulte);
                         }
+
+                        file_put_contents($codeBar, $generator->getBarcode($rowData['N° de badge'], $generator::TYPE_CODE_128, 3, 100));
+                        rename($codeBar, $this->getParameter('codeBarAdulteFile_directory') . $codeBar);
+
                         $adulteCreated++;
                     }
                 }
@@ -206,7 +211,7 @@ class AdulteController extends AbstractController
 
     public function getDataFromFile(string $fileName): array
     {
-        $file = $this->getParameter('adulteFile_directory') . '/' . $fileName;
+        $file = $this->getParameter('adulteFile_directory') . $fileName;
 
         $fileExtension = pathinfo($file, PATHINFO_EXTENSION);
 

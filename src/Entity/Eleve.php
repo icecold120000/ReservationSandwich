@@ -59,6 +59,11 @@ class Eleve
      */
     private ?int $nbRepas;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codeBarreEleve;
+
 
     public function getId(): ?int
     {
@@ -157,6 +162,18 @@ class Eleve
     public function setNbRepas(?int $nbRepas): self
     {
         $this->nbRepas = $nbRepas;
+
+        return $this;
+    }
+
+    public function getCodeBarreEleve(): ?string
+    {
+        return $this->codeBarreEleve;
+    }
+
+    public function setCodeBarreEleve(?string $codeBarreEleve): self
+    {
+        $this->codeBarreEleve = $codeBarreEleve;
 
         return $this;
     }
