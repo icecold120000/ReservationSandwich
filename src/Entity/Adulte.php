@@ -43,6 +43,11 @@ class Adulte
      */
     private $compteAdulte;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codeBarreAdulte;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +109,18 @@ class Adulte
     public function setCompteAdulte(?User $compteAdulte): self
     {
         $this->compteAdulte = $compteAdulte;
+
+        return $this;
+    }
+
+    public function getCodeBarreAdulte(): ?string
+    {
+        return $this->codeBarreAdulte;
+    }
+
+    public function setCodeBarreAdulte(?string $codeBarreAdulte): self
+    {
+        $this->codeBarreAdulte = $codeBarreAdulte;
 
         return $this;
     }

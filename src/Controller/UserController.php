@@ -209,89 +209,91 @@ class UserController extends AbstractController
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un utilisateur*/
                 foreach ($row as $rowData) {
-                    /*Vérifie s'il existe une colonne email et qu'elle n'est pas vide*/
-                    if (array_key_exists('Email', $rowData)
-                        && !empty($rowData['Email'])) {
-                        /*Recherche l'utilisateur dans la base de donnée*/
-                        $userRelated = $this->userRepository->findOneByEmail(
-                            $rowData['Email']
-                        );
-                        /*S'il n'existe pas alors on le crée
-                         en tant qu'un nouvel utilisateur*/
-                        if ($userRelated === null) {
-                            $user = new User();
+                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
+                        /*Vérifie s'il existe une colonne email et qu'elle n'est pas vide*/
+                        if (array_key_exists('Email', $rowData)
+                            && !empty($rowData['Email'])) {
+                            /*Recherche l'utilisateur dans la base de donnée*/
+                            $userRelated = $this->userRepository->findOneByEmail(
+                                $rowData['Email']
+                            );
+                            /*S'il n'existe pas alors on le crée
+                             en tant qu'un nouvel utilisateur*/
+                            if ($userRelated === null) {
+                                $user = new User();
 
-                            $roleUser = $rowData['Fonction'];
-                            $birthday = new DateTime($rowData['Date de naissance'],
-                                new DateTimeZone('Europe/Paris'));
+                                $roleUser = $rowData['Fonction'];
+                                $birthday = new DateTime($rowData['Date de naissance'],
+                                    new DateTimeZone('Europe/Paris'));
 
-                            $eleve = $this->eleveRepository
-                                ->findByNomPrenomDateNaissance($rowData['Nom']
-                                    , $rowData['Prénom'],
-                                    $birthday
+                                $eleve = $this->eleveRepository
+                                    ->findByNomPrenomDateNaissance($rowData['Nom']
+                                        , $rowData['Prénom'],
+                                        $birthday
+                                    );
+
+                                $adulte = $this->adulteRepository
+                                    ->findByNomPrenomDateNaissance($rowData['Nom']
+                                        , $rowData['Prénom'],
+                                        $birthday
+                                    );
+
+                                if ($eleve != null) {
+                                    $user->addEleve($eleve);
+                                } else {
+                                    $user->addAdulte($adulte);
+                                }
+
+                                $user
+                                    ->setEmail($rowData['Email'])
+                                    ->setNomUser($rowData['Nom'])
+                                    ->setPrenomUser($rowData['Prénom'])
+                                    ->setDateNaissanceUser($birthday)
+                                    ->setIsVerified(true);
+
+                                switch ($roleUser) {
+                                    case "Admin":
+                                        $user->setRoles([User::ROLE_ADMIN]);
+                                        break;
+                                    case "Élève":
+                                        $user->setRoles([User::ROLE_ELEVE]);
+                                        break;
+                                    case "Cuisinier":
+                                        $user->setRoles([User::ROLE_CUISINE]);
+                                        break;
+                                    case "Adulte":
+                                        $user->setRoles([User::ROLE_ADULTES]);
+                                        break;
+                                    default:
+                                        $user->setRoles([User::ROLE_USER]);
+                                        break;
+                                }
+
+                                $user->setPassword(
+                                    $this->userPasswordHasher->hashPassword(
+                                        $user,
+                                        $rowData['Mot de passe']
+                                    )
                                 );
+                                $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
-                            $adulte = $this->adulteRepository
-                                ->findByNomPrenomDateNaissance($rowData['Nom']
-                                    , $rowData['Prénom'],
-                                    $birthday
-                                );
-
-                            if ($eleve != null) {
-                                $user->addEleve($eleve);
+                                $this->entityManager->persist($user);
                             } else {
-                                $user->addAdulte($adulte);
+                                $userRelated->setPassword(
+                                    $this->userPasswordHasher->hashPassword(
+                                        $userRelated,
+                                        $rowData['Mot de passe']
+                                    )
+                                );
+
+                                $userRelated
+                                    ->setEmail($rowData['Email'])
+                                    ->setNomUser($rowData['Nom'])
+                                    ->setPrenomUser($rowData['Prénom'])
+                                    ->setIsVerified(true)
+                                    ->setTokenHash(md5($userRelated->getNomUser() . $userRelated->getEmail()));
+                                $this->entityManager->persist($userRelated);
                             }
-
-                            $user
-                                ->setEmail($rowData['Email'])
-                                ->setNomUser($rowData['Nom'])
-                                ->setPrenomUser($rowData['Prénom'])
-                                ->setDateNaissanceUser($birthday)
-                                ->setIsVerified(true);
-
-                            switch ($roleUser) {
-                                case "Admin":
-                                    $user->setRoles([User::ROLE_ADMIN]);
-                                    break;
-                                case "Élève":
-                                    $user->setRoles([User::ROLE_ELEVE]);
-                                    break;
-                                case "Cuisinier":
-                                    $user->setRoles([User::ROLE_CUISINE]);
-                                    break;
-                                case "Adulte":
-                                    $user->setRoles([User::ROLE_ADULTES]);
-                                    break;
-                                default:
-                                    $user->setRoles([User::ROLE_USER]);
-                                    break;
-                            }
-
-                            $user->setPassword(
-                                $this->userPasswordHasher->hashPassword(
-                                    $user,
-                                    $rowData['Mot de passe']
-                                )
-                            );
-                            $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
-
-                            $this->entityManager->persist($user);
-                        } else {
-                            $userRelated->setPassword(
-                                $this->userPasswordHasher->hashPassword(
-                                    $userRelated,
-                                    $rowData['Mot de passe']
-                                )
-                            );
-
-                            $userRelated
-                                ->setEmail($rowData['Email'])
-                                ->setNomUser($rowData['Nom'])
-                                ->setPrenomUser($rowData['Prénom'])
-                                ->setIsVerified(true)
-                                ->setTokenHash(md5($userRelated->getNomUser() . $userRelated->getEmail()));
-                            $this->entityManager->persist($userRelated);
                         }
                         $userCreated++;
                     }

@@ -140,59 +140,60 @@ class AdulteController extends AbstractController
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un adulte */
                 foreach ($row as $rowData) {
-                    /*Vérifie s'il existe une colonne Nom et qu'elle n'est pas vide*/
-                    if (array_key_exists('Nom', $rowData)
-                        && !empty($rowData['Nom'])) {
-                        if (!empty($rowData['Date naissance JJ/MM/AAAA'])) {
-                            $adulteRelated = $this->adulteRepo->findByNomPrenomDateNaissance($rowData['Nom'],
-                                $rowData['Prénom'], new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new DateTimeZone('Europe/Paris')));
-                        } else {
-                            $adulteRelated = $this->adulteRepo->findByNomPrenom($rowData['Nom'],
-                                $rowData['Prénom']);
-                        }
-
-                        /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
-                        if (in_array($adulteRelated, $adulteNonArchives)) {
-
-                            /*Enlève dans le tableau des non archivé les adultes
-                             qui sont dans le fichier excel*/
-                            if (($key = array_search($adulteRelated, $adulteNonArchives)) !== false) {
-                                unset($adulteNonArchives[$key]);
+                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
+                        /*Vérifie s'il existe une colonne Nom et qu'elle n'est pas vide*/
+                        if (array_key_exists('Nom', $rowData)
+                            && !empty($rowData['Nom'])) {
+                            if (!empty($rowData['Date naissance JJ/MM/AAAA'])) {
+                                $adulteRelated = $this->adulteRepo->findByNomPrenomDateNaissance($rowData['Nom'],
+                                    $rowData['Prénom'], new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                        new DateTimeZone('Europe/Paris')));
+                            } else {
+                                $adulteRelated = $this->adulteRepo->findByNomPrenom($rowData['Nom'],
+                                    $rowData['Prénom']);
                             }
-                        }
-                        $generator = new BarcodeGeneratorPNG();
-                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
-                        if ($adulteRelated !== null) {
 
-                            $adulteRelated->setPrenomAdulte($rowData['Prénom'])
-                                ->setNomAdulte($rowData['Nom'])
-                                ->setArchiveAdulte(false);
+                            /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
+                            if (in_array($adulteRelated, $adulteNonArchives)) {
 
-                            if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new DateTimeZone('Europe/Paris')));
+                                /*Enlève dans le tableau des non archivé les adultes
+                                 qui sont dans le fichier excel*/
+                                if (($key = array_search($adulteRelated, $adulteNonArchives)) !== false) {
+                                    unset($adulteNonArchives[$key]);
+                                }
                             }
-                            $adulteRelated->setCodeBarreAdulte($codeBar);
-                            $this->entityManager->persist($adulteRelated);
-                        } else {
-                            $adulte = new Adulte();
+                            $generator = new BarcodeGeneratorPNG();
+                            $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                            if ($adulteRelated !== null) {
 
-                            $adulte->setPrenomAdulte($rowData['Prénom'])
-                                ->setNomAdulte($rowData['Nom'])
-                                ->setArchiveAdulte(false);
+                                $adulteRelated->setPrenomAdulte($rowData['Prénom'])
+                                    ->setNomAdulte($rowData['Nom'])
+                                    ->setArchiveAdulte(false);
 
-                            if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                    new DateTimeZone('Europe/Paris')));
+                                if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
+                                    $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                        new DateTimeZone('Europe/Paris')));
+                                }
+                                $adulteRelated->setCodeBarreAdulte($codeBar);
+                                $this->entityManager->persist($adulteRelated);
+                            } else {
+                                $adulte = new Adulte();
+
+                                $adulte->setPrenomAdulte($rowData['Prénom'])
+                                    ->setNomAdulte($rowData['Nom'])
+                                    ->setArchiveAdulte(false);
+
+                                if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
+                                    $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                        new DateTimeZone('Europe/Paris')));
+                                }
+                                $adulte->setCodeBarreAdulte($codeBar);
+                                $this->entityManager->persist($adulte);
                             }
-                            $adulte->setCodeBarreAdulte($codeBar);
-                            $this->entityManager->persist($adulte);
+
+                            file_put_contents($codeBar, $generator->getBarcode($rowData['N° de badge'], $generator::TYPE_CODE_128, 3, 100));
+                            rename($codeBar, $this->getParameter('codeBarAdulteFile_directory') . $codeBar);
                         }
-
-                        file_put_contents($codeBar, $generator->getBarcode($rowData['N° de badge'], $generator::TYPE_CODE_128, 3, 100));
-                        rename($codeBar, $this->getParameter('codeBarAdulteFile_directory') . $codeBar);
-
                         $adulteCreated++;
                     }
                 }

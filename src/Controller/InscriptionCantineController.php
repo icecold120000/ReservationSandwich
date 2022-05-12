@@ -112,57 +112,57 @@ class InscriptionCantineController extends AbstractController
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'une inscription*/
                 foreach ($row as $rowData) {
+                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
+                        /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
+                        if (array_key_exists('Nom', $rowData)
+                            && !empty($rowData['Nom'])) {
+                            $birthday = null;
+                            if (array_key_exists('Date de naissance', $rowData)
+                                && !empty($rowData['Date de naissance'])) {
+                                $birthday = new DateTime($rowData['Date de naissance']);
+                            }
 
-                    /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
-                    if (array_key_exists('Nom', $rowData)
-                        && !empty($rowData['Nom'])) {
-                        $birthday = null;
-                        if (array_key_exists('Date de naissance', $rowData)
-                            && !empty($rowData['Date de naissance'])) {
-                            $birthday = new DateTime($rowData['Date de naissance']);
-                        }
+                            /*Recherche l'élève dans la base de donnée*/
+                            $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
+                                $rowData['Prénom'],
+                                $birthday
+                            );
 
-                        /*Recherche l'élève dans la base de donnée*/
-                        $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
-                            $rowData['Prénom'],
-                            $birthday
-                        );
+                            $cantineExcel = $this->inscritCantRepo->findOneBy(['eleve' => $eleveExcel]);
 
-                        $cantineExcel = $this->inscritCantRepo->findOneBy(['eleve' => $eleveExcel]);
+                            /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
+                            if (in_array($cantineExcel, $cantineNonArchive)) {
 
-                        /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
-                        if (in_array($cantineExcel, $cantineNonArchive)) {
+                                /*Enlève dans le tableau des non archivé les adultes
+                                 qui sont dans le fichier excel*/
+                                if (($key = array_search($cantineExcel, $cantineNonArchive)) !== false) {
+                                    unset($cantineNonArchive[$key]);
+                                }
+                            }
 
-                            /*Enlève dans le tableau des non archivé les adultes
-                             qui sont dans le fichier excel*/
-                            if (($key = array_search($cantineExcel, $cantineNonArchive)) !== false) {
-                                unset($cantineNonArchive[$key]);
+                            /* Si l'élève est trouvé et doit être modifié*/
+                            if ($cantineExcel !== Null) {
+                                $cantineExcel->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                    ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                    ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                    ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                $this->entityManager->persist($cantineExcel);
+
+                            } /*S'il n'existe pas alors on le crée
+                         en tant qu'un nouvel élève*/
+                            else {
+                                $inscription = new InscriptionCantine();
+                                $inscription->setEleve($eleveExcel)
+                                    ->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                    ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                    ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                    ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                $inscription->setArchiveInscription(false);
+                                $this->entityManager->persist($inscription);
                             }
                         }
-
-                        /* Si l'élève est trouvé et doit être modifié*/
-                        if ($cantineExcel !== Null) {
-                            $cantineExcel->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                            $this->entityManager->persist($cantineExcel);
-
-                        } /*S'il n'existe pas alors on le crée
-                         en tant qu'un nouvel élève*/
-                        else {
-                            $inscription = new InscriptionCantine();
-                            $inscription->setEleve($eleveExcel)
-                                ->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                            $inscription->setArchiveInscription(false);
-                            $this->entityManager->persist($inscription);
-                        }
-
                         $cantineCount++;
                     }
                 }

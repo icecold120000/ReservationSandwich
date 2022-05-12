@@ -157,126 +157,127 @@ class EleveController extends AbstractController
         $elevesNonArchives = $this->eleveRepository->findByArchive(false);
 
         /* Parcours le tableau donné par le fichier Excel*/
-
         while ($eleveCount < sizeof($this->getDataFromFile($fileName))) {
             /*Pour chaque élève*/
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un élève*/
                 foreach ($row as $rowData) {
-                    /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
-                    if (array_key_exists('Nom', $rowData)
-                        && !empty($rowData['Nom'])) {
-                        /*Recherche l'élève dans la base de donnée*/
-                        $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
-                            $rowData['Prénom'],
-                            new DateTime($rowData['Date de naissance'])
-                        );
+                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
+                        /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
+                        if (array_key_exists('Nom', $rowData)
+                            && !empty($rowData['Nom'])) {
+                            /*Recherche l'élève dans la base de donnée*/
+                            $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
+                                $rowData['Prénom'],
+                                new DateTime($rowData['Date de naissance'])
+                            );
 
-                        /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
-                        if (in_array($eleveExcel, $elevesNonArchives)) {
-                            /*Enlève dans le tableau des non archivé les élèves
-                             qui sont dans le fichier excel*/
-                            if (($key = array_search($eleveExcel, $elevesNonArchives)) !== false) {
-                                unset($elevesNonArchives[$key]);
-                            }
-                        }
-
-                        /* Si l'élève est trouvé et doit être modifié*/
-                        if ($eleveExcel !== Null) {
-                            $birthday = new DateTime($rowData['Date de naissance'],
-                                new DateTimeZone('Europe/Paris'));
-
-                            if (array_key_exists('Code classe', $rowData)
-                                && !empty($rowData['Code classe'])) {
-                                $classe = $this->classeRepo
-                                    ->findOneByCode($rowData['Code classe']);
-                            } else {
-                                $classe = null;
-                            }
-
-                            if ($rowData['Nombre de repas Midi'] === null) {
-                                $nbRepas = 0;
-                            } else {
-                                $nbRepas = $rowData['Nombre de repas Midi'];
-                                $inscription = $this->inscritCantRepo->findOneByEleve($eleveExcel->getId());
-                                if ($inscription !== null) {
-                                    $inscription
-                                        ->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                        ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                        ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                        ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                                } else {
-                                    $inscription = new InscriptionCantine();
-                                    $inscription
-                                        ->setEleve($eleveExcel)
-                                        ->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                        ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                        ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                        ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                            /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
+                            if (in_array($eleveExcel, $elevesNonArchives)) {
+                                /*Enlève dans le tableau des non archivé les élèves
+                                 qui sont dans le fichier excel*/
+                                if (($key = array_search($eleveExcel, $elevesNonArchives)) !== false) {
+                                    unset($elevesNonArchives[$key]);
                                 }
-                                $inscription->setArchiveInscription(false);
-                                $this->entityManager->persist($inscription);
-
                             }
 
-                            $eleveExcel
-                                ->setPrenomEleve($rowData['Prénom'])
-                                ->setNomEleve($rowData['Nom'])
-                                ->setDateNaissance($birthday)
-                                ->setArchiveEleve(false)
-                                ->setClasseEleve($classe)
-                                ->setNbRepas($nbRepas);
-                        } /*S'il n'existe pas alors on le crée
+                            /* Si l'élève est trouvé et doit être modifié*/
+                            if ($eleveExcel !== Null) {
+                                $birthday = new DateTime($rowData['Date de naissance'],
+                                    new DateTimeZone('Europe/Paris'));
+
+                                if (array_key_exists('Code classe', $rowData)
+                                    && !empty($rowData['Code classe'])) {
+                                    $classe = $this->classeRepo
+                                        ->findOneByCode($rowData['Code classe']);
+                                } else {
+                                    $classe = null;
+                                }
+
+                                if ($rowData['Nombre de repas Midi'] === null) {
+                                    $nbRepas = 0;
+                                } else {
+                                    $nbRepas = $rowData['Nombre de repas Midi'];
+                                    $inscription = $this->inscritCantRepo->findOneByEleve($eleveExcel->getId());
+                                    if ($inscription !== null) {
+                                        $inscription
+                                            ->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                            ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                            ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                            ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                            ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                    } else {
+                                        $inscription = new InscriptionCantine();
+                                        $inscription
+                                            ->setEleve($eleveExcel)
+                                            ->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                            ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                            ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                            ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                            ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                    }
+                                    $inscription->setArchiveInscription(false);
+                                    $this->entityManager->persist($inscription);
+
+                                }
+
+                                $eleveExcel
+                                    ->setPrenomEleve($rowData['Prénom'])
+                                    ->setNomEleve($rowData['Nom'])
+                                    ->setDateNaissance($birthday)
+                                    ->setArchiveEleve(false)
+                                    ->setClasseEleve($classe)
+                                    ->setNbRepas($nbRepas);
+                            } /*S'il n'existe pas alors on le crée
                          en tant qu'un nouvel élève*/
-                        else {
-                            $eleveExcel = new Eleve();
-                            $birthday = new DateTime($rowData['Date de naissance'],
-                                new DateTimeZone('Europe/Paris'));
+                            else {
+                                $eleveExcel = new Eleve();
+                                $birthday = new DateTime($rowData['Date de naissance'],
+                                    new DateTimeZone('Europe/Paris'));
 
-                            if (array_key_exists('Code classe', $rowData)
-                                && !empty($rowData['Code classe'])) {
-                                $classe = $this->classeRepo
-                                    ->findOneByCode($rowData['Code classe']);
-                            } else {
-                                $classe = null;
+                                if (array_key_exists('Code classe', $rowData)
+                                    && !empty($rowData['Code classe'])) {
+                                    $classe = $this->classeRepo
+                                        ->findOneByCode($rowData['Code classe']);
+                                } else {
+                                    $classe = null;
+                                }
+
+                                if ($rowData['Nombre de repas Midi'] === null) {
+                                    $nbRepas = 0;
+                                } else {
+                                    $nbRepas = $rowData['Nombre de repas Midi'];
+                                    $inscription = new InscriptionCantine();
+                                    $inscription->setEleve($eleveExcel)
+                                        ->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                        ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                        ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                        ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                    $inscription->setArchiveInscription(false);
+                                    $this->entityManager->persist($inscription);
+                                }
+
+                                $eleveExcel
+                                    ->setNomEleve($rowData['Nom'])
+                                    ->setPrenomEleve($rowData['Prénom'])
+                                    ->setDateNaissance($birthday)
+                                    ->setArchiveEleve(false)
+                                    ->setClasseEleve($classe)
+                                    ->setNbRepas($nbRepas);
                             }
 
-                            if ($rowData['Nombre de repas Midi'] === null) {
-                                $nbRepas = 0;
-                            } else {
-                                $nbRepas = $rowData['Nombre de repas Midi'];
-                                $inscription = new InscriptionCantine();
-                                $inscription->setEleve($eleveExcel)
-                                    ->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                    ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                    ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                    ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                                $inscription->setArchiveInscription(false);
-                                $this->entityManager->persist($inscription);
-                            }
+                            $generator = new BarcodeGeneratorPNG();
+                            $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                            file_put_contents($codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
+                            rename($codeBar, $this->getParameter('codeBarEleveFile_directory') . $codeBar);
+                            $eleveExcel->setCodeBarreEleve($codeBar);
 
-                            $eleveExcel
-                                ->setNomEleve($rowData['Nom'])
-                                ->setPrenomEleve($rowData['Prénom'])
-                                ->setDateNaissance($birthday)
-                                ->setArchiveEleve(false)
-                                ->setClasseEleve($classe)
-                                ->setNbRepas($nbRepas);
+                            $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
+                            $eleveExcel->setPhotoEleve($fileNamePhoto);
+
+                            $this->entityManager->persist($eleveExcel);
                         }
-
-                        $generator = new BarcodeGeneratorPNG();
-                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
-                        file_put_contents($codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
-                        rename($codeBar, $this->getParameter('codeBarEleveFile_directory') . $codeBar);
-                        $eleveExcel->setCodeBarreEleve($codeBar);
-
-                        $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
-                        $eleveExcel->setPhotoEleve($fileNamePhoto);
-
-                        $this->entityManager->persist($eleveExcel);
                         $eleveCount++;
                     }
                 }
