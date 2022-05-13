@@ -133,66 +133,63 @@ class AdulteController extends AbstractController
         $adulteNonArchives = $this->adulteRepo->findByArchive(false);
         /* Parcours le tableau donné par le fichier Excel*/
         while ($adulteCreated < sizeof($this->getDataFromFile($fileName))) {
-            /*Pour chaque Utilisateur*/
+            /*Pour chaque adulte*/
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un adulte */
                 foreach ($row as $rowData) {
-                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
-                        /*Vérifie s'il existe une colonne Nom et qu'elle n'est pas vide*/
-                        if (array_key_exists('Nom', $rowData)
-                            && !empty($rowData['Nom'])) {
-                            if (!empty($rowData['Date naissance JJ/MM/AAAA'])) {
-                                $adulteRelated = $this->adulteRepo->findByNomPrenomDateNaissance($rowData['Nom'],
-                                    $rowData['Prénom'], new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                        new DateTimeZone('Europe/Paris')));
-                            } else {
-                                $adulteRelated = $this->adulteRepo->findByNomPrenom($rowData['Nom'],
-                                    $rowData['Prénom']);
-                            }
-
-                            /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
-                            if (in_array($adulteRelated, $adulteNonArchives)) {
-
-                                /*Enlève dans le tableau des non archivé les adultes
-                                 qui sont dans le fichier excel*/
-                                if (($key = array_search($adulteRelated, $adulteNonArchives)) !== false) {
-                                    unset($adulteNonArchives[$key]);
-                                }
-                            }
-                            $generator = new BarcodeGeneratorPNG();
-                            $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
-                            if ($adulteRelated !== null) {
-
-                                $adulteRelated->setPrenomAdulte($rowData['Prénom'])
-                                    ->setNomAdulte($rowData['Nom'])
-                                    ->setArchiveAdulte(false);
-
-                                if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                    $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                        new DateTimeZone('Europe/Paris')));
-                                }
-                                $adulteRelated->setCodeBarreAdulte($codeBar);
-                                $this->entityManager->persist($adulteRelated);
-                            } else {
-                                $adulte = new Adulte();
-
-                                $adulte->setPrenomAdulte($rowData['Prénom'])
-                                    ->setNomAdulte($rowData['Nom'])
-                                    ->setArchiveAdulte(false);
-
-                                if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
-                                    $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
-                                        new DateTimeZone('Europe/Paris')));
-                                }
-                                $adulte->setCodeBarreAdulte($codeBar);
-                                $this->entityManager->persist($adulte);
-                            }
-
-                            file_put_contents($codeBar, $generator->getBarcode($rowData['N° de badge'], $generator::TYPE_CODE_128, 3, 100));
-                            rename($codeBar, $this->getParameter('codeBarAdulteFile_directory') . $codeBar);
+                    /*Vérifie s'il existe une colonne Nom et qu'elle n'est pas vide*/
+                    if (array_key_exists('Nom', $rowData) && !empty($rowData['Nom']) && $rowData['Nom'] != 'Nom') {
+                        if (!empty($rowData['Date naissance JJ/MM/AAAA'])) {
+                            $adulteRelated = $this->adulteRepo->findByNomPrenomDateNaissance($rowData['Nom'],
+                                $rowData['Prénom'], new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
+                        } else {
+                            $adulteRelated = $this->adulteRepo->findByNomPrenom($rowData['Nom'],
+                                $rowData['Prénom']);
                         }
-                        $adulteCreated++;
+
+                        /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
+                        if (in_array($adulteRelated, $adulteNonArchives)) {
+
+                            /*Enlève dans le tableau des non archivé les adultes
+                             qui sont dans le fichier excel*/
+                            if (($key = array_search($adulteRelated, $adulteNonArchives)) !== false) {
+                                unset($adulteNonArchives[$key]);
+                            }
+                        }
+                        $generator = new BarcodeGeneratorPNG();
+                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                        if ($adulteRelated !== null) {
+
+                            $adulteRelated->setPrenomAdulte($rowData['Prénom'])
+                                ->setNomAdulte($rowData['Nom'])
+                                ->setArchiveAdulte(false);
+
+                            if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
+                                $adulteRelated->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
+                            }
+                            $adulteRelated->setCodeBarreAdulte($codeBar);
+                            $this->entityManager->persist($adulteRelated);
+                        } else {
+                            $adulte = new Adulte();
+
+                            $adulte->setPrenomAdulte($rowData['Prénom'])
+                                ->setNomAdulte($rowData['Nom'])
+                                ->setArchiveAdulte(false);
+
+                            if ($rowData['Date naissance JJ/MM/AAAA'] != null) {
+                                $adulte->setDateNaissance(new DateTime($rowData['Date naissance JJ/MM/AAAA'],
+                                    new DateTimeZone('Europe/Paris')));
+                            }
+                            $adulte->setCodeBarreAdulte($codeBar);
+                            $this->entityManager->persist($adulte);
+                        }
+
+                        file_put_contents($codeBar, $generator->getBarcode($rowData['N° de badge'], $generator::TYPE_CODE_128, 3, 100));
+                        rename($codeBar, $this->getParameter('codeBarAdulteFile_directory') . $codeBar);
                     }
+                    $adulteCreated++;
                 }
             }
         }
@@ -222,8 +219,28 @@ class AdulteController extends AbstractController
 
         /** @var string $fileString */
         $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
+        $dataRaw = $serializer->decode($fileString, $fileExtension);
+        $data = [];
+        foreach ($dataRaw['Feuil1'] as $row) {
+            if (key($row) != null or key($row) == "") {
+                if (key($row) == "") {
+                    $temp1 = [
+                        "Nom" => $row[""][0],
+                    ];
+                } else {
+                    $temp1 = [
+                        "Nom" => $row[key($row)],
+                    ];
+                }
+                $temp2 = [
+                    "Prénom" => $row[""][1],
+                    "Date de naissance" => $row[""][2],
+                    "N° de Badge" => $row[""][3]
+                ];
+                $data[][] = array_merge($temp1, $temp2);
+            }
+        }
+        return $data;
     }
 
     /**

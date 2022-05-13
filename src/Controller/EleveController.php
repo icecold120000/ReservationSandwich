@@ -160,11 +160,8 @@ class EleveController extends AbstractController
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'un élève*/
                 foreach ($row as $rowData) {
-                    ($rowData);
-                    //if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
                     /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
-                    if (array_key_exists('Nom', $rowData)
-                        && !empty($rowData['Nom'])) {
+                    if (array_key_exists('Nom', $rowData) && !empty($rowData['Nom']) && $rowData['Nom'] != 'Nom') {
                         /*Recherche l'élève dans la base de donnée*/
                         $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
                             $rowData['Prénom'],
@@ -227,8 +224,7 @@ class EleveController extends AbstractController
                                 ->setArchiveEleve(false)
                                 ->setClasseEleve($classe)
                                 ->setNbRepas($nbRepas);
-                        } /*S'il n'existe pas alors on le crée
-                         en tant qu'un nouvel élève*/
+                        } /*S'il n'existe pas alors on le crée en tant qu'un nouvel élève*/
                         else {
                             $eleveExcel = new Eleve();
                             $birthday = new DateTime($rowData['Date de naissance'],
@@ -278,10 +274,10 @@ class EleveController extends AbstractController
                         $this->entityManager->persist($eleveExcel);
                     }
                     $eleveCount++;
-                    //}
                 }
             }
         }
+
         /*Reste que tous les élèves non archivés
         qui ont quitté l'établissement*/
         foreach ($elevesNonArchives as $eleve) {
@@ -311,9 +307,35 @@ class EleveController extends AbstractController
 
         /** @var string $fileString */
         $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
-
+        $dataRaw = $serializer->decode($fileString, $fileExtension);
+        $data = [];
+        foreach ($dataRaw['Feuil1'] as $row) {
+            if (key($row) != null or key($row) == "") {
+                if (key($row) == "") {
+                    $temp1 = [
+                        "Nom" => $row[""][0],
+                    ];
+                } else {
+                    $temp1 = [
+                        "Nom" => $row[key($row)],
+                    ];
+                }
+                $temp2 = [
+                    "Prénom" => $row[""][1],
+                    "Date de naissance" => $row[""][2],
+                    "Code classe" => $row[""][3],
+                    "Nombre de repas Midi" => $row[""][4],
+                    "Repas Midi J1" => $row[""][5],
+                    "Repas Midi J2" => $row[""][6],
+                    "Repas Midi J3" => $row[""][7],
+                    "Repas Midi J4" => $row[""][8],
+                    "Repas Midi J5" => $row[""][9],
+                    "Num Badge" => $row[""][10]
+                ];
+                $data[][] = array_merge($temp1, $temp2);
+            }
+        }
+        return $data;
     }
 
     /**
