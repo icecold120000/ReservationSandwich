@@ -264,8 +264,7 @@ class EleveController extends AbstractController
 
                         $generator = new BarcodeGeneratorPNG();
                         $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
-                        file_put_contents($codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
-                        rename($codeBar, $this->getParameter('codeBarEleveFile_directory') . $codeBar);
+                        file_put_contents($this->getParameter('codeBarEleveFile_directory') . $codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
                         $eleveExcel->setCodeBarreEleve($codeBar);
 
                         $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
