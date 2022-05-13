@@ -49,17 +49,16 @@
                                 {% endif %}
                             </td>
                             <td style="text-align: center; font-size: 1.25em">
-                                <span style="display: block">Commande :</span>
                                 <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                                 <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
-                                <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
+                                <span style="display: block">{{ commande.dessertChoisi.nomDessert|u.truncate(8,' ',true) }}</span>
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
                             </td>
                             <td>
                                 {% if commande.commandeur.eleves %}
                                     {% for eleve in commande.commandeur.eleves %}
                                         {% if eleve.codeBarreEleve %}
-                                            <img alt="Code barre de l'élève" style="width: 120px; height: 120px"
+                                            <img alt="Code barre de l'élève" style="width: 110px; height: 110px"
                                                  src="{{ absolute_url(asset('uploads/codeBarreEleve/' ~ eleve.codeBarreEleve)) }}">
                                         {% endif %}
                                     {% endfor %}
@@ -68,23 +67,30 @@
                         </tr>
                         </tbody>
                     </table>
-                    {% if loop.last != true %}
+                    {% if not loop.last %}
                         <p style="margin: 0 0 2em 0">
                             <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                         </p>
+                    {% else %}
+                        {% if type == "Impression" %}
+                            <p style="margin: 3.5em 0 3.5em 0">
+                                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                            </p>
+                        {% else %}
+                            <p style="margin: 0 0 2em 0">
+                                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                            </p>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% endif %}
             {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
-                <p style="margin: 0 0 2em 0">
-                    <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-                </p>
                 <h2>Commandes individuelles par adultes :</h2>
                 <p style="margin: 0 0 2em 0">
                     <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                 </p>
                 {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
-                    <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+                    <table style="border: solid; width: 100%; margin: 0 0 2em 0">
                         <tbody>
                         <tr>
                             <td style="text-align: center; font-size: 1.25em">
@@ -97,17 +103,16 @@
                                 <span>{{ commande.commandeur.nomUser }}</span>
                             </td>
                             <td style="text-align: center; font-size: 1.25em">
-                                <span style="display: block">Commande :</span>
                                 <span style="display: block">{{ commande.sandwichChoisi.nomSandwich }}</span>
                                 <span style="display: block">{{ commande.boissonChoisie.nomBoisson }}</span>
-                                <span style="display: block">{{ commande.dessertChoisi.nomDessert }}</span>
+                                <span style="display: block">{{ commande.dessertChoisi.nomDessert|u.truncate(8,' ',true) }}</span>
                                 <span style="display: block">{{ commande.prendreChips ? 'Chips' : '' }}</span>
                             </td>
                             <td>
                                 {% if commande.commandeur.adultes %}
                                     {% for adulte in commande.commandeur.adultes %}
                                         {% if adulte.codeBarreAdulte %}
-                                            <img alt="Code barre de l'adulte" style="width: 120px; height: 120px"
+                                            <img alt="Code barre de l'adulte" style="width: 110px; height: 110px"
                                                  src="{{ absolute_url(asset('uploads/codeBarreAdulte/' ~ adulte.codeBarreAdulte)) }}">
                                         {% endif %}
                                     {% endfor %}
@@ -116,25 +121,20 @@
                         </tr>
                         </tbody>
                     </table>
-                    {% if loop.last != true %}
-                        <p style="margin: 0 0 5em 0">
-                            <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-                        </p>
-                    {% endif %}
+                    <p style="margin: 0 0 2em 0">
+                        <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                    </p>
                 {% endfor %}
             {% endif %}
         {% endif %}
         {% if commandesGroupe %}
-            <p style="margin: 0 0 5em 0">
-                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-            </p>
             <h2>Commandes groupées :</h2>
             <p style="margin: 0 0 2em 0">
                 <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
             </p>
-            <table style="border: solid; width: 100%">
-                <tbody>
-                {% for commande in commandesGroupe %}
+            {% for commande in commandesGroupe %}
+                <table style="border: solid; width: 100%; margin: 0 0 2em 0">
+                    <tbody>
                     <tr>
                         <td style="text-align: center; font-size: 1.25em">
                             <span style="display: block">Lieu et heure</span>
@@ -146,7 +146,6 @@
                             {{ commande.commandeur.prenomUser }} <span>{{ commande.commandeur.nomUser }}</span>
                         </td>
                         <td style="text-align: center; font-size: 1.25em">
-                            <span style="display: block">Commande :</span>
                             {% set nombreEleve = 0 %}
                             {% for sandwichCommande in commande.sandwichCommandeGroupes %}
                                 <span style="display: block">
@@ -155,19 +154,18 @@
                                 </span>
                                 {% set nombreEleve = nombreEleve + sandwichCommande.nombreSandwich %}
                             {% endfor %}
-                            <span style="display: block">{{ nombreEleve }} {{ commande.boissonChoisie.nomBoisson }}</span>
                             <span style="display: block">{{ nombreEleve }} {{ commande.dessertChoisi.nomDessert }}</span>
-                            <span style="display: block"> {{ nombreEleve }} Chips</span>
+                            <span style="display: block"> {{ nombreEleve }} {{ commande.boissonChoisie.nomBoisson }} et Chips</span>
                         </td>
                     </tr>
-                    {% if loop.last != true %}
-                        <p style="margin: 0 0 2em 0">
-                            <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
-                        </p>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+                {% if loop.last != true %}
+                    <p style="margin: 0 0 2em 0">
+                        <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                    </p>
+                {% endif %}
+            {% endfor %}
         {% endif %}
     </main>
 {% endblock %}

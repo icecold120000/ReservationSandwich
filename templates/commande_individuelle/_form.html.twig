@@ -87,8 +87,8 @@
                     {{ form_errors(form.boissonChoisie) }}
                 </div>
             {% endif %}
+            {{ form_widget(form.boissonChoisie) }}
         </div>
-        {{ form_widget(form.boissonChoisie) }}
         <div id="boissonCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for boisson in boissons %}

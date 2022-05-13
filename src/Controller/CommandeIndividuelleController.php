@@ -571,14 +571,14 @@ class CommandeIndividuelleController extends AbstractController
             $commandes = null;
         }
 
-        if ($affichage == "les deux" || $affichage == "groupé") {
+        if ($affichage == "les deux" || $affichage == "groupées") {
 
             $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
         } else {
             $commandeGroupe = null;
         }
 
-        if ($modalite == "Séparé") {
+        if ($modalite == "Séparées") {
             return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
                 'type' => "Impression",
                 'commandes' => $commandes,
