@@ -50,7 +50,6 @@ class AdulteController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
         $adultes = $adulteRepo->findByArchive(false);
-
         $form = $this->createForm(FilterAdulteType::class);
         $filter = $form->handleRequest($request);
 
@@ -88,10 +87,8 @@ class AdulteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierAdulte */
             $fichierAdulte = $form->get('fileSubmit')->getData();
-
             if ($fichierAdulte) {
                 $originalFilename = pathinfo($fichierAdulte->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -204,7 +201,6 @@ class AdulteController extends AbstractController
         foreach ($adulteNonArchives as $adulte) {
             $adulte
                 ->setArchiveAdulte(true);
-
             $this->entityManager->persist($adulte);
         }
         $this->entityManager->flush();

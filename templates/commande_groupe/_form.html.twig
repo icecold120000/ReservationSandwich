@@ -1,12 +1,14 @@
 {{ form_start(form) }}
 <div id="screenLeft">
-    {{ form_label(form.sandwichChoisi1) }}
-    {% if form_errors(form.sandwichChoisi1) %}
-        <div class="erreur">
-            {{ form_errors(form.sandwichChoisi1) }}
-        </div>
-    {% endif %}
-    {{ form_widget(form.sandwichChoisi1) }}
+    <div class="noDisplay">
+        {{ form_label(form.sandwichChoisi1) }}
+        {% if form_errors(form.sandwichChoisi1) %}
+            <div class="erreur">
+                {{ form_errors(form.sandwichChoisi1) }}
+            </div>
+        {% endif %}
+        {{ form_widget(form.sandwichChoisi1) }}
+    </div>
     <div id="sandwich1Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             {% for sandwich in sandwichs %}
@@ -42,13 +44,15 @@
         {{ form_widget(form.nbSandwichChoisi1) }}
     </div>
     <div>
-        {{ form_label(form.dessertChoisi) }}
-        {% if form_errors(form.dessertChoisi) %}
-            <div class="erreur">
-                {{ form_errors(form.dessertChoisi) }}
-            </div>
-        {% endif %}
-        {{ form_widget(form.dessertChoisi) }}
+        <div class="noDisplay">
+            {{ form_label(form.dessertChoisi) }}
+            {% if form_errors(form.dessertChoisi) %}
+                <div class="erreur">
+                    {{ form_errors(form.dessertChoisi) }}
+                </div>
+            {% endif %}
+            {{ form_widget(form.dessertChoisi) }}
+        </div>
         <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for dessert in desserts %}
@@ -87,12 +91,14 @@
     </div>
 </div>
 <div id="screenRight">
-    {{ form_label(form.sandwichChoisi2) }}
-    {% if form_errors(form.sandwichChoisi2) %}
-        <div class="erreur">
-            {{ form_errors(form.sandwichChoisi2) }}
-        </div>
-    {% endif %}
+    <div class="noDisplay">
+        {{ form_label(form.sandwichChoisi2) }}
+        {% if form_errors(form.sandwichChoisi2) %}
+            <div class="erreur">
+                {{ form_errors(form.sandwichChoisi2) }}
+            </div>
+        {% endif %}
+    </div>
     {{ form_widget(form.sandwichChoisi2) }}
     <div id="sandwich2Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">

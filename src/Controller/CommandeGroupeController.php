@@ -43,7 +43,6 @@ class CommandeGroupeController extends AbstractController
                         UserRepository                  $userRepository): Response
     {
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
-
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boisson = $boissonRepo->findOneByNom('Eau');
@@ -58,7 +57,6 @@ class CommandeGroupeController extends AbstractController
             $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,
                 ['sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
         }
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -78,6 +76,7 @@ class CommandeGroupeController extends AbstractController
                 $form->get('nbSandwichChoisi1')->getData(),
                 $form->get('nbSandwichChoisi2')->getData()
             ];
+
             $i = 0;
             foreach ($sandwichsChoisi as $sandwichChoisi) {
                 $groupeSandwich = new SandwichCommandeGroupe();
@@ -149,14 +148,12 @@ class CommandeGroupeController extends AbstractController
                          CommandeGroupe                   $commandeGroupe,
                          SandwichCommandeGroupeRepository $sandComRepo): Response
     {
-
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
         $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe, ['limiteDateSortie' => 0
             , 'sandwichChoisi1' => $groupeSandwich[0], 'sandwichChoisi2' => $groupeSandwich[1]]);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

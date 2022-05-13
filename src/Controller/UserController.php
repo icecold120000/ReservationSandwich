@@ -61,7 +61,6 @@ class UserController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
         $users = $userRepository->findAll();
-
         $form = $this->createForm(UserFilterType::class);
         $search = $form->handleRequest($request);
 
@@ -103,7 +102,6 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $userBirthday = $form->get('dateNaissanceUser')->getData();
-
             if ($userBirthday != null) {
                 $userRelated = $userRepo->findByNomPrenomAndBirthday($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $userBirthday);
@@ -111,7 +109,6 @@ class UserController extends AbstractController
                 $userRelated = $userRepo->findByNomAndPrenom($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData());
             }
-
             if ($userRelated == null) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -119,7 +116,6 @@ class UserController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
-
                 $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
                 $entityManager->persist($user);
@@ -221,7 +217,6 @@ class UserController extends AbstractController
                              en tant qu'un nouvel utilisateur*/
                             if ($userRelated === null) {
                                 $user = new User();
-
                                 $roleUser = $rowData['Fonction'];
                                 $birthday = new DateTime($rowData['Date de naissance'],
                                     new DateTimeZone('Europe/Paris'));
@@ -231,7 +226,6 @@ class UserController extends AbstractController
                                         , $rowData['Prénom'],
                                         $birthday
                                     );
-
                                 $adulte = $this->adulteRepository
                                     ->findByNomPrenomDateNaissance($rowData['Nom']
                                         , $rowData['Prénom'],
@@ -243,7 +237,6 @@ class UserController extends AbstractController
                                 } else {
                                     $user->addAdulte($adulte);
                                 }
-
                                 $user
                                     ->setEmail($rowData['Email'])
                                     ->setNomUser($rowData['Nom'])
@@ -380,7 +373,6 @@ class UserController extends AbstractController
                            InscriptionCantineRepository $cantineRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
-
             $eleveFound = $eleveRepository->findOneByCompte($user);
             $adulteFound = $adulteRepository->findOneByCompte($user);
 

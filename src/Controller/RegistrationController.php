@@ -33,7 +33,6 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                 $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
-
             $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                 $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
 

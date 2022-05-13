@@ -29,7 +29,6 @@ class SandwichController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
         $sandwiches = $sandwichRepo->findAll();
-
         $form = $this->createForm(FilterMenuType::class);
         $filter = $form->handleRequest($request);
 

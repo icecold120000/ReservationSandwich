@@ -30,7 +30,6 @@ class ClasseController extends AbstractController
                           Request            $request): Response
     {
         $classes = $classeRepos->filterClasse('ASC');
-
         $form = $this->createForm(FilterClasseType::class);
         $filter = $form->handleRequest($request);
 
@@ -90,9 +89,7 @@ class ClasseController extends AbstractController
                          InscriptionCantineRepository $cantineRepository): Response
     {
         $eleves = $classe->getEleves();
-
         $form = $this->createForm(OrderEleveType::class);
-
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -163,7 +160,6 @@ class ClasseController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         $eleveRelated = $eleveRepo->findByClasse(null, $classe);
-
         if ($eleveRelated) {
             $this->addFlash(
                 'deleteDangerClasse',

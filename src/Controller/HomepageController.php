@@ -33,7 +33,6 @@ class HomepageController extends AbstractController
 
         // Vérifie si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierEleve */
             $fichierEleve = $form->get('fileSubmit')->getData();
 
@@ -72,6 +71,4 @@ class HomepageController extends AbstractController
             'menu' => $menuRepo->findCurrentOne(count($menuRepo->findAll())),
         ]);
     }
-
-
 }

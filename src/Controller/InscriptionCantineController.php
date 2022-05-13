@@ -171,7 +171,6 @@ class InscriptionCantineController extends AbstractController
         /*Reste que toutes les inscriptions non archivées où les élèves ont quitté l'établissement*/
         foreach ($cantineNonArchive as $inscription) {
             $inscription->setArchiveInscription(true);
-
             $this->entityManager->persist($inscription);
         }
         $this->entityManager->flush();
@@ -197,5 +196,4 @@ class InscriptionCantineController extends AbstractController
         return $serializer->decode($fileString, $fileExtension);
 
     }
-
 }

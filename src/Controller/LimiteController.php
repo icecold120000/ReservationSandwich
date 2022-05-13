@@ -23,7 +23,6 @@ class LimiteController extends AbstractController
     public function index(Request $request, LimitationCommandeRepository $limitationCommandeRepository): Response
     {
         $limites = $limitationCommandeRepository->findAll();
-
         $form = $this->createForm(FilterLimitationType::class);
         $filter = $form->handleRequest($request);
 

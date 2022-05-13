@@ -27,7 +27,6 @@ class LieuLivraisonController extends AbstractController
                           Request                 $request): Response
     {
         $lieux = $lieuLivraisonRepo->findAll();
-
         $form = $this->createForm(FilterLieuType::class);
         $search = $form->handleRequest($request);
 
@@ -124,13 +123,10 @@ class LieuLivraisonController extends AbstractController
                            LieuLivraisonRepository  $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
-
             $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());
-
             foreach ($commandesGroupe as $commandeGroupe) {
                 $commandeGroupe->setLieuLivraison($lieuRepository->find(['id' => 1]));
             }
-
             $entityManager->remove($lieuLivraison);
             $entityManager->flush();
             $this->addFlash(

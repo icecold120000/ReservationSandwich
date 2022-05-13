@@ -8,12 +8,15 @@
 {% endblock %}
 {% block body %}
     <main>
-        <h1>Voici les commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
+        <h1>Commandes du {{ dateChoisi|date('d/m/Y') }} </h1>
         {% if commandes %}
             {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
                 <h2>Commandes individuelles par élèves :</h2>
+                <p style="margin: 0 0 2em 0">
+                    <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                </p>
                 {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
-                    <table style="border: solid; width: 100%; margin: 0 0 3em 0">
+                    <table style="border: solid; width: 100%; margin: 0 0 2em 0">
                         <tbody>
                         <tr>
                             <td style="text-align: center; font-size: 1.25em">
@@ -66,17 +69,20 @@
                         </tbody>
                     </table>
                     {% if loop.last != true %}
-                        <p style="margin: 0 0 5em 0">
+                        <p style="margin: 0 0 2em 0">
                             <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                         </p>
                     {% endif %}
                 {% endfor %}
             {% endif %}
             {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
-                <p style="margin: 0 0 5em 0">
+                <p style="margin: 0 0 2em 0">
                     <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                 </p>
                 <h2>Commandes individuelles par adultes :</h2>
+                <p style="margin: 0 0 2em 0">
+                    <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+                </p>
                 {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ADULTES","ROLE_USER"] or commande.commandeur.roles == ["ROLE_CUISINE","ROLE_USER"] or commande.commandeur.roles == ["ROLE_ADMIN","ROLE_USER"]) %}
                     <table style="border: solid; width: 100%; margin: 0 0 3em 0">
                         <tbody>
@@ -123,6 +129,9 @@
                 <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
             </p>
             <h2>Commandes groupées :</h2>
+            <p style="margin: 0 0 2em 0">
+                <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
+            </p>
             <table style="border: solid; width: 100%">
                 <tbody>
                 {% for commande in commandesGroupe %}
@@ -152,7 +161,7 @@
                         </td>
                     </tr>
                     {% if loop.last != true %}
-                        <p style="margin: 0 0 5em 0">
+                        <p style="margin: 0 0 2em 0">
                             <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                         </p>
                     {% endif %}
@@ -161,5 +170,4 @@
             </table>
         {% endif %}
     </main>
-
 {% endblock %}

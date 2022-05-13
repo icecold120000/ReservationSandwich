@@ -119,6 +119,21 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     /**
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
+    public function limiteCommande(User $user, DateTime $date): array
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.commandeur = :user')
+            ->andWhere('c.dateHeureLivraison Like :date')
+            ->setParameters(array('date' => '%' . $date->format('y-m-d') . '%', 'user' => $user))
+            ->orderBy('c.dateHeureLivraison', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    /**
+     * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
+     */
     public function findBetweenDate(User $user, DateTime $dateDebut, DateTime $dateFin): array
     {
         $query = $this->createQueryBuilder('ci');
@@ -137,7 +152,6 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     public function filterIndex(User $user, ?DateTime $date = null, ?bool $cloture = null): array
     {
         $query = $this->createQueryBuilder('ci');
-
         $query
             ->leftJoin('ci.commandeur', 'u')
             ->andWhere('u.id = :user')

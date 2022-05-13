@@ -1,12 +1,14 @@
 {{ form_start(form) }}
 <div id="screenLeft">
-    {{ form_label(form.sandwichChoisi) }}
-    {% if form_errors(form.sandwichChoisi) %}
-        <div class="erreur">
-            {{ form_errors(form.sandwichChoisi) }}
-        </div>
-    {% endif %}
-    {{ form_widget(form.sandwichChoisi) }}
+    <div class="noDisplay">
+        {{ form_label(form.sandwichChoisi) }}
+        {% if form_errors(form.sandwichChoisi) %}
+            <div class="erreur">
+                {{ form_errors(form.sandwichChoisi) }}
+            </div>
+        {% endif %}
+        {{ form_widget(form.sandwichChoisi) }}
+    </div>
     {# Carrousel des sandwich #}
     <div id="sandwichCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         {# Contenu du carrousel #}
@@ -40,13 +42,15 @@
         </button>
     </div>
     <div>
-        {{ form_label(form.dessertChoisi) }}
-        {% if form_errors(form.dessertChoisi) %}
-            <div class="erreur">
-                {{ form_errors(form.dessertChoisi) }}
-            </div>
-        {% endif %}
-        {{ form_widget(form.dessertChoisi) }}
+        <div class="noDisplay">
+            {{ form_label(form.dessertChoisi) }}
+            {% if form_errors(form.dessertChoisi) %}
+                <div class="erreur">
+                    {{ form_errors(form.dessertChoisi) }}
+                </div>
+            {% endif %}
+            {{ form_widget(form.dessertChoisi) }}
+        </div>
         <div id="dessertCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
                 {% for dessert in desserts %}
@@ -76,12 +80,14 @@
 </div>
 <div id="screenRight">
     <div>
-        {{ form_label(form.boissonChoisie) }}
-        {% if form_errors(form.boissonChoisie) %}
-            <div class="erreur">
-                {{ form_errors(form.boissonChoisie) }}
-            </div>
-        {% endif %}
+        <div class="noDisplay">
+            {{ form_label(form.boissonChoisie) }}
+            {% if form_errors(form.boissonChoisie) %}
+                <div class="erreur">
+                    {{ form_errors(form.boissonChoisie) }}
+                </div>
+            {% endif %}
+        </div>
         {{ form_widget(form.boissonChoisie) }}
         <div id="boissonCarousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
             <div class="carousel-inner">
@@ -127,15 +133,54 @@
     <div class="divInput">
         {{ form_widget(form.dateHeureLivraison) }}
     </div>
-    {{ form_label(form.raisonCommande) }}
-    {% if form_errors(form.raisonCommande) %}
-        <div class="erreur">
-            {{ form_errors(form.raisonCommande) }}
+    {% if not is_granted('ROLE_ADULTES') %}
+        {{ form_label(form.raisonCommande) }}
+        {% if form_errors(form.raisonCommande) %}
+            <div class="erreur">
+                {{ form_errors(form.raisonCommande) }}
+            </div>
+        {% endif %}
+        <div class="divInput">
+            {{ form_widget(form.raisonCommande) }}
+        </div>
+    {% else %}
+        <div class="noDisplay">
+            {{ form_label(form.raisonCommande) }}
+            {% if form_errors(form.raisonCommande) %}
+                <div class="erreur">
+                    {{ form_errors(form.raisonCommande) }}
+                </div>
+            {% endif %}
+            <div class="divInput">
+                {{ form_widget(form.raisonCommande) }}
+            </div>
         </div>
     {% endif %}
-    <div class="divInput">
-        {{ form_widget(form.raisonCommande) }}
-    </div>
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
+        {{ form_label(form.commandeur) }}
+        {{ form_help(form.commandeur) }}
+        {% if form_errors(form.commandeur) %}
+            <div class="erreur">
+                {{ form_errors(form.commandeur) }}
+            </div>
+        {% endif %}
+        <div class="divInput">
+            {{ form_widget(form.commandeur) }}
+        </div>
+    {% else %}
+        <div class="noDisplay">
+            {{ form_label(form.commandeur) }}
+            {{ form_help(form.commandeur) }}
+            {% if form_errors(form.commandeur) %}
+                <div class="erreur">
+                    {{ form_errors(form.commandeur) }}
+                </div>
+            {% endif %}
+            <div class="divInput">
+                {{ form_widget(form.commandeur) }}
+            </div>
+        </div>
+    {% endif %}
     <script type="text/javascript">
         function update() {
             const selectRaison = document.getElementById('commande_individuelle_raisonCommande');

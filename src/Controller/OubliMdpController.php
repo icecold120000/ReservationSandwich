@@ -37,10 +37,8 @@ class OubliMdpController extends AbstractController
         $email = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user = $email->get("emailFirst")->getData();
             $dateNaissance = $email->get("dateAnniversaire")->getData();
-
             $data = $userRepo->findOneByEmailAndDate($user, $dateNaissance);
 
             if (empty($data))
@@ -66,7 +64,6 @@ class OubliMdpController extends AbstractController
             }
         }
 
-
         return $this->render('oubli_mdp/index.html.twig', [
             'error' => $error ?? null,
             'form' => $form->createView(),
@@ -86,11 +83,9 @@ class OubliMdpController extends AbstractController
     {
         $form = $this->createForm(UserMdpType::class);
         $form->handleRequest($request);
-
         $userFound = $userRepo->findOneByEmail($user->getEmail());
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             if ($form->get('plainPassword')->getData()) {
                 $userFound->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -122,6 +117,4 @@ class OubliMdpController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
-
 }

@@ -43,8 +43,8 @@ class FilterExportationType extends AbstractType
                 'label' => 'Choix de présentation',
                 'required' => true,
                 'choices' => [
-                    'Par commande' => 'Séparé',
-                    'Regroupée pour la préparation' => 'Regroupé'
+                    'Par commande' => 'Séparées',
+                    'Regroupée pour la préparation' => 'Regroupées'
                 ],
                 'constraints' => [
                     new NotNull([

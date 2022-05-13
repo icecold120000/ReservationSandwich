@@ -30,7 +30,6 @@ class BoissonController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
         $boissons = $boissonRepo->findAll();
-
         $form = $this->createForm(FilterMenuType::class);
         $filter = $form->handleRequest($request);
 
@@ -65,10 +64,8 @@ class BoissonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierBoisson */
             $fichierBoisson = $form->get('imageBoisson')->getData();
-
             if ($fichierBoisson) {
                 $originalFilename = pathinfo($fichierBoisson
                     ->getClientOriginalName(), PATHINFO_FILENAME);

@@ -29,7 +29,6 @@ class DessertController extends AbstractController
                           PaginatorInterface $paginator): Response
     {
         $desserts = $dessertRepo->findAll();
-
         $form = $this->createForm(FilterMenuType::class);
         $filter = $form->handleRequest($request);
 
@@ -64,7 +63,6 @@ class DessertController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /** @var UploadedFile $fichierDessert */
             $fichierDessert = $form->get('imageDessert')->getData();
 

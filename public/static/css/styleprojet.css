@@ -74,6 +74,10 @@ form div {
     color: green;
 }
 
+.noDisplay {
+    display: none;
+}
+
 /*Barre de navigation*/
 
 nav p, nav ul {
@@ -355,6 +359,7 @@ section#formRegister div.container-fluid, section#formResetMdp div.container-flu
 
 #formRegister .erreur {
     padding: 0 0 10px 0;
+    display: flex;
 }
 
 #formRegister .help-text {
@@ -457,16 +462,6 @@ form textarea {
 }
 
 /*Formulaire de Commandes individuelle et groupé*/
-
-#commande_individuelle_sandwichChoisi, #commande_individuelle_dessertChoisi,
-#commande_individuelle_boissonChoisie {
-    display: none;
-}
-
-#commande_groupe_sandwichChoisi1, #commande_groupe_sandwichChoisi2,
-#commande_groupe_dessertChoisi {
-    display: none;
-}
 
 #sandwichCarousel img, #dessertCarousel img, #sandwich1Carousel img, #sandwich2Carousel img {
     height: 13em;

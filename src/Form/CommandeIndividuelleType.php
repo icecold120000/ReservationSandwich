@@ -6,9 +6,11 @@ use App\Entity\Boisson;
 use App\Entity\CommandeIndividuelle;
 use App\Entity\Dessert;
 use App\Entity\Sandwich;
+use App\Entity\User;
 use App\Repository\BoissonRepository;
 use App\Repository\DessertRepository;
 use App\Repository\SandwichRepository;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -99,7 +101,7 @@ class CommandeIndividuelleType extends AbstractType
                     'Autres (à préciser)' => 'Autre'
                 ],
                 'required' => true,
-                'attr' => ['onChange' => 'update()'],
+                'attr' => ["onChange" => "update()"],
             ])
             ->add('raisonCommandeAutre', TextareaType::class, [
                 'label' => 'À préciser',
@@ -109,6 +111,22 @@ class CommandeIndividuelleType extends AbstractType
                     new NotBlank(['message' => 'Veuillez saisir une raison valable !'])
                 ],
                 'empty_data' => 'Ajouter text',
+            ])
+            ->add('commandeur', EntityType::class, [
+                'label' => 'La personne qui a commandé',
+                'help' => 'Appuyer sur une lettre pour filter les utilisateurs',
+                'required' => false,
+                'class' => User::class,
+                'query_builder' => function (UserRepository $er) {
+                    return $er
+                        ->createQueryBuilder('u')
+                        ->andWhere('u.isVerified = :verified')
+                        ->setParameter('verified', true);
+                },
+                'choice_label' => function (?User $user) {
+                    return $user ? substr($user->getPrenomUser(), 0, 4) . '. ' . $user->getNomUser() : '';
+                },
+                'placeholder' => 'Veuillez choisir une personne',
             ]);
     }
 
@@ -116,7 +134,7 @@ class CommandeIndividuelleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CommandeIndividuelle::class,
-            'attr' => ['id' => 'formCommandeInd']
+            'attr' => ['id' => 'formCommandeInd'],
         ]);
     }
 }
