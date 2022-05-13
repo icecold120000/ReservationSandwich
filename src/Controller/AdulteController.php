@@ -157,7 +157,15 @@ class AdulteController extends AbstractController
                             }
                         }
                         $generator = new BarcodeGeneratorPNG();
-                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                        if ($rowData['N° de Badge'] != null) {
+                            $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+                            file_put_contents($this->getParameter('codeBarAdulteFile_directory') . $codeBar,
+                                $generator->getBarcode($rowData['N° de Badge'],
+                                    $generator::TYPE_CODE_128, 3, 100));
+                        } else {
+                            $codeBar = null;
+                        }
+
                         if ($adulteRelated !== null) {
                             $adulteRelated->setPrenomAdulte($rowData['Prénom'])
                                 ->setNomAdulte($rowData['Nom'])
@@ -171,7 +179,6 @@ class AdulteController extends AbstractController
                             $this->entityManager->persist($adulteRelated);
                         } else {
                             $adulte = new Adulte();
-
                             $adulte->setPrenomAdulte($rowData['Prénom'])
                                 ->setNomAdulte($rowData['Nom'])
                                 ->setArchiveAdulte(false);
@@ -183,9 +190,6 @@ class AdulteController extends AbstractController
                             $adulte->setCodeBarreAdulte($codeBar);
                             $this->entityManager->persist($adulte);
                         }
-
-                        file_put_contents($this->getParameter('codeBarAdulteFile_directory') . $codeBar,
-                            $generator->getBarcode($rowData['N° de Badge'], $generator::TYPE_CODE_128, 3, 100));
                     }
                     $adulteCreated++;
                 }
@@ -217,6 +221,8 @@ class AdulteController extends AbstractController
 
         /** @var string $fileString */
         $fileString = file_get_contents($file);
+
+        /*Réfactorisation des colonnes du fichier Excel */
         $dataRaw = $serializer->decode($fileString, $fileExtension);
         $data = [];
         foreach ($dataRaw['Feuil1'] as $row) {

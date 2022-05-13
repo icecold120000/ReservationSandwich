@@ -139,7 +139,7 @@
         </div>
         {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
             <div class="table-responsive-lg">
-                <h2>Commandes groupées :</h2>
+                <h2>Historique de commandes groupées :</h2>
                 <div>
                     {{ knp_pagination_render(commande_groupes) }}
                 </div>
@@ -227,7 +227,7 @@
         {% endif %}
         {% if affichageTableau == "les deux" or affichageTableau == "individuelle" %}
             <div class="table-responsive-lg">
-                <h2>Commandes individuelles :</h2>
+                <h2>Historique de commandes :</h2>
                 <div>
                     {{ knp_pagination_render(commandes_ind) }}
                 </div>

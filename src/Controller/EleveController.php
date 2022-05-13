@@ -261,12 +261,26 @@ class EleveController extends AbstractController
                                 ->setClasseEleve($classe)
                                 ->setNbRepas($nbRepas);
                         }
-
+                        /*Génération d'un code barre pour un éléve*/
                         $generator = new BarcodeGeneratorPNG();
-                        $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
-                        file_put_contents($this->getParameter('codeBarEleveFile_directory') . $codeBar, $generator->getBarcode($rowData['Num Badge'], $generator::TYPE_CODE_128, 3, 100));
-                        $eleveExcel->setCodeBarreEleve($codeBar);
 
+                        /*Vérifie si l'élève a un numéro de badge*/
+                        if ($rowData['Num Badge'] != null) {
+
+                            /*Nom du fichier*/
+                            $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+
+                            /*Créer le fichier à l'emplacement attribué et génére le code barre
+                             avec le numéro de badge associé à l'élève */
+                            file_put_contents($this->getParameter('codeBarEleveFile_directory') . $codeBar,
+                                $generator->getBarcode($rowData['Num Badge'],
+                                    $generator::TYPE_CODE_128, 3, 100));
+                        } else {
+                            /*Mettre null si l'élève n'a pas de code*/
+                            $codeBar = null;
+                        }
+
+                        $eleveExcel->setCodeBarreEleve($codeBar);
                         $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
                         $eleveExcel->setPhotoEleve($fileNamePhoto);
 
