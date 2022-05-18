@@ -98,8 +98,8 @@
                 {{ form_errors(form.sandwichChoisi2) }}
             </div>
         {% endif %}
+        {{ form_widget(form.sandwichChoisi2) }}
     </div>
-    {{ form_widget(form.sandwichChoisi2) }}
     <div id="sandwich2Carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             {% for sandwich in sandwichs %}

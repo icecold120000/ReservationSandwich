@@ -60,39 +60,47 @@ class CommandeGroupeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $commandeGroupe
-                ->setCommandeur($userRepository->find($this->getUser()))
-                ->setDateCreation($dateNow)
-                ->setBoissonChoisie($boisson)
-                ->setEstValide(true);
-            $entityManager->persist($commandeGroupe);
-            $entityManager->flush();
-
-            $sandwichsChoisi = [
-                $form->get('sandwichChoisi1')->getData(),
-                $form->get('sandwichChoisi2')->getData()
-            ];
-            $nbSandwich = [
-                $form->get('nbSandwichChoisi1')->getData(),
-                $form->get('nbSandwichChoisi2')->getData()
-            ];
-
-            $i = 0;
-            foreach ($sandwichsChoisi as $sandwichChoisi) {
-                $groupeSandwich = new SandwichCommandeGroupe();
-                $groupeSandwich
-                    ->setCommandeAffecte($commandeGroupe)
-                    ->setSandwichChoisi($sandwichChoisi)
-                    ->setNombreSandwich($nbSandwich[$i]);
-                $entityManager->persist($groupeSandwich);
+            $sandwich1 = $form->get('sandwichChoisi1')->getData();
+            $sandwich2 = $form->get('sandwichChoisi2')->getData();
+            if ($sandwich1 != $sandwich2) {
+                $commandeGroupe
+                    ->setCommandeur($userRepository->find($this->getUser()))
+                    ->setDateCreation($dateNow)
+                    ->setBoissonChoisie($boisson)
+                    ->setEstValide(true);
+                $entityManager->persist($commandeGroupe);
                 $entityManager->flush();
-                $i++;
-            }
 
-            $this->addFlash(
-                'SuccessComGr',
-                'Votre commande groupé a été sauvegardée !'
-            );
+                $sandwichsChoisi = [
+                    $sandwich1,
+                    $sandwich2
+                ];
+                $nbSandwich = [
+                    $form->get('nbSandwichChoisi1')->getData(),
+                    $form->get('nbSandwichChoisi2')->getData()
+                ];
+
+                $i = 0;
+                foreach ($sandwichsChoisi as $sandwichChoisi) {
+                    $groupeSandwich = new SandwichCommandeGroupe();
+                    $groupeSandwich
+                        ->setCommandeAffecte($commandeGroupe)
+                        ->setSandwichChoisi($sandwichChoisi)
+                        ->setNombreSandwich($nbSandwich[$i]);
+                    $entityManager->persist($groupeSandwich);
+                    $entityManager->flush();
+                    $i++;
+                }
+                $this->addFlash(
+                    'SuccessComGr',
+                    'Votre commande groupé a été sauvegardée !'
+                );
+            } else {
+                $this->addFlash(
+                    'FailedComGr',
+                    'Vous ne pouvez pas choisir le même sandwich !'
+                );
+            }
 
             return $this->redirectToRoute('commande_groupe_new',
                 [], Response::HTTP_SEE_OTHER);
@@ -157,32 +165,41 @@ class CommandeGroupeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $entityManager->flush();
-
-            $sandwichsChoisi = [
-                $form->get('sandwichChoisi1')->getData(),
-                $form->get('sandwichChoisi2')->getData()
-            ];
-            $nbSandwich = [
-                $form->get('nbSandwichChoisi1')->getData(),
-                $form->get('nbSandwichChoisi2')->getData()
-            ];
-            $i = 0;
-
-            foreach ($sandwichsChoisi as $sandwichChoisi) {
-                $groupeSandwich[$i]
-                    ->setCommandeAffecte($commandeGroupe)
-                    ->setSandwichChoisi($sandwichChoisi)
-                    ->setNombreSandwich($nbSandwich[$i]);
+            $sandwich1 = $form->get('sandwichChoisi1')->getData();
+            $sandwich2 = $form->get('sandwichChoisi2')->getData();
+            if ($sandwich1 != $sandwich2) {
                 $entityManager->flush();
-                $i++;
+
+                $sandwichsChoisi = [
+                    $sandwich1,
+                    $sandwich2
+                ];
+                $nbSandwich = [
+                    $form->get('nbSandwichChoisi1')->getData(),
+                    $form->get('nbSandwichChoisi2')->getData()
+                ];
+                $i = 0;
+
+                foreach ($sandwichsChoisi as $sandwichChoisi) {
+                    $groupeSandwich[$i]
+                        ->setCommandeAffecte($commandeGroupe)
+                        ->setSandwichChoisi($sandwichChoisi)
+                        ->setNombreSandwich($nbSandwich[$i]);
+                    $entityManager->flush();
+                    $i++;
+                }
+
+                $this->addFlash(
+                    'SuccessComGr',
+                    'Votre commande groupée a été modifiée !'
+                );
+            } else {
+                $this->addFlash(
+                    'FailedComGr',
+                    'Vous ne pouvez pas choisir le même sandwich !'
+                );
             }
 
-            $this->addFlash(
-                'SuccessComGr',
-                'Votre commande groupée a été modifiée !'
-            );
             return $this->redirectToRoute('commande_groupe_edit',
                 ['id' => $commandeGroupe->getId()], Response::HTTP_SEE_OTHER);
         }

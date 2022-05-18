@@ -13,6 +13,11 @@
                 {{ message }}
             </div>
         {% endfor %}
+        {% for message in app.flashes('FailedComGr') %}
+            <div class="erreur">
+                {{ message }}
+            </div>
+        {% endfor %}
         <div>
             <div class="container-fluid formEntité2" id="commandeFormGroupe">
                 {{ include('commande_groupe/_form.html.twig') }}

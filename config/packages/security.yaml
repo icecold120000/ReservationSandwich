@@ -28,7 +28,8 @@ security:
       remember_me:
         secret: '%kernel.secret%' # required
         lifetime: 432000
-        always_remember_me: true
+        secure: true
+        always_remember_me: false
         signature_properties: [ password ]
 
       # activate different ways to authenticate
