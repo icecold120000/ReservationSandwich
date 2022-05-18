@@ -8,21 +8,31 @@
     <main class="container-fluid">
         <div>
             <h1>Bienvenue dans l'espace d'administration</h1>
-            {% for message in app.flashes('SuccessDeactivation') %}
-                <div class="flash-success">
-                    {{ message }}
-                </div>
-            {% endfor %}
-            {% if desactivation.isDeactivated == false %}
-                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
-                      onsubmit="return confirm('Voulez-vous vraiment désactivé les pages de réservation ?');">
-                    <button class="btn btn-danger" id="btnSuppr">Désactivation des pages de réservations</button>
-                </form>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% for message in app.flashes('SuccessDeactivation') %}
+                    <div class="flash-success">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                {% if desactivation.isDeactivated == false %}
+                    <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
+                          onsubmit="return confirm('Voulez-vous vraiment désactivé les pages de réservation ?');">
+                        <button class="btn btn-danger" id="btnSuppr">Désactivation des pages de réservations</button>
+                    </form>
+                {% else %}
+                    <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
+                          onsubmit="return confirm('Voulez-vous vraiment réactivé les pages de réservation ?');">
+                        <button class="btn btn-success" id="btnSuppr">Réactivation des pages de réservations</button>
+                    </form>
+                {% endif %}
             {% else %}
-                <form method="post" id="btnActive" action="{{ path('commande_ind_desactive',{'desactiveId': 1}) }}"
-                      onsubmit="return confirm('Voulez-vous vraiment réactivé les pages de réservation ?');">
-                    <button class="btn btn-success" id="btnSuppr">Réactivation des pages de réservations</button>
-                </form>
+                <p>
+                    Par mesure de sécurité :
+                    veuillez vous reconnecter pour pouvoir désactiver les pages de réservations !
+                </p>
+                <a class="btn btn-primary" id="btnLogin" href="{{ path('app_login') }}">
+                    Se reconnecter
+                </a>
             {% endif %}
         </div>
         <div>

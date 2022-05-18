@@ -7,14 +7,14 @@
 {% block body %}
     <main class="container-fluid">
         <div id="profilHeader">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <h1>Bienvenue {{ app.user.getPrenomUser }} {{ app.user.getNomUser }}.</h1>
             {% endif %}
-            <p>Vous êtes enregistré en tant <span id="typeUser">qu'élève</span> sur cette plateforme.</p>
+            <p>Vous êtes enregistré(e) en tant <span id="typeUser">qu'élève</span> sur cette plateforme.</p>
             <p>Ma Classe : {{ eleve.classeEleve.codeClasse }}</p>
         </div>
         <div>
-            <h2>Vous êtes inscrit à la cantine :</h2>
+            <h2>Vous êtes inscrit(e) à la cantine :</h2>
             <table class="table tableAdmin">
                 <thead>
                 <tr>
@@ -86,11 +86,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Votre liste de commandes</td>
+                    <td>Votre historique de commandes</td>
                     <td>
                         <a class="btn btn-info" id="btnProfilAcces4"
                            href="{{ path('commande_individuelle_index') }}">
-                            Voir votre liste de commandes
+                            Voir l'historique de vos commandes
                         </a>
                     </td>
                 </tr>

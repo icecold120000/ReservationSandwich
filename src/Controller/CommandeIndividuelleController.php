@@ -685,12 +685,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le lundi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le lundi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le lundi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le lundi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -701,12 +701,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le mardi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le mardi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le mardi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le mardi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -717,12 +717,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le mercredi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le mercredi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le mercredi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le mercredi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -733,12 +733,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le jeudi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le jeudi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le jeudi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le jeudi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -749,12 +749,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le vendredi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le vendredi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le vendredi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le vendredi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -966,12 +966,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le lundi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le lundi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le lundi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le lundi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -982,12 +982,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le mardi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le mardi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le mardi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le mardi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -998,12 +998,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le mercredi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le mercredi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le mercredi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le mercredi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -1014,12 +1014,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le jeudi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le jeudi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le jeudi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le jeudi à la cantine !'
                                     );
                                 }
                                 $error = true;
@@ -1030,12 +1030,12 @@ class CommandeIndividuelleController extends AbstractController
                                 if ($commandeur === null) {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'Vous n\'êtes pas inscrit le vendredi à la cantine !'
+                                        'Vous n\'êtes pas inscrit(e) le vendredi à la cantine !'
                                     );
                                 } else {
                                     $this->addFlash(
                                         'limiteCloture',
-                                        'L\'élève n\'est pas inscrit le vendredi à la cantine !'
+                                        'L\'élève n\'est pas inscrit(e) le vendredi à la cantine !'
                                     );
                                 }
                                 $error = true;

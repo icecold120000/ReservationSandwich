@@ -7,10 +7,10 @@
 {% block body %}
     <main class="container-fluid">
         <div id="profilHeader">
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <h1>Bienvenue {{ app.user.getPrenomUser }} {{ app.user.getNomUser }}.</h1>
             {% endif %}
-            <p>Vous êtes enregistré en tant <span id="typeUser">qu'adulte</span> sur cette plateforme.</p>
+            <p>Vous êtes enregistré(e) en tant <span id="typeUser">qu'adulte</span> sur cette plateforme.</p>
         </div>
         <div>
             <h2>Vos accès :</h2>
@@ -32,11 +32,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Commande individuelle</td>
+                    <td>Commande</td>
                     <td>
                         <a class="btn btn-info" id="btnProfilAcces2"
                            href="{{ path('commande_individuelle_new') }}">
-                            Faire vos commandes individuelles
+                            Faire vos commandes
                         </a>
                     </td>
                 </tr>
@@ -50,11 +50,20 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Votre liste de commandes</td>
+                    <td>Votre historique de vos commandes</td>
                     <td>
                         <a class="btn btn-info" id="btnProfilAcces4"
                            href="{{ path('commande_individuelle_index') }}">
-                            Voir votre liste de commandes
+                            Voir l'historique de vos commandes
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Rechercher vos classes</td>
+                    <td>
+                        <a href="{{ path('classe_index') }}"
+                           class="btn btn-info" id="btnProfilAcces1">
+                            Liste des classes
                         </a>
                     </td>
                 </tr>

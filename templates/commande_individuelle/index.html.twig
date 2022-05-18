@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vos commandes{% endblock %}
+{% block title %}Historique de vos commandes{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
 {% endblock %}
 {% block body %}
     <main class="container-fluid">
-        <h1>Vos commandes</h1>
+        <h1>Historique de vos commandes</h1>
         {% for message in app.flashes('SuccessDeleteComInd') %}
             <div class="flash-success">
                 {{ message }}
@@ -17,18 +17,18 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <p>Les commandes invalidées par le service de restauration seront indiquées en <span
-                    class="invalidCommande">rouge et en gras</span>.</p>
+        <p>Les commandes invalidées par le service de restauration seront indiquées <span
+                    class="invalidCommande">en rouge et en gras</span>.</p>
         {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
             {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
                 {% if nbCommandeMois < limiteNbMois and limiteActiveNbMois == true %}
                     <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                        Faire une commande individuelle
+                        Faire une commande
                     </a>
                 {% else %}
                     {% if limiteActiveNbMois == false %}
                         <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                            Faire une commande individuelle
+                            Faire une commande
                         </a>
                     {% else %}
                         <button class="btn btn-primary" id="btnAjout" disabled>
@@ -39,7 +39,7 @@
             {% else %}
                 {% if limiteActiveNbSemaine == false %}
                     <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                        Faire une commande individuelle
+                        Faire une commande
                     </a>
                 {% else %}
                     <button class="btn btn-primary" id="btnAjout" disabled>
@@ -50,7 +50,7 @@
         {% else %}
             {% if limiteActiveNbJour == false %}
                 <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                    Faire une commande individuelle
+                    Faire une commande
                 </a>
             {% else %}
                 <button class="btn btn-primary" id="btnAjout" disabled>
@@ -312,7 +312,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="7" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
+                            <td colspan="7" class="erreur">Aucune commande n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
                     </tbody>

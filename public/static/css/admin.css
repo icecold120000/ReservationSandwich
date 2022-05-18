@@ -275,7 +275,7 @@ table form button.btn-danger {
 }
 
 #btnProfilAcces4 {
-    padding: 15px 56px;
+    padding: 15px 39px;
 }
 
 /*Profil d'un élève*/
@@ -432,6 +432,10 @@ table form button.btn-danger {
     /*Page de profile*/
     #btnProfilAcces1 {
         padding: 15px 112px;
+    }
+
+    #btnProfilAcces2 {
+        padding: 15px 91px;
     }
 
     #btnProfilAdmin {

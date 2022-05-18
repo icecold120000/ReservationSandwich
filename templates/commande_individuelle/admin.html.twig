@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
-{% block title %}Liste des commandes à venir{% endblock %}
+{% block title %}Historique de commandes à venir{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
 {% endblock %}
 {% block body %}
     <main class="container-fluid">
-        <h1>Liste des commandes à venir</h1>
+        <h1>Historique de commandes à venir</h1>
         {% for message in app.flashes('failedExport') %}
             <div class="erreur">
                 {{ message }}
@@ -24,82 +24,93 @@
         <div>
             <div>
                 <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                    Faire une commande individuelle
+                    Faire une commande
                 </a>
                 <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
                     Faire une commande groupée
                 </a>
             </div>
             <div id="divRetour">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf"
-                        id="btnAjout">
-                    Choisir votre mode d'exportation
-                </button>
-                <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel"
-                     aria-hidden="true">
-                    <div class="modal-dialog modal-fullscreen">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close">
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <h1>Choisir les modalités de votre export</h1>
-                                {{ form_start(exportForm) }}
-                                <div id="screenLeft">
-                                    {{ form_label(exportForm.methodeExport) }}
-                                    {% if form_errors(exportForm.methodeExport) %}
-                                        <div class="erreur">
-                                            {{ form_errors(exportForm.methodeExport) }}
-                                        </div>
-                                    {% endif %}
-                                    <div>
-                                        {{ form_widget(exportForm.methodeExport) }}
-                                    </div>
-                                    {{ form_label(exportForm.affichageExport) }}
-                                    {% if form_errors(exportForm.affichageExport) %}
-                                        <div class="erreur">
-                                            {{ form_errors(exportForm.affichageExport) }}
-                                        </div>
-                                    {% endif %}
-                                    <div>
-                                        {{ form_widget(exportForm.affichageExport) }}
-                                    </div>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#formExportPdf"
+                            id="btnAjout">
+                        Choisir votre mode d'exportation
+                    </button>
+                    <div class="modal fade" id="formExportPdf" tabindex="-1" aria-labelledby="formExportLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-fullscreen">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="formExportLabel">Choisir votre mode d'exportation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
                                 </div>
-                                <div id="screenRight">
-                                    {{ form_label(exportForm.modaliteCommande) }}
-                                    {% if form_errors(exportForm.modaliteCommande) %}
-                                        <div class="erreur">
-                                            {{ form_errors(exportForm.modaliteCommande) }}
+                                <div class="modal-body">
+                                    <h1>Choisir les modalités de votre export</h1>
+                                    {{ form_start(exportForm) }}
+                                    <div id="screenLeft">
+                                        {{ form_label(exportForm.methodeExport) }}
+                                        {% if form_errors(exportForm.methodeExport) %}
+                                            <div class="erreur">
+                                                {{ form_errors(exportForm.methodeExport) }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            {{ form_widget(exportForm.methodeExport) }}
                                         </div>
-                                    {% endif %}
-                                    <div>
-                                        {{ form_widget(exportForm.modaliteCommande) }}
-                                    </div>
-                                    {{ form_label(exportForm.dateExport) }}
-                                    {% if form_errors(exportForm.dateExport) %}
-                                        <div class="erreur">
-                                            {{ form_errors(exportForm.dateExport) }}
+                                        {{ form_label(exportForm.affichageExport) }}
+                                        {% if form_errors(exportForm.affichageExport) %}
+                                            <div class="erreur">
+                                                {{ form_errors(exportForm.affichageExport) }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            {{ form_widget(exportForm.affichageExport) }}
                                         </div>
-                                    {% endif %}
-                                    <div>
-                                        {{ form_widget(exportForm.dateExport) }}
                                     </div>
+                                    <div id="screenRight">
+                                        {{ form_label(exportForm.modaliteCommande) }}
+                                        {% if form_errors(exportForm.modaliteCommande) %}
+                                            <div class="erreur">
+                                                {{ form_errors(exportForm.modaliteCommande) }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            {{ form_widget(exportForm.modaliteCommande) }}
+                                        </div>
+                                        {{ form_label(exportForm.dateExport) }}
+                                        {% if form_errors(exportForm.dateExport) %}
+                                            <div class="erreur">
+                                                {{ form_errors(exportForm.dateExport) }}
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            {{ form_widget(exportForm.dateExport) }}
+                                        </div>
+                                    </div>
+                                    {{ form_end(exportForm) }}
+                                    <button type="submit"
+                                            class="btn btn-success" form="formExport">
+                                        Démarrer votre export
+                                    </button>
                                 </div>
-                                {{ form_end(exportForm) }}
-                                <button type="submit"
-                                        class="btn btn-success" form="formExport">
-                                    Démarrer votre export
-                                </button>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    <p>
+                        Par mesure de sécurité :
+                        veuillez vous reconnecter pour pouvoir exporter vos commandes !
+                    </p>
+                    <a class="btn btn-primary" id="btnAjout" href="{{ path('app_login') }}">
+                        Se reconnecter
+                    </a>
+                {% endif %}
                 <a href="{{ path('espace_admin') }}"
                    class="btn btn-secondary" id="btnRetour">
                     Retourner à la liste des fonctionnalités
@@ -301,7 +312,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="9" class="erreur">Aucune commande individuelle n'a été réalisée !</td>
+                            <td colspan="9" class="erreur">Aucune commande n'a été réalisée !</td>
                         </tr>
                     {% endfor %}
                     </tbody>
