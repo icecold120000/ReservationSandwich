@@ -162,6 +162,31 @@
     <div class="divInput">
         {{ form_widget(form.lieuLivraison) }}
     </div>
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
+        {{ form_label(form.commandeur) }}
+        {{ form_help(form.commandeur) }}
+        {% if form_errors(form.commandeur) %}
+            <div class="erreur">
+                {{ form_errors(form.commandeur) }}
+            </div>
+        {% endif %}
+        <div class="divInput">
+            {{ form_widget(form.commandeur) }}
+        </div>
+    {% else %}
+        <div class="noDisplay">
+            {{ form_label(form.commandeur) }}
+            {{ form_help(form.commandeur) }}
+            {% if form_errors(form.commandeur) %}
+                <div class="erreur">
+                    {{ form_errors(form.commandeur) }}
+                </div>
+            {% endif %}
+            <div class="divInput">
+                {{ form_widget(form.commandeur) }}
+            </div>
+        </div>
+    {% endif %}
     {{ form_label(form.commentaireCommande) }}
     {{ form_help(form.commentaireCommande) }}
     {% if form_errors(form.commentaireCommande) %}

@@ -7,9 +7,11 @@ use App\Entity\Dessert;
 use App\Entity\LieuLivraison;
 use App\Entity\Sandwich;
 use App\Entity\SandwichCommandeGroupe;
+use App\Entity\User;
 use App\Repository\DessertRepository;
 use App\Repository\LieuLivraisonRepository;
 use App\Repository\SandwichRepository;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -139,6 +141,23 @@ class CommandeGroupeType extends AbstractType
                 },
                 'choice_label' => 'libelleLieu',
                 'required' => true,
+            ])
+            ->add('commandeur', EntityType::class, [
+                'label' => 'La personne qui a commandé',
+                'help' => 'Appuyer sur une lettre pour filter les utilisateurs',
+                'required' => false,
+                'class' => User::class,
+                'query_builder' => function (UserRepository $er) {
+                    return $er
+                        ->createQueryBuilder('u')
+                        ->andWhere('u.isVerified = :verified')
+                        ->andWhere('u.roles not Like :eleve')
+                        ->setParameters(['verified' => true, 'eleve' => '%' . 'ROLE_ELEVE' . '%']);
+                },
+                'choice_label' => function (?User $user) {
+                    return $user ? substr($user->getPrenomUser(), 0, 4) . '. ' . $user->getNomUser() : '';
+                },
+                'placeholder' => 'Veuillez choisir une personne',
             ])
             ->add('dessertChoisi', EntityType::class, [
                 'label' => 'Choisir un dessert',

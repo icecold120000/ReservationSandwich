@@ -42,6 +42,8 @@ class CommandeGroupeController extends AbstractController
                         LimitationCommandeRepository    $limiteRepo,
                         UserRepository                  $userRepository): Response
     {
+        $user = $userRepository->find($this->getUser());
+        $roles = $user->getRoles();
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -49,7 +51,7 @@ class CommandeGroupeController extends AbstractController
         $desserts = $dessertRepo->findByDispo(true);
         $limiteDate = $limiteRepo->findOneById(5);
         $commandeGroupe = new CommandeGroupe();
-        if ($limiteDate->getIsActive()) {
+        if ($limiteDate->getIsActive() && (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles))) {
             $form = $this->createForm(CommandeGroupeType::class,
                 $commandeGroupe, ['limiteDateSortie' => $limiteDate->getNbLimite(),
                     'sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
@@ -62,9 +64,17 @@ class CommandeGroupeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $sandwich1 = $form->get('sandwichChoisi1')->getData();
             $sandwich2 = $form->get('sandwichChoisi2')->getData();
+
             if ($sandwich1 != $sandwich2) {
+                $commandeur = $form->get('commandeur')->getData();
+
+                if ($commandeur) {
+                    $commandeGroupe->setCommandeur($commandeur);
+                } else {
+                    $commandeGroupe->setCommandeur($user);
+                }
+
                 $commandeGroupe
-                    ->setCommandeur($userRepository->find($this->getUser()))
                     ->setDateCreation($dateNow)
                     ->setBoissonChoisie($boisson)
                     ->setEstValide(true);
@@ -154,7 +164,8 @@ class CommandeGroupeController extends AbstractController
                          DessertRepository                $dessertRepo,
                          DesactivationCommandeRepository  $deactiveRepo,
                          CommandeGroupe                   $commandeGroupe,
-                         SandwichCommandeGroupeRepository $sandComRepo): Response
+                         SandwichCommandeGroupeRepository $sandComRepo,
+                         UserRepository                   $userRepository): Response
     {
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -168,6 +179,13 @@ class CommandeGroupeController extends AbstractController
             $sandwich1 = $form->get('sandwichChoisi1')->getData();
             $sandwich2 = $form->get('sandwichChoisi2')->getData();
             if ($sandwich1 != $sandwich2) {
+                $commandeur = $form->get('commandeur')->getData();
+
+                if ($commandeur) {
+                    $commandeGroupe->setCommandeur($commandeur);
+                } else {
+                    $commandeGroupe->setCommandeur($userRepository->find($this->getUser()));
+                }
                 $entityManager->flush();
 
                 $sandwichsChoisi = [

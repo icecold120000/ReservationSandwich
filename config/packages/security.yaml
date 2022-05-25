@@ -20,7 +20,8 @@ security:
     main:
       lazy: true
       provider: app_user_provider
-      custom_authenticator: App\Security\LoginAuthenticator
+      custom_authenticator:
+        - App\Security\LoginAuthenticator
       logout:
         path: app_logout
         # where to redirect after logout
@@ -41,56 +42,56 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - { path: ^/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/sandwich, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/sandwich/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/sandwich/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/sandwich/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/boisson, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/boisson/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/boisson/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/boisson/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/dessert, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/dessert/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/dessert/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/dessert/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/inscription/cantine, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/adulte, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/adulte/new, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/adulte/edit, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/adulte/file, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/adulte/delete_view, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/classe, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/classe/new, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/classe/edit, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/classe/show, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/classe/delete_view, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/eleve, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/eleve/new, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/eleve/edit, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/eleve/file, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/eleve/delete_view, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/user, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/user/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/user/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/user/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/limite, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/limite/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/limite/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/limite/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/user/file, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/profile/admin, roles: [ ROLE_ADMIN, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/profile/cuisine, roles: [ ROLE_CUISINE, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/profile/adulte, roles: [ ROLE_ADULTES, IS_AUTHENTICATED_REMEMBERED ] }
-    - { path: ^/profile/eleve, roles: [ ROLE_ELEVE, IS_AUTHENTICATED_REMEMBERED ] }
+    - { path: ^/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/inscription/cantine, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/adulte, roles: ROLE_ADMIN }
+    - { path: ^/adulte/new, roles: ROLE_ADMIN }
+    - { path: ^/adulte/edit, roles: ROLE_ADMIN }
+    - { path: ^/adulte/file, roles: ROLE_ADMIN }
+    - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/classe, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/classe/new, roles: ROLE_ADMIN }
+    - { path: ^/classe/edit, roles: ROLE_ADMIN }
+    - { path: ^/classe/show, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/eleve, roles: ROLE_ADMIN }
+    - { path: ^/eleve/new, roles: ROLE_ADMIN }
+    - { path: ^/eleve/edit, roles: ROLE_ADMIN }
+    - { path: ^/eleve/file, roles: ROLE_ADMIN }
+    - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
+    - { path: ^/user, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/file, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/profile/admin, roles: ROLE_ADMIN }
+    - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
+    - { path: ^/profile/adulte, roles: ROLE_ADULTES }
+    - { path: ^/profile/eleve, roles: ROLE_ELEVE }
     - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_REMEMBERED }
-    - { path: ^/commande/individuelle/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/commande/individuelle/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_REMEMBERED }
     - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/commande/groupe/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/commande/groupe/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES, IS_AUTHENTICATED_FULLY ] }
-    - { path: ^/commande/groupe/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES, IS_AUTHENTICATED_FULLY ] }
+    - { path: ^/commande/groupe/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/commande/groupe/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/commande/groupe/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
 
 when@test:
   security:

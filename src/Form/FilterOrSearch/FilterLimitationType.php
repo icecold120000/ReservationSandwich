@@ -21,7 +21,7 @@ class FilterLimitationType extends AbstractType
                 'required' => false,
             ])
             ->add('limiteActive', ChoiceType::class, [
-                'label' => 'Activé',
+                'label' => 'Activée',
                 'choices' => [
                     'Oui' => true,
                     'Non' => false,

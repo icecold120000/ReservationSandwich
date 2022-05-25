@@ -12,7 +12,7 @@
         {% if commandes %}
             {% if commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
                 <h2>Commandes individuelles par élèves :</h2>
-                <p style="margin: 0 0 2em 0">
+                <p style="margin: 0 0 1.5em 0">
                     <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                 </p>
                 {% for commande in commandes|filter(commande => commande.commandeur.roles == ["ROLE_ELEVE","ROLE_USER"]) %}
@@ -23,7 +23,7 @@
                                 {% if commande.commandeur.eleves %}
                                     {% for eleve in commande.commandeur.eleves %}
                                         {% if eleve.photoEleve %}
-                                            <img alt="Photo de l'élève" style="width: 120px; height: 120px"
+                                            <img alt="Photo de l'élève" style="width: 97.5px; height: 130px"
                                                  src="{{ absolute_url(asset('uploads/photoFile/' ~ eleve.photoEleve)) }}">
                                         {% endif %}
                                     {% else %}
@@ -68,12 +68,12 @@
                         </tbody>
                     </table>
                     {% if not loop.last %}
-                        <p style="margin: 0 0 2em 0">
+                        <p style="margin: 0 0 1.5em 0">
                             <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                         </p>
                     {% else %}
                         {% if type == "Impression" %}
-                            <p style="margin: 3.5em 0 3.5em 0">
+                            <p style="margin: 3em 0 3em 0">
                                 <i class="fas fa-cut"></i>----------------------------------------------------------------------------------------------------------------------
                             </p>
                         {% else %}

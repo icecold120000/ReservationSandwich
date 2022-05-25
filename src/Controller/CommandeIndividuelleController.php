@@ -642,10 +642,6 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
-            if ($commandeur) {
-                $user = $commandeur;
-                $roles = $user->getRoles();
-            }
             if (in_array("ROLE_ELEVE", $roles)) {
                 $eleve = $eleveRepository->findOneByCompte($user);
                 $cantine = $cantineRepository->findOneByEleve($eleve->getId());
@@ -772,13 +768,15 @@ class CommandeIndividuelleController extends AbstractController
                         $error = true;
                     }
                 } else {
-                    $nbCommande = $commandeRepo->limiteCommande($commandeur, $dateLivraison);
-                    if (count($nbCommande) > 1) {
-                        $this->addFlash(
-                            'limiteCloture',
-                            'Vous ne pouvez pas faire 2 commandes pour la même journée et pour la même personne !'
-                        );
-                        $error = true;
+                    if ($commandeur) {
+                        $nbCommande = $commandeRepo->limiteCommande($commandeur, $dateLivraison);
+                        if (count($nbCommande) > 1) {
+                            $this->addFlash(
+                                'limiteCloture',
+                                'Vous ne pouvez pas faire 2 commandes pour la même journée et pour la même personne !'
+                            );
+                            $error = true;
+                        }
                     }
                 }
                 if (!$error) {
@@ -923,10 +921,6 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
-            if ($commandeur) {
-                $user = $commandeur;
-                $roles = $user->getRoles();
-            }
             if (in_array("ROLE_ELEVE", $roles)) {
                 $eleve = $eleveRepository->findOneByCompte($user);
                 $cantine = $cantineRepository->findOneByEleve($eleve->getId());
