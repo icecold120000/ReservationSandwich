@@ -63,7 +63,7 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/", name="commande_individuelle_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="commande_individuelle_index", methods={"GET","POST"})
      * @throws NonUniqueResultException
      * @throws \Exception
      */
@@ -72,7 +72,8 @@ class CommandeIndividuelleController extends AbstractController
                           Request                        $request,
                           LimitationCommandeRepository   $limiteRepo,
                           CommandeGroupeRepository       $comGrRepo,
-                          UserRepository                 $userRepo): Response
+                          UserRepository                 $userRepo,
+                                                         $page = 1): Response
     {
         $user = $userRepo->find($this->getUser());
         $affichageTableau = "les deux";
@@ -90,7 +91,7 @@ class CommandeIndividuelleController extends AbstractController
         $commandes = $comIndRepo->findIndexAllNonCloture($user);
         $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($user);
 
-        $form = $this->createForm(FilterIndexCommandeType::class);
+        $form = $this->createForm(FilterIndexCommandeType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $commandes = $this->comIndRepo->filterIndex(
@@ -109,13 +110,13 @@ class CommandeIndividuelleController extends AbstractController
 
         $commandes = $paginator->paginate(
             $commandes,
-            $request->query->getInt('page', 1),
+            $page,
             25
         );
 
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $request->query->getInt('page', 1),
+            $page,
             5
         );
 
@@ -168,7 +169,7 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/admin", name="commande_individuelle_admin", methods={"GET","POST"})
+     * @Route("/admin/{page}",defaults={"page" : 1}, name="commande_individuelle_admin", methods={"GET","POST"})
      * @throws Exception
      * @throws NonUniqueResultException
      * @throws \Exception
@@ -176,7 +177,8 @@ class CommandeIndividuelleController extends AbstractController
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface             $paginator,
                           Request                        $request,
-                          CommandeGroupeRepository       $comGrRepo): Response
+                          CommandeGroupeRepository       $comGrRepo,
+                                                         $page = 1): Response
     {
         $affichageTableau = "les deux";
         $commandes = $comIndRepo->findAllNonCloture();
@@ -285,7 +287,6 @@ class CommandeIndividuelleController extends AbstractController
                     // Put the content in a file with format extension for example
                     file_put_contents('Commandes_Séparées_' . $dateChoisi->format('d-m-y') . '.xlsx', $xls);
                     $filename = 'Commandes_Séparées_' . $dateChoisi->format('d-m-y') . '.xlsx';
-
                     //Permet le téléchargement du fichier
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');
@@ -294,8 +295,8 @@ class CommandeIndividuelleController extends AbstractController
                     header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
-                    readfile($filename);
 
+                    readfile($filename);
                     // Déplace le fichier dans le dossier Uploads
                     rename($filename, $this->getParameter('exportFile_directory') . $filename);
 
@@ -317,7 +318,7 @@ class CommandeIndividuelleController extends AbstractController
                             foreach ($commandesGroupeExport as $commandeGroupe) {
                                 foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichComGroupe) {
                                     if ($sandwichComGroupe->getSandwichChoisi()->getId() == $sandwich->getId()) {
-                                        $nombreSandwich = $sandwichComGroupe->getNombreSandwich();
+                                        $nombreSandwich = $nombreSandwich + $sandwichComGroupe->getNombreSandwich();
                                     }
                                 }
                             }
@@ -361,6 +362,7 @@ class CommandeIndividuelleController extends AbstractController
                             $nbDessert[] = count($comIndRepo->findByDessert($dessert->getId(), $dateChoisi)) + $nombreEleve;
                         }
                     }
+
                     $dataRowSandwich = [];
                     for ($i = 0; $i < count($nomSandwich); $i++) {
                         $dataRowSandwich[$i] = [
@@ -428,7 +430,6 @@ class CommandeIndividuelleController extends AbstractController
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
-
                     rename($filename, $this->getParameter('excelFile_directory') . $filename);
                 }
                 return new Response();
@@ -445,7 +446,7 @@ class CommandeIndividuelleController extends AbstractController
             );
         }
 
-        $form = $this->createForm(FilterAdminCommandeType::class);
+        $form = $this->createForm(FilterAdminCommandeType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -472,13 +473,13 @@ class CommandeIndividuelleController extends AbstractController
 
         $commandes = $paginator->paginate(
             $commandes,
-            $request->query->getInt('page', 1),
+            $page,
             25
         );
 
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $request->query->getInt('page', 1),
+            $page,
             5
         );
 
@@ -666,7 +667,7 @@ class CommandeIndividuelleController extends AbstractController
                 $error = false;
                 if (in_array("ROLE_ELEVE", $roles)) {
                     if ($debutService->getIsActive() === true && $finService->getIsActive() === true) {
-                        if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) < $dateLivraison->format('y-m-d H:i'))
+                        if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) <= $dateLivraison->format('y-m-d H:i'))
                             && ($dateLivraison->format('y-m-d H:i') < $dateLivraison->format('y-m-d ' . $finService->getHeureLimite()->format('H:i'))))) {
                             $this->addFlash(
                                 'limiteCloture',
@@ -896,9 +897,8 @@ class CommandeIndividuelleController extends AbstractController
         $user = $userRepo->find($this->getUser());
         $roles = $user->getRoles();
         $cantine = null;
-
         if (in_array("ROLE_ELEVE", $roles)) {
-            $cantine = $cantineRepository->findOneByEleve($user->getEleves()->first());
+            $cantine = $cantineRepository->findOneByEleve($user->getEleves()->first()->getId());
         }
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
@@ -945,7 +945,7 @@ class CommandeIndividuelleController extends AbstractController
                 $error = false;
                 if (in_array("ROLE_ELEVE", $roles)) {
                     if ($debutService->getIsActive() === true && $finService->getIsActive() === true) {
-                        if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) < $dateLivraison->format('y-m-d H:i'))
+                        if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) <= $dateLivraison->format('y-m-d H:i'))
                             && ($dateLivraison->format('y-m-d H:i') < $dateLivraison->format('y-m-d ' . $finService->getHeureLimite()->format('H:i'))))) {
                             $this->addFlash(
                                 'limiteCloture',

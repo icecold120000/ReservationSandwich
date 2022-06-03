@@ -167,17 +167,17 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                 $query
                     ->andWhere('ci.dateHeureLivraison > :dateNow')
                     ->andWhere('ci.dateHeureLivraison < :dateThen')
-                    ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d h:i'),
-                        'dateThen' => $date->format('Y-m-d h:i'), 'user' => $user->getId()));
+                    ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d H:i'),
+                        'dateThen' => $date->format('Y-m-d H:i'), 'user' => $user->getId()));
             }
         }
-        if ($cloture === false) {
-            $query
-                ->andWhere('ci.dateHeureLivraison >= :dateNow')
-                ->setParameter('dateNow', new DateTime('now'));
-        } elseif ($cloture === true) {
+        if ($cloture === true) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :dateNow')
+                ->setParameter('dateNow', new DateTime('now'));
+        } else {
+            $query
+                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 
@@ -212,18 +212,18 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                 $query
                     ->andWhere('ci.dateHeureLivraison > :dateNow')
                     ->andWhere('ci.dateHeureLivraison < :dateThen')
-                    ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d h:i'),
-                        'dateThen' => $date->format('Y-m-d h:i'), 'search' => '%' . $search . '%'));
+                    ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d H:i'),
+                        'dateThen' => $date->format('Y-m-d H:i')));
             }
         }
 
-        if ($cloture === false) {
-            $query
-                ->andWhere('ci.dateHeureLivraison >= :dateNow')
-                ->setParameter('dateNow', new DateTime('now'));
-        } elseif ($cloture === true) {
+        if ($cloture === true) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :dateNow')
+                ->setParameter('dateNow', new DateTime('now'));
+        } else {
+            $query
+                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 

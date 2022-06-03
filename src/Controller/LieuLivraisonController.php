@@ -20,14 +20,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class LieuLivraisonController extends AbstractController
 {
     /**
-     * @Route("/", name="lieu_livraison_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page":1}, name="lieu_livraison_index", methods={"GET","POST"})
      */
     public function index(LieuLivraisonRepository $lieuLivraisonRepo,
                           PaginatorInterface      $paginator,
-                          Request                 $request): Response
+                          Request                 $request,
+                                                  $page = 1): Response
     {
         $lieux = $lieuLivraisonRepo->findAll();
-        $form = $this->createForm(FilterLieuType::class);
+        $form = $this->createForm(FilterLieuType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -39,7 +40,7 @@ class LieuLivraisonController extends AbstractController
 
         $lieux = $paginator->paginate(
             $lieux,
-            $request->query->getInt('page', 1),
+            $page,
             10
         );
 

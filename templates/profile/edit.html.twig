@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier votre profil{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
 {% block body %}
     <main class="container-fluid">
         <h1>Modifier votre profil</h1>
@@ -42,9 +45,9 @@
                 </div>
             </div>
             <div id="screenRight">
-                {% if form_errors(form.plainPassword) %}
+                {% if form_errors(form.plainPassword.first) %}
                     <div class="erreur">
-                        {{ form_errors(form.plainPassword) }}
+                        {{ form_errors(form.plainPassword.first) }}
                     </div>
                 {% endif %}
                 <div class="divInput">

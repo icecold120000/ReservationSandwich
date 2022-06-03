@@ -43,14 +43,15 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @Route("/", name="adulte_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="adulte_index", methods={"GET","POST"})
      */
     public function index(AdulteRepository   $adulteRepo,
                           Request            $request,
-                          PaginatorInterface $paginator): Response
+                          PaginatorInterface $paginator,
+                                             $page = 1): Response
     {
         $adultes = $adulteRepo->findByArchive(false);
-        $form = $this->createForm(FilterAdulteType::class);
+        $form = $this->createForm(FilterAdulteType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,7 +65,7 @@ class AdulteController extends AbstractController
 
         $adultes = $paginator->paginate(
             $adultes,
-            $request->query->getInt('page', 1),
+            $page,
             20
         );
 
@@ -269,16 +270,6 @@ class AdulteController extends AbstractController
         return $this->renderForm('adulte/new.html.twig', [
             'adulte' => $adulte,
             'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="adulte_show", methods={"GET"})
-     */
-    public function show(Adulte $adulte): Response
-    {
-        return $this->render('adulte/show.html.twig', [
-            'adulte' => $adulte,
         ]);
     }
 

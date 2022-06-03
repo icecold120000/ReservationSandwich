@@ -54,14 +54,15 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/", name="user_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="user_index", methods={"GET","POST"})
      */
     public function index(Request            $request,
                           UserRepository     $userRepository,
-                          PaginatorInterface $paginator): Response
+                          PaginatorInterface $paginator,
+                                             $page = 1): Response
     {
         $users = $userRepository->findAll();
-        $form = $this->createForm(UserFilterType::class);
+        $form = $this->createForm(UserFilterType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -76,7 +77,7 @@ class UserController extends AbstractController
         $usersTotal = $users;
         $users = $paginator->paginate(
             $users,
-            $request->query->getInt('page', 1),
+            $page,
             30
         );
 

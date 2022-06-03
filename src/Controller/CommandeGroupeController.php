@@ -250,6 +250,6 @@ class CommandeGroupeController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('commande_groupe_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);
     }
 }

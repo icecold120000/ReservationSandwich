@@ -74,10 +74,17 @@
                         Enregistrer votre commande
                     </button>
                 {% endif %}
-                <a href="{{ path('commande_individuelle_index') }}"
-                   class="btn btn-secondary" id="btnRetour">
-                    Revenir à la liste
-                </a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('commande_individuelle_admin') }}"
+                       class="btn btn-secondary" id="btnRetour">
+                        Revenir à la liste
+                    </a>
+                {% else %}
+                    <a href="{{ path('commande_individuelle_index') }}"
+                       class="btn btn-secondary" id="btnRetour">
+                        Revenir à la liste
+                    </a>
+                {% endif %}
             </div>
         </div>
     </main>

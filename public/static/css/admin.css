@@ -204,7 +204,7 @@ div#filtreEleve.filtre label {
 /*Les Formulaires d'ajout et de modification des utilisateurs*/
 
 #formUser.formEntité2 div#user_roles label, #formUser select#user_roles_1,
-#formUser select#user_roles_2 {
+#formUser select#user_roles_2, #formUserProfile #profile_plainPassword ul li {
     display: none;
 }
 

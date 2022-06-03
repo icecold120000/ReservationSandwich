@@ -22,14 +22,15 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class DessertController extends AbstractController
 {
     /**
-     * @Route("/", name="dessert_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="dessert_index", methods={"GET","POST"})
      */
     public function index(DessertRepository  $dessertRepo,
                           Request            $request,
-                          PaginatorInterface $paginator): Response
+                          PaginatorInterface $paginator,
+                                             $page = 1): Response
     {
         $desserts = $dessertRepo->findAll();
-        $form = $this->createForm(FilterMenuType::class);
+        $form = $this->createForm(FilterMenuType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -41,7 +42,7 @@ class DessertController extends AbstractController
 
         $desserts = $paginator->paginate(
             $desserts,
-            $request->query->getInt('page', 1),
+            $page,
             10
         );
 

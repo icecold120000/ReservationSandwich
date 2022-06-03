@@ -52,14 +52,14 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @Route("/", name="eleve_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page"}, name="eleve_index", methods={"GET","POST"})
      */
     public function index(EleveRepository    $eleveRepo,
                           Request            $request,
-                          PaginatorInterface $paginator): Response
+                          PaginatorInterface $paginator, $page = 1): Response
     {
         $eleves = $eleveRepo->findByArchive(false);
-        $form = $this->createForm(FilterEleveType::class);
+        $form = $this->createForm(FilterEleveType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -75,7 +75,7 @@ class EleveController extends AbstractController
         $elevesTotal = $eleves;
         $eleves = $paginator->paginate(
             $eleves,
-            $request->query->getInt('page', 1),
+            $page,
             40
         );
 

@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LimiteController extends AbstractController
 {
     /**
-     * @Route("/", name="limite_index", methods={"GET","POST"})
+     * @Route("/index", name="limite_index", methods={"GET","POST"})
      */
     public function index(Request $request, LimitationCommandeRepository $limitationCommandeRepository): Response
     {

@@ -23,14 +23,15 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class BoissonController extends AbstractController
 {
     /**
-     * @Route("/", name="boisson_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="boisson_index", methods={"GET","POST"})
      */
     public function index(BoissonRepository  $boissonRepo,
                           Request            $request,
-                          PaginatorInterface $paginator): Response
+                          PaginatorInterface $paginator,
+                                             $page = 1): Response
     {
         $boissons = $boissonRepo->findAll();
-        $form = $this->createForm(FilterMenuType::class);
+        $form = $this->createForm(FilterMenuType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -42,7 +43,7 @@ class BoissonController extends AbstractController
 
         $boissons = $paginator->paginate(
             $boissons,
-            $request->query->getInt('page', 1),
+            $page,
             10
         );
 

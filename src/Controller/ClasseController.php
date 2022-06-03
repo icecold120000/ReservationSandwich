@@ -23,14 +23,15 @@ use Knp\Component\Pager\PaginatorInterface;
 class ClasseController extends AbstractController
 {
     /**
-     * @Route("/", name="classe_index", methods={"GET","POST"})
+     * @Route("/index/{page}",defaults={"page" : 1}, name="classe_index", methods={"GET","POST"})
      */
     public function index(ClasseRepository   $classeRepos,
                           PaginatorInterface $paginator,
-                          Request            $request): Response
+                          Request            $request,
+                                             $page = 1): Response
     {
         $classes = $classeRepos->filterClasse('ASC');
-        $form = $this->createForm(FilterClasseType::class);
+        $form = $this->createForm(FilterClasseType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -42,7 +43,7 @@ class ClasseController extends AbstractController
 
         $classes = $paginator->paginate(
             $classes,
-            $request->query->getInt('page', 1),
+            $page,
             10
         );
 
@@ -86,7 +87,8 @@ class ClasseController extends AbstractController
     public function show(Classe                       $classe,
                          Request                      $request,
                          EleveRepository              $eleveRepo,
-                         InscriptionCantineRepository $cantineRepository): Response
+                         InscriptionCantineRepository $cantineRepository,
+                                                      $page = 1): Response
     {
         $eleves = $classe->getEleves();
         $form = $this->createForm(OrderEleveType::class);
@@ -104,7 +106,6 @@ class ClasseController extends AbstractController
         foreach ($eleves as $eleve) {
             $cantineInscrit[] = $cantineRepository->findOneByEleve($eleve->getId());
         }
-
 
         return $this->render('classe/show.html.twig', [
             'eleves' => $eleves,
