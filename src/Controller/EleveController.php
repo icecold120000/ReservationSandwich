@@ -266,7 +266,6 @@ class EleveController extends AbstractController
 
                         /*Vérifie si l'élève a un numéro de badge*/
                         if ($rowData['Num Badge'] != null) {
-
                             /*Nom du fichier*/
                             $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
 

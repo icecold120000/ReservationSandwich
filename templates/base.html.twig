@@ -126,8 +126,10 @@
                         <p>
                             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_CUISINE') %}
                                 <a href="{{ path('commande_individuelle_admin') }}">Les Commandes</a>
-                            {% else %}
+                            {% elseif is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                                 <a href="{{ path('commande_individuelle_index') }}">Vos Commandes</a>
+                            {% else %}
+                                <a href="{{ path('app_login') }}">Formulaire de connexion</a>
                             {% endif %}
                         </p>
                         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
