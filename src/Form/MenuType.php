@@ -17,7 +17,7 @@ class MenuType extends AbstractType
             ->add('fileSubmit', FileType::class, [
                 'mapped' => false,
                 'required' => true,
-                'help' => 'Type de fichier supporté : .png, .jpg .jpeg.',
+                'help' => 'Type de fichier supporté : .png, .jpg ou .jpeg.',
                 'constraints' => [
                     new File([
                         'maxSize' => '8192k',
@@ -25,7 +25,7 @@ class MenuType extends AbstractType
                             'image/png',
                             'image/jpeg',
                         ],
-                        'mimeTypesMessage' => 'Veuillez sélectionner un fichier .png,.jpg .jpeg !',
+                        'mimeTypesMessage' => 'Veuillez sélectionner un fichier .png, .jpg ou .jpeg !',
                         'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 8192ko !',
                     ]),
                     new NotNull([

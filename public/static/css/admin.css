@@ -647,7 +647,7 @@ table form button.btn-danger {
     }
 
     /*Filtre gestion de commande*/
-    div#afficheTabFilter {
+    div#notAfficheTabFilter {
         display: none;
     }
 

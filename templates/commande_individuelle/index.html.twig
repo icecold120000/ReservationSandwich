@@ -19,86 +19,88 @@
         {% endfor %}
         <p>Les commandes invalidées par le service de restauration seront indiquées <span
                     class="invalidCommande">en rouge et en gras</span>.</p>
-        {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
-            {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
-                {% if nbCommandeMois < limiteNbMois and limiteActiveNbMois == true %}
-                    <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                        Faire une commande
-                    </a>
+        {% if is_granted('ROLE_ELEVE') or is_granted('ROLE_ADULTES') or is_granted('ROLE_CUISINE') or is_granted('ROLE_ADMIN') %}
+            {% if nbCommandeJournalier < limiteNbJournalier and limiteActiveNbJour == true %}
+                {% if nbCommandeSemaine < limiteNbSemaine and limiteActiveNbSemaine == true %}
+                    {% if nbCommandeMois < limiteNbMois and limiteActiveNbMois == true %}
+                        <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
+                            Faire une commande
+                        </a>
+                    {% else %}
+                        {% if limiteActiveNbMois == false %}
+                            <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
+                                Faire une commande
+                            </a>
+                        {% else %}
+                            <button class="btn btn-primary" id="btnAjout" disabled>
+                                Vous avez dépassé le nombre limite mensuel de {{ limiteNbMois }} commandes !
+                            </button>
+                        {% endif %}
+                    {% endif %}
                 {% else %}
-                    {% if limiteActiveNbMois == false %}
+                    {% if limiteActiveNbSemaine == false %}
                         <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
                             Faire une commande
                         </a>
                     {% else %}
                         <button class="btn btn-primary" id="btnAjout" disabled>
-                            Vous avez dépassé le nombre limite mensuel de {{ limiteNbMois }} commandes !
+                            Vous avez dépassé le nombre limite hebdomadaire de {{ limiteNbSemaine }} commandes !
                         </button>
                     {% endif %}
                 {% endif %}
             {% else %}
-                {% if limiteActiveNbSemaine == false %}
+                {% if limiteActiveNbJour == false %}
                     <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
                         Faire une commande
                     </a>
                 {% else %}
                     <button class="btn btn-primary" id="btnAjout" disabled>
-                        Vous avez dépassé le nombre limite hebdomadaire de {{ limiteNbSemaine }} commandes !
+                        Vous avez dépassé le nombre limite journalier de {{ limiteNbJournalier }} commandes !
                     </button>
                 {% endif %}
             {% endif %}
-        {% else %}
-            {% if limiteActiveNbJour == false %}
-                <a href="{{ path('commande_individuelle_new') }}" class="btn btn-primary" id="btnAjout">
-                    Faire une commande
+            {% if not is_granted('ROLE_ELEVE') %}
+                <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
+                    Faire une commande groupée
                 </a>
-            {% else %}
-                <button class="btn btn-primary" id="btnAjout" disabled>
-                    Vous avez dépassé le nombre limite journalier de {{ limiteNbJournalier }} commandes !
-                </button>
             {% endif %}
-        {% endif %}
-        {% if not is_granted('ROLE_ELEVE') %}
-            <a href="{{ path('commande_groupe_new') }}" class="btn btn-primary" id="btnAjout">
-                Faire une commande groupée
-            </a>
-        {% endif %}
-        <div id="formFilter">
-            <div id="filtre">
-                {{ form_start(form) }}
-                <div>
-                    <div class="selectFiltre">
-                        <span>{{ form_label(form.date) }}</span>
-                        {{ form_widget(form.date) }}
-                    </div>
-                    <div class="selectFiltre">
-                        <span>{{ form_label(form.cloture) }}</span>
-                        {{ form_widget(form.cloture) }}
-                    </div>
-                </div>
-                {% if is_granted('ROLE_ELEVE') %}
-                    <div id="afficheTabFilter">
-                        <div class="selectFiltre">
-                            <span>{{ form_label(form.affichageTableau) }}</span>
-                            {{ form_widget(form.affichageTableau) }}
-                        </div>
-                    </div>
-                {% else %}
+            <div id="formFilter">
+                <div id="filtre">
+                    {{ form_start(form) }}
                     <div>
                         <div class="selectFiltre">
-                            <span>{{ form_label(form.affichageTableau) }}</span>
-                            {{ form_widget(form.affichageTableau) }}
+                            <span>{{ form_label(form.date) }}</span>
+                            {{ form_widget(form.date) }}
+                        </div>
+                        <div class="selectFiltre">
+                            <span>{{ form_label(form.cloture) }}</span>
+                            {{ form_widget(form.cloture) }}
                         </div>
                     </div>
-                {% endif %}
-                <div>
-                    <button type="submit" class="btn btn-info">
-                        Afficher
-                    </button>
+                    {% if is_granted('ROLE_ELEVE') %}
+                        <div id="notAfficheTabFilter">
+                            <div class="selectFiltre">
+                                <span>{{ form_label(form.affichageTableau) }}</span>
+                                {{ form_widget(form.affichageTableau) }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div>
+                            <div class="selectFiltre">
+                                <span>{{ form_label(form.affichageTableau) }}</span>
+                                {{ form_widget(form.affichageTableau) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <button type="submit" class="btn btn-info">
+                            Afficher
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
                 </div>
-                {{ form_end(form) }}
             </div>
-        </div>
+        {% endif %}
         {% if not is_granted('ROLE_ELEVE') %}
             {% if affichageTableau == "les deux" or affichageTableau == "groupé" %}
                 <div class="table-responsive-lg">
@@ -160,7 +162,7 @@
                                     </td>
                                 {% endif %}
                                 {% set dateLimiteGroupe = commande_groupe.dateHeureLivraison|date_modify('-'~ limiteGroupeCom.nbLimite ~'days')|date('m/d/Y', 'Europe/Paris') %}
-                                {% if dateLimiteGroupe|date('m/d/Y') < "now"|date('m/d/Y') %}
+                                {% if dateLimiteGroupe|date('m/d/Y') < "now"|date('m/d/Y') and commande_groupe.dateHeureLivraison|date('m/d/Y', 'Europe/Paris') > "now"|date('m/d/Y', 'Europe/Paris') %}
                                     <td>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
                                         Vous avez dépassé la date
@@ -169,7 +171,16 @@
                                     <td>
                                         Vous ne pouvez plus <span>annuler cette commande.</span>
                                         Vous avez dépassé la date
-                                        <span>limite de modification : {{ dateLimiteGroupe|date('d/m/Y') }}</span>
+                                        <span>limite d'annulation : {{ dateLimiteGroupe|date('d/m/Y') }}</span>
+                                    </td>
+                                {% elseif commande_groupe.dateHeureLivraison|date('m/d/Y', 'Europe/Paris') < "now"|date('m/d/Y', 'Europe/Paris') %}
+                                    <td>
+                                        <span>Cette commande groupée est clôturée.</span>
+                                        Vous ne pouvez plus <span>modifier cette commande.</span>
+                                    </td>
+                                    <td>
+                                        <span>Cette commande groupée est clôturée.</span>
+                                        Vous ne pouvez plus <span>annuler cette commande.</span>
                                     </td>
                                 {% else %}
                                     <td>
@@ -229,8 +240,8 @@
                                     {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
                                     '<i class="fas fa-times"></i>' }}
                                 </td>
-                                {% if limite|date('m/d/Y H:i', 'Europe/Paris') < "now"|date('m/d/Y h:i', 'Europe/Paris') and limiteActive == true
-                                    and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y', 'Europe/Paris') %}
+                                {% if limite|date('m/d/Y H:i', 'Europe/Paris') < "now"|date('m/d/Y H:i', 'Europe/Paris') and limiteActive == true
+                                    and commande.dateHeureLivraison|date('m/d/Y') == "now"|date('m/d/Y', 'Europe/Paris') %}
                                     <td>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
                                         Vous avez dépassé l'heure
@@ -241,7 +252,7 @@
                                         Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
-                                {% elseif commande.dateHeureLivraison|date('m/d/Y') < "now"|date('m/d/Y', 'Europe/Paris') %}
+                                {% elseif commande.dateHeureLivraison|date('m/d/Y', 'Europe/Paris') < "now"|date('m/d/Y', 'Europe/Paris') %}
                                     <td>
                                         <span>Cette commande est clôturée.</span>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>
@@ -273,8 +284,8 @@
                                     {{ commande.prendreChips ? '<i class="fas fa-check"></i>' :
                                     '<i class="fas fa-times"></i>' }}
                                 </td>
-                                {% if limite|date('m/d/Y H:i', 'Europe/Paris') < "now"|date('m/d/Y h:i', 'Europe/Paris') and limiteActive == true
-                                    and commande.dateHeureLivraison|date('d/m/Y') == "now"|date('d/m/Y', 'Europe/Paris') %}
+                                {% if limite|date('m/d/Y H:i', 'Europe/Paris') < "now"|date('m/d/Y H:i', 'Europe/Paris') and limiteActive == true
+                                    and commande.dateHeureLivraison|date('m/d/Y', 'Europe/Paris') == "now"|date('m/d/Y', 'Europe/Paris') %}
                                     <td class="invalidCommande">
                                         Vous ne pouvez plus <span>modifier votre commande.</span>
                                         Vous avez dépassé l'heure
@@ -285,7 +296,7 @@
                                         Vous avez dépassé l'heure
                                         <span>limite de modification : {{ limite|date('H:i', 'Europe/Paris') }}</span>
                                     </td>
-                                {% elseif commande.dateHeureLivraison|date('m/d/Y') < "now"|date('m/d/Y', 'Europe/Paris') %}
+                                {% elseif commande.dateHeureLivraison|date('m/d/Y', 'Europe/Paris') < "now"|date('m/d/Y', 'Europe/Paris') %}
                                     <td class="invalidCommande">
                                         <span>Cette commande est clôturée.</span>
                                         Vous ne pouvez plus <span>modifier cette commande.</span>

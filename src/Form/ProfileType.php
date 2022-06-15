@@ -4,12 +4,14 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfileType extends AbstractType
 {
@@ -19,14 +21,30 @@ class ProfileType extends AbstractType
             ->add('nomUser', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom d\'utilisateur !'
+                    ])
+                ]
             ])
             ->add('prenomUser', TextType::class, [
                 'label' => 'Prénom de l\'utilisateur',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un prénom d\'utilisateur !'
+                    ])
+                ]
             ])
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email de l\'utilisateur',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un email !'
+                    ])
+                ],
+                'invalid_message' => 'Votre saisie n\'est pas un email !',
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,
@@ -43,6 +61,11 @@ class ProfileType extends AbstractType
                         'max' => 4096,
                         'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
                     ]),
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Veuillez saisir un mot de passe !'
+                        ])
+                    ]
                 ],
             ]);
     }

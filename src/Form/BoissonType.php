@@ -10,15 +10,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class BoissonType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomBoisson', TextType::class,[
+            ->add('nomBoisson', TextType::class, [
                 'label' => 'Nom de la boisson',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom de boisson !'
+                    ])
+                ]
             ])
             ->add('imageBoisson', FileType::class, [
                 'label' => 'Photo de la boisson',
@@ -44,8 +50,8 @@ class BoissonType extends AbstractType
                     'Non' => false,
                 ],
                 'required' => true,
-            ])
-        ;
+                'empty_data' => true,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

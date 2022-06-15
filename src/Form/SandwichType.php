@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SandwichType extends AbstractType
 {
@@ -20,6 +21,11 @@ class SandwichType extends AbstractType
             ->add('nomSandwich', TextType::class, [
                 'label' => 'Nom du sandwich',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom de sandwich !'
+                    ])
+                ]
             ])
             ->add('imageSandwich', FileType::class, [
                 'label' => 'Photo du sandwich',

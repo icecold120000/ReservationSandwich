@@ -8,6 +8,7 @@ use App\Entity\Eleve;
 use App\Repository\AdulteRepository;
 use App\Repository\EleveRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -16,15 +17,23 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email', TextType::class, [
+            ->add('email', EmailType::class, [
                 'label' => 'Email de l\'utilisateur',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un email de l\'utilisateur !'
+                    ])
+                ]
             ])
             ->add('roles', CollectionType::class, [
                 'label' => 'Fonction de l\'utilisateur',
@@ -41,19 +50,37 @@ class UserType extends AbstractType
                     'placeholder' => 'Veuillez choisir une fonction',
                     'attr' => ['onChange' => 'update()'],
                     'label_attr' => ['onChange' => 'update()'],
+                    'empty_data' => '[]',
                 ],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe de l\'utilisateur',
                 'required' => $options['password_required'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir votre mot de passe !',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit comporter au moins 6 caractères !',
+                        'max' => 4096,
+                        'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
+                    ]),
+                ]
             ])
             ->add('nomUser', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
                 'required' => true,
+                new NotBlank([
+                    'message' => 'Veuillez saisir un nom d\'utilisateur !'
+                ])
             ])
             ->add('prenomUser', TextType::class, [
                 'label' => 'Prénom de l\'utilisateur',
                 'required' => true,
+                new NotBlank([
+                    'message' => 'Veuillez saisir un prénom d\'utilisateur !'
+                ])
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Date de naissance de l\'utilisateur',
@@ -72,6 +99,7 @@ class UserType extends AbstractType
                     'Non' => false,
                 ],
                 'required' => false,
+                'empty_data' => false,
             ])
             ->add('eleve', EntityType::class, [
                 'label' => 'Compte auquel l\'utilisateur est rattaché',

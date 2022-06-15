@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LieuLivraisonType extends AbstractType
 {
@@ -17,6 +18,11 @@ class LieuLivraisonType extends AbstractType
             ->add('libelleLieu', TextType::class, [
                 'label' => 'Libellé du lieu',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un libellé de lieu !'
+                    ])
+                ]
             ])
             ->add('estActive', ChoiceType::class, [
                 'label' => 'Lieu activé',

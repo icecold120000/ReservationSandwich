@@ -84,10 +84,12 @@ security:
     - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
     - { path: ^/profile/adulte, roles: ROLE_ADULTES }
     - { path: ^/profile/eleve, roles: ROLE_ELEVE }
+    - { path: ^/profile/user, roles: [ ROLE_USER, IS_AUTHENTICATED_REMEMBERED ] }
+    - { path: ^/profile/edit, roles: IS_AUTHENTICATED_REMEMBERED }
     - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_REMEMBERED }
     - { path: ^/commande/individuelle/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/commande/individuelle/new, roles: IS_AUTHENTICATED_REMEMBERED }
-    - { path: ^/commande/individuelle/edit, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/commande/individuelle/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ELEVE, ROLE_ADULTES ] }
+    - { path: ^/commande/individuelle/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ELEVE, ROLE_ADULTES ] }
     - { path: ^/commande/individuelle/delete_view, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/commande/groupe/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
     - { path: ^/commande/groupe/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }

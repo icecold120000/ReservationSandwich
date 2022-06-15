@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 class EleveType extends AbstractType
@@ -24,10 +25,20 @@ class EleveType extends AbstractType
             ->add('nomEleve', TextType::class, [
                 'label' => 'Nom de l\'élève',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom d\'élève !'
+                    ])
+                ]
             ])
             ->add('prenomEleve', TextType::class, [
                 'label' => 'Prénom de l\'élève',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom d\'élève !'
+                    ])
+                ]
             ])
             ->add('photoEleve', FileType::class, [
                 'label' => 'Photo de l\'élève',

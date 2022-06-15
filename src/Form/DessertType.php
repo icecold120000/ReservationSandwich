@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DessertType extends AbstractType
 {
@@ -20,6 +21,11 @@ class DessertType extends AbstractType
             ->add('nomDessert', TextType::class, [
                 'label' => 'Nom du dessert',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom de dessert !'
+                    ])
+                ]
             ])
             ->add('imageDessert', FileType::class, [
                 'label' => 'Photo du dessert',

@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ClasseType extends AbstractType
 {
@@ -16,10 +17,20 @@ class ClasseType extends AbstractType
             ->add('libelleClasse', TextType::class, [
                 'label' => 'Libellé de la classe',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un libellé de classe !'
+                    ])
+                ]
             ])
             ->add('codeClasse', TextType::class, [
                 'label' => 'Code de la classe',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un code de classe !'
+                    ])
+                ]
             ]);
     }
 

@@ -9,6 +9,8 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AdulteType extends AbstractType
 {
@@ -18,10 +20,20 @@ class AdulteType extends AbstractType
             ->add('nomAdulte', TextType::class, [
                 'label' => 'Nom de l\'adulte',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom d\'adulte !'
+                    ])
+                ]
             ])
             ->add('prenomAdulte', TextType::class, [
                 'label' => 'Prénom de l\'adulte',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un prénom d\'adulte !'
+                    ])
+                ]
             ])
             ->add('dateNaissance', DateType::class, [
                 'label' => 'Date de naissance de l\'adulte ',
@@ -29,7 +41,14 @@ class AdulteType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy',
                 'required' => false,
-                'help' => ' format : JJ/MM/AAAA'
+                'help' => ' format : JJ/MM/AAAA',
+                'invalid_message' => 'Votre saisie n\'est pas une date !',
+                'constraints' => [
+                    new LessThan([
+                        'value' => 'today',
+                        'message' => 'Veuillez saisir une date de naissance !'
+                    ]),
+                ]
             ])
             ->add('archiveAdulte', ChoiceType::class, [
                 'label' => 'Adulte archivé',

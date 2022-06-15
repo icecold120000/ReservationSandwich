@@ -57,7 +57,7 @@ class CommandeGroupeController extends AbstractController
                     'sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
         } else {
             $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,
-                ['sandwichChoisi1' => null, 'sandwichChoisi2' => null]);
+                ['sandwichChoisi1' => null, 'sandwichChoisi2' => null, 'requiredNonAdmin' => false]);
         }
         $form->handleRequest($request);
 
@@ -72,6 +72,12 @@ class CommandeGroupeController extends AbstractController
                     $commandeGroupe->setCommandeur($commandeur);
                 } else {
                     $commandeGroupe->setCommandeur($user);
+                }
+
+                if (in_array("ROLE_ADMIN", $roles) && ($form->get('motifSortie')->getData() === null || $form->get('commentaireCommande')->getData()) === null) {
+                    $commandeGroupe
+                        ->setMotifSortie("Commande faite par un administrateur ou personnel de cuisine")
+                        ->setCommentaireCommande("Commande faite par un administrateur ou personnel de cuisine");
                 }
 
                 $commandeGroupe

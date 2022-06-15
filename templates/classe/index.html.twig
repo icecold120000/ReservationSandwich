@@ -18,11 +18,16 @@
                    class="btn btn-info" id="btnAjout">
                     Ajouter une nouvelle classe
                 </a>
+                <a href="{{ path('espace_admin') }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Retourner à la liste des fonctionnalités
+                </a>
+            {% else %}
+                <a href="{{ path('profile_adulte',{'userTokenHash': app.user.tokenHash}) }}"
+                   class="btn btn-secondary" id="btnRetour">
+                    Retourner sur votre profil
+                </a>
             {% endif %}
-            <a href="{{ path('espace_admin') }}"
-               class="btn btn-secondary" id="btnRetour">
-                Retourner à la liste des fonctionnalités
-            </a>
         </div>
         <div>
             {{ form_start(form) }}

@@ -22,6 +22,7 @@ class OubliMdpType extends AbstractType
                         'message' => 'Veuillez saisir un email !',
                     ]),
                 ],
+                'invalid_message' => 'Votre saisie n\'est pas un email !'
             ])
             ->add('dateAnniversaire', DateType::class, [
                 'label' => 'Votre date de naissance',
@@ -35,6 +36,7 @@ class OubliMdpType extends AbstractType
                         'message' => 'Veuillez saisir votre date de naissance !',
                     ]),
                 ],
+                'invalid_message' => 'Votre saisie n\'est pas une date !',
             ]);
     }
 

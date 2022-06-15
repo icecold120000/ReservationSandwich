@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Votre Profile{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
+{% endblock %}
+{% block body %}
+    <main class="container-fluid">
+        <div id="profilHeader">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <h1>Bienvenue {{ app.user.getPrenomUser }} {{ app.user.getNomUser }}.</h1>
+            {% endif %}
+            <p>Vous êtes enregistré en tant <span id="typeUser">qu'un utilisateur</span> sur cette plateforme.</p>
+        </div>
+        <div>
+            <h2>Vos accès :</h2>
+            <table class="table tableAdmin">
+                <thead>
+                <tr>
+                    <th scope="col">Nom de la fonctionnalité</th>
+                    <th scope="col">Lien pour gérer la fonctionnalité</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Éditer votre profil</td>
+                    <td>
+                        <a class="btn btn-info" id="btnProfilAcces1"
+                           href="{{ path('profile_edit',{'id': app.user.id}) }}">
+                            Éditer votre profil
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Votre historique de vos commandes</td>
+                    <td>
+                        <a class="btn btn-info" id="btnProfilAcces4"
+                           href="{{ path('commande_individuelle_index') }}">
+                            Voir l'historique de vos commandes
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+{% endblock %}

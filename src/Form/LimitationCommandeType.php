@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class LimitationCommandeType extends AbstractType
@@ -22,6 +23,11 @@ class LimitationCommandeType extends AbstractType
                 'required' => true,
                 'attr' => ['oninput' => 'update()'],
                 'label_attr' => ['oninput' => 'update()'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un libellé d\'une limitation !'
+                    ])
+                ]
             ])
             ->add('is_active', ChoiceType::class, [
                 'label' => 'Limitation activée',
@@ -30,6 +36,7 @@ class LimitationCommandeType extends AbstractType
                     'Oui' => true,
                 ],
                 'required' => true,
+                'empty_data' => false,
             ])
             ->add('nbLimite', NumberType::class, [
                 'label' => 'Nombre limite',
@@ -40,7 +47,7 @@ class LimitationCommandeType extends AbstractType
                         'match' => false,
                         'pattern' => "/[\-]/",
                         'message' => "Veuillez saisir un nombre positif !",
-                    ])
+                    ]),
                 ],
             ])
             ->add('heureLimite', TimeType::class, [

@@ -27,10 +27,8 @@ class FichierType extends AbstractType
                         ],
                         'mimeTypesMessage' => 'Veuillez sélectionner un fichier .xlsx !',
                         'maxSizeMessage' => 'Veuillez transférer un fichier ayant pour taille maximum de 8192 Ko !',
+                        'uploadNoFileErrorMessage' => 'Veuillez séléctionné un fichier !',
                     ]),
-                    new NotNull([
-                        'message' => 'Veuillez sélectionner un fichier !'
-                    ])
                 ],
             ]);
     }

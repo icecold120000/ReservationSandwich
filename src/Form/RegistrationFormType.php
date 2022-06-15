@@ -46,6 +46,7 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Veuillez saisir un email !',
                     ]),
                 ],
+                'invalid_message' => 'Votre saisie n\'est pas un email !',
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Votre date de naissance',
@@ -59,6 +60,7 @@ class RegistrationFormType extends AbstractType
                         'message' => 'Veuillez saisir une date de naissance !',
                     ]),
                 ],
+                'invalid_message' => 'Votre saisie n\'est pas un date !',
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'mapped' => false,

@@ -40,6 +40,7 @@ class CommandeIndividuelleType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'invalid_message' => 'Veuillez sélectionner un sandwich !',
             ])
             ->add('boissonChoisie', EntityType::class, [
                 'label' => 'Choisir une boisson',
@@ -54,6 +55,7 @@ class CommandeIndividuelleType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'invalid_message' => 'Veuillez sélectionner une boisson !',
             ])
             ->add('dessertChoisi', EntityType::class, [
                 'label' => 'Choisir un dessert',
@@ -68,6 +70,7 @@ class CommandeIndividuelleType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'invalid_message' => 'Veuillez sélectionner un dessert !',
             ])
             ->add('prendreChips', ChoiceType::class, [
                 'label' => 'Prendre des chips',
@@ -102,6 +105,9 @@ class CommandeIndividuelleType extends AbstractType
                 ],
                 'required' => true,
                 'attr' => ["onChange" => "update()"],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez choisir une raison valable !'])
+                ],
             ])
             ->add('raisonCommandeAutre', TextareaType::class, [
                 'label' => 'À préciser',

@@ -45,6 +45,7 @@ class CommandeGroupeType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'data' => $options['sandwichChoisi1']?->getSandwichChoisi(),
+                'invalid_message' => 'Veuillez sélectionner un sandwich !',
             ])
             ->add('nbSandwichChoisi1', NumberType::class, [
                 'label' => 'Nombre du premier sandwich choisi',
@@ -56,7 +57,12 @@ class CommandeGroupeType extends AbstractType
                         'match' => false,
                         'pattern' => "/[\-]/",
                         'message' => "Veuillez saisir un nombre positif !",
-                    ])
+                    ]),
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Veuillez saisir un nombre de sandwich commandé !'
+                        ])
+                    ]
                 ],
                 'data' => $options['sandwichChoisi1']?->getNombreSandwich(),
             ])
@@ -75,6 +81,7 @@ class CommandeGroupeType extends AbstractType
                 'multiple' => false,
                 'required' => true,
                 'data' => $options['sandwichChoisi2']?->getSandwichChoisi(),
+                'invalid_message' => 'Veuillez sélectionner un sandwich !',
             ])
             ->add('nbSandwichChoisi2', NumberType::class, [
                 'label' => 'Nombre du deuxième sandwich choisi',
@@ -86,7 +93,12 @@ class CommandeGroupeType extends AbstractType
                         'match' => false,
                         'pattern' => "/[\-]/",
                         'message' => "Veuillez saisir un nombre positif !",
-                    ])
+                    ]),
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'Veuillez saisir un nombre de sandwich commandé !'
+                        ])
+                    ]
                 ],
                 'data' => $options['sandwichChoisi2']?->getNombreSandwich(),
             ])
@@ -102,17 +114,17 @@ class CommandeGroupeType extends AbstractType
             ->add('commentaireCommande', TextareaType::class, [
                 'label' => 'Commentaire sur la commande',
                 'help' => 'Ex : nombre d\'élève, allergies, d\'autres contraintes...',
-                'required' => true,
+                'required' => $options['requiredNonAdmin'],
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un commentaire'])
+                    new NotBlank(['message' => 'Veuillez saisir un commentaire !'])
                 ],
             ])
             ->add('motifSortie', TextareaType::class, [
                 'label' => 'Motif de la sortie',
                 'help' => 'Ex : Description de la sortie, nombre de participant...',
-                'required' => true,
+                'required' => $options['requiredNonAdmin'],
                 'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un motif.'])
+                    new NotBlank(['message' => 'Veuillez saisir un motif de sortie !'])
                 ],
             ])
             ->add('dateHeureLivraison', DateTimeType::class, [
@@ -140,6 +152,7 @@ class CommandeGroupeType extends AbstractType
                         ->orderBy('l.libelleLieu', 'ASC');
                 },
                 'choice_label' => 'libelleLieu',
+                'invalid_message' => 'Veuillez sélectionner un lieu de livraison !',
                 'required' => true,
             ])
             ->add('commandeur', EntityType::class, [
@@ -172,6 +185,7 @@ class CommandeGroupeType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'required' => true,
+                'invalid_message' => 'Veuillez sélectionner un dessert !',
             ]);
     }
 
@@ -180,9 +194,10 @@ class CommandeGroupeType extends AbstractType
         $resolver->setDefaults([
             'data_class' => CommandeGroupe::class,
             'attr' => ['id' => 'formCommandeGroupe'],
-            'limiteDateSortie' => 7,
+            'limiteDateSortie' => 0,
             'sandwichChoisi1' => SandwichCommandeGroupe::class,
             'sandwichChoisi2' => SandwichCommandeGroupe::class,
+            'requiredNonAdmin' => true,
         ]);
     }
 }
