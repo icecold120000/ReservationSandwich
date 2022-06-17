@@ -48,6 +48,7 @@ class InscriptionCantineController extends AbstractController
                                SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
+        $eleveMissing = [];
         $cantineFile = new Fichier();
         $form = $this->createForm(FichierType::class, $cantineFile);
         $form->handleRequest($request);
@@ -80,8 +81,9 @@ class InscriptionCantineController extends AbstractController
             $entityManager->persist($cantineFile);
             $entityManager->flush();
 
-            // Traite les données du fichier Excel et l'envoie dans la base de donnée
-            InscriptionCantineController::creerCantine($cantineFile->getFileName());
+            // Traite les données du fichier Excel, l'envoie dans la base de donnée
+            // retourne des élèves manquants
+            $eleveMissing = $this->creerCantine($cantineFile->getFileName());
 
             // Affiche le message de validation
             $this->addFlash(
@@ -89,12 +91,18 @@ class InscriptionCantineController extends AbstractController
                 'Les inscriptions ont été sauvegardées ou modifiées !'
             );
 
-            return $this->redirectToRoute('inscription_cantine_file');
+            return $this->render('inscription_cantine/cantineFile.html.twig', [
+                'fichierUser' => $cantineFile,
+                'form' => $form->createView(),
+                'eleveMissingTab' => $eleveMissing,
+            ]);
         }
+
 
         return $this->render('inscription_cantine/cantineFile.html.twig', [
             'fichierUser' => $cantineFile,
             'form' => $form->createView(),
+            'eleveMissingTab' => $eleveMissing,
         ]);
     }
 
@@ -102,9 +110,11 @@ class InscriptionCantineController extends AbstractController
      * @throws NonUniqueResultException
      * @throws Exception
      */
-    private function creerCantine(string $fileName): void
+    private function creerCantine(string $fileName): array|null
     {
         $cantineCount = 0;
+        $eleveMissingBdd = [];
+        $i = 0;
         $cantineNonArchive = $this->inscritCantRepo->findByArchive(false);
         /* Parcours le tableau donné par le fichier Excel*/
         while ($cantineCount < sizeof($this->getDataFromFile($fileName))) {
@@ -112,68 +122,82 @@ class InscriptionCantineController extends AbstractController
             foreach ($this->getDataFromFile($fileName) as $row) {
                 /*Parcours les données d'une inscription*/
                 foreach ($row as $rowData) {
-                    if ($rowData[""][0] != null or $rowData[""][0] != "Nom") {
-                        /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
-                        if (array_key_exists('Nom', $rowData)
-                            && !empty($rowData['Nom'])) {
-                            $birthday = null;
-                            if (array_key_exists('Date de naissance', $rowData)
-                                && !empty($rowData['Date de naissance'])) {
-                                $birthday = new DateTime($rowData['Date de naissance']);
-                            }
+                    /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
+                    if (array_key_exists('Nom', $rowData) && !empty($rowData['Nom']) && $rowData['Nom'] != 'Nom') {
+                        $birthday = null;
+                        if (array_key_exists('Date de naissance', $rowData)
+                            && !empty($rowData['Date de naissance'])) {
+                            $birthday = new DateTime($rowData['Date de naissance']);
+                        }
 
-                            /*Recherche l'élève dans la base de donnée*/
-                            $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
-                                $rowData['Prénom'],
-                                $birthday
-                            );
+                        /*Recherche l'élève dans la base de donnée*/
+                        $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
+                            $rowData['Prénom'],
+                            $birthday
+                        );
 
+                        if ($eleveExcel != null) {
                             $cantineExcel = $this->inscritCantRepo->findOneBy(['eleve' => $eleveExcel]);
-
-                            /*Vérifie si l'adulte dans le fichier est dans le tableau des non archivé*/
+                            /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
                             if (in_array($cantineExcel, $cantineNonArchive)) {
-
-                                /*Enlève dans le tableau des non archivé les adultes
+                                /*Enlève dans le tableau des non archivé les élèves
                                  qui sont dans le fichier excel*/
                                 if (($key = array_search($cantineExcel, $cantineNonArchive)) !== false) {
                                     unset($cantineNonArchive[$key]);
                                 }
                             }
-
-                            /* Si l'élève est trouvé et doit être modifié*/
+                            /* Si l'inscription est trouvée et doit être modifiée*/
                             if ($cantineExcel !== Null) {
                                 $cantineExcel->setRepasJ1(!empty($rowData['Repas Midi J1']))
                                     ->setRepasJ2(!empty($rowData['Repas Midi J2']))
                                     ->setRepasJ3(!empty($rowData['Repas Midi J3']))
                                     ->setRepasJ4(!empty($rowData['Repas Midi J4']))
                                     ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                                $this->entityManager->persist($cantineExcel);
 
-                            } /*S'il n'existe pas alors on le crée
-                         en tant qu'un nouvel élève*/
+                            } /*S'il n'existe pas alors on le crée en tant qu'une nouvelle inscription à la cantine pour cette élève*/
                             else {
-                                $inscription = new InscriptionCantine();
-                                $inscription->setEleve($eleveExcel)
-                                    ->setRepasJ1(!empty($rowData['Repas Midi J1']))
-                                    ->setRepasJ2(!empty($rowData['Repas Midi J2']))
-                                    ->setRepasJ3(!empty($rowData['Repas Midi J3']))
-                                    ->setRepasJ4(!empty($rowData['Repas Midi J4']))
-                                    ->setRepasJ5(!empty($rowData['Repas Midi J5']));
-                                $inscription->setArchiveInscription(false);
-                                $this->entityManager->persist($inscription);
+                                /*Vérifie si le nombre de repas est suprieur à zéro */
+                                if ($eleveExcel->getNbRepas() > 0) {
+                                    $inscription = new InscriptionCantine();
+                                    $inscription->setEleve($eleveExcel)
+                                        ->setRepasJ1(!empty($rowData['Repas Midi J1']))
+                                        ->setRepasJ2(!empty($rowData['Repas Midi J2']))
+                                        ->setRepasJ3(!empty($rowData['Repas Midi J3']))
+                                        ->setRepasJ4(!empty($rowData['Repas Midi J4']))
+                                        ->setRepasJ5(!empty($rowData['Repas Midi J5']));
+                                    $inscription->setArchiveInscription(false);
+                                    $this->entityManager->persist($inscription);
+                                }
                             }
+                        } else {
+                            /*Récupére l'èlève manquant*/
+                            $eleveMissingBdd[$i] = ["prenom" => $rowData['Prénom'], "nom" => $rowData['Nom'], "dateDeNaissance" => $rowData['Date de naissance']];
+                            $i++;
                         }
-                        $cantineCount++;
                     }
+                    $cantineCount++;
                 }
             }
         }
         /*Reste que toutes les inscriptions non archivées où les élèves ont quitté l'établissement*/
         foreach ($cantineNonArchive as $inscription) {
             $inscription->setArchiveInscription(true);
-            $this->entityManager->persist($inscription);
         }
+
         $this->entityManager->flush();
+
+        if ($eleveMissingBdd != []) {
+            $this->addFlash(
+                'eleveMissing',
+                'Le(s) inscriptions de(s) élève(s) suivant(s) n\'ont pas été prise(s) en compte !
+                Veuillez vérifié l\'orthographe, la date de naissance
+                 ou la présence dans la base de données de(s) élève(s) suivant(s) :'
+
+            );
+            return $eleveMissingBdd;
+        } else {
+            return null;
+        }
     }
 
     public function getDataFromFile(string $fileName): array
@@ -192,8 +216,35 @@ class InscriptionCantineController extends AbstractController
 
         /** @var string $fileString */
         $fileString = file_get_contents($file);
-
-        return $serializer->decode($fileString, $fileExtension);
+        $dataRaw = $serializer->decode($fileString, $fileExtension);
+        $data = [];
+        foreach ($dataRaw['Feuil1'] as $row) {
+            if (key($row) != null or key($row) == "") {
+                if (key($row) == "") {
+                    $temp1 = [
+                        "Nom" => $row[""][0],
+                    ];
+                } else {
+                    $temp1 = [
+                        "Nom" => $row[key($row)],
+                    ];
+                }
+                $temp2 = [
+                    "Prénom" => $row[""][1],
+                    "Date de naissance" => $row[""][2],
+                    "Code classe" => $row[""][3],
+                    "Nombre de repas Midi" => $row[""][4],
+                    "Repas Midi J1" => $row[""][5],
+                    "Repas Midi J2" => $row[""][6],
+                    "Repas Midi J3" => $row[""][7],
+                    "Repas Midi J4" => $row[""][8],
+                    "Repas Midi J5" => $row[""][9],
+                    "Num Badge" => $row[""][10]
+                ];
+                $data[][] = array_merge($temp1, $temp2);
+            }
+        }
+        return $data;
 
     }
 }

@@ -71,16 +71,20 @@ class UserType extends AbstractType
             ->add('nomUser', TextType::class, [
                 'label' => 'Nom de l\'utilisateur',
                 'required' => true,
-                new NotBlank([
-                    'message' => 'Veuillez saisir un nom d\'utilisateur !'
-                ])
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nom de l\'utilisateur !'
+                    ])
+                ]
             ])
             ->add('prenomUser', TextType::class, [
                 'label' => 'Prénom de l\'utilisateur',
                 'required' => true,
-                new NotBlank([
-                    'message' => 'Veuillez saisir un prénom d\'utilisateur !'
-                ])
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un prénom de l\'utilisateur !'
+                    ])
+                ]
             ])
             ->add('dateNaissanceUser', DateType::class, [
                 'label' => 'Date de naissance de l\'utilisateur',

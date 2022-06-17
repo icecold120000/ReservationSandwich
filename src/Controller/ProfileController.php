@@ -100,4 +100,13 @@ class ProfileController extends AbstractController
     {
         return $this->render('profile/adulte.html.twig');
     }
+
+    /**
+     * @Route("/profile/user/{userTokenHash}", name="profile_user")
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     */
+    public function user(): Response
+    {
+        return $this->render('profile/user.html.twig');
+    }
 }

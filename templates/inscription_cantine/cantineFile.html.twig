@@ -8,10 +8,35 @@
     <main class="container-fluid">
         <h1>Modifier les inscriptions à la cantine.</h1>
         <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine !</h2>
-
+        <h3>Attention: Vous ne pouvez pas créer des élèves sur cette page !</h3>
+        <h3>Veuillez appuyer sur le bouton suivant.</h3>
+        <a class="btn btn-info" href="{{ path('eleve_file') }}">Ajouter une liste d'élèves</a>
         {% for message in app.flashes('SuccessCantineFileSubmit') %}
             <div class="flash-success">
                 {{ message }}
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('eleveMissing') %}
+            <div class="erreur">
+                {{ message|replace({"!":"!</br>"})|raw }}
+                <table class="table tableAdmin">
+                    <thead>
+                    <tr>
+                        <th>Prénom</th>
+                        <th>Nom</th>
+                        <th>Date de naissance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key in eleveMissingTab|keys %}
+                        <tr>
+                            <td>{{ eleveMissingTab[key].prenom }}</td>
+                            <td>{{ eleveMissingTab[key].nom }}</td>
+                            <td>{{ eleveMissingTab[key].dateDeNaissance|date('d/m/Y') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endfor %}
         <div class="fichierForm">

@@ -89,6 +89,11 @@
                                        href="{{ path('profile_cuisine',{'userTokenHash': app.user.tokenHash}) }}">
                                         Voir profil
                                     </a>
+                                {% else %}
+                                    <a class="dropdown-item"
+                                       href="{{ path('profile_user',{'userTokenHash': app.user.tokenHash}) }}">
+                                        Voir profil
+                                    </a>
                                 {% endif %}
                             </li>
                             <li><a class="dropdown-item" href="{{ path('profile_edit',{'id': app.user.id}) }}">Éditer
