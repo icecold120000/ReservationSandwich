@@ -101,8 +101,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $userBirthday = $form->get('dateNaissanceUser')->getData();
+            /*Vérification si l'utilisateur existe dans la base de données*/
             if ($userBirthday != null) {
                 $userRelated = $userRepo->findByNomPrenomAndBirthday($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $userBirthday);
@@ -337,7 +337,9 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*Si le champ mot de passe est rempli*/
             if ($form->get('password')->getData() != null) {
+                /*Hash le mot de passe*/
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -350,7 +352,7 @@ class UserController extends AbstractController
                 'SuccessUser',
                 'L\'utilisateur a été modifié !'
             );
-
+            /*Regénére le token hash*/
             $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $entityManager->flush();
             return $this->redirectToRoute('user_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
@@ -365,6 +367,7 @@ class UserController extends AbstractController
     /**
      * @Route("/{id}", name="user_delete", methods={"POST"})
      * @throws NonUniqueResultException
+     * Formualire de supression d'un utilisateur
      */
     public function delete(Request                      $request,
                            User                         $user,
@@ -377,6 +380,9 @@ class UserController extends AbstractController
             $eleveFound = $eleveRepository->findOneByCompte($user);
             $adulteFound = $adulteRepository->findOneByCompte($user);
 
+            /*Vérifie si l'utilisateur est rattaché un élève,
+             supprime son inscription à la cantine et l'élève concerné.
+            */
             if ($eleveFound) {
                 $cantine = $cantineRepository->findOneByEleve($eleveFound->getId());
                 $entityManager->remove($cantine);
@@ -384,7 +390,9 @@ class UserController extends AbstractController
                 $entityManager->remove($eleveFound);
                 $entityManager->flush();
             }
-
+            /*Vérifie si l'utilisateur est rattaché un adulte,
+             supprime son inscription à la cantine et l'adulte concerné.
+            */
             if ($adulteFound) {
                 $entityManager->remove($adulteFound);
                 $entityManager->flush();

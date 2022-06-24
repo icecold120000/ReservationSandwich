@@ -94,7 +94,7 @@ class Dessert
         return $this->ingredientDessert;
     }
 
-    public function setIngredientDessert(string $ingredientDessert): self
+    public function setIngredientDessert(?string $ingredientDessert): self
     {
         $this->ingredientDessert = $ingredientDessert;
 
@@ -106,7 +106,7 @@ class Dessert
         return $this->commentaireDessert;
     }
 
-    public function setCommentaireDessert(string $commentaireDessert): self
+    public function setCommentaireDessert(?string $commentaireDessert): self
     {
         $this->commentaireDessert = $commentaireDessert;
 

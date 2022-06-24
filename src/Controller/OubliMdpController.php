@@ -28,6 +28,7 @@ class OubliMdpController extends AbstractController
      * @Route("/oubli/mdp", name="oubli_mdp")
      * @throws TransportExceptionInterface
      * @throws NonUniqueResultException
+     * Formulaire d'oubli de mot de passe
      */
     public function forgottenPassword(Request         $request,
                                       MailerInterface $mailer,
@@ -37,20 +38,22 @@ class OubliMdpController extends AbstractController
         $email = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $email->get("emailFirst")->getData();
-            $dateNaissance = $email->get("dateAnniversaire")->getData();
-            $data = $userRepo->findOneByEmailAndDate($user, $dateNaissance);
 
-            if (empty($data))
+            $userEmail = $email->get("emailFirst")->getData();
+            $dateNaissance = $email->get("dateAnniversaire")->getData();
+            $user = $userRepo->findOneByEmailAndDate($userEmail, $dateNaissance);
+            /*Vérifie si l'utilisateur existe et renvoie un message d'erreur*/
+            if (empty($user))
                 $error = "L'adresse mail n'est lié à aucun compte !";
             else {
+                /*Envoie d'un email*/
                 $email = (new TemplatedEmail())
                     ->from('cuisine.saintvincentsenlis@gmail.com')
-                    ->to($data->getEmail())
+                    ->to($user->getEmail())
                     ->subject('Votre réinitialisation de mot de passe')
                     ->htmlTemplate('email/send_oubli_mdp.html.twig')
                     ->context([
-                        'user' => $data
+                        'user' => $user
                     ]);
 
                 $mailer->send($email);
@@ -74,6 +77,7 @@ class OubliMdpController extends AbstractController
      * @Route("/oubli/mdp/{userTokenHash}", name="oubli_mdp_reset", methods={"GET","POST"})
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      * @throws NonUniqueResultException
+     * Formulaire de réinitialisation de mot de passe
      */
     public function resetPassword(EntityManagerInterface      $em,
                                   User                        $user,
@@ -86,6 +90,7 @@ class OubliMdpController extends AbstractController
         $userFound = $userRepo->findOneByEmail($user->getEmail());
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*Hash le nouveau mot de passe*/
             if ($form->get('plainPassword')->getData()) {
                 $userFound->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -100,7 +105,7 @@ class OubliMdpController extends AbstractController
                 'SuccessResetMdp',
                 'Votre mot de passe a été modifié !'
             );
-
+            /*Authentifie l'utilisateur*/
             new Passport(
                 new UserBadge($userFound->getEmail()),
                 new PasswordCredentials($request->request->get('plainPassword', '')),

@@ -42,15 +42,31 @@ class CommandeGroupeController extends AbstractController
                         LimitationCommandeRepository    $limiteRepo,
                         UserRepository                  $userRepository): Response
     {
+        /*Récupèration de l'utilisateur courant et son rôle*/
         $user = $userRepository->find($this->getUser());
         $roles = $user->getRoles();
+
+        /*Récupération de la date d'ajourd'hui*/
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
+
+        /*Récupération de la donnée permettant de désactiver ou non le service de commandes*/
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
+
+        /*Récupération des produits disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boisson = $boissonRepo->findOneByNom('Eau');
         $desserts = $dessertRepo->findByDispo(true);
+
+        /*Récupération de la limite de 7 jours avant les commandes pour les sorties*/
         $limiteDate = $limiteRepo->findOneById(5);
         $commandeGroupe = new CommandeGroupe();
+
+        /*Vérifie si la limite est active et que l'utilisateur n'est un administrateur ou
+        un personnel de cuisine
+        si oui la limitation est mise en place pour l'utilisateur dans le formulaire
+        sinon la limitation n'est pas en place et certains champs ne sont pas obligatoire pour
+        administrateur et personnel de cuisine
+        */
         if ($limiteDate->getIsActive() && (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles))) {
             $form = $this->createForm(CommandeGroupeType::class,
                 $commandeGroupe, ['limiteDateSortie' => $limiteDate->getNbLimite(),
@@ -62,22 +78,36 @@ class CommandeGroupeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*Récupère les sandwichs commandés*/
             $sandwich1 = $form->get('sandwichChoisi1')->getData();
             $sandwich2 = $form->get('sandwichChoisi2')->getData();
 
+            /*Vérifie si les sandwichs commandes sont différents
+             si oui, la commande groupée est réalisé
+             sinon un message d'erreur est affiché
+            */
             if ($sandwich1 != $sandwich2) {
                 $commandeur = $form->get('commandeur')->getData();
-
+                /*Si le champ personne qui a commandé ce sandwich n'est
+                 pas null et affecte cette commande
+                */
                 if ($commandeur) {
                     $commandeGroupe->setCommandeur($commandeur);
                 } else {
                     $commandeGroupe->setCommandeur($user);
                 }
 
-                if (in_array("ROLE_ADMIN", $roles) && ($form->get('motifSortie')->getData() === null || $form->get('commentaireCommande')->getData()) === null) {
-                    $commandeGroupe
-                        ->setMotifSortie("Commande faite par un administrateur ou personnel de cuisine")
-                        ->setCommentaireCommande("Commande faite par un administrateur ou personnel de cuisine");
+                /*Vérifie si l'utilisateur est un administrateur ou un personnel de cuisine
+                 et qu'un des champs non requis par cet utilisateur n'est pas rempli*/
+                if ((in_array("ROLE_ADMIN", $roles) || in_array("ROLE_CUISINE", $roles))
+                    && ($form->get('motifSortie')->getData() === null
+                        || $form->get('commentaireCommande')->getData()) === null) {
+                    if ($form->get('motifSortie')->getData() != null) {
+                        $commandeGroupe->setMotifSortie($form->get('motifSortie')->getData());
+                    }
+                    if ($form->get('commentaireCommande')->getData() != null) {
+                        $commandeGroupe->setCommentaireCommande($form->get('commentaireCommande')->getData());
+                    }
                 }
 
                 $commandeGroupe
@@ -87,6 +117,8 @@ class CommandeGroupeController extends AbstractController
                 $entityManager->persist($commandeGroupe);
                 $entityManager->flush();
 
+                /*Récupère les sandwichs choisis et
+                 leur nombre commandé sous forme de tableau*/
                 $sandwichsChoisi = [
                     $sandwich1,
                     $sandwich2
@@ -97,6 +129,9 @@ class CommandeGroupeController extends AbstractController
                 ];
 
                 $i = 0;
+                /*Pour chaque sandwich choisi, il crée un sandwich commande groupe et
+                 affecte la commande groupée réalisée ci-dessus
+                */
                 foreach ($sandwichsChoisi as $sandwichChoisi) {
                     $groupeSandwich = new SandwichCommandeGroupe();
                     $groupeSandwich
@@ -121,7 +156,10 @@ class CommandeGroupeController extends AbstractController
             return $this->redirectToRoute('commande_groupe_new',
                 [], Response::HTTP_SEE_OTHER);
         }
-
+        /*Vérifie si le service de restauration est désactivé, il retourne sur la page
+         de désactivation de service sinon il retourne le formulaire
+         d'ajout d'une commande groupée
+        */
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
@@ -136,6 +174,7 @@ class CommandeGroupeController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="commande_groupe_delete_view", methods={"GET", "POST"})
+     * Page de pré-suppression d'une commande groupée
      */
     public function delete_view(CommandeGroupe $commandeGroupe): Response
     {
@@ -146,9 +185,13 @@ class CommandeGroupeController extends AbstractController
 
     /**
      * @Route("/validate/{id}", name="validate_commande_groupe",methods={"GET","POST"})
+     * Fonction permettant de valider ou invalider une commande groupée
      */
     public function validateCommande(CommandeGroupe $commande, EntityManagerInterface $entityManager): RedirectResponse
     {
+        /*Récupère le champ est valide de commande groupée et vérifie si
+         elle est valide ou non et le change à son contraire
+        */
         if ($commande->getEstValide() === false) {
             $commande->setEstValide(true);
         } else {
@@ -158,7 +201,6 @@ class CommandeGroupeController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('commande_individuelle_admin', [], Response::HTTP_SEE_OTHER);
-
     }
 
     /**
@@ -173,20 +215,30 @@ class CommandeGroupeController extends AbstractController
                          SandwichCommandeGroupeRepository $sandComRepo,
                          UserRepository                   $userRepository): Response
     {
+        /*Récupération de la donnée qui désactive ou non le service de commande*/
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
+
+        /*Récupère les sandwichs et desserts disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
+
+        /*Récupère les sandwichs choisis et les affectent dans le formulaire de modfication*/
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
         $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe, ['limiteDateSortie' => 0
             , 'sandwichChoisi1' => $groupeSandwich[0], 'sandwichChoisi2' => $groupeSandwich[1]]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /*Récupère les sandwichs du formulaire*/
             $sandwich1 = $form->get('sandwichChoisi1')->getData();
             $sandwich2 = $form->get('sandwichChoisi2')->getData();
+
+            /*Vérifie si les sandwichs sont différents*/
             if ($sandwich1 != $sandwich2) {
                 $commandeur = $form->get('commandeur')->getData();
 
+                /*Vérifie si le champ commandeur est rempli*/
                 if ($commandeur) {
                     $commandeGroupe->setCommandeur($commandeur);
                 } else {
@@ -194,6 +246,7 @@ class CommandeGroupeController extends AbstractController
                 }
                 $entityManager->flush();
 
+                /*Récupère les sandwichs choisis et leur nombre commandé */
                 $sandwichsChoisi = [
                     $sandwich1,
                     $sandwich2
@@ -204,6 +257,7 @@ class CommandeGroupeController extends AbstractController
                 ];
                 $i = 0;
 
+                /*Modifie les sandwichs affectés à cette commande groupée*/
                 foreach ($sandwichsChoisi as $sandwichChoisi) {
                     $groupeSandwich[$i]
                         ->setCommandeAffecte($commandeGroupe)
@@ -227,7 +281,9 @@ class CommandeGroupeController extends AbstractController
             return $this->redirectToRoute('commande_groupe_edit',
                 ['id' => $commandeGroupe->getId()], Response::HTTP_SEE_OTHER);
         }
-
+        /*Vérifie si le service de commande est désactivé, il retourne la page de désactivation
+         de service sinon il retourne le formulaire de modification de la commande groupée
+         */
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
@@ -243,11 +299,18 @@ class CommandeGroupeController extends AbstractController
     /**
      * @Route("/{id}", name="commande_groupe_delete", methods={"POST"})
      */
-    public function delete(Request                $request,
-                           CommandeGroupe         $commandeGroupe,
-                           EntityManagerInterface $entityManager): Response
+    public function delete(Request                          $request,
+                           CommandeGroupe                   $commandeGroupe,
+                           EntityManagerInterface           $entityManager,
+                           SandwichCommandeGroupeRepository $sandComRepo): Response
     {
         if ($this->isCsrfTokenValid('delete' . $commandeGroupe->getId(), $request->request->get('_token'))) {
+
+            /*Récupère les sandwichs affectés à la commande groupée et les suppriment*/
+            $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
+            foreach ($groupeSandwich as $sandwich) {
+                $entityManager->remove($sandwich);
+            }
             $entityManager->remove($commandeGroupe);
             $entityManager->flush();
             $this->addFlash(

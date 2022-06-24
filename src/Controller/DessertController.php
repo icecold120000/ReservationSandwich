@@ -23,11 +23,16 @@ class DessertController extends AbstractController
 {
     /**
      * @Route("/index/{page}",defaults={"page" : 1}, name="dessert_index", methods={"GET","POST"})
+     * @param DessertRepository $dessertRepo
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param int $page Utilisé sur les filtres et la pagination
+     * @return Response
      */
     public function index(DessertRepository  $dessertRepo,
                           Request            $request,
                           PaginatorInterface $paginator,
-                                             $page = 1): Response
+                          int                $page = 1): Response
     {
         $desserts = $dessertRepo->findAll();
         $form = $this->createForm(FilterMenuType::class, null, ['method' => 'GET']);
@@ -54,6 +59,7 @@ class DessertController extends AbstractController
 
     /**
      * @Route("/new", name="dessert_new", methods={"GET", "POST"})
+     * Formulaire d'ajout d'un dessert
      */
     public function new(Request                $request,
                         EntityManagerInterface $entityManager,
@@ -66,7 +72,7 @@ class DessertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierDessert */
             $fichierDessert = $form->get('imageDessert')->getData();
-
+            /*Vérifie si l'image du deseert est rempli*/
             if ($fichierDessert) {
                 $originalFilename = pathinfo($fichierDessert
                     ->getClientOriginalName(), PATHINFO_FILENAME);
@@ -107,12 +113,14 @@ class DessertController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="dessert_edit", methods={"GET", "POST"})
+     * Formulaire de modification d'un dessert
      */
     public function edit(Request                $request,
                          Dessert                $dessert,
                          EntityManagerInterface $entityManager,
                          SluggerInterface       $slugger): Response
     {
+        /*Récupération de l'ancienne image*/
         $oldDessert = $dessert->getImageDessert();
         $form = $this->createForm(DessertType::class, $dessert, ['fichierRequired' => false]);
         $form->handleRequest($request);
@@ -120,7 +128,7 @@ class DessertController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierDessert */
             $fichierDessert = $form->get('imageDessert')->getData();
-
+            /*Vérifie si l'image a changé*/
             if ($fichierDessert) {
                 $originalFilename = pathinfo($fichierDessert
                     ->getClientOriginalName(), PATHINFO_FILENAME);
@@ -138,6 +146,7 @@ class DessertController extends AbstractController
                     throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
                 }
+                /*Supprimer le fichier de l'ancienne image */
                 unlink($this->getParameter('dessert_directory') . $oldDessert);
                 $dessert->setImageDessert($newFilename);
             }
@@ -160,6 +169,7 @@ class DessertController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="dessert_delete_view", methods={"GET"})
+     * Page de pré-suppression d'un dessert
      */
     public function delete_view(Dessert $dessert): Response
     {
@@ -170,12 +180,14 @@ class DessertController extends AbstractController
 
     /**
      * @Route("/{id}", name="dessert_delete", methods={"POST"})
+     * Formulaire de suppression d'un dessert
      */
     public function delete(Request                $request,
                            Dessert                $dessert,
                            EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $dessert->getId(), $request->request->get('_token'))) {
+            /*Supprimer le fichier*/
             unlink($this->getParameter('dessert_directory') . $dessert->getImageDessert());
             $entityManager->remove($dessert);
             $entityManager->flush();

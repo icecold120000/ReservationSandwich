@@ -57,9 +57,6 @@ class UserType extends AbstractType
                 'label' => 'Mot de passe de l\'utilisateur',
                 'required' => $options['password_required'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez saisir votre mot de passe !',
-                    ]),
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe doit comporter au moins 6 caractères !',
@@ -102,11 +99,11 @@ class UserType extends AbstractType
                     'Oui' => true,
                     'Non' => false,
                 ],
-                'required' => false,
+                'required' => true,
                 'empty_data' => false,
             ])
             ->add('eleve', EntityType::class, [
-                'label' => 'Compte auquel l\'utilisateur est rattaché',
+                'label' => 'Élève',
                 'mapped' => false,
                 'class' => Eleve::class,
                 'query_builder' => function (EleveRepository $er) {

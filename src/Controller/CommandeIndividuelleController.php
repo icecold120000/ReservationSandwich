@@ -64,8 +64,17 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/index/{page}",defaults={"page" : 1}, name="commande_individuelle_index", methods={"GET","POST"})
+     * @param CommandeIndividuelleRepository $comIndRepo
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param LimitationCommandeRepository $limiteRepo
+     * @param CommandeGroupeRepository $comGrRepo
+     * @param UserRepository $userRepo
+     * @param int $page Utlisé pour les filtres et la pagination
+     * @return Response
      * @throws NonUniqueResultException
      * @throws \Exception
+     * Historique des commandes d'un utilisateur
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface             $paginator,
@@ -73,10 +82,15 @@ class CommandeIndividuelleController extends AbstractController
                           LimitationCommandeRepository   $limiteRepo,
                           CommandeGroupeRepository       $comGrRepo,
                           UserRepository                 $userRepo,
-                                                         $page = 1): Response
+                          int                            $page = 1): Response
     {
+        /*Récupère l'utilisateur courant*/
         $user = $userRepo->find($this->getUser());
+
+        /*Affichage par défault de la page*/
         $affichageTableau = "les deux";
+
+        /*Récupèration des limites mise en place sur les commandes*/
         $limiteGroupeCom = $limiteRepo->findOneById(5);
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limiteNbJour = $limiteRepo->findOneById(2);
@@ -85,9 +99,10 @@ class CommandeIndividuelleController extends AbstractController
         $nbCommandeJournalier = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 day 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeSemaine = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeMois = count($comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
-        $limiteDate = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'),
+        $limiteDate = new DateTime('now' . $limiteJourMeme->getHeureLimite()->format('h:i'),
             new DateTimeZone('Europe/Paris'));
 
+        /*Récupère les commandes de l'utilisateur*/
         $commandes = $comIndRepo->findIndexAllNonCloture($user);
         $commandesGroupe = $comGrRepo->findAllIndexNonClotureGroupe($user);
 
@@ -144,6 +159,7 @@ class CommandeIndividuelleController extends AbstractController
     /**
      * @Route("/desactivation/{desactiveId}", name="commande_ind_desactive", methods={"GET","POST"})
      * @Entity("desactivationCommande", expr="repository.find(desactiveId)")
+     * Formulaire permettant de désactiver le service de commande
      */
     public function deactivation(DesactivationCommande  $desactiveId,
                                  EntityManagerInterface $manager): RedirectResponse
@@ -173,24 +189,32 @@ class CommandeIndividuelleController extends AbstractController
      * @throws Exception
      * @throws NonUniqueResultException
      * @throws \Exception
+     * Gestion des commandes
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface             $paginator,
                           Request                        $request,
                           CommandeGroupeRepository       $comGrRepo,
-                                                         $page = 1): Response
+                          int                            $page = 1): Response
     {
+        /*Récupération des commandes + affichage par défault de la page*/
         $affichageTableau = "les deux";
         $commandes = $comIndRepo->findAllNonCloture();
         $commandesGroupe = $comGrRepo->findAllAdminNonClotureGroupe();
 
+        /*Formulaire d'exportation de commandes*/
         $export = $this->createForm(FilterExportationType::class);
         $exportReq = $export->handleRequest($request);
 
         if ($export->isSubmitted() && $export->isValid()) {
+            /*Récupération et formatage de la date choisi par l'utilisateur*/
             $dateChoisi = $exportReq->get('dateExport')->getData();
             $dateChoisi = $dateChoisi->format('y-m-d');
+
+            /*Récupération de l'affichage du rendu*/
             $modalite = $exportReq->get('modaliteCommande')->getData();
+
+            /*Récupération des commandes et commandes groupées selon l'affichage de l'export*/
             if ($exportReq->get('affichageExport')->getData() == "les deux" ||
                 $exportReq->get('affichageExport')->getData() == "individuelle") {
                 $commandesExport = $comIndRepo->exportationCommande($dateChoisi);
@@ -203,27 +227,37 @@ class CommandeIndividuelleController extends AbstractController
             } else {
                 $commandesGroupeExport = null;
             }
+
+            /*Récupération du type rendu attendu par l'utilisateur (PDF, Excel ou Impression)*/
             $methode = $exportReq->get('methodeExport')->getData();
             if ($methode == "PDF") {
+                /*Fonction permettant de mettre en pdf les commandes*/
                 CommandeIndividuelleController::pdfDownload($commandesExport, $commandesGroupeExport, $modalite, $exportReq->get('dateExport')->getData());
             } elseif ($methode == "Excel") {
+                /*Vérifie si le rendu attendu est les commandes sont affichées un par un*/
                 if ($modalite == "Séparées") {
                     $commandeRow = [];
                     $commandeGroupeRow = [];
+                    /*Vérifie s'il y a des commandes individuelles a exporté*/
                     if ($commandesExport) {
+                        /*Pour chaque commande*/
                         foreach ($commandesExport as $commande) {
+                            /*Vérifie si la commande est faite par un élève et récupère la classe de l'élève
+                             Sinon les adultes sont attribués une classe adulte
+                            */
                             if (in_array(User::ROLE_ELEVE, $commande->getCommandeur()->getRoles())) {
                                 $eleve = $this->eleveRepo->findOneByCompte($commande->getCommandeur());
                                 $classe = $eleve->getClasseEleve()->getCodeClasse();
                             } else {
                                 $classe = "Adulte";
                             }
-
+                            /*Récupère si la commande a des chips commandés*/
                             if ($commande->getPrendreChips()) {
                                 $chips = "Oui";
                             } else {
                                 $chips = "Non";
                             }
+                            /*Place les données dans une ligne*/
                             $commandeRow[] = [
                                 'Date et heure de Livraison' => $commande->getDateHeureLivraison()->format('d/m/y h:i'),
                                 'Prénom et Nom' => $commande->getCommandeur()->getPrenomUser() . ' ' . $commande->getCommandeur()->getNomUser(),
@@ -235,6 +269,9 @@ class CommandeIndividuelleController extends AbstractController
                     }
                     if ($commandesGroupeExport) {
                         foreach ($commandesGroupeExport as $commandeGroupe) {
+                            /*Vérifie si la commande est faite par un élève et récupère la classe de l'élève
+                             Sinon les adultes sont attribués une classe adulte
+                            */
                             if (in_array(User::ROLE_ELEVE, $commandeGroupe->getCommandeur()->getRoles())) {
                                 $eleve = $this->eleveRepo->findOneByCompte($commandeGroupe->getCommandeur());
                                 $classe = $eleve->getClasseEleve()->getCodeClasse();
@@ -244,11 +281,12 @@ class CommandeIndividuelleController extends AbstractController
 
                             $sandwichsGroupe = [];
                             $nombreEleve = 0;
+                            /*Récupère les sandwichs commandés*/
                             foreach ($commandeGroupe->getSandwichCommandeGroupes() as $sandwichChoisi) {
                                 $nombreEleve = $nombreEleve + $sandwichChoisi->getNombreSandwich();
                                 $sandwichsGroupe[] = $sandwichChoisi->getNombreSandwich() . ' ' . $sandwichChoisi->getSandwichChoisi()->getNomSandwich();
                             }
-
+                            /*Place les données dans une ligne*/
                             $commandeGroupeRow[] = [
                                 'Date et heure de Livraison' => $commandeGroupe->getDateHeureLivraison()->format('d/m/y h:i'),
                                 'Prénom et Nom' => $commandeGroupe->getCommandeur()->getPrenomUser() . ' ' . $commandeGroupe->getCommandeur()->getNomUser(),
@@ -260,13 +298,18 @@ class CommandeIndividuelleController extends AbstractController
                     }
 
                     $encoder = new ExcelEncoder($defaultContext = []);
-                    if ($commandeGroupeRow != [] || $commandeRow != []) {
+                    /*Vérifie s'il y a des commandes et des commandes groupées*/
+                    if ($commandeGroupeRow != [] && $commandeRow != []) {
+                        /*Regroupe les commandes et commandes groupées dans un même
+                         tableau et le met dans un tableau qui sera dans une feuille excel
+                        */
                         $commandesRegroupe = array_merge($commandeRow, $commandeGroupeRow);
                         $data = [
                             // Array by sheet
                             'Feuille 1' => $commandesRegroupe
                         ];
                     } else {
+                        /*Met les commandes (groupées) dans un tableau qui sera dans une feuille excel*/
                         if ($commandeRow != []) {
                             $data = [
                                 // Array by sheet
@@ -301,6 +344,7 @@ class CommandeIndividuelleController extends AbstractController
                     rename($filename, $this->getParameter('exportFile_directory') . $filename);
 
                 } elseif ($modalite == "Regroupées") {
+                    /*Récupère les produits disponibles*/
                     $sandwichDispo = $this->sandwichRepo->findByDispo(true);
                     $boissonDispo = $this->boissonRepo->findByDispo(true);
                     $dessertDispo = $this->dessertRepo->findByDispo(true);
@@ -311,6 +355,7 @@ class CommandeIndividuelleController extends AbstractController
                     $nomDessert = [];
                     $nbDessert = [];
                     $nbChips = 0;
+                    /*Compte le nombre de sandwichs commandés pour chaque sandwich*/
                     foreach ($sandwichDispo as $sandwich) {
                         $nomSandwich[] = $sandwich->getNomSandwich();
                         $nombreSandwich = 0;
@@ -327,7 +372,7 @@ class CommandeIndividuelleController extends AbstractController
                             $nbSandwich[] = count($comIndRepo->findBySandwich($sandwich->getId(), $dateChoisi)) + $nombreSandwich;
                         }
                     }
-
+                    /*Compte le nombre de boissons commandés pour chaque boisson*/
                     foreach ($boissonDispo as $boisson) {
                         $nomBoisson[] = $boisson->getNomBoisson();
                         $nombreEleve = 0;
@@ -344,7 +389,7 @@ class CommandeIndividuelleController extends AbstractController
                             $nbBoisson[] = count($comIndRepo->findByBoisson($boisson->getId(), $dateChoisi)) + $nombreEleve;
                         }
                     }
-
+                    /*Compte le nombre de desserts pour chaque dessert*/
                     foreach ($dessertDispo as $dessert) {
                         $nomDessert[] = $dessert->getNomDessert();
                         $nombreEleve = 0;
@@ -356,6 +401,7 @@ class CommandeIndividuelleController extends AbstractController
                                     }
                                 }
                             }
+                            /*Récupère le nombre de chips pour les commandes groupées*/
                             $nbChips = $nbChips + $nombreEleve;
                         }
                         if ($commandesExport != null) {
@@ -363,6 +409,7 @@ class CommandeIndividuelleController extends AbstractController
                         }
                     }
 
+                    /*Place pour chaque sandwich, le nombre total de sandwich commandé*/
                     $dataRowSandwich = [];
                     for ($i = 0; $i < count($nomSandwich); $i++) {
                         $dataRowSandwich[$i] = [
@@ -371,6 +418,7 @@ class CommandeIndividuelleController extends AbstractController
                         ];
                     }
 
+                    /*Place pour chaque boisson, le nombre total de boisson commandée*/
                     $dataRowBoisson = [];
                     for ($i = 0; $i < count($nomBoisson); $i++) {
                         $dataRowBoisson[$i] = [
@@ -379,6 +427,7 @@ class CommandeIndividuelleController extends AbstractController
                         ];
                     }
 
+                    /*Place pour chaque dessert, le nombre total de dessert commandé*/
                     $dataRowDessert = [];
                     for ($i = 0; $i < count($nomDessert); $i++) {
                         $dataRowDessert[$i] = [
@@ -386,7 +435,7 @@ class CommandeIndividuelleController extends AbstractController
                             'Nombre de produit' => $nbDessert[$i],
                         ];
                     }
-
+                    /*Compte le nombre de chips des commandes individuelles*/
                     if ($commandesExport) {
                         foreach ($commandesExport as $commande) {
                             if ($commande->getPrendreChips()) {
@@ -394,7 +443,7 @@ class CommandeIndividuelleController extends AbstractController
                             }
                         }
                     }
-
+                    /*Place les données dans un tableau*/
                     $dataRow = array_merge(
                         $dataRowSandwich,
                         $dataRowBoisson,
@@ -408,7 +457,7 @@ class CommandeIndividuelleController extends AbstractController
                     );
 
                     $encoder = new ExcelEncoder($defaultContext = []);
-                    // Test data
+                    /* Place les données dans une feuille*/
                     $data = [
                         // Array by sheet
                         'Feuille 1' => $dataRow
@@ -421,7 +470,7 @@ class CommandeIndividuelleController extends AbstractController
                     // Put the content in a file with format extension for example
                     file_put_contents('Commandes_Regroupées_' . $dateChoisi->format('d-m-y') . '.xlsx', $xls);
                     $filename = 'Commandes_Regroupées_' . $dateChoisi->format('d-m-y') . '.xlsx';
-
+                    /*Permet le téléchargement du fichier*/
                     header('Content-Description: File Transfer');
                     header('Content-Type: application/octet-stream');
                     header("Cache-Control: no-cache, must-revalidate");
@@ -430,10 +479,12 @@ class CommandeIndividuelleController extends AbstractController
                     header('Content-Length: ' . filesize($filename));
                     header('Pragma: public');
                     readfile($filename);
+                    /*Déplace le fichier dans le dossier Uploads*/
                     rename($filename, $this->getParameter('excelFile_directory') . $filename);
                 }
                 return new Response();
             } elseif ($methode == "Impression") {
+                /*Ouvrir la page de pré-impression avec les données*/
                 return CommandeIndividuelleController::printPreview($modalite,
                     $exportReq->get('dateExport')->getData(),
                     $exportReq->get('affichageExport')->getData());
@@ -445,7 +496,7 @@ class CommandeIndividuelleController extends AbstractController
                 'Votre export a échoué à la suite d\'une erreur !'
             );
         }
-
+        /*Filtre de la page*/
         $form = $this->createForm(FilterAdminCommandeType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
@@ -518,7 +569,7 @@ class CommandeIndividuelleController extends AbstractController
         // Donne le context http au pdf
         $dompdf->setHttpContext($context);
 
-        // Génère le pdf et le rendu html à partir du TWIG
+        // Génère le pdf et le rendu html à partir du TWIG selon type de rendu choisi
         if ($modalite == "Séparées") {
             $html = $this->renderView('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
                 'type' => "PDF",
@@ -565,6 +616,7 @@ class CommandeIndividuelleController extends AbstractController
      */
     public function printPreview($modalite, $dateChoisi, $affichage): Response
     {
+        /*Récupèration des commandes et commandes groupées*/
         if ($affichage == "les deux" || $affichage == "individuelle") {
             $commandes = $this->comIndRepo
                 ->exportationCommande($dateChoisi->format('y-m-d'));
@@ -573,12 +625,11 @@ class CommandeIndividuelleController extends AbstractController
         }
 
         if ($affichage == "les deux" || $affichage == "groupées") {
-
             $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
         } else {
             $commandeGroupe = null;
         }
-
+        /*Affichage du rendu selon ce qui est demandé*/
         if ($modalite == "Séparées") {
             return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
                 'type' => "Impression",
@@ -615,12 +666,13 @@ class CommandeIndividuelleController extends AbstractController
                         EleveRepository                 $eleveRepository,
                         UserRepository                  $userRepo): Response
     {
+        /*Récupère l'utilisateur et son rôle*/
         $user = $userRepo->find($this->getUser());
         $roles = $user->getRoles();
         $cantine = null;
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
-        /*Limite mise en place*/
+        /*Récupère les limites mises en place*/
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
         $limiteNbJour = $limiteRepo->findOneById(2);
@@ -633,39 +685,54 @@ class CommandeIndividuelleController extends AbstractController
         $nbCommandeMois = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
 
+        /*Récupèration des produits disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
 
+        /*Formulaire de commande*/
         $commandeIndividuelle = new CommandeIndividuelle();
         $form = $this->createForm(CommandeIndividuelleType::class, $commandeIndividuelle);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
+            /*Récupère l'isncriptions à la cantine de l'élève*/
             if (in_array("ROLE_ELEVE", $roles)) {
                 $eleve = $eleveRepository->findOneByCompte($user);
                 $cantine = $cantineRepository->findOneByEleve($eleve->getId());
             }
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ((!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) &&
-                ($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
-                ($dateLivraison > new DateTime('now 00:00:00',
-                        new DateTimeZone('Europe/Paris')) &&
-                    $dateLivraison < new DateTime('now 23:59:59',
-                        new DateTimeZone('Europe/Paris')))) {
-                $this->addFlash(
-                    'limiteCloture',
-                    'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
-                );
-            } elseif ((!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) && ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday")) {
-                $this->addFlash(
-                    'limiteCloture',
-                    'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
-                );
+            /*Vérifie si l'utilisateur n'est pas un administrateur ou un personnel de cuisine
+             et que la commande est faite avant la clôture des commandes pour le jour même
+             sinon affiche un message d'erreur
+            */
+            if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
+                if (($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
+                    ($dateLivraison > new DateTime('now 00:00:00',
+                            new DateTimeZone('Europe/Paris')) &&
+                        $dateLivraison < new DateTime('now 23:59:59',
+                            new DateTimeZone('Europe/Paris')))) {
+                    $this->addFlash(
+                        'limiteCloture',
+                        'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
+                    );
+                } elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
+                    /*Vérifie que la commande n'est pas faite le samedi ou le dimanche
+                     sinon un message d'erreur
+                    */
+                    $this->addFlash(
+                        'limiteCloture',
+                        'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
+                    );
+                }
             } else {
                 $error = false;
+                /*Vérifie si l'utilisateur est un élève*/
                 if (in_array("ROLE_ELEVE", $roles)) {
+                    /*Vérifie si la commande est entre les heures de début et fin de service
+                     sinon message d'erreur
+                    */
                     if ($debutService->getIsActive() === true && $finService->getIsActive() === true) {
                         if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) <= $dateLivraison->format('y-m-d H:i'))
                             && ($dateLivraison->format('y-m-d H:i') < $dateLivraison->format('y-m-d ' . $finService->getHeureLimite()->format('H:i'))))) {
@@ -676,6 +743,9 @@ class CommandeIndividuelleController extends AbstractController
                             $error = true;
                         }
                     }
+                    /*Vérifie si l'élève qui a commandé son sandwich est incrit
+                     le jour de la livraison à la cantine sinon message d'erreur
+                    */
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
                             if (!$cantine->getRepasJ1()) {
@@ -759,6 +829,7 @@ class CommandeIndividuelleController extends AbstractController
                             break;
                     }
                 }
+                /*Vérifie si l'utilisateur n'a pas commandé deux fois le même jour*/
                 if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
                     $nbCommande = $commandeRepo->limiteCommande($user, $dateLivraison);
                     if (count($nbCommande) > 1) {
@@ -780,37 +851,42 @@ class CommandeIndividuelleController extends AbstractController
                         }
                     }
                 }
+                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
+                    $this->addFlash(
+                        'precisionReason',
+                        'Veuillez préciser votre raison !'
+                    );
+                    $error = true;
+                }
+                /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
                 if (!$error) {
-                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
-                    if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
-                        $this->addFlash(
-                            'precisionReason',
-                            'Veuillez préciser votre raison !'
-                        );
+                    /*Vérifie si la raison choisie est autre
+                     et récupère le champ raison précisé*/
+                    if ($form->get('raisonCommande')->getData() == "Autre") {
+                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
                     } else {
-                        if ($form->get('raisonCommande')->getData() == "Autre") {
-                            $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                        } else {
-                            $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
-                        }
-
-                        if ($form->get('commandeur')->getData() != null) {
-                            $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
-                        } else {
-                            $commandeIndividuelle->setCommandeur($user);
-                        }
-
-                        $commandeIndividuelle
-                            ->setDateCreation($dateNow)
-                            ->setEstValide(true);
-                        $entityManager->persist($commandeIndividuelle);
-                        $entityManager->flush();
-
-                        $this->addFlash(
-                            'SuccessComInd',
-                            'Votre commande a été sauvegardée !'
-                        );
+                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                     }
+                    /*Vérifie si le champ commande est rempli
+                     et met le comandeur dans la base de donnée*/
+                    if ($form->get('commandeur')->getData() != null) {
+                        $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
+                    } else {
+                        $commandeIndividuelle->setCommandeur($user);
+                    }
+
+                    $commandeIndividuelle
+                        ->setDateCreation($dateNow)
+                        ->setEstValide(true);
+                    $entityManager->persist($commandeIndividuelle);
+                    $entityManager->flush();
+
+                    $this->addFlash(
+                        'SuccessComInd',
+                        'Votre commande a été sauvegardée !'
+                    );
+
                 }
             }
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
@@ -842,6 +918,7 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/desactive", name="deactivate_commande",methods={"GET"})
+     * Page de déactivation de service
      */
     public function deactivated(): Response
     {
@@ -852,6 +929,7 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/validate/{id}", name="validate_commande",methods={"GET","POST"})
+     * Formulaire permettant de valider ou invalider la commande
      */
     public function validateCommande(CommandeIndividuelle $commande, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -868,6 +946,7 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="commande_individuelle_delete_view", methods={"GET","POST"})
+     * Page de pré-suppression d'une commande
      */
     public function delete_view(CommandeIndividuelle $commandeIndividuelle): Response
     {
@@ -894,12 +973,11 @@ class CommandeIndividuelleController extends AbstractController
                          CommandeIndividuelleRepository  $commandeRepo,
                          UserRepository                  $userRepo): Response
     {
+        /*Récupère l'utilisateur courant et son rôle*/
         $user = $userRepo->find($this->getUser());
         $roles = $user->getRoles();
-        $cantine = null;
-        if (in_array("ROLE_ELEVE", $roles)) {
-            $cantine = $cantineRepository->findOneByEleve($user->getEleves()->first()->getId());
-        }
+
+        /*Récupération des limites mises en place*/
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limite = new DateTime('now ' . $limiteJourMeme->getHeureLimite()->format('h:i'), new DateTimeZone('Europe/Paris'));
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
@@ -912,6 +990,7 @@ class CommandeIndividuelleController extends AbstractController
         $nbCommandeSemaine = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 week 23:59:00', new DateTimezone('Europe/Paris'))));
         $nbCommandeMois = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
 
+        /*Récupération des produits et de la donnée qui désactive le service de commandes*/
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
@@ -921,29 +1000,39 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
-            if (in_array("ROLE_ELEVE", $roles)) {
-                $eleve = $eleveRepository->findOneByCompte($user);
-                $cantine = $cantineRepository->findOneByEleve($eleve->getId());
-            }
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
-            if ((!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) &&
-                ($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
-                ($dateLivraison > new DateTime('now 00:00:00',
-                        new DateTimeZone('Europe/Paris')) &&
-                    $dateLivraison < new DateTime('now 23:59:59',
-                        new DateTimeZone('Europe/Paris')))) {
-                $this->addFlash(
-                    'limiteCloture',
-                    'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
-                );
-            } elseif ((!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) && ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday")) {
-                $this->addFlash(
-                    'limiteCloture',
-                    'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
-                );
+            /*Vérifie si l'utilisateur n'est pas un administrateur ou un personnel de cuisine
+             et que la commande est faite avant la clôture des commandes pour le jour même
+             sinon affiche un message d'erreur
+            */
+            if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
+                if (($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
+                    ($dateLivraison > new DateTime('now 00:00:00',
+                            new DateTimeZone('Europe/Paris')) &&
+                        $dateLivraison < new DateTime('now 23:59:59',
+                            new DateTimeZone('Europe/Paris')))) {
+                    $this->addFlash(
+                        'limiteCloture',
+                        'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
+                    );
+                } elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
+                    /*Vérifie que la commande n'est pas faite le samedi ou le dimanche
+                     sinon un message d'erreur
+                    */
+                    $this->addFlash(
+                        'limiteCloture',
+                        'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
+                    );
+                }
             } else {
                 $error = false;
+                /*Vérifie si l'utilisateur est un élève*/
                 if (in_array("ROLE_ELEVE", $roles)) {
+                    /*Récupère les inscriptions à la cantine de l'élève*/
+                    $cantine = $cantineRepository->findOneByEleve($user->getEleves()->first()->getId());
+                    /*Vérifie si la commande est entre les heures de début et fin de service
+                     sinon message d'erreur
+                    */
                     if ($debutService->getIsActive() === true && $finService->getIsActive() === true) {
                         if (!(($dateLivraison->format('y-m-d ' . $debutService->getHeureLimite()->format('H:i')) <= $dateLivraison->format('y-m-d H:i'))
                             && ($dateLivraison->format('y-m-d H:i') < $dateLivraison->format('y-m-d ' . $finService->getHeureLimite()->format('H:i'))))) {
@@ -954,6 +1043,9 @@ class CommandeIndividuelleController extends AbstractController
                             $error = true;
                         }
                     }
+                    /*Vérifie si l'élève qui a commandé son sandwich est incrit
+                     le jour de la livraison à la cantine sinon message d'erreur
+                    */
                     switch ($dateLivraison->format('l')) {
                         case "Monday":
                             if (!$cantine->getRepasJ1()) {
@@ -1037,6 +1129,8 @@ class CommandeIndividuelleController extends AbstractController
                             break;
                     }
                 }
+                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+                /*Vérifie si l'utilisateur n'a pas commandé deux fois le même jour*/
                 if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
                     $nbCommande = $commandeRepo->limiteCommande($user, $dateLivraison);
                     if (count($nbCommande) > 1) {
@@ -1046,43 +1140,49 @@ class CommandeIndividuelleController extends AbstractController
                         );
                         $error = true;
                     }
-                } else {
-                    $nbCommande = $commandeRepo->limiteCommande($commandeur, $dateLivraison);
-                    if (count($nbCommande) > 1) {
-                        $this->addFlash(
-                            'limiteCloture',
-                            'Vous ne pouvez pas faire 2 commandes pour la même journée et pour la même personne !'
-                        );
-                        $error = true;
-                    }
-                }
-                if (!$error) {
-                    $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
                     if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                         $this->addFlash(
                             'precisionReason',
                             'Veuillez préciser votre raison !'
                         );
-                    } else {
-                        if ($form->get('raisonCommande')->getData() == "Autre") {
-                            $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                        } else {
-                            $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
-                        }
-
-                        if ($form->get('commandeur')->getData() != null) {
-                            $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
-                        } else {
-                            $commandeIndividuelle->setCommandeur($user);
-                        }
-
-                        $entityManager->flush();
-
-                        $this->addFlash(
-                            'SuccessComInd',
-                            'Votre commande a été modifiée !'
-                        );
+                        $error = true;
                     }
+                } else {
+                    if ($commandeur) {
+                        $nbCommande = $commandeRepo->limiteCommande($commandeur, $dateLivraison);
+                        if (count($nbCommande) > 1) {
+                            $this->addFlash(
+                                'limiteCloture',
+                                'Vous ne pouvez pas faire 2 commandes pour la même journée et pour la même personne !'
+                            );
+                            $error = true;
+                        }
+                    }
+                }
+                /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
+                if (!$error) {
+                    /*Vérifie si la raison choisie est autre
+                     et récupère le champ raison précisé*/
+                    if ($form->get('raisonCommande')->getData() == "Autre") {
+                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                    } else {
+                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
+                    }
+                    /*Vérifie si le champ commande est rempli
+                     et met le comandeur dans la base de donnée*/
+                    if ($commandeur) {
+                        $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
+                    } else {
+                        $commandeIndividuelle->setCommandeur($commandeIndividuelle->getCommandeur());
+                    }
+
+                    $entityManager->flush();
+
+                    $this->addFlash(
+                        'SuccessComInd',
+                        'Votre commande a été sauvegardée !'
+                    );
+
                 }
             }
 
@@ -1115,6 +1215,7 @@ class CommandeIndividuelleController extends AbstractController
 
     /**
      * @Route("/{id}", name="commande_individuelle_delete", methods={"POST"})
+     * Formilaire de suppression d'une commande
      */
     public function delete(Request                $request,
                            CommandeIndividuelle   $commandeIndividuelle,

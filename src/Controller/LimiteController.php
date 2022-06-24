@@ -19,6 +19,7 @@ class LimiteController extends AbstractController
 {
     /**
      * @Route("/index", name="limite_index", methods={"GET","POST"})
+     * Gestion des limitations
      */
     public function index(Request $request, LimitationCommandeRepository $limitationCommandeRepository): Response
     {
@@ -43,7 +44,7 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/new", name="limite_new", methods={"GET", "POST"})
-     * À Garder pour les développeurs
+     * À Garder pour les développeurs permet de créer des limites
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -52,6 +53,16 @@ class LimiteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /*Permet de mettre null dans le champ nbLimite si l'utilisateur
+             a saisi une limite d'heure et inversement*/
+            $libelle = $form->get('libelleLimite')->getData();
+            if (str_contains($libelle, 'Heure')) {
+                $limitationCommande->setNbLimite(null);
+            } else {
+                $limitationCommande->setHeureLimite(null);
+            }
+
             $entityManager->persist($limitationCommande);
             $entityManager->flush();
             $this->addFlash(
@@ -70,6 +81,7 @@ class LimiteController extends AbstractController
     /**
      * @Route("/{id}/delete_view", name="limite_delete_view", methods={"GET"})
      * À Garder pour les développeurs
+     * Page de pré-suppression d'une limitation
      */
     public function delete_view(LimitationCommande $limitationCommande): Response
     {
@@ -80,6 +92,7 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="limite_edit", methods={"GET", "POST"})
+     * Formulaire de modification d'une limitation
      */
     public function edit(Request $request, LimitationCommande $limitationCommande, EntityManagerInterface $entityManager): Response
     {
@@ -87,6 +100,16 @@ class LimiteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /*Permet de mettre null dans le champ nbLimite si l'utilisateur
+            a saisi une limite d'heure et inversement*/
+            $libelle = $form->get('libelleLimite')->getData();
+            if (str_contains($libelle, 'Heure')) {
+                $limitationCommande->setNbLimite(null);
+            } else {
+                $limitationCommande->setHeureLimite(null);
+            }
+
             $entityManager->flush();
             $this->addFlash(
                 'SuccessLimite',
@@ -104,7 +127,7 @@ class LimiteController extends AbstractController
 
     /**
      * @Route("/{id}", name="limite_delete", methods={"POST"})
-     * À Garder pour les développeurs
+     * À Garder pour les développeurs permet de supprimer une limitation
      */
     public function delete(Request $request, LimitationCommande $limitationCommande, EntityManagerInterface $entityManager): Response
     {

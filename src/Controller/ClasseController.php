@@ -24,11 +24,16 @@ class ClasseController extends AbstractController
 {
     /**
      * @Route("/index/{page}",defaults={"page" : 1}, name="classe_index", methods={"GET","POST"})
+     * @param ClasseRepository $classeRepos
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param int $page Utilisé pour les filtres et la pagination
+     * @return Response
      */
     public function index(ClasseRepository   $classeRepos,
                           PaginatorInterface $paginator,
                           Request            $request,
-                                             $page = 1): Response
+                          int                $page = 1): Response
     {
         $classes = $classeRepos->filterClasse('ASC');
         $form = $this->createForm(FilterClasseType::class, null, ['method' => 'GET']);
@@ -55,6 +60,7 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/new", name="classe_new", methods={"GET","POST"})
+     * Formulaire d'ajout d'une classe
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -83,6 +89,7 @@ class ClasseController extends AbstractController
     /**
      * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
      * @throws NonUniqueResultException
+     * Page de détail d'une classe
      */
     public function show(Classe                       $classe,
                          Request                      $request,
@@ -117,6 +124,7 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="classe_edit", methods={"GET","POST"})
+     * Page de modification d'une classe
      */
     public function edit(Request                $request,
                          Classe                 $classe,
@@ -144,6 +152,7 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET","POST"})
+     * Page de pré-suppression d'une classe
      */
     public function delete_view(Classe $classe): Response
     {
@@ -154,6 +163,7 @@ class ClasseController extends AbstractController
 
     /**
      * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
+     * Formulaire de suppression d'une classe
      */
     public function delete(Request                $request,
                            Classe                 $classe,
@@ -161,6 +171,10 @@ class ClasseController extends AbstractController
                            EntityManagerInterface $entityManager): Response
     {
         $eleveRelated = $eleveRepo->findByClasse(null, $classe);
+        /*Vérifie si cette classe contient toujours des élèves
+         si ou renvoie un message d'erreur
+         sinon supprime la classe
+        */
         if ($eleveRelated) {
             $this->addFlash(
                 'deleteDangerClasse',

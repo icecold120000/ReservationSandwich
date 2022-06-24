@@ -96,7 +96,8 @@
                                     </a>
                                 {% endif %}
                             </li>
-                            <li><a class="dropdown-item" href="{{ path('profile_edit',{'id': app.user.id}) }}">Éditer
+                            <li><a class="dropdown-item"
+                                   href="{{ path('profile_edit',{'userTokenHash': app.user.tokenHash}) }}">Éditer
                                     votre profil</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                         </ul>
@@ -157,7 +158,11 @@
                                     </a>
                                 {% endif %}
                             </p>
-                            <p><a href="{{ path('profile_edit',{'id': app.user.id}) }}">Éditer votre profil</a></p>
+                            <p>
+                                <a href="{{ path('profile_edit',{'userTokenHash': app.user.tokenHash}) }}">
+                                    Éditer votre profil
+                                </a>
+                            </p>
                         {% endif %}
                     </li>
                 </ol>

@@ -29,13 +29,14 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            /*Récupère si l'utilsateur est un élève ou adulte*/
             $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                 $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
             $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                 $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
 
+            /*Vérifie si l'utilisateur est un élève ou adulte*/
             if ($eleveFound || $adulteFound) {
                 // encode the plain password
                 $user->setPassword(
@@ -44,9 +45,10 @@ class RegistrationController extends AbstractController
                         $form->get('plainPassword')->getData()
                     )
                 );
+                /*Génére un token hash de l'utilisateur*/
                 $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
                 $user->setIsVerified(true);
-
+                /*Attribut le rôle de l'utilisateur*/
                 if ($eleveFound) {
                     $user->setRoles([User::ROLE_ELEVE]);
                 } elseif ($adulteFound) {
@@ -56,8 +58,7 @@ class RegistrationController extends AbstractController
                 }
 
                 $entityManager->persist($user);
-                $entityManager->flush();
-
+                /*Attribut l'élève ou adulte son compte utilisateur*/
                 if ($eleveFound) {
                     $eleveFound->setCompteEleve($user);
                 } elseif ($adulteFound) {

@@ -46,30 +46,46 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        /*Vérifie si l'utilisateur existe et renvoie un message d'erreur si c'est non*/
         if (!$user) {
             throw new CustomUserMessageAuthenticationException('Erreur de saisie.
                 Veuillez vérifier votre email et votre mot de passe ou vous inscrire pour vous connecter !');
         } else {
+            /*Vérifie si le compte de l'utilisateur est vérifié et renvoie un message d'erreur si non */
             if ($user->isVerified() === false) {
                 throw new CustomUserMessageAuthenticationException('Votre demande d\'inscription
                  n\'a pas encore été validée. Veuillez attendre la confirmation de l\'administrateur !');
             }
         }
-
+        /*Message d'erreur si le mot de passe n'est pas rempli ou valide*/
         if (empty($request->request->get('password')) ||
             $this->userPasswordHasher->isPasswordValid($user, $request->request->get('password')) === false) {
             throw new CustomUserMessageAuthenticationException('Erreur de saisie.
                 Veuillez vérifier votre email et votre mot de passe ou vous inscrire pour vous connecter !');
         }
 
-        return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($request->request->get('password', '')),
-            [
-                new RememberMeBadge(),
-                new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-            ]
-        );
+        /*Vérifie si la fonctionnalité rememberMe est coché,
+         si oui le compte aura cette fonctionnalié
+         sinon le compte n'aura pas la fonctionnalité
+        */
+        if ($request->request->get('_remember_me') == "on") {
+            return new Passport(
+                new UserBadge($email),
+                new PasswordCredentials($request->request->get('password', '')),
+                [
+                    new RememberMeBadge(),
+                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                ]
+            );
+        } else {
+            return new Passport(
+                new UserBadge($email),
+                new PasswordCredentials($request->request->get('password', '')),
+                [
+                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+                ]
+            );
+        }
     }
 
     /**

@@ -43,6 +43,7 @@ class InscriptionCantineController extends AbstractController
     /**
      * @Route("/", name="inscription_cantine_index", methods={"GET","POST"})
      * @throws NonUniqueResultException
+     * Formulaire d'ajout d'une liste d'inscription à la cantine
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
@@ -135,7 +136,7 @@ class InscriptionCantineController extends AbstractController
                             $rowData['Prénom'],
                             $birthday
                         );
-
+                        /*Si l'élève existe */
                         if ($eleveExcel != null) {
                             $cantineExcel = $this->inscritCantRepo->findOneBy(['eleve' => $eleveExcel]);
                             /*Vérifie si l'élève dans le fichier est dans le tableau des non archivé*/
@@ -170,7 +171,7 @@ class InscriptionCantineController extends AbstractController
                                 }
                             }
                         } else {
-                            /*Récupére l'èlève manquant*/
+                            /*Récupére les èlèves manquants*/
                             $eleveMissingBdd[$i] = ["prenom" => $rowData['Prénom'], "nom" => $rowData['Nom'], "dateDeNaissance" => $rowData['Date de naissance']];
                             $i++;
                         }
@@ -185,7 +186,7 @@ class InscriptionCantineController extends AbstractController
         }
 
         $this->entityManager->flush();
-
+        /*Affiche un message d'erreur et la liste des élèves manquants*/
         if ($eleveMissingBdd != []) {
             $this->addFlash(
                 'eleveMissing',
@@ -200,6 +201,13 @@ class InscriptionCantineController extends AbstractController
         }
     }
 
+
+    /**
+     * @param string $fileName
+     * @return array
+     * Fonction permettant de récupérer les données du fichier excel et de retourner
+     * un tableau qui contient les inscriptions à la cantine des élèves dans l'excel
+     */
     public function getDataFromFile(string $fileName): array
     {
         $file = $this->getParameter('cantineFile_directory') . $fileName;

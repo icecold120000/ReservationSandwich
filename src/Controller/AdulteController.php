@@ -44,16 +44,23 @@ class AdulteController extends AbstractController
 
     /**
      * @Route("/index/{page}",defaults={"page" : 1}, name="adulte_index", methods={"GET","POST"})
+     * Liste des adultes
+     * @param AdulteRepository $adulteRepo
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param int $page Utilisé dans les filtres et la pagination
+     * @return Response
      */
     public function index(AdulteRepository   $adulteRepo,
                           Request            $request,
                           PaginatorInterface $paginator,
-                                             $page = 1): Response
+                          int                $page = 1): Response
     {
         $adultes = $adulteRepo->findByArchive(false);
         $form = $this->createForm(FilterAdulteType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $adultes = $adulteRepo->filter(
                 $filter->get('nomAdulte')->getData(),
@@ -62,7 +69,7 @@ class AdulteController extends AbstractController
                 $filter->get('archiveAdulte')->getData()
             );
         }
-
+        /*Pagination*/
         $adultes = $paginator->paginate(
             $adultes,
             $page,
@@ -78,6 +85,7 @@ class AdulteController extends AbstractController
     /**
      * @Route("/file", name="adulte_file", methods={"GET","POST"})
      * @throws Exception
+     * Formulaire d'ajout une liste d'adultes à partir d'excel
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
@@ -90,6 +98,7 @@ class AdulteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierAdulte */
             $fichierAdulte = $form->get('fileSubmit')->getData();
+            /*Vérification d'ajout d'un fichier excel*/
             if ($fichierAdulte) {
                 $originalFilename = pathinfo($fichierAdulte->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -109,6 +118,7 @@ class AdulteController extends AbstractController
             $entityManager->persist($adulteFile);
             $entityManager->flush();
 
+            /*Traitement du fichier excel*/
             AdulteController::creerAdulte($adulteFile->getFileName());
 
             $this->addFlash(
@@ -127,6 +137,7 @@ class AdulteController extends AbstractController
 
     /**
      * @throws Exception
+     * Fonction permettant de traiter le fichier excel
      */
     private function creerAdulte(string $fileName): void
     {
@@ -206,6 +217,12 @@ class AdulteController extends AbstractController
         $this->entityManager->flush();
     }
 
+    /**
+     * @param string $fileName
+     * @return array
+     * Fonction permettant de récupérer les données du fichier excel et de retourner
+     * un tableau qui contient les adultes dans l'excel
+     */
     public function getDataFromFile(string $fileName): array
     {
         $file = $this->getParameter('adulteFile_directory') . $fileName;
@@ -226,8 +243,15 @@ class AdulteController extends AbstractController
         /*Réfactorisation des colonnes du fichier Excel */
         $dataRaw = $serializer->decode($fileString, $fileExtension);
         $data = [];
+        /*Pour chaque ligne de Feuil1 dans l'excel */
         foreach ($dataRaw['Feuil1'] as $row) {
-            if (key($row) != null or key($row) == "") {
+            /*Vérifie si la clé de la ligne est different de null*/
+            if (key($row) != null) {
+                /*Vérifie si la clé a une valeur vide
+                 si oui il récupère la valeur de la première façon
+                 sinon il récupère de l'autre façon (dd($dataRaw) pour voir
+                 la différence les données récupèrées)
+                */
                 if (key($row) == "") {
                     $temp1 = [
                         "Nom" => $row[""][0],
@@ -242,6 +266,7 @@ class AdulteController extends AbstractController
                     "Date de naissance" => $row[""][2],
                     "N° de Badge" => $row[""][3]
                 ];
+                /*Rassemble les deux tableaux*/
                 $data[][] = array_merge($temp1, $temp2);
             }
         }
@@ -250,6 +275,7 @@ class AdulteController extends AbstractController
 
     /**
      * @Route("/new", name="adulte_new", methods={"GET", "POST"})
+     * Formulaire d'ajout d'un adulte
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -275,6 +301,7 @@ class AdulteController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="adulte_edit", methods={"GET", "POST"})
+     * Formulaire de modificiation d'un adulte
      */
     public function edit(Request                $request,
                          Adulte                 $adulte,
@@ -300,6 +327,7 @@ class AdulteController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="adulte_delete_view", methods={"GET"})
+     * Page de pré-suppression d'un adulte
      */
     public function delete_view(Adulte $adulte): Response
     {
@@ -311,6 +339,7 @@ class AdulteController extends AbstractController
     /**
      * @Route("/{id}", name="adulte_delete", methods={"POST"})
      * @throws NonUniqueResultException
+     * Formulaire de suppression d'un adulte
      */
     public function delete(Request                $request,
                            Adulte                 $adulte,
@@ -318,6 +347,7 @@ class AdulteController extends AbstractController
                            UserRepository         $userRepo): Response
     {
         if ($this->isCsrfTokenValid('delete' . $adulte->getId(), $request->request->get('_token'))) {
+            /*Récuperation du compte utilisateur de l'adulte et le supprime*/
             $user = $userRepo->findOneByAdulte($adulte->getId());
             if ($user) {
                 $entityManager->remove($user);

@@ -58,11 +58,9 @@ class CommandeGroupeType extends AbstractType
                         'pattern' => "/[\-]/",
                         'message' => "Veuillez saisir un nombre positif !",
                     ]),
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un nombre de sandwich commandé !'
-                        ])
-                    ]
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nombre de sandwich commandé !'
+                    ])
                 ],
                 'data' => $options['sandwichChoisi1']?->getNombreSandwich(),
             ])
@@ -94,11 +92,9 @@ class CommandeGroupeType extends AbstractType
                         'pattern' => "/[\-]/",
                         'message' => "Veuillez saisir un nombre positif !",
                     ]),
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un nombre de sandwich commandé !'
-                        ])
-                    ]
+                    new NotBlank([
+                        'message' => 'Veuillez saisir un nombre de sandwich commandé !'
+                    ])
                 ],
                 'data' => $options['sandwichChoisi2']?->getNombreSandwich(),
             ])

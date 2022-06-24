@@ -62,10 +62,10 @@
             const option = select.options[select.selectedIndex];
 
             const selected = option.text;
-            const toDisable1 = document.getElementById("user_eleve");
+            const toDisable1 = document.getElementById("hideEleve");
             toDisable1.hidden = selected !== "Élève";
 
-            const toDisable2 = document.getElementById("user_adulte");
+            const toDisable2 = document.getElementById("hideAdulte");
             toDisable2.hidden = selected !== "Adulte";
         }
     </script>
@@ -78,23 +78,28 @@
     <div>
         {{ form_widget(form.isVerified) }}
     </div>
-    {{ form_label(form.eleve) }}
-    {% if form_errors(form.eleve) %}
-        <div class="erreur">
-            {{ form_errors(form.eleve) }}
+    <label>Compte auquel l'utilisateur est rattaché :</label>
+    <div id="hideEleve">
+        {{ form_label(form.eleve) }}
+        {% if form_errors(form.eleve) %}
+            <div class="erreur">
+                {{ form_errors(form.eleve) }}
+            </div>
+        {% endif %}
+        <div>
+            {{ form_widget(form.eleve) }}
         </div>
-    {% endif %}
-    <div>
-        {{ form_widget(form.eleve) }}
     </div>
-    {{ form_label(form.adulte) }}
-    {% if form_errors(form.adulte) %}
-        <div class="erreur">
-            {{ form_errors(form.adulte) }}
+    <div id="hideAdulte">
+        {{ form_label(form.adulte) }}
+        {% if form_errors(form.adulte) %}
+            <div class="erreur">
+                {{ form_errors(form.adulte) }}
+            </div>
+        {% endif %}
+        <div>
+            {{ form_widget(form.adulte) }}
         </div>
-    {% endif %}
-    <div>
-        {{ form_widget(form.adulte) }}
     </div>
 </div>
 {{ form_end(form) }}

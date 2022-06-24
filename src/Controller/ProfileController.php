@@ -18,7 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     /**
-     * @Route("profile/{id}/edit", name="profile_edit", methods={"GET","POST"})
+     * @Route("profile/{userTokenHash}/edit", name="profile_edit", methods={"GET","POST"})
+     * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      */
     public function edit(Request                     $request,
                          User                        $user,
@@ -29,7 +30,7 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            /*Hash le nouveau mot de passe*/
             if ($form->get('plainPassword')->getData()) {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -38,7 +39,7 @@ class ProfileController extends AbstractController
                     )
                 );
             }
-
+            /*Regénére un nouveau token hash*/
             $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $em->flush();
 
@@ -58,6 +59,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/admin/{userTokenHash}", name="profile_admin")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * Page de profil d'un administrateur
      */
     public function admin(): Response
     {
@@ -68,11 +70,13 @@ class ProfileController extends AbstractController
      * @Route("/profile/eleve/{userTokenHash}", name="profile_eleve")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
      * @throws NonUniqueResultException
+     * Page de profil d'un élève
      */
     public function eleve(EleveRepository              $eleveRepository,
                           User                         $user,
                           InscriptionCantineRepository $cantineRepository): Response
     {
+        /*Récupére l'élève et les inscriptions à la cantine de l'élève*/
         $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($user->getNomUser(),
             $user->getPrenomUser(), $user->getDateNaissanceUser());
         $inscrit = $cantineRepository->findOneByEleve($eleveFound->getId());
@@ -86,6 +90,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/cuisine/{userTokenHash}", name="profile_cuisine")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * Page de profil d'un personnel de cuisine
      */
     public function cuisine(): Response
     {
@@ -95,6 +100,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/adulte/{userTokenHash}", name="profile_adulte")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * Page de profil d'un adulte
      */
     public function adulte(): Response
     {
@@ -104,6 +110,7 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/user/{userTokenHash}", name="profile_user")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * Page de profil d'un utilisateur connecté
      */
     public function user(): Response
     {

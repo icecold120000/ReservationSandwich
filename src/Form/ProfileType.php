@@ -61,11 +61,6 @@ class ProfileType extends AbstractType
                         'max' => 4096,
                         'maxMessage' => 'Votre mot de passe doit être limité à 4096 caractères !',
                     ]),
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Veuillez saisir un mot de passe !'
-                        ])
-                    ]
                 ],
             ]);
     }

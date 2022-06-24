@@ -56,7 +56,7 @@ security:
     - { path: ^/dessert/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/dessert/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/inscription/cantine, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/adulte, roles: ROLE_ADMIN }
+    - { path: ^/adulte, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/adulte/new, roles: ROLE_ADMIN }
     - { path: ^/adulte/edit, roles: ROLE_ADMIN }
     - { path: ^/adulte/file, roles: ROLE_ADMIN }
@@ -66,7 +66,7 @@ security:
     - { path: ^/classe/edit, roles: ROLE_ADMIN }
     - { path: ^/classe/show, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
     - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
-    - { path: ^/eleve, roles: ROLE_ADMIN }
+    - { path: ^/eleve, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/eleve/new, roles: ROLE_ADMIN }
     - { path: ^/eleve/edit, roles: ROLE_ADMIN }
     - { path: ^/eleve/file, roles: ROLE_ADMIN }

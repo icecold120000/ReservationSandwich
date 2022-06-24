@@ -7,23 +7,25 @@
 {% block body %}
     <main class="container-fluid">
         <h1>Liste d'élèves</h1>
-        {% for message in app.flashes('SuccessDeleteEleve') %}
-            <div class="flash-success">
-                {{ message }}
+        {% if is_granted('ROLE_ADMIN') %}
+            {% for message in app.flashes('SuccessDeleteEleve') %}
+                <div class="flash-success">
+                    {{ message }}
+                </div>
+            {% endfor %}
+            <div>
+                <a href="{{ path('eleve_new') }}">
+                    <button class="btn btn-primary" id="btnAjout">
+                        Ajouter un nouveau élève
+                    </button>
+                </a>
+                <a href="{{ path('eleve_file') }}">
+                    <button class="btn btn-info" id="btnAjout">
+                        Ajouter une liste d'élèves
+                    </button>
+                </a>
             </div>
-        {% endfor %}
-        <div>
-            <a href="{{ path('eleve_new') }}">
-                <button class="btn btn-primary" id="btnAjout">
-                    Ajouter un nouveau élève
-                </button>
-            </a>
-            <a href="{{ path('eleve_file') }}">
-                <button class="btn btn-info" id="btnAjout">
-                    Ajouter une liste d'élèves
-                </button>
-            </a>
-        </div>
+        {% endif %}
         <div id="divRetour">
             <a href="{{ path('espace_admin') }}">
                 <button class="btn btn-secondary" id="btnRetour">
@@ -69,8 +71,10 @@
                     <th>Prénom et Nom</th>
                     <th>Classe</th>
                     <th>Date de naissance</th>
-                    <th>Modifier</th>
-                    <th>Supprimer</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
+                    {% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -86,27 +90,35 @@
                         <td>{{ eleve.prenomEleve }} <span>{{ eleve.nomEleve }}</span></td>
                         <td>{{ eleve.classeEleve.codeClasse }}</td>
                         <td>{{ eleve.dateNaissance ? eleve.dateNaissance|date('d/m/Y') : '' }}</td>
-                        <td>
-                            <a href="{{ path('eleve_edit',
-                                {'id': eleve.id}) }}">
-                                <button class="btn btn-primary">
-                                    <i class="far fa-edit"></i>
-                                </button>
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ path('eleve_delete',
-                                {'id': eleve.id}) }}">
-                                <button class="btn btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </a>
-                        </td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <td>
+                                <a href="{{ path('eleve_edit',
+                                    {'id': eleve.id}) }}">
+                                    <button class="btn btn-primary">
+                                        <i class="far fa-edit"></i>
+                                    </button>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ path('eleve_delete',
+                                    {'id': eleve.id}) }}">
+                                    <button class="btn btn-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </a>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% else %}
-                    <tr>
-                        <td colspan="11" class="erreur">Aucun élève n'a été trouvé !</td>
-                    </tr>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <tr>
+                            <td colspan="6" class="erreur">Aucun élève n'a été trouvé !</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="erreur">Aucun élève n'a été trouvé !</td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
             </table>

@@ -21,11 +21,16 @@ class LieuLivraisonController extends AbstractController
 {
     /**
      * @Route("/index/{page}",defaults={"page":1}, name="lieu_livraison_index", methods={"GET","POST"})
+     * @param LieuLivraisonRepository $lieuLivraisonRepo
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param int $page Utilisé dans les filtres et la pagination
+     * @return Response
      */
     public function index(LieuLivraisonRepository $lieuLivraisonRepo,
                           PaginatorInterface      $paginator,
                           Request                 $request,
-                                                  $page = 1): Response
+                          int                     $page = 1): Response
     {
         $lieux = $lieuLivraisonRepo->findAll();
         $form = $this->createForm(FilterLieuType::class, null, ['method' => 'GET']);
@@ -52,6 +57,7 @@ class LieuLivraisonController extends AbstractController
 
     /**
      * @Route("/new", name="lieu_livraison_new", methods={"GET","POST"})
+     * Formulaire d'ajout d'un lieu de livraison
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -79,6 +85,7 @@ class LieuLivraisonController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="lieu_livraison_delete_view", methods={"GET","POST"})
+     * Page de pré-suppression d'un lieu de livraison
      */
     public function delete_view(LieuLivraison $lieuLivraison): Response
     {
@@ -89,6 +96,7 @@ class LieuLivraisonController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="lieu_livraison_edit", methods={"GET","POST"})
+     * Formululaire de modification d'un lieu de livraison
      */
     public function edit(Request                $request,
                          LieuLivraison          $lieuLivraison,
@@ -116,6 +124,7 @@ class LieuLivraisonController extends AbstractController
 
     /**
      * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
+     * Formulaire de suppression d'un lieu de livraison
      */
     public function delete(Request                  $request,
                            LieuLivraison            $lieuLivraison,
@@ -124,6 +133,9 @@ class LieuLivraisonController extends AbstractController
                            LieuLivraisonRepository  $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
+            /*Modifie les commmandes groupées qui utlisent le lieu de livraison et les affectent
+              au lieu de livraison aucun
+             */
             $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());
             foreach ($commandesGroupe as $commandeGroupe) {
                 $commandeGroupe->setLieuLivraison($lieuRepository->find(['id' => 1]));

@@ -23,6 +23,7 @@ class SandwichController extends AbstractController
 {
     /**
      * @Route("/index/{page}",defaults={"page": 1}, name="sandwich_index", methods={"GET","POST"})
+     * Gestion des sandwich
      */
     public function index(SandwichRepository $sandwichRepo,
                           Request            $request,
@@ -54,6 +55,7 @@ class SandwichController extends AbstractController
 
     /**
      * @Route("/new", name="sandwich_new", methods={"GET", "POST"})
+     * Formulaire d'ajout d'un sandwich
      */
     public function new(Request                $request,
                         EntityManagerInterface $entityManager,
@@ -66,7 +68,6 @@ class SandwichController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierSandwich */
             $fichierSandwich = $form->get('imageSandwich')->getData();
-
             if ($fichierSandwich) {
                 $originalFilename = pathinfo($fichierSandwich
                     ->getClientOriginalName(), PATHINFO_FILENAME);
@@ -104,12 +105,14 @@ class SandwichController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="sandwich_edit", methods={"GET", "POST"})
+     * Formulaire de modification d'un sandwich
      */
     public function edit(Request                $request,
                          Sandwich               $sandwich,
                          EntityManagerInterface $entityManager,
                          SluggerInterface       $slugger): Response
     {
+        /*Récupèration de l'ancienne image*/
         $oldSandwich = $sandwich->getImageSandwich();
         $form = $this->createForm(SandwichType::class, $sandwich, ['fichierRequired' => false]);
         $form->handleRequest($request);
@@ -117,7 +120,7 @@ class SandwichController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierSandwich */
             $fichierSandwich = $form->get('imageSandwich')->getData();
-
+            /*Vérifie si l'image a changé*/
             if ($fichierSandwich) {
                 $originalFilename = pathinfo($fichierSandwich
                     ->getClientOriginalName(), PATHINFO_FILENAME);
@@ -155,6 +158,7 @@ class SandwichController extends AbstractController
 
     /**
      * @Route("/{id}/delete_view", name="sandwich_delete_view", methods={"GET"})
+     * Page de pré-suppression d'un sandwich
      */
     public function delete_view(Sandwich $sandwich): Response
     {
@@ -165,12 +169,14 @@ class SandwichController extends AbstractController
 
     /**
      * @Route("/{id}", name="sandwich_delete", methods={"POST"})
+     * Formulaire de supression d'un sandwich
      */
     public function delete(Request                $request,
                            Sandwich               $sandwich,
                            EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $sandwich->getId(), $request->request->get('_token'))) {
+            /*Supprime l'image de sandwich*/
             unlink($this->getParameter('sandwich_directory') . $sandwich->getImageSandwich());
             $entityManager->remove($sandwich);
             $entityManager->flush();

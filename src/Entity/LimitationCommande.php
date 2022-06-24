@@ -72,7 +72,7 @@ class LimitationCommande
         return $this->nbLimite;
     }
 
-    public function setNbLimite(int $nbLimite): self
+    public function setNbLimite(?int $nbLimite): self
     {
         $this->nbLimite = $nbLimite;
 

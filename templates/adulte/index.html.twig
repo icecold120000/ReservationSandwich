@@ -12,16 +12,18 @@
                 {{ message }}
             </div>
         {% endfor %}
-        <div>
-            <a href="{{ path('adulte_new') }}"
-               class="btn btn-primary" id="btnAjout">
-                Ajouter un nouvel adulte
-            </a>
-            <a href="{{ path('adulte_file') }}"
-               class="btn btn-info" id="btnAjout">
-                Ajouter une liste d'adultes
-            </a>
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div>
+                <a href="{{ path('adulte_new') }}"
+                   class="btn btn-primary" id="btnAjout">
+                    Ajouter un nouvel adulte
+                </a>
+                <a href="{{ path('adulte_file') }}"
+                   class="btn btn-info" id="btnAjout">
+                    Ajouter une liste d'adultes
+                </a>
+            </div>
+        {% endif %}
         <div id="divRetour">
             <a href="{{ path('espace_admin') }}"
                class="btn btn-secondary" id="btnRetour">
@@ -68,8 +70,10 @@
                 <th>Prénom et Nom</th>
                 <th>Date de naissance</th>
                 <th>Archivé</th>
-                <th>Éditer</th>
-                <th>Supprimer</th>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <th>Éditer</th>
+                    <th>Supprimer</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody>
@@ -87,23 +91,31 @@
                         {{ adulte.archiveAdulte ? '<i class="fas fa-check"></i>' :
                         '<i class="fas fa-times"></i>' }}
                     </td>
-                    <td>
-                        <a href="{{ path('adulte_edit',
-                            {'id': adulte.id}) }}" class="btn btn-primary">
-                            <i class="far fa-edit"></i>
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{{ path('adulte_delete_view',
-                            {'id': adulte.id}) }}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </td>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <td>
+                            <a href="{{ path('adulte_edit',
+                                {'id': adulte.id}) }}" class="btn btn-primary">
+                                <i class="far fa-edit"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('adulte_delete_view',
+                                {'id': adulte.id}) }}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
-                <tr>
-                    <td colspan="7" class="erreur">Aucun adulte n'a été trouvé !</td>
-                </tr>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <tr>
+                        <td colspan="5" class="erreur">Aucun adulte n'a été trouvé !</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="erreur">Aucun adulte n'a été trouvé !</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>

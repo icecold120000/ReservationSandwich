@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\MenuAccueil;
 use App\Form\MenuType;
 use App\Repository\MenuAccueilRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,30 +22,30 @@ class HomepageController extends AbstractController
      * @Route("/", name="homepage", methods={"GET","POST"})
      * @throws NonUniqueResultException
      */
-    public function index(Request               $request,
-                          SluggerInterface      $slugger,
-                          ManagerRegistry       $doctrine,
-                          MenuAccueilRepository $menuRepo): Response
+    public function index(Request                $request,
+                          SluggerInterface       $slugger,
+                          EntityManagerInterface $entityManager,
+                          MenuAccueilRepository  $menuRepo): Response
     {
-        $entityManager = $doctrine->getManager();
+        /*Formulaire d'ajout d'un menu*/
         $menuAccueil = new MenuAccueil();
         $form = $this->createForm(MenuType::class);
         $form->handleRequest($request);
 
         // Vérifie si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $fichierEleve */
-            $fichierEleve = $form->get('fileSubmit')->getData();
-
-            if ($fichierEleve) {
-                $originalFilename = pathinfo($fichierEleve->getClientOriginalName(), PATHINFO_FILENAME);
+            /** @var UploadedFile $fichierMenu */
+            $fichierMenu = $form->get('fileSubmit')->getData();
+            /*si le champ fichier menu est rempli*/
+            if ($fichierMenu) {
+                $originalFilename = pathinfo($fichierMenu->getClientOriginalName(), PATHINFO_FILENAME);
                 // garantie que le nom du fichier soit dans l'URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '.' . $fichierEleve->guessExtension();
+                $newFilename = $safeFilename . '.' . $fichierMenu->guessExtension();
 
                 // Déplace le fichier dans le directory où il sera stocké
                 try {
-                    $fichierEleve->move(
+                    $fichierMenu->move(
                         $this->getParameter('menu_directory'),
                         $newFilename
                     );

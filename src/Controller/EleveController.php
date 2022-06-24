@@ -58,6 +58,7 @@ class EleveController extends AbstractController
                           Request            $request,
                           PaginatorInterface $paginator, $page = 1): Response
     {
+        /*Récupére les élèves non archivés*/
         $eleves = $eleveRepo->findByArchive(false);
         $form = $this->createForm(FilterEleveType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
@@ -89,6 +90,7 @@ class EleveController extends AbstractController
     /**
      * @Route("/file", name="eleve_file", methods={"GET","POST"})
      * @throws NonUniqueResultException
+     * Formulaire d'ajout d'une liste d'élèves
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
@@ -147,6 +149,7 @@ class EleveController extends AbstractController
     /**
      * @throws NonUniqueResultException
      * @throws Exception
+     * Fonction permettant de créer des élèves à aprtir d'un fichier excel
      */
     private function creerEleves(string $fileName): void
     {
@@ -189,12 +192,16 @@ class EleveController extends AbstractController
                             } else {
                                 $classe = null;
                             }
-
+                            /*Vérifie si l'élève a un nombre de repas*/
                             if ($rowData['Nombre de repas Midi'] === null) {
                                 $nbRepas = 0;
                             } else {
                                 $nbRepas = $rowData['Nombre de repas Midi'];
+                                /*Récupère l'inscription à la cantine des élèves*/
                                 $inscription = $this->inscritCantRepo->findOneByEleve($eleveExcel->getId());
+                                /*Si l'inscription existe alors il modifie les inscriptions
+                                 sinon il crée une nouvelle inscription
+                                */
                                 if ($inscription !== null) {
                                     $inscription
                                         ->setRepasJ1(!empty($rowData['Repas Midi J1']))
@@ -214,7 +221,6 @@ class EleveController extends AbstractController
                                 }
                                 $inscription->setArchiveInscription(false);
                                 $this->entityManager->persist($inscription);
-
                             }
 
                             $eleveExcel
@@ -238,6 +244,7 @@ class EleveController extends AbstractController
                                 $classe = null;
                             }
 
+                            /*Récupère l'inscription à la cantine*/
                             if ($rowData['Nombre de repas Midi'] === null) {
                                 $nbRepas = 0;
                             } else {
@@ -303,6 +310,12 @@ class EleveController extends AbstractController
         $this->entityManager->flush();
     }
 
+    /**
+     * @param string $fileName
+     * @return array
+     * Fonction permettant de récupérer les données du fichier excel et de retourner
+     * un tableau qui contient les élèves dans l'excel
+     */
     public function getDataFromFile(string $fileName): array
     {
         $file = $this->getParameter('eleveFile_directory') . $fileName;
@@ -322,7 +335,13 @@ class EleveController extends AbstractController
         $dataRaw = $serializer->decode($fileString, $fileExtension);
         $data = [];
         foreach ($dataRaw['Feuil1'] as $row) {
-            if (key($row) != null or key($row) == "") {
+            /*Vérifie si la clé de la ligne est different de null*/
+            if (key($row) != null) {
+                /*Vérifie si la clé a une valeur vide
+                 si oui il récupère la valeur de la première façon
+                 sinon il récupère de l'autre façon (dd($dataRaw) pour voir
+                 la différence les données récupèrées)
+                */
                 if (key($row) == "") {
                     $temp1 = [
                         "Nom" => $row[""][0],
@@ -353,6 +372,7 @@ class EleveController extends AbstractController
     /**
      * @Route("/new", name="eleve_new", methods={"GET","POST"})
      * @throws Exception
+     * Formulaire d'ajout d'un élève
      */
     public function new(Request                $request,
                         SluggerInterface       $slugger,
@@ -365,7 +385,7 @@ class EleveController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imgProfileEleve */
             $imgProfileEleve = $form->get('photoEleve')->getData();
-
+            /*Vérifie si le champ image d'un élève est rempli*/
             if ($imgProfileEleve) {
                 $originalFilename = pathinfo($imgProfileEleve->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -406,12 +426,14 @@ class EleveController extends AbstractController
     /**
      * @Route("/{id}/edit", name="eleve_edit", methods={"GET","POST"})
      * @throws Exception
+     * Formulaire de modification de l'élève
      */
     public function edit(Request                $request,
                          Eleve                  $eleve,
                          SluggerInterface       $slugger,
                          EntityManagerInterface $entityManager): Response
     {
+        /*Récupère l'ancienne photo de l'élève*/
         $anciennePhoto = $eleve->getPhotoEleve();
         $form = $this->createForm(EleveType::class, $eleve);
         $form->handleRequest($request);
@@ -419,13 +441,14 @@ class EleveController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imgProfileEleve */
             $imgProfileEleve = $form->get('photoEleve')->getData();
-
+            /*Vérifie si le champ image d'un élève est rempli*/
             if ($imgProfileEleve) {
                 $originalFilename = pathinfo($imgProfileEleve->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFileNameImg = $safeFilename . '.' . $imgProfileEleve->guessExtension();
 
+                /*Supprime l'ancienne photo de l'élève*/
                 if ($newFileNameImg != $anciennePhoto && $anciennePhoto != null) {
                     unlink($this->getParameter('photoEleve_directory') . $anciennePhoto);
                 }
@@ -461,6 +484,7 @@ class EleveController extends AbstractController
 
     /**
      * @Route("/{id}/delete", name="eleve_delete_view", methods={"GET"})
+     * Page de pré-impression
      */
     public function delete_view(Eleve $eleve): Response
     {
@@ -472,6 +496,7 @@ class EleveController extends AbstractController
     /**
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
      * @throws NonUniqueResultException
+     * Formulaire de suppression d'un élève
      */
     public function delete(Request                      $request,
                            Eleve                        $eleve,
@@ -480,12 +505,15 @@ class EleveController extends AbstractController
                            InscriptionCantineRepository $cantineRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $eleve->getId(), $request->request->get('_token'))) {
+            /*Vérifie si l'élève a une image et le supprime si c'est le cas*/
             if ($eleve->getPhotoEleve() != null) {
                 unlink($this->getParameter('photoEleve_directory') . $eleve->getPhotoEleve());
             }
+            /*Vérifie si l'élève a un fichier code barre et le supprime si c'est le cas*/
             if ($eleve->getCodeBarreEleve() != null) {
                 unlink($this->getParameter('codeBarEleveFile_directory') . $eleve->getCodeBarreEleve());
             }
+            /*Récupère le compte utilisateur et les inscriptions à la cantine et les suppriment*/
             $user = $userRepo->findOneByEleve($eleve->getId());
             $cantine = $cantineRepository->findOneByEleve($eleve->getId());
             if ($user) {
