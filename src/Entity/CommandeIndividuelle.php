@@ -64,7 +64,7 @@ class CommandeIndividuelle
     /**
      * @ORM\Column(type="boolean")
      */
-    private $est_valide;
+    private $estValide;
 
     public function getId(): ?int
     {
@@ -169,12 +169,12 @@ class CommandeIndividuelle
 
     public function getEstValide(): ?bool
     {
-        return $this->est_valide;
+        return $this->estValide;
     }
 
-    public function setEstValide(bool $est_valide): self
+    public function setEstValide(bool $estValide): self
     {
-        $this->est_valide = $est_valide;
+        $this->estValide = $estValide;
 
         return $this;
     }
