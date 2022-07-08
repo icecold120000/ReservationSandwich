@@ -14,6 +14,9 @@
         </a>
 
         <h2>Veuillez sélectionner un fichier contenant une liste d'utilisateur !</h2>
+        <h2>Voici les champs obligatoires dans cette ordre :</h2>
+        <img id="champObli" src="{{ asset('/static/images/champObligatoireUser.png') }}"
+             alt="Champ obligatoire liste d'utlisateurq">
 
         {% for message in app.flashes('SuccessUserFileSubmit') %}
             <div class="flash-success">

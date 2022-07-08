@@ -21,6 +21,7 @@ class DessertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des desserts
      * @param int|null $dispo
      * @param string $order
      * @return Dessert[] Returns an array of Dessert objects
@@ -36,6 +37,8 @@ class DessertRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère les desserts selon leur disponibilité
+     * @param bool $dispo
      * @return Dessert[] Returns an array of Dessert objects
      */
     public function findByDispo(bool $dispo): array
@@ -45,5 +48,20 @@ class DessertRepository extends ServiceEntityRepository
             ->setParameter('dispo', $dispo)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Récupère un dessert selon son nom
+     * @param string $nom
+     * @return Dessert|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByNom(string $nom): ?Dessert
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.nomDessert = :nom')
+            ->setParameter('nom', $nom)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

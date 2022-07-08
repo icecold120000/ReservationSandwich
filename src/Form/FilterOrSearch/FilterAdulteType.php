@@ -15,6 +15,7 @@ class FilterAdulteType extends AbstractType
         $builder
             ->add('nomAdulte', TextType::class, [
                 'label' => 'Rechercher un adulte',
+                'help' => 'Saisie possible pour la barre de recherche : Nom ou Prénom',
                 'required' => false,
             ])
             ->add('ordreNom', ChoiceType::class, [

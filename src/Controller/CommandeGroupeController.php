@@ -29,9 +29,19 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommandeGroupeController extends AbstractController
 {
     /**
+     * Formulaire d'ajout d'une commande groupée
+     * @Route("/new", name="commande_groupe_new", methods={"GET", "POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param SandwichRepository $sandwichRepo
+     * @param BoissonRepository $boissonRepo
+     * @param DessertRepository $dessertRepo
+     * @param DesactivationCommandeRepository $deactiveRepo
+     * @param LimitationCommandeRepository $limiteRepo
+     * @param UserRepository $userRepository
+     * @return Response
      * @throws NonUniqueResultException
      * @throws Exception
-     * @Route("/new", name="commande_groupe_new", methods={"GET", "POST"})
      */
     public function new(Request                         $request,
                         EntityManagerInterface          $entityManager,
@@ -165,7 +175,7 @@ class CommandeGroupeController extends AbstractController
         } else {
             return $this->renderForm('commande_groupe/new.html.twig', [
                 'commande_groupe' => $commandeGroupe,
-                'form' => $form,
+                'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
                 'desserts' => $desserts,
             ]);
@@ -173,8 +183,10 @@ class CommandeGroupeController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete_view", name="commande_groupe_delete_view", methods={"GET", "POST"})
      * Page de pré-suppression d'une commande groupée
+     * @Route("/{id}/delete_view", name="commande_groupe_delete_view", methods={"GET", "POST"})
+     * @param CommandeGroupe $commandeGroupe
+     * @return Response
      */
     public function delete_view(CommandeGroupe $commandeGroupe): Response
     {
@@ -184,8 +196,8 @@ class CommandeGroupeController extends AbstractController
     }
 
     /**
-     * @Route("/validate/{id}", name="validate_commande_groupe",methods={"GET","POST"})
      * Fonction permettant de valider ou invalider une commande groupée
+     * @Route("/validate/{id}", name="validate_commande_groupe",methods={"GET","POST"})
      */
     public function validateCommande(CommandeGroupe $commande, EntityManagerInterface $entityManager): RedirectResponse
     {
@@ -204,7 +216,17 @@ class CommandeGroupeController extends AbstractController
     }
 
     /**
+     * Formulaire de modification d'une commande groupée
      * @Route("/{id}/edit", name="commande_groupe_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param SandwichRepository $sandwichRepo
+     * @param DessertRepository $dessertRepo
+     * @param DesactivationCommandeRepository $deactiveRepo
+     * @param CommandeGroupe $commandeGroupe
+     * @param SandwichCommandeGroupeRepository $sandComRepo
+     * @param UserRepository $userRepository
+     * @return Response
      */
     public function edit(Request                          $request,
                          EntityManagerInterface           $entityManager,
@@ -289,7 +311,7 @@ class CommandeGroupeController extends AbstractController
         } else {
             return $this->renderForm('commande_groupe/edit.html.twig', [
                 'commande_groupe' => $commandeGroupe,
-                'form' => $form,
+                'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
                 'desserts' => $desserts,
             ]);
@@ -297,7 +319,13 @@ class CommandeGroupeController extends AbstractController
     }
 
     /**
+     * Page de pré-suppression d'une commande groupée
      * @Route("/{id}", name="commande_groupe_delete", methods={"POST"})
+     * @param Request $request
+     * @param CommandeGroupe $commandeGroupe
+     * @param EntityManagerInterface $entityManager
+     * @param SandwichCommandeGroupeRepository $sandComRepo
+     * @return Response
      */
     public function delete(Request                          $request,
                            CommandeGroupe                   $commandeGroupe,
@@ -313,6 +341,8 @@ class CommandeGroupeController extends AbstractController
             }
             $entityManager->remove($commandeGroupe);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessDeleteComGr',
                 'La commande groupée a été annulée !'

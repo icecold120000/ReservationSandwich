@@ -54,26 +54,36 @@ class UserController extends AbstractController
     }
 
     /**
+     * Page de gestion des utilisateurs
      * @Route("/index/{page}",defaults={"page" : 1}, name="user_index", methods={"GET","POST"})
+     * @param Request $request
+     * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param int $page
+     * @return Response
      */
     public function index(Request            $request,
                           UserRepository     $userRepository,
                           PaginatorInterface $paginator,
-                                             $page = 1): Response
+                          int                $page = 1): Response
     {
+        /*Récupération des utlisateurs*/
         $users = $userRepository->findAll();
         $form = $this->createForm(UserFilterType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $users = $userRepository->search(
                 $search->get('roleUser')->getData(),
                 $search->get('userVerifie')->getData(),
                 $search->get('ordreNom')->getData(),
-                $search->get('ordrePrenom')->getData()
+                $search->get('ordrePrenom')->getData(),
+                $search->get('userName')->getData()
             );
         }
 
+        /*Paginantion*/
         $usersTotal = $users;
         $users = $paginator->paginate(
             $users,
@@ -89,7 +99,14 @@ class UserController extends AbstractController
     }
 
     /**
+     * Formulaire d'ajout d'un utilisateur
      * @Route("/new", name="user_new", methods={"GET", "POST"})
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function new(Request                     $request,
                         UserPasswordHasherInterface $userPasswordHasher,
@@ -102,7 +119,10 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $userBirthday = $form->get('dateNaissanceUser')->getData();
-            /*Vérification si l'utilisateur existe dans la base de données*/
+            /*
+              Vérification si l'utilisateur existe dans la base de données
+              Avec ou sans date de naissance saisie
+            */
             if ($userBirthday != null) {
                 $userRelated = $userRepo->findByNomPrenomAndBirthday($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData(), $userBirthday);
@@ -110,7 +130,10 @@ class UserController extends AbstractController
                 $userRelated = $userRepo->findByNomAndPrenom($form->get('nomUser')->getData(),
                     $form->get('prenomUser')->getData());
             }
+
+            /*Si l'utilsateur n'existe pas alors */
             if ($userRelated == null) {
+                /*Il est créé*/
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -127,6 +150,7 @@ class UserController extends AbstractController
                     'L\'utilisateur a été sauvegardé !'
                 );
             } else {
+                /*Sinon un message d'erreur s'affiche*/
                 $this->addFlash(
                     'FailedUser',
                     'L\'utilisateur existe déjà dans la base de données !'
@@ -138,12 +162,17 @@ class UserController extends AbstractController
 
         return $this->renderForm('user/new.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
+     * Formulaire d'ajout d'une liste d'utlisateur
      * @Route("/file", name="user_file", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      * @throws NonUniqueResultException
      */
     public function fileSubmit(Request                $request,
@@ -157,7 +186,6 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierUser */
             $fichierUser = $form->get('fileSubmit')->getData();
-
             if ($fichierUser) {
                 $originalFilename = pathinfo($fichierUser->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
@@ -179,6 +207,7 @@ class UserController extends AbstractController
             $entityManager->persist($userFile);
             $entityManager->flush();
 
+            /*Traitement du fichier Excel soumis*/
             UserController::creerUsers($userFile->getFileName());
             $this->addFlash(
                 'SuccessUserFileSubmit',
@@ -194,6 +223,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Fonction permettant de traiter les utilisateurs dans l'excel
+     * @param string $fileName
      * @throws NonUniqueResultException
      * @throws Exception
      */
@@ -222,6 +253,10 @@ class UserController extends AbstractController
                                 $birthday = new DateTime($rowData['Date de naissance'],
                                     new DateTimeZone('Europe/Paris'));
 
+                                /*
+                                  Récupère et attribue le compte utilisateur
+                                  à l'élève ou l'adulte concerné
+                                */
                                 $eleve = $this->eleveRepository
                                     ->findByNomPrenomDateNaissance($rowData['Nom']
                                         , $rowData['Prénom'],
@@ -235,9 +270,10 @@ class UserController extends AbstractController
 
                                 if ($eleve != null) {
                                     $user->addEleve($eleve);
-                                } else {
+                                } elseif ($adulte != null) {
                                     $user->addAdulte($adulte);
                                 }
+
                                 $user
                                     ->setEmail($rowData['Email'])
                                     ->setNomUser($rowData['Nom'])
@@ -245,6 +281,7 @@ class UserController extends AbstractController
                                     ->setDateNaissanceUser($birthday)
                                     ->setIsVerified(true);
 
+                                /*Attribue le rôle de l'utilisateur*/
                                 switch ($roleUser) {
                                     case "Admin":
                                         $user->setRoles([User::ROLE_ADMIN]);
@@ -263,12 +300,14 @@ class UserController extends AbstractController
                                         break;
                                 }
 
+                                /*Hash le mot de passe*/
                                 $user->setPassword(
                                     $this->userPasswordHasher->hashPassword(
                                         $user,
                                         $rowData['Mot de passe']
                                     )
                                 );
+                                /*Génére un token hash*/
                                 $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
                                 $this->entityManager->persist($user);
@@ -294,10 +333,17 @@ class UserController extends AbstractController
                 }
             }
         }
+        /*Supprime le fichier Excel après le traitement du fichier*/
         unlink($this->getParameter('userFile_directory') . $fileName);
         $this->entityManager->flush();
     }
 
+    /**
+     * Fonction permettant de récupérer les données du fichier excel et de retourner
+     * un tableau qui contient les utilisateurs dans l'excel
+     * @param string $fileName
+     * @return array
+     */
     public function getDataFromFile(string $fileName): array
     {
         $file = $this->getParameter('userfile_directory') . $fileName;
@@ -305,7 +351,7 @@ class UserController extends AbstractController
 
         $normalizers = [new ObjectNormalizer()];
         $encoders = [
-            new ExcelEncoder($defaultContext = []),
+            new ExcelEncoder([]),
         ];
         $serializer = new Serializer($normalizers, $encoders);
 
@@ -316,7 +362,10 @@ class UserController extends AbstractController
     }
 
     /**
+     * Page de pré-suppression d'un utilisateur
      * @Route("/{id}/delete_view", name="user_delete_view", methods={"GET"})
+     * @param User $user
+     * @return Response
      */
     public function delete_view(User $user): Response
     {
@@ -326,7 +375,13 @@ class UserController extends AbstractController
     }
 
     /**
+     * Formulaire de suppression d'un élève
      * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param User $user
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function edit(Request                     $request,
                          User                        $user,
@@ -346,28 +401,61 @@ class UserController extends AbstractController
                         $form->get('password')->getData()
                     )
                 );
+
+                /*Récupére le champ fonction de l'utilisateur*/
+                if ($form->get('roles')->getData()) {
+                    $roles = $form->get('roles')->getData();
+                    /*Attribue le rôle correspondant*/
+                    switch ($roles) {
+                        case in_array("ROLE_ADMIN", $roles):
+                            $user->setRoles([User::ROLE_ADMIN]);
+                            break;
+                        case in_array("ROLE_ELEVE", $roles):
+                            $user->setRoles([User::ROLE_ELEVE]);
+                            break;
+                        case in_array("ROLE_CUISINE", $roles):
+                            $user->setRoles([User::ROLE_CUISINE]);
+                            break;
+                        case in_array("ROLE_ADULTES", $roles):
+                            $user->setRoles([User::ROLE_ADULTES]);
+                            break;
+                        default:
+                            $user->setRoles([User::ROLE_USER]);
+                            break;
+                    }
+                }
             }
 
+            /*Regénére le token hash*/
+            $user->setTokenHash(md5($user->getId() . $user->getEmail()));
+            $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessUser',
                 'L\'utilisateur a été modifié !'
             );
-            /*Regénére le token hash*/
-            $user->setTokenHash(md5($user->getId() . $user->getEmail()));
-            $entityManager->flush();
+
             return $this->redirectToRoute('user_edit', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="user_delete", methods={"POST"})
-     * @throws NonUniqueResultException
      * Formualire de supression d'un utilisateur
+     * @Route("/{id}", name="user_delete", methods={"POST"})
+     * @param Request $request
+     * @param User $user
+     * @param EntityManagerInterface $entityManager
+     * @param AdulteRepository $adulteRepository
+     * @param EleveRepository $eleveRepository
+     * @param InscriptionCantineRepository $cantineRepository
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function delete(Request                      $request,
                            User                         $user,

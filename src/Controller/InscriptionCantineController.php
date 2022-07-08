@@ -41,14 +41,19 @@ class InscriptionCantineController extends AbstractController
     }
 
     /**
-     * @Route("/", name="inscription_cantine_index", methods={"GET","POST"})
-     * @throws NonUniqueResultException
      * Formulaire d'ajout d'une liste d'inscription à la cantine
+     * @Route("/index", name="inscription_cantine_index", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
                                EntityManagerInterface $entityManager): Response
     {
+        /*Création d'un tableau qui contiendra les élèves qui n'ont pas été enregistrées*/
         $eleveMissing = [];
         $cantineFile = new Fichier();
         $form = $this->createForm(FichierType::class, $cantineFile);
@@ -58,7 +63,7 @@ class InscriptionCantineController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierEleve */
             $fichierEleve = $form->get('fileSubmit')->getData();
-
+            /*Vérifie si le chmap a été rempli*/
             if ($fichierEleve) {
                 $originalFilename = pathinfo($fichierEleve->getClientOriginalName(),
                     PATHINFO_FILENAME);
@@ -108,6 +113,10 @@ class InscriptionCantineController extends AbstractController
     }
 
     /**
+     * Fonction permettant de traiter les inscriptions à la cantine
+     * des élèves
+     * @param string $fileName
+     * @return array|null
      * @throws NonUniqueResultException
      * @throws Exception
      */
@@ -148,7 +157,7 @@ class InscriptionCantineController extends AbstractController
                                 }
                             }
                             /* Si l'inscription est trouvée et doit être modifiée*/
-                            if ($cantineExcel !== Null) {
+                            if ($cantineExcel !== null) {
                                 $cantineExcel->setRepasJ1(!empty($rowData['Repas Midi J1']))
                                     ->setRepasJ2(!empty($rowData['Repas Midi J2']))
                                     ->setRepasJ3(!empty($rowData['Repas Midi J3']))
@@ -203,10 +212,10 @@ class InscriptionCantineController extends AbstractController
 
 
     /**
-     * @param string $fileName
-     * @return array
      * Fonction permettant de récupérer les données du fichier excel et de retourner
      * un tableau qui contient les inscriptions à la cantine des élèves dans l'excel
+     * @param string $fileName
+     * @return array
      */
     public function getDataFromFile(string $fileName): array
     {
@@ -227,32 +236,70 @@ class InscriptionCantineController extends AbstractController
         $dataRaw = $serializer->decode($fileString, $fileExtension);
         $data = [];
         foreach ($dataRaw['Feuil1'] as $row) {
-            if (key($row) != null or key($row) == "") {
+            /*Vérifie si la clé de la ligne est different de null*/
+            if (key($row) != null) {
+                /*
+                  Premier cas de figure : le fichier excel a des lignes vides
+                  au-dessus de la ligne où sont marqué la légende
+                  Vérifie si la clé a une valeur vide et
+                  rempli les données dans un tableau
+                 */
                 if (key($row) == "") {
                     $temp1 = [
                         "Nom" => $row[""][0],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "Nombre de repas Midi" => $row[""][3],
+                        "Repas Midi J1" => $row[""][4],
+                        "Repas Midi J2" => $row[""][5],
+                        "Repas Midi J3" => $row[""][6],
+                        "Repas Midi J4" => $row[""][7],
+                        "Repas Midi J5" => $row[""][8]
+                    ];
+                } elseif (key($row) == "Nom") {
+                    /*
+                      Deuxième cas de figure : l'excel a uniquement la légende
+                      et les données
+                      et rempli les données dans un tableau
+                     */
+                    $temp1 = [
+                        "Nom" => $row["Nom"],
+                    ];
+                    $temp2 = [
+                        "Prénom" => $row["Prénom"],
+                        "Date de naissance" => $row["Date de naissance"],
+                        "Nombre de repas Midi" => $row["Nombre de repas Midi"],
+                        "Repas Midi J1" => $row["Repas Midi J1"],
+                        "Repas Midi J2" => $row["Repas Midi J2"],
+                        "Repas Midi J3" => $row["Repas Midi J3"],
+                        "Repas Midi J4" => $row["Repas Midi J4"],
+                        "Repas Midi J5" => $row["Repas Midi J5"],
+                    ];
                 } else {
+                    /*
+                      Troisième cas de figure : l'excel a des lignes avec des données
+                      écites avant la légende (exemple une date)
+                      et rempli les données dans un tableau
+                     */
                     $temp1 = [
                         "Nom" => $row[key($row)],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "Nombre de repas Midi" => $row[""][3],
+                        "Repas Midi J1" => $row[""][4],
+                        "Repas Midi J2" => $row[""][5],
+                        "Repas Midi J3" => $row[""][6],
+                        "Repas Midi J4" => $row[""][7],
+                        "Repas Midi J5" => $row[""][8]
+                    ];
                 }
-                $temp2 = [
-                    "Prénom" => $row[""][1],
-                    "Date de naissance" => $row[""][2],
-                    "Code classe" => $row[""][3],
-                    "Nombre de repas Midi" => $row[""][4],
-                    "Repas Midi J1" => $row[""][5],
-                    "Repas Midi J2" => $row[""][6],
-                    "Repas Midi J3" => $row[""][7],
-                    "Repas Midi J4" => $row[""][8],
-                    "Repas Midi J5" => $row[""][9],
-                    "Num Badge" => $row[""][10]
-                ];
                 $data[][] = array_merge($temp1, $temp2);
             }
         }
         return $data;
-
     }
 }

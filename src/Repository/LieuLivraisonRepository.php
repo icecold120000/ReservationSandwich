@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\LieuLivraison;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,6 +21,9 @@ class LieuLivraisonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des lieux de livraisons
+     * @param bool|null $active
+     * @param string $order
      * @return LieuLivraison[] Returns an array of Boisson objects
      */
     public function filter(bool $active = null, string $order = 'ASC'): array
@@ -30,5 +34,20 @@ class LieuLivraisonRepository extends ServiceEntityRepository
                 ->setParameter('active', $active);
         }
         return $query->orderBy('l.libelleLieu', $order)->getQuery()->getResult();
+    }
+
+    /**
+     * Récupère le lieu de livraison selon le libellé
+     * @param string $libelle
+     * @return LieuLivraison|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByLibelle(string $libelle): ?LieuLivraison
+    {
+        return $this->createQueryBuilder('l')
+            ->andWhere('l.libelleLieu = :libelle')
+            ->setParameter('libelle', $libelle)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

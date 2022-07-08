@@ -32,6 +32,13 @@
             <div id="filtre">
                 {{ form_start(form) }}
                 <div>
+                    {{ form_help(form.userName) }}
+                </div>
+                <div>
+                    <span>{{ form_label(form.userName) }}</span>
+                    {{ form_widget(form.userName) }}
+                </div>
+                <div>
                     <div class="selectFiltre">
                         <span>{{ form_label(form.roleUser) }} </span>
                         {{ form_widget(form.roleUser) }}

@@ -6,11 +6,21 @@
 {% endblock %}
 {% block body %}
     <main class="container-fluid">
-        <h1>Modifier les inscriptions à la cantine.</h1>
-        <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine !</h2>
-        <h3>Attention: Vous ne pouvez pas créer des élèves sur cette page !</h3>
-        <h3>Veuillez appuyer sur le bouton suivant.</h3>
-        <a class="btn btn-info" href="{{ path('eleve_file') }}">Ajouter une liste d'élèves</a>
+        <div>
+            <h1>Modifier les inscriptions à la cantine.</h1>
+            <h2>Veuillez sélectionner un fichier contenant une liste des élèves avec leur inscription à la cantine
+                !</h2>
+            <h3>Attention: Vous ne pouvez pas créer des élèves sur cette page !</h3>
+            <h3>Veuillez appuyer sur le bouton suivant.</h3>
+            <a class="btn btn-info" href="{{ path('eleve_file') }}">Ajouter une liste d'élèves</a>
+        </div>
+        <div>
+            <h2>Voici les champs obligatoires dans cette ordre et</h2>
+            <h2>les titres des champs doivent être nommés comme afficher ici :</h2>
+            <img id="champObli" src="{{ asset('/static/images/champObligatoireCantine.png') }}"
+                 alt="Champ obligatoire liste d'inscription de cantine">
+        </div>
+
         {% for message in app.flashes('SuccessCantineFileSubmit') %}
             <div class="flash-success">
                 {{ message }}

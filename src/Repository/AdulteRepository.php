@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Adulte;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,6 +23,8 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération les adultes selon s'ils sont archivés ou non
+     * @param bool $archive
      * @return Adulte[] Returns an array of Adulte objects
      */
     public function findByArchive(bool $archive): array
@@ -36,6 +39,11 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des adultes
+     * @param string|null $search
+     * @param string|null $ordreNom
+     * @param string|null $ordrePrenom
+     * @param bool|null $archive
      * @return Adulte[] Returns an array of Adulte objects
      */
     public function filter(string $search = null, string $ordreNom = null,
@@ -66,14 +74,15 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére l'adulte selon son nom, prénom et date de naissance
      * @param string $nom
      * @param string $prenom
-     * @param \DateTime|null $birthday
+     * @param DateTime|null $birthday
      * @return Adulte|null
      * @throws NonUniqueResultException
      */
-    public function findByNomPrenomDateNaissance(string    $nom, string $prenom,
-                                                 \DateTime $birthday = null): ?Adulte
+    public function findByNomPrenomDateNaissance(string   $nom, string $prenom,
+                                                 DateTime $birthday = null): ?Adulte
     {
         $query = $this->createQueryBuilder('a');
         $query->andWhere('a.nomAdulte = :nom')
@@ -88,6 +97,10 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére l'adulte selon son nom et prénom
+     * @param string $nom
+     * @param string $prenom
+     * @return Adulte|null
      * @throws NonUniqueResultException
      */
     public function findByNomPrenom(string $nom, string $prenom): ?Adulte
@@ -101,6 +114,9 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére l'adulte selon son compte utilisateur
+     * @param User $user
+     * @return Adulte|null
      * @throws NonUniqueResultException
      */
     public function findOneByCompte(User $user): ?Adulte

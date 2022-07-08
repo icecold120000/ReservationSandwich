@@ -7,6 +7,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\AdulteRepository;
 use App\Repository\EleveRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,8 +18,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     /**
+     * Formulaire d'insctiption
      * @Route("/register", name="app_register")
-     * @throws Exception
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param EntityManagerInterface $entityManager
+     * @param EleveRepository $eleveRepository
+     * @param AdulteRepository $adulteRepository
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function register(Request                     $request,
                              UserPasswordHasherInterface $userPasswordHasher,

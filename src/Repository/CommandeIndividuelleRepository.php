@@ -22,6 +22,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Mettre les commandes individuelles par ordre croissant selon leur dateHeureLivraison
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findAll(): array
@@ -30,6 +31,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération de toutes les commandes individuelles non clôturées (Administration)
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findAllNonCloture(): array
@@ -43,6 +45,8 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére les commandes individuelles valides pour être exportées selon une date
+     * @param string $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function exportationCommande(string $date): array
@@ -58,6 +62,10 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération des commandes individuelles selon le sandwich et la date
+     * Utilisé pour compter le nombre de sandwichs commandés selon la date
+     * @param int $sandwich
+     * @param string $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findBySandwich(int $sandwich, string $date): array
@@ -73,6 +81,10 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération des commandes individuelles selon la boisson et la date
+     * Utilisé pour compter le nombre de boissons commandées selon la date
+     * @param int $boisson
+     * @param string $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findByBoisson(int $boisson, string $date): array
@@ -88,6 +100,10 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération des commandes individuelles selon le dessert et la date
+     * Utilisé pour compter le nombre de desserts commandés selon la date
+     * @param int $dessert
+     * @param string $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findByDessert(int $dessert, string $date): array
@@ -103,6 +119,9 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération les commandes individuelles non clôturées selon l'utilisateur
+     * (Historique des commandes)
+     * @param User $user
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findIndexAllNonCloture(User $user): array
@@ -117,6 +136,9 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Utilisé pour éviter de faire plus d'une commande la même journée
+     * @param User $user
+     * @param DateTime $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function limiteCommande(User $user, DateTime $date): array
@@ -130,8 +152,12 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
     /**
+     * Utilisé pour compter les commandes pour les limites
+     * (Journalières,Hebdomadaire et Mensuelles)
+     * @param User $user
+     * @param DateTime $dateDebut
+     * @param DateTime $dateFin
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */
     public function findBetweenDate(User $user, DateTime $dateDebut, DateTime $dateFin): array
@@ -146,6 +172,10 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des historiques de commandes
+     * @param User $user
+     * @param DateTime|null $date
+     * @param bool|null $cloture
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      * @throws Exception
      */
@@ -185,6 +215,10 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre de la page de gestion des commandes (Administrateur)
+     * @param string|null $search
+     * @param DateTime|null $date
+     * @param bool|null $cloture
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      * @throws Exception
      */

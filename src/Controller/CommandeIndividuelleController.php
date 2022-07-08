@@ -63,18 +63,19 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/index/{page}",defaults={"page" : 1}, name="commande_individuelle_index", methods={"GET","POST"})
+     * Historique de commandes
+     * @Route("/index/{comIndPage}/{comGrPage}",defaults={"comIndPage" : 1,"comGrPage" : 1}, name="commande_individuelle_index", methods={"GET","POST"})
      * @param CommandeIndividuelleRepository $comIndRepo
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @param LimitationCommandeRepository $limiteRepo
      * @param CommandeGroupeRepository $comGrRepo
      * @param UserRepository $userRepo
-     * @param int $page Utlisé pour les filtres et la pagination
+     * @param int $comIndPage Utilisé pour le filtre et la pagination des commandes individuelles
+     * @param int $comGrPage Utilisé pour le filtre et la pagination des commandes groupées
      * @return Response
      * @throws NonUniqueResultException
      * @throws \Exception
-     * Historique des commandes d'un utilisateur
      */
     public function index(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface             $paginator,
@@ -82,7 +83,8 @@ class CommandeIndividuelleController extends AbstractController
                           LimitationCommandeRepository   $limiteRepo,
                           CommandeGroupeRepository       $comGrRepo,
                           UserRepository                 $userRepo,
-                          int                            $page = 1): Response
+                          int                            $comIndPage = 1,
+                          int                            $comGrPage = 1): Response
     {
         /*Récupère l'utilisateur courant*/
         $user = $userRepo->find($this->getUser());
@@ -108,6 +110,8 @@ class CommandeIndividuelleController extends AbstractController
 
         $form = $this->createForm(FilterIndexCommandeType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
+
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $commandes = $this->comIndRepo->filterIndex(
                 $user,
@@ -123,16 +127,20 @@ class CommandeIndividuelleController extends AbstractController
             );
         }
 
+        /*Pagination des commandes*/
         $commandes = $paginator->paginate(
             $commandes,
-            $page,
-            25
+            $comIndPage,
+            25,
+            ['pageParameterName' => 'comIndPage']
         );
 
+        /*Pagination des commandes groupées*/
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $page,
-            5
+            $comGrPage,
+            5,
+            ['pageParameterName' => 'comGrPage']
         );
 
         return $this->render('commande_individuelle/index.html.twig', [
@@ -157,9 +165,12 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Formulaire permettant de désactiver et réactiver le service de commande
      * @Route("/desactivation/{desactiveId}", name="commande_ind_desactive", methods={"GET","POST"})
      * @Entity("desactivationCommande", expr="repository.find(desactiveId)")
-     * Formulaire permettant de désactiver le service de commande
+     * @param DesactivationCommande $desactiveId
+     * @param EntityManagerInterface $manager
+     * @return RedirectResponse
      */
     public function deactivation(DesactivationCommande  $desactiveId,
                                  EntityManagerInterface $manager): RedirectResponse
@@ -185,17 +196,26 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/admin/{page}",defaults={"page" : 1}, name="commande_individuelle_admin", methods={"GET","POST"})
+     * Gestion des commandes
+     * @Route("/admin/{comIndPage}/{comGrPage}",defaults={"comIndPage" : 1,"comGrPage" : 1},
+     *      name="commande_individuelle_admin", methods={"GET","POST"})
+     * @param CommandeIndividuelleRepository $comIndRepo
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param CommandeGroupeRepository $comGrRepo
+     * @param int $comIndPage Utilisé pour le filtre et la pagination des commandes individuelles
+     * @param int $comGrPage Utilisé pour le filtre et la pagination des commandes groupées
+     * @return Response
      * @throws Exception
      * @throws NonUniqueResultException
      * @throws \Exception
-     * Gestion des commandes
      */
     public function admin(CommandeIndividuelleRepository $comIndRepo,
                           PaginatorInterface             $paginator,
                           Request                        $request,
                           CommandeGroupeRepository       $comGrRepo,
-                          int                            $page = 1): Response
+                          int                            $comIndPage = 1,
+                          int                            $comGrPage = 1): Response
     {
         /*Récupération des commandes + affichage par défault de la page*/
         $affichageTableau = "les deux";
@@ -297,7 +317,7 @@ class CommandeIndividuelleController extends AbstractController
                         }
                     }
 
-                    $encoder = new ExcelEncoder($defaultContext = []);
+                    $encoder = new ExcelEncoder([]);
                     /*Vérifie s'il y a des commandes et des commandes groupées*/
                     if ($commandeGroupeRow != [] && $commandeRow != []) {
                         /*Regroupe les commandes et commandes groupées dans un même
@@ -456,7 +476,7 @@ class CommandeIndividuelleController extends AbstractController
                         ]
                     );
 
-                    $encoder = new ExcelEncoder($defaultContext = []);
+                    $encoder = new ExcelEncoder([]);
                     /* Place les données dans une feuille*/
                     $data = [
                         // Array by sheet
@@ -522,16 +542,20 @@ class CommandeIndividuelleController extends AbstractController
             );
         }
 
+        /*Pagination des commandes*/
         $commandes = $paginator->paginate(
             $commandes,
-            $page,
-            25
+            $comIndPage,
+            25,
+            ['pageParameterName' => 'comIndPage']
         );
 
+        /*Pagination des commandes groupées*/
         $commandesGroupe = $paginator->paginate(
             $commandesGroupe,
-            $page,
-            5
+            $comGrPage,
+            5,
+            ['pageParameterName' => 'comGrPage']
         );
 
         return $this->render('commande_individuelle/admin.html.twig', [
@@ -544,9 +568,16 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Fonction permettant d'exporter les commandes sous forme de pdf
      * @Route("/pdf", name="commande_pdf", methods={"GET","POST"})
+     * @param array $commandes
+     * @param array $commandesGroupe
+     * @param string $modalite
+     * @param DateTime $dateChoisi
+     * @return Response
      */
-    public function pdfDownload($commandes, $commandesGroupe, $modalite, $dateChoisi): Response
+    public function pdfDownload(array  $commandes, array $commandesGroupe,
+                                string $modalite, DateTime $dateChoisi): Response
     {
         // Défini les options du pdf
         $optionsPdf = new OptionsPdf();
@@ -590,7 +621,7 @@ class CommandeIndividuelleController extends AbstractController
 
         // Génère l'affichage du pdf dans un onglet
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A4');
         $dompdf->render();
 
         $date = $dateChoisi->format('d-m-Y');
@@ -608,25 +639,32 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @param $modalite
-     * @param $dateChoisi
-     * @param $affichage
-     * @return Response
+     * Page de pré-impression de l'exportation des commandes
      * @Route("/preview", name="commande_impression", methods={"GET","POST"})
+     * @param string $modalite
+     * @param DateTime $dateChoisi
+     * @param string $affichage
+     * @return Response
      */
-    public function printPreview($modalite, $dateChoisi, $affichage): Response
+    public function printPreview(string $modalite, DateTime $dateChoisi,
+                                 string $affichage): Response
     {
-        /*Récupèration des commandes et commandes groupées*/
+        /*Si l'affichage choisi est individuelle ou les deux*/
         if ($affichage == "les deux" || $affichage == "individuelle") {
+            /*Si oui, alors il y a récupèration des commandes individuelles*/
             $commandes = $this->comIndRepo
                 ->exportationCommande($dateChoisi->format('y-m-d'));
         } else {
+            /*Sinon les commandes individuelles sont rendu null*/
             $commandes = null;
         }
 
+        /*Si l'affichage choisi est groupées ou les deux*/
         if ($affichage == "les deux" || $affichage == "groupées") {
+            /*Si oui, alors il y a récupèration des commandes groupées*/
             $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
         } else {
+            /*Sinon les commandes groupées sont rendu null*/
             $commandeGroupe = null;
         }
         /*Affichage du rendu selon ce qui est demandé*/
@@ -650,7 +688,20 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Formulaire d'ajout d'une commande individuelle
      * @Route("/new", name="commande_individuelle_new", methods={"GET", "POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param SandwichRepository $sandwichRepo
+     * @param BoissonRepository $boissonRepo
+     * @param DessertRepository $dessertRepo
+     * @param DesactivationCommandeRepository $deactiveRepo
+     * @param LimitationCommandeRepository $limiteRepo
+     * @param InscriptionCantineRepository $cantineRepository
+     * @param CommandeIndividuelleRepository $commandeRepo
+     * @param EleveRepository $eleveRepository
+     * @param UserRepository $userRepo
+     * @return Response
      * @throws NonUniqueResultException
      * @throws \Exception
      */
@@ -743,7 +794,7 @@ class CommandeIndividuelleController extends AbstractController
                             $error = true;
                         }
                     }
-                    /*Vérifie si l'élève qui a commandé son sandwich est incrit
+                    /*Vérifie si l'élève qui a commandé son sandwich est inscrit
                      le jour de la livraison à la cantine sinon message d'erreur
                     */
                     switch ($dateLivraison->format('l')) {
@@ -898,7 +949,7 @@ class CommandeIndividuelleController extends AbstractController
         } else {
             return $this->renderForm('commande_individuelle/new.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
-                'form' => $form,
+                'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
                 'boissons' => $boissons,
                 'desserts' => $desserts,
@@ -917,8 +968,8 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Affichage de la page de déactivation de service
      * @Route("/desactive", name="deactivate_commande",methods={"GET"})
-     * Page de déactivation de service
      */
     public function deactivated(): Response
     {
@@ -928,11 +979,15 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/validate/{id}", name="validate_commande",methods={"GET","POST"})
      * Formulaire permettant de valider ou invalider la commande
+     * @Route("/validate/{id}", name="validate_commande",methods={"GET","POST"})
+     * @param CommandeIndividuelle $commande
+     * @param EntityManagerInterface $entityManager
+     * @return RedirectResponse
      */
     public function validateCommande(CommandeIndividuelle $commande, EntityManagerInterface $entityManager): RedirectResponse
     {
+        /*Vérifie si la commande est valide ou pas et change son contraire*/
         if ($commande->getEstValide() === false) {
             $commande->setEstValide(true);
         } else {
@@ -945,8 +1000,10 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete_view", name="commande_individuelle_delete_view", methods={"GET","POST"})
      * Page de pré-suppression d'une commande
+     * @Route("/{id}/delete_view", name="commande_individuelle_delete_view", methods={"GET","POST"})
+     * @param CommandeIndividuelle $commandeIndividuelle
+     * @return Response
      */
     public function delete_view(CommandeIndividuelle $commandeIndividuelle): Response
     {
@@ -956,7 +1013,21 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Formulaire de modification d'une commande individuelle
      * @Route("/{id}/edit", name="commande_individuelle_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param CommandeIndividuelle $commandeIndividuelle
+     * @param EntityManagerInterface $entityManager
+     * @param SandwichRepository $sandwichRepo
+     * @param BoissonRepository $boissonRepo
+     * @param DessertRepository $dessertRepo
+     * @param DesactivationCommandeRepository $deactiveRepo
+     * @param LimitationCommandeRepository $limiteRepo
+     * @param InscriptionCantineRepository $cantineRepository
+     * @param EleveRepository $eleveRepository
+     * @param CommandeIndividuelleRepository $commandeRepo
+     * @param UserRepository $userRepo
+     * @return Response
      * @throws NonUniqueResultException
      * @throws \Exception
      */
@@ -1190,12 +1261,14 @@ class CommandeIndividuelleController extends AbstractController
                 ['id' => $commandeIndividuelle->getId()], Response::HTTP_SEE_OTHER);
         }
 
+        /*Si le service est déactivé alors retourne la page de désactivation de service*/
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
+            /*Sinon retourne le formulaire de modification de commande individuelle*/
             return $this->renderForm('commande_individuelle/edit.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
-                'form' => $form,
+                'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
                 'boissons' => $boissons,
                 'desserts' => $desserts,
@@ -1214,8 +1287,12 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
+     * Formulaire de suppression d'une commande
      * @Route("/{id}", name="commande_individuelle_delete", methods={"POST"})
-     * Formilaire de suppression d'une commande
+     * @param Request $request
+     * @param CommandeIndividuelle $commandeIndividuelle
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function delete(Request                $request,
                            CommandeIndividuelle   $commandeIndividuelle,
@@ -1224,6 +1301,8 @@ class CommandeIndividuelleController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $commandeIndividuelle->getId(), $request->request->get('_token'))) {
             $entityManager->remove($commandeIndividuelle);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessDeleteComInd',
                 'La commande a été annulée !'

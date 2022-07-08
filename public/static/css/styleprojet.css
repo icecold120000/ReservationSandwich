@@ -812,7 +812,7 @@ div#preciserRaison {
         height: 5em;
     }
 
-    #btnAjout, #btnRetour, .btn.btn-success {
+    #btnAjout, #btnRetour, .btn.btn-success, .btn.btn-info {
         padding: 30px;
         font-size: 2.5em;
         margin: 1em 0;

@@ -25,10 +25,14 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 class OubliMdpController extends AbstractController
 {
     /**
-     * @Route("/oubli/mdp", name="oubli_mdp")
-     * @throws TransportExceptionInterface
-     * @throws NonUniqueResultException
      * Formulaire d'oubli de mot de passe
+     * @Route("/oubli/mdp", name="oubli_mdp")
+     * @param Request $request
+     * @param MailerInterface $mailer
+     * @param UserRepository $userRepo
+     * @return Response
+     * @throws NonUniqueResultException
+     * @throws TransportExceptionInterface
      */
     public function forgottenPassword(Request         $request,
                                       MailerInterface $mailer,
@@ -38,7 +42,6 @@ class OubliMdpController extends AbstractController
         $email = $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $userEmail = $email->get("emailFirst")->getData();
             $dateNaissance = $email->get("dateAnniversaire")->getData();
             $user = $userRepo->findOneByEmailAndDate($userEmail, $dateNaissance);
@@ -46,7 +49,6 @@ class OubliMdpController extends AbstractController
             if (empty($user))
                 $error = "L'adresse mail n'est lié à aucun compte !";
             else {
-                /*Envoie d'un email*/
                 $email = (new TemplatedEmail())
                     ->from('cuisine.saintvincentsenlis@gmail.com')
                     ->to($user->getEmail())
@@ -55,7 +57,7 @@ class OubliMdpController extends AbstractController
                     ->context([
                         'user' => $user
                     ]);
-
+                /*Envoie d'un email*/
                 $mailer->send($email);
                 $this->addFlash(
                     'SuccessOubli',
@@ -74,10 +76,16 @@ class OubliMdpController extends AbstractController
     }
 
     /**
+     * Formulaire de réinitialisation de mot de passe
      * @Route("/oubli/mdp/{userTokenHash}", name="oubli_mdp_reset", methods={"GET","POST"})
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * @param EntityManagerInterface $em
+     * @param User $user
+     * @param UserRepository $userRepo
+     * @param Request $request
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @return Response|null
      * @throws NonUniqueResultException
-     * Formulaire de réinitialisation de mot de passe
      */
     public function resetPassword(EntityManagerInterface      $em,
                                   User                        $user,

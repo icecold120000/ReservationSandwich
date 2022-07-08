@@ -21,6 +21,7 @@ class LimitationCommandeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère la limitation selon son identifiant
      * @param int $idLimite
      * @return LimitationCommande|null
      * @throws NonUniqueResultException
@@ -34,6 +35,14 @@ class LimitationCommandeRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * Filtre des limitations
+     * @param string|null $ordreLibelle
+     * @param bool|null $isActive
+     * @param string|null $ordreNombre
+     * @param string|null $ordreHeure
+     * @return array
+     */
     public function filter(string $ordreLibelle = null, bool $isActive = null,
                            string $ordreNombre = null, string $ordreHeure = null): array
     {

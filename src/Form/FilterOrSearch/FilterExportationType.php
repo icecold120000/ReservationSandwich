@@ -30,7 +30,7 @@ class FilterExportationType extends AbstractType
                 ],
             ])
             ->add('affichageExport', ChoiceType::class, [
-                'label' => 'Affichage de l\'export',
+                'label' => 'Affichage de l\'exportation',
                 'choices' => [
                     'Les deux' => 'les deux',
                     'Commandes individuelles seulement' => 'individuelle',

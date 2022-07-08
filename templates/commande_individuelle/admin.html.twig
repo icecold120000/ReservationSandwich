@@ -47,7 +47,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <h1>Choisir les modalités de votre export</h1>
+                                <h1>Choisir les modalités de votre exportation</h1>
                                 {{ form_start(exportForm) }}
                                 <div id="screenLeft">
                                     {{ form_label(exportForm.methodeExport) }}
@@ -111,6 +111,9 @@
         <div id="formFilter">
             <div id="filtre">
                 {{ form_start(form) }}
+                <div>
+                    {{ form_help(form.nom) }}
+                </div>
                 <div>
                     <div class="selectFiltre">
                         <span>{{ form_label(form.nom) }} </span>

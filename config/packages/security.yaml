@@ -43,42 +43,42 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     - { path: ^/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/sandwich, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/sandwich/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/sandwich/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/sandwich/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/sandwich/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/boisson, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/boisson/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/boisson/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/boisson/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/boisson/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/dessert, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/dessert/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/dessert/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/dessert/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/dessert/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/inscription/cantine, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/adulte, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/inscription/cantine/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/adulte/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/adulte/new, roles: ROLE_ADMIN }
     - { path: ^/adulte/edit, roles: ROLE_ADMIN }
     - { path: ^/adulte/file, roles: ROLE_ADMIN }
     - { path: ^/adulte/delete_view, roles: ROLE_ADMIN }
-    - { path: ^/classe, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
+    - { path: ^/classe/index, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
     - { path: ^/classe/new, roles: ROLE_ADMIN }
     - { path: ^/classe/edit, roles: ROLE_ADMIN }
     - { path: ^/classe/show, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ADULTES ] }
     - { path: ^/classe/delete_view, roles: ROLE_ADMIN }
-    - { path: ^/eleve, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/eleve/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/eleve/new, roles: ROLE_ADMIN }
     - { path: ^/eleve/edit, roles: ROLE_ADMIN }
     - { path: ^/eleve/file, roles: ROLE_ADMIN }
     - { path: ^/eleve/delete_view, roles: ROLE_ADMIN }
-    - { path: ^/user, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/user/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/user/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/user/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
-    - { path: ^/limite, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/limite/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/limite/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/limite/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/limite/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/index, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/new, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
+    - { path: ^/user/delete_view, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/user/file, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/profile/admin, roles: ROLE_ADMIN }
     - { path: ^/profile/cuisine, roles: ROLE_CUISINE }
@@ -86,7 +86,7 @@ security:
     - { path: ^/profile/eleve, roles: ROLE_ELEVE }
     - { path: ^/profile/user, roles: [ ROLE_USER, IS_AUTHENTICATED_REMEMBERED ] }
     - { path: ^/profile/edit, roles: IS_AUTHENTICATED_REMEMBERED }
-    - { path: ^/commande/individuelle, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/commande/individuelle/index, roles: IS_AUTHENTICATED_REMEMBERED }
     - { path: ^/commande/individuelle/admin, roles: [ ROLE_ADMIN, ROLE_CUISINE ] }
     - { path: ^/commande/individuelle/new, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ELEVE, ROLE_ADULTES ] }
     - { path: ^/commande/individuelle/edit, roles: [ ROLE_ADMIN, ROLE_CUISINE, ROLE_ELEVE, ROLE_ADULTES ] }

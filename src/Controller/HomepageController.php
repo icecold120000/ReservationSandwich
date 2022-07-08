@@ -19,7 +19,13 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class HomepageController extends AbstractController
 {
     /**
+     * Page d'accueil
      * @Route("/", name="homepage", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @param MenuAccueilRepository $menuRepo
+     * @return Response
      * @throws NonUniqueResultException
      */
     public function index(Request                $request,

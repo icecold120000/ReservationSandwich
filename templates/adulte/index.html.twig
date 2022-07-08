@@ -34,6 +34,9 @@
             <div id="filtre">
                 {{ form_start(form) }}
                 <div>
+                    {{ form_help(form.nomAdulte) }}
+                </div>
+                <div>
                     <div class="selectFiltre">
                         <span>{{ form_label(form.nomAdulte) }}</span>
                         {{ form_widget(form.nomAdulte) }}

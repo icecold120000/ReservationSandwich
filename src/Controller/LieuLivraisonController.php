@@ -8,6 +8,7 @@ use App\Form\LieuLivraisonType;
 use App\Repository\CommandeGroupeRepository;
 use App\Repository\LieuLivraisonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class LieuLivraisonController extends AbstractController
 {
     /**
+     * Page de gestion des lieux de livraison
      * @Route("/index/{page}",defaults={"page":1}, name="lieu_livraison_index", methods={"GET","POST"})
      * @param LieuLivraisonRepository $lieuLivraisonRepo
      * @param PaginatorInterface $paginator
@@ -32,10 +34,12 @@ class LieuLivraisonController extends AbstractController
                           Request                 $request,
                           int                     $page = 1): Response
     {
+        /*Récupération des lieux de livraison*/
         $lieux = $lieuLivraisonRepo->findAll();
         $form = $this->createForm(FilterLieuType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $lieux = $lieuLivraisonRepo->filter(
                 $search->get('lieuActive')->getData(),
@@ -43,6 +47,7 @@ class LieuLivraisonController extends AbstractController
             );
         }
 
+        /*Pagination*/
         $lieux = $paginator->paginate(
             $lieux,
             $page,
@@ -56,36 +61,60 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="lieu_livraison_new", methods={"GET","POST"})
      * Formulaire d'ajout d'un lieu de livraison
+     * @Route("/new", name="lieu_livraison_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param LieuLivraisonRepository $lieuLivraisonRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request                 $request,
+                        EntityManagerInterface  $entityManager,
+                        LieuLivraisonRepository $lieuLivraisonRepo): Response
     {
         $lieuLivraison = new LieuLivraison();
         $form = $this->createForm(LieuLivraisonType::class, $lieuLivraison);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($lieuLivraison);
-            $entityManager->flush();
 
-            $this->addFlash(
-                'SuccessLieu',
-                'Le lieu de livraison a été sauvegardé !'
-            );
+            /*Vérifie si le lieu saisi existe déjà*/
+            $lieuFound = $lieuLivraisonRepo->findOneByLibelle($form->get('libelleLieu')->getData());
+
+            /*Si le lieu n'existe pas alors*/
+            if (!$lieuFound) {
+                /*Le lieu est créé*/
+                $entityManager->persist($lieuLivraison);
+                $entityManager->flush();
+
+                /*Message de validation*/
+                $this->addFlash(
+                    'SuccessLieu',
+                    'Le lieu de livraison a été sauvegardé !'
+                );
+            } else {
+                /*Sinon un message d'erreur s'affiche*/
+                $this->addFlash(
+                    'ErreurLibelleLieu',
+                    'Le lieu saisie existe déjà !'
+                );
+            }
 
             return $this->redirectToRoute('lieu_livraison_new', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('lieu_livraison/new.html.twig', [
             'lieu_livraison' => $lieuLivraison,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete_view", name="lieu_livraison_delete_view", methods={"GET","POST"})
      * Page de pré-suppression d'un lieu de livraison
+     * @Route("/{id}/delete_view", name="lieu_livraison_delete_view", methods={"GET","POST"})
+     * @param LieuLivraison $lieuLivraison
+     * @return Response
      */
     public function delete_view(LieuLivraison $lieuLivraison): Response
     {
@@ -95,36 +124,61 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="lieu_livraison_edit", methods={"GET","POST"})
      * Formululaire de modification d'un lieu de livraison
+     * @Route("/{id}/edit", name="lieu_livraison_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param LieuLivraison $lieuLivraison
+     * @param EntityManagerInterface $entityManager
+     * @param LieuLivraisonRepository $lieuLivraisonRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
-    public function edit(Request                $request,
-                         LieuLivraison          $lieuLivraison,
-                         EntityManagerInterface $entityManager): Response
+    public function edit(Request                 $request,
+                         LieuLivraison           $lieuLivraison,
+                         EntityManagerInterface  $entityManager,
+                         LieuLivraisonRepository $lieuLivraisonRepo): Response
     {
         $form = $this->createForm(LieuLivraisonType::class, $lieuLivraison);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            /*Vérifie si le lieu saisi existe déjà*/
+            $lieuFound = $lieuLivraisonRepo->findOneByLibelle($form->get('libelleLieu')->getData());
 
-            $this->addFlash(
-                'SuccessLieu',
-                'Le lieu de livraison a été modifiée !'
-            );
+            /*Si le lieu saisi est trouvé avec ce nom et que nom a changé alors*/
+            if ($lieuFound && $lieuLivraison->getLibelleLieu() != $form->get('libelleLieu')->getData()) {
+                $this->addFlash(
+                    'ErreurLibelleLieu',
+                    'Le lieu de livraison a été modifiée !'
+                );
+            } else {
+                $entityManager->flush();
+
+                /*Message de validation*/
+                $this->addFlash(
+                    'SuccessLieu',
+                    'Le lieu de livraison a été modifiée !'
+                );
+            }
 
             return $this->redirectToRoute('lieu_livraison_edit', ['id' => $lieuLivraison->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('lieu_livraison/edit.html.twig', [
             'lieu_livraison' => $lieuLivraison,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
      * Formulaire de suppression d'un lieu de livraison
+     * @Route("/{id}", name="lieu_livraison_delete", methods={"POST"})
+     * @param Request $request
+     * @param LieuLivraison $lieuLivraison
+     * @param EntityManagerInterface $entityManager
+     * @param CommandeGroupeRepository $comGroupeRepo
+     * @param LieuLivraisonRepository $lieuRepository
+     * @return Response
      */
     public function delete(Request                  $request,
                            LieuLivraison            $lieuLivraison,
@@ -133,8 +187,8 @@ class LieuLivraisonController extends AbstractController
                            LieuLivraisonRepository  $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
-            /*Modifie les commmandes groupées qui utlisent le lieu de livraison et les affectent
-              au lieu de livraison aucun
+            /*Modifie toutes les commmandes groupées qui utlisent le lieu de livraison
+              et les affectent au lieu de livraison aucun
              */
             $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());
             foreach ($commandesGroupe as $commandeGroupe) {
@@ -142,6 +196,8 @@ class LieuLivraisonController extends AbstractController
             }
             $entityManager->remove($lieuLivraison);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessDeleteLieu',
                 'Le lieu a été supprimé !'

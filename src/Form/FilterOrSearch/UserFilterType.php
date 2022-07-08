@@ -5,14 +5,21 @@ namespace App\Form\FilterOrSearch;
 use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use function Sodium\add;
 
 class UserFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('userName', TextType::class, [
+                'label' => 'Rechercher un utilisateur',
+                'help' => 'Saisie possible pour la barre de recherche : Nom ou Prénom',
+                'required' => false,
+            ])
             ->add('roleUser', ChoiceType::class, [
                 'label' => 'Fonction',
                 'choices' => [

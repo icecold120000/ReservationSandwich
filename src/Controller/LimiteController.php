@@ -18,15 +18,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class LimiteController extends AbstractController
 {
     /**
-     * @Route("/index", name="limite_index", methods={"GET","POST"})
      * Gestion des limitations
+     * @Route("/index", name="limite_index", methods={"GET","POST"})
+     * @param Request $request
+     * @param LimitationCommandeRepository $limitationCommandeRepository
+     * @return Response
      */
-    public function index(Request $request, LimitationCommandeRepository $limitationCommandeRepository): Response
+    public function index(Request                      $request,
+                          LimitationCommandeRepository $limitationCommandeRepository): Response
     {
+        /*Récupération des limitations*/
         $limites = $limitationCommandeRepository->findAll();
         $form = $this->createForm(FilterLimitationType::class);
         $filter = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $limites = $limitationCommandeRepository->filter(
                 $filter->get('ordreLibelle')->getData(),
@@ -38,13 +44,17 @@ class LimiteController extends AbstractController
 
         return $this->render('limite/index.html.twig', [
             'limitations' => $limites,
-            'form' => $form->createView()
+            'form' => $filter->createView()
         ]);
     }
 
     /**
+     * Formulaire d'ajout d'une limitation
+     * À Garder pour les développeurs
      * @Route("/new", name="limite_new", methods={"GET", "POST"})
-     * À Garder pour les développeurs permet de créer des limites
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -53,7 +63,6 @@ class LimiteController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /*Permet de mettre null dans le champ nbLimite si l'utilisateur
              a saisi une limite d'heure et inversement*/
             $libelle = $form->get('libelleLimite')->getData();
@@ -65,6 +74,8 @@ class LimiteController extends AbstractController
 
             $entityManager->persist($limitationCommande);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessLimite',
                 'Votre limitation a été sauvegardée !'
@@ -74,14 +85,16 @@ class LimiteController extends AbstractController
 
         return $this->renderForm('limite/new.html.twig', [
             'limitation_commande' => $limitationCommande,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete_view", name="limite_delete_view", methods={"GET"})
-     * À Garder pour les développeurs
      * Page de pré-suppression d'une limitation
+     * À Garder pour les développeurs
+     * @Route("/{id}/delete_view", name="limite_delete_view", methods={"GET"})
+     * @param LimitationCommande $limitationCommande
+     * @return Response
      */
     public function delete_view(LimitationCommande $limitationCommande): Response
     {
@@ -91,16 +104,21 @@ class LimiteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="limite_edit", methods={"GET", "POST"})
      * Formulaire de modification d'une limitation
+     * @Route("/{id}/edit", name="limite_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param LimitationCommande $limitationCommande
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function edit(Request $request, LimitationCommande $limitationCommande, EntityManagerInterface $entityManager): Response
+    public function edit(Request                $request,
+                         LimitationCommande     $limitationCommande,
+                         EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(LimitationCommandeType::class, $limitationCommande);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             /*Permet de mettre null dans le champ nbLimite si l'utilisateur
             a saisi une limite d'heure et inversement*/
             $libelle = $form->get('libelleLimite')->getData();
@@ -121,21 +139,30 @@ class LimiteController extends AbstractController
 
         return $this->renderForm('limite/edit.html.twig', [
             'limitation_commande' => $limitationCommande,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
+     * Formulaire de suppression d'une limitation
+     * À Garder pour les développeurs
      * @Route("/{id}", name="limite_delete", methods={"POST"})
-     * À Garder pour les développeurs permet de supprimer une limitation
+     * @param Request $request
+     * @param LimitationCommande $limitationCommande
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
-    public function delete(Request $request, LimitationCommande $limitationCommande, EntityManagerInterface $entityManager): Response
+    public function delete(Request                $request,
+                           LimitationCommande     $limitationCommande,
+                           EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $limitationCommande->getId(), $request->request->get('_token'))) {
             $entityManager->remove($limitationCommande);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
-                'SuccessDeleteEleve',
+                'SuccessDeleteLimite',
                 'La limitation a été supprimée !'
             );
         }

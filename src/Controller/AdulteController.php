@@ -43,8 +43,8 @@ class AdulteController extends AbstractController
     }
 
     /**
+     * Page de gestion des adultes
      * @Route("/index/{page}",defaults={"page" : 1}, name="adulte_index", methods={"GET","POST"})
-     * Liste des adultes
      * @param AdulteRepository $adulteRepo
      * @param Request $request
      * @param PaginatorInterface $paginator
@@ -56,6 +56,7 @@ class AdulteController extends AbstractController
                           PaginatorInterface $paginator,
                           int                $page = 1): Response
     {
+        /*Récupération des adultes non archivés*/
         $adultes = $adulteRepo->findByArchive(false);
         $form = $this->createForm(FilterAdulteType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
@@ -69,7 +70,7 @@ class AdulteController extends AbstractController
                 $filter->get('archiveAdulte')->getData()
             );
         }
-        /*Pagination*/
+        /*Pagination des adultes*/
         $adultes = $paginator->paginate(
             $adultes,
             $page,
@@ -83,9 +84,13 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @Route("/file", name="adulte_file", methods={"GET","POST"})
-     * @throws Exception
      * Formulaire d'ajout une liste d'adultes à partir d'excel
+     * @Route("/file", name="adulte_file", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     * @throws Exception
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
@@ -121,6 +126,7 @@ class AdulteController extends AbstractController
             /*Traitement du fichier excel*/
             AdulteController::creerAdulte($adulteFile->getFileName());
 
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessAdulteFileSubmit',
                 'Les adultes ont été sauvegardés !'
@@ -136,8 +142,10 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @throws Exception
      * Fonction permettant de traiter le fichier excel
+     * @param string $fileName
+     * @throws NonUniqueResultException
+     * @throws Exception
      */
     private function creerAdulte(string $fileName): void
     {
@@ -168,18 +176,31 @@ class AdulteController extends AbstractController
                                 unset($adulteNonArchives[$key]);
                             }
                         }
+                        /*Générer un code barre pour l'adulte*/
                         $generator = new BarcodeGeneratorPNG();
+
+                        /*Vérifie si l'adulte a un numéro de badge*/
                         if ($rowData['N° de Badge'] != null) {
+
+                            /*Si oui, on nomme le fichier qui contiendra l'image du code barre*/
                             $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
+
+                            /*
+                              Puis met dans l'emplacement du fichier,
+                              on génère l'image du code barre grâce au numéro de badge de l'adulte
+                            */
                             file_put_contents($this->getParameter('codeBarAdulteFile_directory') . $codeBar,
                                 $generator->getBarcode($rowData['N° de Badge'],
                                     $generator::TYPE_CODE_128, 3, 100));
                         } else {
+                            /*Sinon on met le code barre à null*/
                             $codeBar = null;
                         }
 
+                        /*Si l'adulte saisi existe alors il est modifié*/
                         if ($adulteRelated !== null) {
-                            $adulteRelated->setPrenomAdulte($rowData['Prénom'])
+                            $adulteRelated
+                                ->setPrenomAdulte($rowData['Prénom'])
                                 ->setNomAdulte($rowData['Nom'])
                                 ->setArchiveAdulte(false);
 
@@ -188,15 +209,16 @@ class AdulteController extends AbstractController
                                     new DateTimeZone('Europe/Paris')));
                             }
                             $adulteRelated->setCodeBarreAdulte($codeBar);
-                            $this->entityManager->persist($adulteRelated);
                         } else {
+                            /*Sinon il est créé*/
                             $adulte = new Adulte();
-                            $adulte->setPrenomAdulte($rowData['Prénom'])
+                            $adulte
+                                ->setPrenomAdulte($rowData['Prénom'])
                                 ->setNomAdulte($rowData['Nom'])
                                 ->setArchiveAdulte(false);
 
                             if ($rowData['Date de naissance'] != null) {
-                                $adulte->setDateNaissance(new DateTime($rowData['Date de naissanced'],
+                                $adulte->setDateNaissance(new DateTime($rowData['Date de naissance'],
                                     new DateTimeZone('Europe/Paris')));
                             }
                             $adulte->setCodeBarreAdulte($codeBar);
@@ -218,10 +240,10 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @param string $fileName
-     * @return array
      * Fonction permettant de récupérer les données du fichier excel et de retourner
      * un tableau qui contient les adultes dans l'excel
+     * @param string $fileName
+     * @return array
      */
     public function getDataFromFile(string $fileName): array
     {
@@ -247,25 +269,49 @@ class AdulteController extends AbstractController
         foreach ($dataRaw['Feuil1'] as $row) {
             /*Vérifie si la clé de la ligne est different de null*/
             if (key($row) != null) {
-                /*Vérifie si la clé a une valeur vide
-                 si oui il récupère la valeur de la première façon
-                 sinon il récupère de l'autre façon (dd($dataRaw) pour voir
-                 la différence les données récupèrées)
-                */
+                /*
+                  Premier cas de figure : le fichier excel a des lignes vides
+                  au-dessus de la ligne où sont marqué la légende
+                  Vérifie si la clé a une valeur vide et
+                  rempli les données dans un tableau
+                 */
                 if (key($row) == "") {
                     $temp1 = [
                         "Nom" => $row[""][0],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "N° de Badge" => $row[""][3]
+                    ];
+                } elseif (key($row) == "Nom") {
+                    /*
+                      Deuxième cas de figure : l'excel a uniquement la légende
+                      et les données et rempli les données dans un tableau
+                     */
+                    $temp1 = [
+                        "Nom" => $row["Nom"],
+                    ];
+                    $temp2 = [
+                        "Prénom" => $row["Prénom"],
+                        "Date de naissance" => $row["Date de naissance"],
+                        "N° de Badge" => $row["N° de Badge"]
+                    ];
                 } else {
+                    /*
+                      Troisième cas de figure : l'excel a des lignes avec des données
+                      écites avant la légende (exemple une date)
+                      et rempli les données dans un tableau
+                     */
                     $temp1 = [
                         "Nom" => $row[key($row)],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "N° de Badge" => $row[""][3]
+                    ];
                 }
-                $temp2 = [
-                    "Prénom" => $row[""][1],
-                    "Date de naissance" => $row[""][2],
-                    "N° de Badge" => $row[""][3]
-                ];
                 /*Rassemble les deux tableaux*/
                 $data[][] = array_merge($temp1, $temp2);
             }
@@ -274,8 +320,11 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="adulte_new", methods={"GET", "POST"})
      * Formulaire d'ajout d'un adulte
+     * @Route("/new", name="adulte_new", methods={"GET", "POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -295,13 +344,17 @@ class AdulteController extends AbstractController
 
         return $this->renderForm('adulte/new.html.twig', [
             'adulte' => $adulte,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="adulte_edit", methods={"GET", "POST"})
      * Formulaire de modificiation d'un adulte
+     * @Route("/{id}/edit", name="adulte_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param Adulte $adulte
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function edit(Request                $request,
                          Adulte                 $adulte,
@@ -321,13 +374,15 @@ class AdulteController extends AbstractController
 
         return $this->renderForm('adulte/edit.html.twig', [
             'adulte' => $adulte,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete_view", name="adulte_delete_view", methods={"GET"})
      * Page de pré-suppression d'un adulte
+     * @Route("/{id}/delete_view", name="adulte_delete_view", methods={"GET"})
+     * @param Adulte $adulte
+     * @return Response
      */
     public function delete_view(Adulte $adulte): Response
     {
@@ -337,9 +392,14 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="adulte_delete", methods={"POST"})
-     * @throws NonUniqueResultException
      * Formulaire de suppression d'un adulte
+     * @Route("/{id}", name="adulte_delete", methods={"POST"})
+     * @param Request $request
+     * @param Adulte $adulte
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function delete(Request                $request,
                            Adulte                 $adulte,
@@ -349,6 +409,7 @@ class AdulteController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $adulte->getId(), $request->request->get('_token'))) {
             /*Récuperation du compte utilisateur de l'adulte et le supprime*/
             $user = $userRepo->findOneByAdulte($adulte->getId());
+            /*Si l'adulte a un compte utilisateur alors le compte est supprimé*/
             if ($user) {
                 $entityManager->remove($user);
             }

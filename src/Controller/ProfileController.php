@@ -18,8 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProfileController extends AbstractController
 {
     /**
+     * Formulaire de modification de profil
      * @Route("profile/{userTokenHash}/edit", name="profile_edit", methods={"GET","POST"})
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * @param Request $request
+     * @param User $user
+     * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param EntityManagerInterface $em
+     * @return Response
      */
     public function edit(Request                     $request,
                          User                        $user,
@@ -57,9 +63,9 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Page de profil d'un administrateur
      * @Route("/profile/admin/{userTokenHash}", name="profile_admin")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
-     * Page de profil d'un administrateur
      */
     public function admin(): Response
     {
@@ -67,10 +73,14 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Page de profil d'un élève
      * @Route("/profile/eleve/{userTokenHash}", name="profile_eleve")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
+     * @param EleveRepository $eleveRepository
+     * @param User $user
+     * @param InscriptionCantineRepository $cantineRepository
+     * @return Response
      * @throws NonUniqueResultException
-     * Page de profil d'un élève
      */
     public function eleve(EleveRepository              $eleveRepository,
                           User                         $user,
@@ -88,9 +98,9 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Page de profil d'un personnel de cuisine
      * @Route("/profile/cuisine/{userTokenHash}", name="profile_cuisine")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
-     * Page de profil d'un personnel de cuisine
      */
     public function cuisine(): Response
     {
@@ -98,9 +108,9 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Page de profil d'un adulte
      * @Route("/profile/adulte/{userTokenHash}", name="profile_adulte")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
-     * Page de profil d'un adulte
      */
     public function adulte(): Response
     {
@@ -108,9 +118,9 @@ class ProfileController extends AbstractController
     }
 
     /**
+     * Page de profil d'un utilisateur connecté
      * @Route("/profile/user/{userTokenHash}", name="profile_user")
      * @Entity("user", expr="repository.findOneByToken(userTokenHash)")
-     * Page de profil d'un utilisateur connecté
      */
     public function user(): Response
     {

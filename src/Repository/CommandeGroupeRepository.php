@@ -24,6 +24,8 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére les commandes groupées non clôturées selon un utilisateur (Historique de commande)
+     * @param User $user
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
     public function findAllIndexNonClotureGroupe(User $user): array
@@ -38,6 +40,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére toutes les commandes groupées non clôturées (Administrateur)
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
     public function findAllAdminNonClotureGroupe(): array
@@ -51,6 +54,8 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére les commandes groupées valides pour être exportées selon une date
+     * @param string $date
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
     public function exportationCommandeGroupe(string $date): array
@@ -66,23 +71,8 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
-     */
-    public function findBySandwich(Sandwich $sandwich, string $date): array
-    {
-        $query = $this->createQueryBuilder('ci');
-        $query
-            ->leftJoin('ci.sandwichCommandeGroupe', 'sc')
-            ->andWhere('ci.dateHeureLivraison Like :date')
-            ->andWhere('ci.estValide = 1')
-            ->andWhere('sc.sandwichChoisi = :sandwich')
-            ->setParameters(['sandwich' => $sandwich, 'date' => '%' . $date . '%'])
-            ->orderBy('ci.dateHeureLivraison', 'ASC');
-
-        return $query->getQuery()->getResult();
-    }
-
-    /**
+     * Récupére les commandes groupées selon le lieu de livraison
+     * @param string $lieu
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
     public function findByLieuLivraison(string $lieu): array
@@ -97,6 +87,10 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre de la page d'historique de commandes
+     * @param User $user
+     * @param DateTime|null $date
+     * @param bool|null $cloture
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      * @throws Exception
      */
@@ -137,6 +131,10 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des commandes groupées dans la page de gestion des commandes
+     * @param string|null $search
+     * @param DateTime|null $date
+     * @param bool|null $cloture
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      * @throws Exception
      */

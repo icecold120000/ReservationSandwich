@@ -10,7 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminController extends AbstractController
 {
     /**
+     * Espace administration
      * @Route("/admin", name="espace_admin")
+     * @param DesactivationCommandeRepository $repository Utilisé pour la désactivation du service de commande de sandwich
+     * @return Response
      */
     public function index(DesactivationCommandeRepository $repository): Response
     {

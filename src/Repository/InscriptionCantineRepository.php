@@ -22,6 +22,8 @@ class InscriptionCantineRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère toutes les incriptions selon si l'inscription est archivée ou non
+     * @param bool $archive
      * @return InscriptionCantine[] Returns an array of InscriptionCantine objects
      */
     public function findByArchive(bool $archive): array
@@ -34,6 +36,7 @@ class InscriptionCantineRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère l'inscription d'un élève
      * @param int $eleve
      * @return InscriptionCantine|null Returns an InscriptionCantine object
      * @throws NonUniqueResultException

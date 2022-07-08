@@ -21,6 +21,9 @@ class ClasseRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des classes
+     * @param string $order
+     * @param string|null $search
      * @return Classe[]
      */
     public function filterClasse(string $order, string $search = null): array
@@ -37,18 +40,24 @@ class ClasseRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère la classe selon leur libellé
+     * @param string $libelle
+     * @return Classe|null
      * @throws NonUniqueResultException
      */
     public function findOneByLibelle(string $libelle): ?Classe
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.libelleClasse = :libelle')
+            ->andWhere('c.libelle = :libelle')
             ->setParameter('libelle', $libelle)
             ->getQuery()
             ->getOneOrNullResult();
     }
 
     /**
+     * Récupère la classe selon le code
+     * @param string $code
+     * @return Classe|null
      * @throws NonUniqueResultException
      */
     public function findOneByCode(string $code): ?Classe

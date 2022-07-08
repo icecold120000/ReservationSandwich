@@ -9,6 +9,16 @@
         <h1>Ajouter une liste d'utilisateur</h1>
 
         <h2>Veuillez sélectionner un fichier contenant une liste d'adultes !</h2>
+        <h2>Voici les champs obligatoires dans cette ordre et</h2>
+        <h2>les titres des champs doivent être nommés comme afficher ici :</h2>
+        <img id="champObli" src="{{ asset('/static/images/champObligatoireAdulte.png') }}"
+             alt="Champ obligatoire liste d'adultes">
+
+        {% for message in app.flashes('SuccessFileSubmit') %}
+            <div class="flash-success">
+                {{ message }}
+            </div>
+        {% endfor %}
 
         {% for message in app.flashes('SuccessAdulteFileSubmit') %}
             <div class="flash-success">

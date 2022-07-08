@@ -23,6 +23,7 @@ use Knp\Component\Pager\PaginatorInterface;
 class ClasseController extends AbstractController
 {
     /**
+     * Page de gestion des classes
      * @Route("/index/{page}",defaults={"page" : 1}, name="classe_index", methods={"GET","POST"})
      * @param ClasseRepository $classeRepos
      * @param PaginatorInterface $paginator
@@ -35,10 +36,12 @@ class ClasseController extends AbstractController
                           Request            $request,
                           int                $page = 1): Response
     {
+        /*Récupération des classes*/
         $classes = $classeRepos->filterClasse('ASC');
         $form = $this->createForm(FilterClasseType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $classes = $classeRepos->filterClasse(
                 $filter->get('ordreAlphabet')->getData(),
@@ -46,6 +49,7 @@ class ClasseController extends AbstractController
             );
         }
 
+        /*Pagination*/
         $classes = $paginator->paginate(
             $classes,
             $page,
@@ -59,24 +63,51 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="classe_new", methods={"GET","POST"})
      * Formulaire d'ajout d'une classe
+     * @Route("/new", name="classe_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ClasseRepository $classeRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request                $request,
+                        EntityManagerInterface $entityManager,
+                        ClasseRepository       $classeRepo): Response
     {
         $classe = new Classe();
         $form = $this->createForm(ClasseType::class, $classe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($classe);
-            $entityManager->flush();
+            /*Vérifie si la classe saisie existe déjà par son libellé ou par code*/
+            $foundLib = $classeRepo->findOneByLibelle($form->get('libelle')->getData());
+            $foundCode = $classeRepo->findOneByCode($form->get('codeClasse')->getData());
 
-            $this->addFlash(
-                'SuccessClasse',
-                'La classe a été sauvegardée !'
-            );
+            /*
+              Si une classe saisie est trouvée avec ce libellé alors un message d'erreur s'affiche
+              Sinon si une classe saisie est trouvée avec ce code de classe alors un message d'erreur s'affiche
+              Sinon la classe est créée
+             */
+            if ($foundLib) {
+                $this->addFlash(
+                    'ErreurClasseLib',
+                    'La classe saisie existe déjà avec ce libellé !'
+                );
+            } elseif ($foundCode) {
+                $this->addFlash(
+                    'ErreurClasseLib',
+                    'La classe saisie existe déjà avec ce code de classe !'
+                );
+            } else {
+                $entityManager->persist($classe);
+                $entityManager->flush();
 
+                $this->addFlash(
+                    'SuccessClasse',
+                    'La classe a été sauvegardée !'
+                );
+            }
             return $this->redirectToRoute('classe_new');
         }
 
@@ -87,20 +118,30 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/show/{id}", name="classe_show", methods={"GET","POST"})
-     * @throws NonUniqueResultException
      * Page de détail d'une classe
+     * @Route("/show/{id}/{page}",defaults={"page" : 1}, name="classe_show", methods={"GET","POST"})
+     * @param Classe $classe
+     * @param Request $request
+     * @param EleveRepository $eleveRepo
+     * @param InscriptionCantineRepository $cantineRepository
+     * @param PaginatorInterface $paginator
+     * @param int $page
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function show(Classe                       $classe,
                          Request                      $request,
                          EleveRepository              $eleveRepo,
                          InscriptionCantineRepository $cantineRepository,
-                                                      $page = 1): Response
+                         PaginatorInterface           $paginator,
+                         int                          $page = 1): Response
     {
+        /*Récupération des élèves de la classe*/
         $eleves = $classe->getEleves();
-        $form = $this->createForm(OrderEleveType::class);
+        $form = $this->createForm(OrderEleveType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $eleves = $eleveRepo->orderByEleve(
                 $search->get('ordreNom')->getData(),
@@ -109,10 +150,18 @@ class ClasseController extends AbstractController
             );
         }
 
+        /*Récupération des inscriptions à la cantine par élèves*/
         $cantineInscrit = [];
         foreach ($eleves as $eleve) {
             $cantineInscrit[] = $cantineRepository->findOneByEleve($eleve->getId());
         }
+
+        /*Pagination*/
+        $eleves = $paginator->paginate(
+            $eleves,
+            $page,
+            40
+        );
 
         return $this->render('classe/show.html.twig', [
             'eleves' => $eleves,
@@ -123,23 +172,51 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="classe_edit", methods={"GET","POST"})
      * Page de modification d'une classe
+     * @Route("/{id}/edit", name="classe_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Classe $classe
+     * @param EntityManagerInterface $entityManager
+     * @param ClasseRepository $classeRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function edit(Request                $request,
                          Classe                 $classe,
-                         EntityManagerInterface $entityManager): Response
+                         EntityManagerInterface $entityManager,
+                         ClasseRepository       $classeRepo): Response
     {
         $form = $this->createForm(ClasseType::class, $classe);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+            /*Vérifie si la classe saisie existe déjà par son libellé ou par code*/
+            $foundLib = $classeRepo->findOneByLibelle($form->get('libelle')->getData());
+            $foundCode = $classeRepo->findOneByCode($form->get('codeClasse')->getData());
 
-            $this->addFlash(
-                'SuccessClasse',
-                'La classe a été modifiée !'
-            );
+            /*
+              Si une classe saisie est trouvée avec ce libellé et que libellé a changé alors un message d'erreur s'affiche
+              Sinon si une classe saisie est trouvée avec ce code de classe et que le code de classe a changé alors un message d'erreur s'affiche
+              Sinon la classe est créée
+             */
+            if ($foundLib && $classe->getLibelleClasse() != $classeRepo->findOneByLibelle($form->get('libelle')->getData())) {
+                $this->addFlash(
+                    'ErreurClasseLib',
+                    'La classe saisie existe déjà avec ce libellé !'
+                );
+            } elseif ($foundCode && $classe->getCodeClasse() != $classeRepo->findOneByCode($form->get('codeClasse')->getData())) {
+                $this->addFlash(
+                    'ErreurClasseLib',
+                    'La classe saisie existe déjà avec ce code de classe !'
+                );
+            } else {
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'SuccessClasse',
+                    'La classe a été modifiée !'
+                );
+            }
 
             return $this->redirectToRoute('classe_edit', array('id' => $classe->getId()));
         }
@@ -151,8 +228,10 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET","POST"})
      * Page de pré-suppression d'une classe
+     * @Route("/{id}/delete_view", name="classe_delete_view", methods={"GET","POST"})
+     * @param Classe $classe
+     * @return Response
      */
     public function delete_view(Classe $classe): Response
     {
@@ -162,20 +241,25 @@ class ClasseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
      * Formulaire de suppression d'une classe
+     * @Route("/{id}", name="classe_delete", methods={"GET","POST","DELETE"})
+     * @param Request $request
+     * @param Classe $classe
+     * @param EleveRepository $eleveRepo
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function delete(Request                $request,
                            Classe                 $classe,
                            EleveRepository        $eleveRepo,
                            EntityManagerInterface $entityManager): Response
     {
+        /*Récupération des élèves d'une classe*/
         $eleveRelated = $eleveRepo->findByClasse(null, $classe);
-        /*Vérifie si cette classe contient toujours des élèves
-         si ou renvoie un message d'erreur
-         sinon supprime la classe
-        */
+
+        /*Vérifie si cette classe contient toujours des élèves*/
         if ($eleveRelated) {
+            //si oui renvoie un message d'erreur
             $this->addFlash(
                 'deleteDangerClasse',
                 'Erreur, impossible de supprimer cette classe.
@@ -184,10 +268,13 @@ class ClasseController extends AbstractController
             return $this->redirectToRoute('classe_delete_view',
                 array('id' => $classe->getId()));
         } else {
+            //sinon supprime la classe
             if ($this->isCsrfTokenValid('delete' . $classe->getId(),
                 $request->request->get('_token'))) {
                 $entityManager->remove($classe);
                 $entityManager->flush();
+
+                /*Message d'erreur*/
                 $this->addFlash(
                     'SuccessDeleteClasse',
                     'La classe a été supprimée !'

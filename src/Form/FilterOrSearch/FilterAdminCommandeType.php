@@ -16,7 +16,7 @@ class FilterAdminCommandeType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Rechercher une personne',
-                'help' => 'Saisie possible : Nom, Prénom, Classe',
+                'help' => 'Saisie possible pour la barre de recherche : Nom, Prénom ou Classe',
                 'required' => false,
             ])
             ->add('date', ChoiceType::class, [

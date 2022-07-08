@@ -39,30 +39,41 @@ class EleveController extends AbstractController
     private EleveRepository $eleveRepository;
     private ClasseRepository $classeRepo;
     private InscriptionCantineRepository $inscritCantRepo;
+    private UserRepository $userRepo;
 
     public function __construct(EntityManagerInterface       $entityManager,
                                 EleveRepository              $eleveRepository,
                                 ClasseRepository             $classeRepo,
-                                InscriptionCantineRepository $inscritCantRepo)
+                                InscriptionCantineRepository $inscritCantRepo,
+                                UserRepository               $userRepo)
     {
         $this->entityManager = $entityManager;
         $this->eleveRepository = $eleveRepository;
         $this->classeRepo = $classeRepo;
         $this->inscritCantRepo = $inscritCantRepo;
+        $this->userRepo = $userRepo;
     }
 
     /**
+     * Page de gestion des élèves
      * @Route("/index/{page}",defaults={"page"}, name="eleve_index", methods={"GET","POST"})
+     * @param EleveRepository $eleveRepo
+     * @param Request $request
+     * @param PaginatorInterface $paginator
+     * @param int $page
+     * @return Response
      */
     public function index(EleveRepository    $eleveRepo,
                           Request            $request,
-                          PaginatorInterface $paginator, $page = 1): Response
+                          PaginatorInterface $paginator,
+                          int                $page = 1): Response
     {
         /*Récupére les élèves non archivés*/
         $eleves = $eleveRepo->findByArchive(false);
         $form = $this->createForm(FilterEleveType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $eleves = $eleveRepo->findByClasse(
                 $search->get('nom')->getData(),
@@ -74,6 +85,7 @@ class EleveController extends AbstractController
         }
 
         $elevesTotal = $eleves;
+        /*Pagination*/
         $eleves = $paginator->paginate(
             $eleves,
             $page,
@@ -88,9 +100,13 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @Route("/file", name="eleve_file", methods={"GET","POST"})
-     * @throws NonUniqueResultException
      * Formulaire d'ajout d'une liste d'élèves
+     * @Route("/file", name="eleve_file", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function fileSubmit(Request                $request,
                                SluggerInterface       $slugger,
@@ -105,6 +121,7 @@ class EleveController extends AbstractController
             /** @var UploadedFile $fichierEleve */
             $fichierEleve = $form->get('fileSubmit')->getData();
 
+            /*Vérifie si le champ est rempli*/
             if ($fichierEleve) {
                 $originalFilename = pathinfo($fichierEleve->getClientOriginalName(),
                     PATHINFO_FILENAME);
@@ -147,9 +164,10 @@ class EleveController extends AbstractController
     }
 
     /**
+     * Fonction permettant de créer des élèves à aprtir d'un fichier excel
+     * @param string $fileName
      * @throws NonUniqueResultException
      * @throws Exception
-     * Fonction permettant de créer des élèves à aprtir d'un fichier excel
      */
     private function creerEleves(string $fileName): void
     {
@@ -166,7 +184,8 @@ class EleveController extends AbstractController
                     /*Vérifie s'il existe une colonne nom et qu'elle n'est pas vide*/
                     if (array_key_exists('Nom', $rowData) && !empty($rowData['Nom']) && $rowData['Nom'] != 'Nom') {
                         /*Recherche l'élève dans la base de donnée*/
-                        $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance($rowData['Nom'],
+                        $eleveExcel = $this->eleveRepository->findByNomPrenomDateNaissance(
+                            $rowData['Nom'],
                             $rowData['Prénom'],
                             new DateTime($rowData['Date de naissance'])
                         );
@@ -260,6 +279,14 @@ class EleveController extends AbstractController
                                 $this->entityManager->persist($inscription);
                             }
 
+                            $userFound = $this->userRepo->findByNomPrenomAndBirthday(
+                                $rowData['Nom'],
+                                $rowData['Prénom'],
+                                new DateTime($rowData['Date de naissance'])
+                            );
+
+                            $userFound?->addEleve($eleveExcel);
+
                             $eleveExcel
                                 ->setNomEleve($rowData['Nom'])
                                 ->setPrenomEleve($rowData['Prénom'])
@@ -287,6 +314,7 @@ class EleveController extends AbstractController
                         }
 
                         $eleveExcel->setCodeBarreEleve($codeBar);
+                        /*Pour l'image de l'élève*/
                         $fileNamePhoto = $rowData['Nom'] . ' ' . $rowData['Prénom'] . '.jpg';
                         $eleveExcel->setPhotoEleve($fileNamePhoto);
 
@@ -311,10 +339,10 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @param string $fileName
-     * @return array
      * Fonction permettant de récupérer les données du fichier excel et de retourner
      * un tableau qui contient les élèves dans l'excel
+     * @param string $fileName
+     * @return array
      */
     public function getDataFromFile(string $fileName): array
     {
@@ -337,32 +365,71 @@ class EleveController extends AbstractController
         foreach ($dataRaw['Feuil1'] as $row) {
             /*Vérifie si la clé de la ligne est different de null*/
             if (key($row) != null) {
-                /*Vérifie si la clé a une valeur vide
-                 si oui il récupère la valeur de la première façon
-                 sinon il récupère de l'autre façon (dd($dataRaw) pour voir
-                 la différence les données récupèrées)
-                */
+                /*
+                  Premier cas de figure : le fichier excel a des lignes vides
+                  au-dessus de la ligne où sont marqué la légende
+                  Vérifie si la clé a une valeur vide et
+                  rempli les données dans un tableau
+                 */
                 if (key($row) == "") {
                     $temp1 = [
                         "Nom" => $row[""][0],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "Code classe" => $row[""][3],
+                        "Nombre de repas Midi" => $row[""][4],
+                        "Repas Midi J1" => $row[""][5],
+                        "Repas Midi J2" => $row[""][6],
+                        "Repas Midi J3" => $row[""][7],
+                        "Repas Midi J4" => $row[""][8],
+                        "Repas Midi J5" => $row[""][9],
+                        "Num Badge" => $row[""][10]
+                    ];
+                } elseif (key($row) == "Nom") {
+                    /*
+                      Deuxième cas de figure : l'excel a uniquement la légende
+                      et les données
+                      et rempli les données dans un tableau
+                     */
+                    $temp1 = [
+                        "Nom" => $row["Nom"],
+                    ];
+                    $temp2 = [
+                        "Prénom" => $row["Prénom"],
+                        "Date de naissance" => $row["Date de naissance"],
+                        "Code classe" => $row["Code classe"],
+                        "Nombre de repas Midi" => $row["Nombre de repas Midi"],
+                        "Repas Midi J1" => $row["Repas Midi J1"],
+                        "Repas Midi J2" => $row["Repas Midi J2"],
+                        "Repas Midi J3" => $row["Repas Midi J3"],
+                        "Repas Midi J4" => $row["Repas Midi J4"],
+                        "Repas Midi J5" => $row["Repas Midi J5"],
+                        "Num Badge" => $row["N° de Badge"]
+                    ];
                 } else {
+                    /*
+                      Troisième cas de figure : l'excel a des lignes avec des données
+                      écites avant la légende (exemple une date)
+                      et rempli les données dans un tableau
+                     */
                     $temp1 = [
                         "Nom" => $row[key($row)],
                     ];
+                    $temp2 = [
+                        "Prénom" => $row[""][1],
+                        "Date de naissance" => $row[""][2],
+                        "Code classe" => $row[""][3],
+                        "Nombre de repas Midi" => $row[""][4],
+                        "Repas Midi J1" => $row[""][5],
+                        "Repas Midi J2" => $row[""][6],
+                        "Repas Midi J3" => $row[""][7],
+                        "Repas Midi J4" => $row[""][8],
+                        "Repas Midi J5" => $row[""][9],
+                        "Num Badge" => $row[""][10]
+                    ];
                 }
-                $temp2 = [
-                    "Prénom" => $row[""][1],
-                    "Date de naissance" => $row[""][2],
-                    "Code classe" => $row[""][3],
-                    "Nombre de repas Midi" => $row[""][4],
-                    "Repas Midi J1" => $row[""][5],
-                    "Repas Midi J2" => $row[""][6],
-                    "Repas Midi J3" => $row[""][7],
-                    "Repas Midi J4" => $row[""][8],
-                    "Repas Midi J5" => $row[""][9],
-                    "Num Badge" => $row[""][10]
-                ];
                 $data[][] = array_merge($temp1, $temp2);
             }
         }
@@ -370,13 +437,19 @@ class EleveController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="eleve_new", methods={"GET","POST"})
-     * @throws Exception
      * Formulaire d'ajout d'un élève
+     * @Route("/new", name="eleve_new", methods={"GET","POST"})
+     * @param Request $request
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function new(Request                $request,
                         SluggerInterface       $slugger,
-                        EntityManagerInterface $entityManager): Response
+                        EntityManagerInterface $entityManager,
+                        UserRepository         $userRepo): Response
     {
         $eleve = new Eleve();
         $form = $this->createForm(EleveType::class, $eleve);
@@ -405,7 +478,18 @@ class EleveController extends AbstractController
                 $eleve->setPhotoEleve($newFileNameImg);
             }
 
+            /*Récupère le compte utilisateur
+             et s'il existe un compte il attribue à l'élève
+            */
+            $userFound = $userRepo->findByNomPrenomAndBirthday(
+                $form->get('nomEleve')->getData(),
+                $form->get('prenomEleve')->getData(),
+                $form->get('dateNaissance')->getData()
+            );
+
+            $userFound?->addEleve($eleve);
             $entityManager->persist($eleve);
+
             $entityManager->flush();
 
             $this->addFlash(
@@ -424,9 +508,13 @@ class EleveController extends AbstractController
 
 
     /**
-     * @Route("/{id}/edit", name="eleve_edit", methods={"GET","POST"})
-     * @throws Exception
      * Formulaire de modification de l'élève
+     * @Route("/{id}/edit", name="eleve_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Eleve $eleve
+     * @param SluggerInterface $slugger
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function edit(Request                $request,
                          Eleve                  $eleve,
@@ -448,12 +536,15 @@ class EleveController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFileNameImg = $safeFilename . '.' . $imgProfileEleve->guessExtension();
 
-                /*Supprime l'ancienne photo de l'élève*/
+                /*Vérifie si la nouvelle image est différente de l'ancienne et que l'image n'est pas null*/
                 if ($newFileNameImg != $anciennePhoto && $anciennePhoto != null) {
-                    unlink($this->getParameter('photoEleve_directory') . $anciennePhoto);
+                    if (file_exists($this->getParameter('photoEleve_directory') . $anciennePhoto)) {
+                        /*Supprime l'ancienne photo de l'élève*/
+                        unlink($this->getParameter('photoEleve_directory') . $anciennePhoto);
+                    }
                 }
 
-                // Move the file to the directory where brochures are stored
+                // Move the file to the directory where images are stored
                 try {
                     $imgProfileEleve->move(
                         $this->getParameter('photoEleve_directory'),
@@ -468,6 +559,7 @@ class EleveController extends AbstractController
 
             $entityManager->flush();
 
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessEleve',
                 'L\'élève a été modifié !'
@@ -483,8 +575,10 @@ class EleveController extends AbstractController
     }
 
     /**
+     * Page de pré-impression de l'élève
      * @Route("/{id}/delete", name="eleve_delete_view", methods={"GET"})
-     * Page de pré-impression
+     * @param Eleve $eleve
+     * @return Response
      */
     public function delete_view(Eleve $eleve): Response
     {
@@ -494,9 +588,15 @@ class EleveController extends AbstractController
     }
 
     /**
+     * Formulaire de suppression de l'élève
      * @Route("/{id}/delete", name="eleve_delete", methods={"POST"})
-     * @throws NonUniqueResultException
-     * Formulaire de suppression d'un élève
+     * @param Request $request
+     * @param Eleve $eleve
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepo
+     * @param InscriptionCantineRepository $cantineRepository
+     * @return Response
+     * @throws NonUniqueResultException Formulaire de suppression d'un élève
      */
     public function delete(Request                      $request,
                            Eleve                        $eleve,
@@ -507,23 +607,34 @@ class EleveController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $eleve->getId(), $request->request->get('_token'))) {
             /*Vérifie si l'élève a une image et le supprime si c'est le cas*/
             if ($eleve->getPhotoEleve() != null) {
-                unlink($this->getParameter('photoEleve_directory') . $eleve->getPhotoEleve());
+                /*Vérifie si l'image est dans son emplacement où elle est enregistrée*/
+                if (file_exists($this->getParameter('photoEleve_directory') . $eleve->getPhotoEleve())) {
+                    /*Supprime l'ancienne photo de l'élève*/
+                    unlink($this->getParameter('photoEleve_directory') . $eleve->getPhotoEleve());
+                }
             }
             /*Vérifie si l'élève a un fichier code barre et le supprime si c'est le cas*/
             if ($eleve->getCodeBarreEleve() != null) {
                 unlink($this->getParameter('codeBarEleveFile_directory') . $eleve->getCodeBarreEleve());
             }
-            /*Récupère le compte utilisateur et les inscriptions à la cantine et les suppriment*/
+
+            /*Récupère le compte utilisateur et les inscriptions à la cantine*/
             $user = $userRepo->findOneByEleve($eleve->getId());
             $cantine = $cantineRepository->findOneByEleve($eleve->getId());
+
+            /*Vérifie si l'utilisateur a un compte utilisateur et le supprime si oui*/
             if ($user) {
                 $entityManager->remove($user);
             }
+
+            /*Vérifie si l'utilisateur a des inscriptions à la cantine et les suppriment si oui*/
             if ($cantine) {
                 $entityManager->remove($cantine);
             }
             $entityManager->remove($eleve);
             $entityManager->flush();
+
+            /*Message d'erreur*/
             $this->addFlash(
                 'SuccessDeleteEleve',
                 'L\'élève a été supprimé !'

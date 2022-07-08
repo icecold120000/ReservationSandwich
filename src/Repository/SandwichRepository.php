@@ -21,6 +21,7 @@ class SandwichRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des sandwichs
      * @param int|null $dispo
      * @param string $order
      * @return Sandwich[] Returns an array of sandwich objects
@@ -36,6 +37,8 @@ class SandwichRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère les sandwichs selon leur disponibilité
+     * @param bool $dispo
      * @return Sandwich[] Returns an array of sandwich objects
      */
     public function findByDispo(bool $dispo): array
@@ -45,5 +48,20 @@ class SandwichRepository extends ServiceEntityRepository
             ->setParameter('dispo', $dispo)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Récupère le sandwich selon son nom
+     * @param string $nom
+     * @return Sandwich|null
+     * @throws NonUniqueResultException
+     */
+    public function findOneByNom(string $nom): ?Sandwich
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.nomSandwich = :nom')
+            ->setParameter('nom', $nom)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

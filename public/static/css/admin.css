@@ -184,8 +184,8 @@ table a.btn.btn-info {
     flex-wrap: wrap;
 }
 
-div#filtreEleve {
-    padding-top: 30px;
+div#helpEleveFiltre {
+    margin: 30px 0 10px 0;
 }
 
 div#filtreEleve.filtre label {
@@ -199,6 +199,10 @@ div#filtreEleve.filtre label {
 /*Formulaire d'ajout par une liste*/
 .fichierForm form {
     flex-direction: column;
+}
+
+img#champObli {
+    width: 95%;
 }
 
 /*Les Formulaires d'ajout et de modification des utilisateurs*/
@@ -231,7 +235,7 @@ div#limitation_commande_heureLimite {
 
 /*Liste des commandes admin*/
 
-div#afficheTabFilter {
+div#notAfficheTabFilter {
     display: none;
 }
 
@@ -579,6 +583,10 @@ table form button.btn-danger {
     }
 
     /*Filtre de gestion des élèves*/
+    div#helpEleveFiltre p {
+        font-size: 2.5em;
+    }
+
     #filtreEleve form {
         font-size: 2em;
         padding: 0;
@@ -603,7 +611,6 @@ table form button.btn-danger {
 
     #btnSuppr, #btnRetourSuppr {
         padding: 1em;
-        font-size: 2em;
         margin-top: 1em;
     }
 

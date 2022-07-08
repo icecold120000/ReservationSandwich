@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,10 +40,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Filtre des utilisateurs
+     * @param string|null $roleUser
+     * @param bool|null $userVerifie
+     * @param string|null $ordreNom
+     * @param string|null $ordrePrenom
+     * @param string|null $userName
      * @return User[]
      */
-    public function search(string $roleUser = null, bool $userVerifie = null,
-                           string $ordreNom = null, string $ordrePrenom = null): array
+    public function search(?string $roleUser = null, ?bool $userVerifie = null,
+                           ?string $ordreNom = null, ?string $ordrePrenom = null,
+                           ?string $userName = null): array
     {
         $query = $this->createQueryBuilder('u');
         if ($roleUser !== null) {
@@ -64,10 +72,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $query->orderBy('u.nomUser', $ordreNom);
         }
 
+        if ($userName !== null) {
+            $query->andWhere('u.nomUser like :name or u.prenomUser like :name')
+                ->setParameter('name', '%' . $userName . '%');
+        }
+
         return $query->getQuery()->getResult();
     }
 
     /**
+     * Récupère le compte utlisateur selon l'email
+     * @param string $email
+     * @return User|null
      * @throws NonUniqueResultException
      */
     public function findOneByEmail(string $email): ?User
@@ -80,9 +96,16 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Utilisé dans le formulaire d'oubli de mot de passe
+     * Pour rechercher si l'utilisateur existe pour lui
+     * envoyer un email afin qu'il puisse réinitialiser
+     * son mot de passe
+     * @param string $email
+     * @param DateTime $date
+     * @return User|null
      * @throws NonUniqueResultException
      */
-    public function findOneByEmailAndDate(string $email, \DateTime $date): ?User
+    public function findOneByEmailAndDate(string $email, DateTime $date): ?User
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.email = :email')
@@ -93,6 +116,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Récupère le compte utilisateur selon l'identifiant de l'adulte
+     * @param int $adulteId
+     * @return User|null
      * @throws NonUniqueResultException
      */
     public function findOneByAdulte(int $adulteId): ?User
@@ -106,6 +132,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
+     * Récupère le compte utilisateur selon l'identifiant de l'élève
+     * @param int $eleveId
+     * @return User|null
      * @throws NonUniqueResultException
      */
     public function findOneByEleve(int $eleveId): ?User
@@ -119,23 +148,34 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return User[]
+     * Vérification si un utilisateur existe (adulte)
+     * selon leur nom, prénom et date de naissance
+     * @param string $nom
+     * @param string $prenom
+     * @return User|null
+     * @throws NonUniqueResultException
      */
-    public function findByNomAndPrenom(string $nom, string $prenom): array
+    public function findByNomAndPrenom(string $nom, string $prenom): ?User
     {
         $query = $this->createQueryBuilder('u');
         $query->andWhere('u.nomUser Like :nom')
             ->andWhere('u.prenomUser Like :prenom')
             ->setParameters(array('nom' => '%' . $nom . '%', 'prenom' => '%' . $prenom . '%'));
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     /**
-     * @return User[]
+     * Vérification si un utilisateur existe (élève)
+     * selon leur nom, prénom et date de naissance
+     * @param string $nom
+     * @param string $prenom
+     * @param DateTime $birthday
+     * @return User|null
+     * @throws NonUniqueResultException
      */
-    public function findByNomPrenomAndBirthday(string    $nom,
-                                               string    $prenom,
-                                               \DateTime $birthday): array
+    public function findByNomPrenomAndBirthday(string   $nom,
+                                               string   $prenom,
+                                               DateTime $birthday): ?User
     {
         $query = $this->createQueryBuilder('u');
         $query->andWhere('u.nomUser like :nom')
@@ -144,11 +184,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->setParameters(array('nom' => '%' . $nom . '%',
                 'prenom' => '%' . $prenom . '%', 'birthday' => $birthday));
 
-        return $query->getQuery()->getResult();
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     /**
-     * Utilisé dans ProfileController
+     * Utilisé dans ProfileController @entity
      * @throws NonUniqueResultException
      */
     public function findOneByToken(string $tokenHash): ?User

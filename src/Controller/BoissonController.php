@@ -7,6 +7,7 @@ use App\Form\BoissonType;
 use App\Form\FilterOrSearch\FilterMenuType;
 use App\Repository\BoissonRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Bundle\PaginatorBundle\KnpPaginatorBundle;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,6 +24,7 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class BoissonController extends AbstractController
 {
     /**
+     * Page de gestion des boissons
      * @Route("/index/{page}",defaults={"page" : 1}, name="boisson_index", methods={"GET","POST"})
      * @param BoissonRepository $boissonRepo
      * @param Request $request
@@ -35,10 +37,12 @@ class BoissonController extends AbstractController
                           PaginatorInterface $paginator,
                           int                $page = 1): Response
     {
+        /*Récupération des boissons*/
         $boissons = $boissonRepo->findAll();
         $form = $this->createForm(FilterMenuType::class, null, ['method' => 'GET']);
         $filter = $form->handleRequest($request);
 
+        /*Filtre*/
         if ($form->isSubmitted() && $form->isValid()) {
             $boissons = $boissonRepo->filter(
                 $filter->get('dispo')->getData(),
@@ -46,6 +50,7 @@ class BoissonController extends AbstractController
             );
         }
 
+        /*Pagination*/
         $boissons = $paginator->paginate(
             $boissons,
             $page,
@@ -59,66 +64,97 @@ class BoissonController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="boisson_new", methods={"GET", "POST"})
      * Formulaire d'ajout d'une boisson
+     * @Route("/new", name="boisson_new", methods={"GET", "POST"})
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param SluggerInterface $slugger
+     * @param BoissonRepository $boissonRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function new(Request                $request,
                         EntityManagerInterface $entityManager,
-                        SluggerInterface       $slugger): Response
+                        SluggerInterface       $slugger,
+                        BoissonRepository      $boissonRepo): Response
     {
         $boisson = new Boisson();
         $form = $this->createForm(BoissonType::class, $boisson);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $fichierBoisson */
-            $fichierBoisson = $form->get('imageBoisson')->getData();
-            if ($fichierBoisson) {
-                $originalFilename = pathinfo($fichierBoisson
-                    ->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
+            /*Vérifie si la boisson existe déjà*/
+            $boissonFound = $boissonRepo->findOneByNom($form->get('nomBoisson')->getData());
 
-                // Move the file to the directory where drinks are stored
-                try {
-                    $fichierBoisson->move(
-                        $this->getParameter('boisson_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    throw new FileException("Fichier corrompu.
+            /*Si la boisson n'existe pas alors*/
+            if (!$boissonFound) {
+                /*Elle est créée*/
+                /** @var UploadedFile $fichierBoisson */
+                $fichierBoisson = $form->get('imageBoisson')->getData();
+                /*Vérifie si le champ image boisson est rempli*/
+                if ($fichierBoisson) {
+                    $originalFilename = pathinfo($fichierBoisson
+                        ->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
+
+                    // Move the file to the directory where drinks are stored
+                    try {
+                        $fichierBoisson->move(
+                            $this->getParameter('boisson_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
+                    }
+
+                    $boisson->setImageBoisson($newFilename);
                 }
 
-                $boisson->setImageBoisson($newFilename);
+                $entityManager->persist($boisson);
+                $entityManager->flush();
+
+                /*Message de validation*/
+                $this->addFlash(
+                    'SuccessBoisson',
+                    'La boisson a été sauvegardée !'
+                );
+            } else {
+                /*Sinon un message d'erreur*/
+                $this->addFlash(
+                    'ErreurNomBoisson',
+                    'La boisson saisie existe déjà !'
+                );
             }
 
-            $this->addFlash(
-                'SuccessBoisson',
-                'La boisson a été sauvegardée !'
-            );
-
-            $entityManager->persist($boisson);
-            $entityManager->flush();
 
             return $this->redirectToRoute('boisson_new');
         }
 
         return $this->renderForm('boisson/new.html.twig', [
             'boisson' => $boisson,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="boisson_edit", methods={"GET", "POST"})
      * Formulaire de supression d'une boisson
+     * @Route("/{id}/edit", name="boisson_edit", methods={"GET", "POST"})
+     * @param Request $request
+     * @param Boisson $boisson
+     * @param EntityManagerInterface $entityManager
+     * @param SluggerInterface $slugger
+     * @param BoissonRepository $boissonRepo
+     * @return Response
+     * @throws NonUniqueResultException
      */
     public function edit(Request                $request,
                          Boisson                $boisson,
                          EntityManagerInterface $entityManager,
-                         SluggerInterface       $slugger): Response
+                         SluggerInterface       $slugger,
+                         BoissonRepository      $boissonRepo): Response
     {
         /*Récupèration de l'ancienne image*/
         $oldImgBoisson = $boisson->getImageBoisson();
@@ -126,50 +162,73 @@ class BoissonController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $fichierBoisson */
-            $fichierBoisson = $form->get('imageBoisson')->getData();
-            /*Vérifie si l'image a changé*/
-            if ($fichierBoisson) {
-                $originalFilename = pathinfo($fichierBoisson
-                    ->getClientOriginalName(), PATHINFO_FILENAME);
-                // this is needed to safely include the file name as part of the URL
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
+            /*Vérifie si la boisson saisie existe déjà*/
+            $boissonFound = $boissonRepo->findOneByNom($form->get('nomBoisson')->getData());
 
-                // Move the file to the directory where boissons are stored
-                try {
-                    $fichierBoisson->move(
-                        $this->getParameter('boisson_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-                    throw new FileException("Fichier corrompu.
+            /*Si la boisson saisie est trouvée avec ce nom et que nom a changé alors*/
+            if ($boissonFound && $boisson->getNomBoisson() != $form->get('nomBoisson')->getData()) {
+                /*Un message d'erreur s'affiche*/
+                $this->addFlash(
+                    'ErreurNomBoisson',
+                    'La boisson saisie existe déjà !'
+                );
+            } else {
+                /*Sinon la boisson est créée*/
+                /** @var UploadedFile $fichierBoisson */
+                $fichierBoisson = $form->get('imageBoisson')->getData();
+                /*Vérifie si l'image a changé*/
+                if ($fichierBoisson) {
+                    $originalFilename = pathinfo($fichierBoisson
+                        ->getClientOriginalName(), PATHINFO_FILENAME);
+                    // this is needed to safely include the file name as part of the URL
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename . '.' . $fichierBoisson->guessExtension();
+
+                    // Move the file to the directory where boissons are stored
+                    try {
+                        $fichierBoisson->move(
+                            $this->getParameter('boisson_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        throw new FileException("Fichier corrompu.
                      Veuillez retransférer votre fichier !");
+                    }
+
+                    /*Vérifie si la nouvelle image n'a pas le même nom que l'ancienne*/
+                    if ($newFilename != $oldImgBoisson) {
+                        /*Vérifie si l'ancienne image est dans l'emplacement où il est enregistré*/
+                        if (file_exists($this->getParameter('boisson_directory') . $oldImgBoisson)) {
+                            /*Supprime le fichier*/
+                            unlink($this->getParameter('boisson_directory') . $oldImgBoisson);
+                        }
+                    }
+                    $boisson->setImageBoisson($newFilename);
                 }
-                /*Supprimer le fichier de l'ancienne image */
-                unlink($this->getParameter('boisson_directory') . $oldImgBoisson);
-                $boisson->setImageBoisson($newFilename);
 
+                $entityManager->flush();
+
+                /*Message de validation*/
+                $this->addFlash(
+                    'SuccessBoisson',
+                    'La boisson a été modifiée !'
+                );
             }
-
-            $this->addFlash(
-                'SuccessBoisson',
-                'La boisson a été modifiée !'
-            );
-            $entityManager->flush();
 
             return $this->redirectToRoute('boisson_edit', ['id' => $boisson->getId()]);
         }
 
         return $this->renderForm('boisson/edit.html.twig', [
             'boisson' => $boisson,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/delete_view", name="boisson_delete_view", methods={"GET"})
      * Page de pré-suppression d'une boisson
+     * @Route("/{id}/delete_view", name="boisson_delete_view", methods={"GET"})
+     * @param Boisson $boisson
+     * @return Response
      */
     public function delete_view(Boisson $boisson): Response
     {
@@ -179,18 +238,28 @@ class BoissonController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="boisson_delete", methods={"POST"})
      * Formulaire de supression d'une boisson
+     * @Route("/{id}", name="boisson_delete", methods={"POST"})
+     * @param Request $request
+     * @param Boisson $boisson
+     * @param EntityManagerInterface $entityManager
+     * @return Response
      */
     public function delete(Request                $request,
                            Boisson                $boisson,
                            EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete' . $boisson->getId(), $request->request->get('_token'))) {
-            /*Supprime la photo de la boisson*/
-            unlink($this->getParameter('boisson_directory') . $boisson->getImageBoisson());
+
+            /*Vérifie si l'image est à son emplacement où elle est enregistrée*/
+            if (file_exists($this->getParameter('boisson_directory') . $boisson->getImageBoisson())) {
+                /*Supprime le fichier*/
+                unlink($this->getParameter('boisson_directory') . $boisson->getImageBoisson());
+            }
             $entityManager->remove($boisson);
             $entityManager->flush();
+
+            /*Message de validation*/
             $this->addFlash(
                 'SuccessDeleteBoisson',
                 'La boisson a été supprimée !'

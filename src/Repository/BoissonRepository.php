@@ -21,6 +21,9 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Filtre des boissons
+     * @param bool|null $dispo
+     * @param string $order
      * @return Boisson[] Returns an array of Boisson objects
      */
     public function filter(bool $dispo = null, string $order = 'ASC'): array
@@ -34,6 +37,7 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupère les boissons selon leur disponibilté
      * @return Boisson[] Returns an array of Boisson objects
      */
     public function findByDispo(bool $dispo): array
@@ -46,6 +50,7 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupére une boisson selon son nom
      * @param string $nom
      * @return Boisson|null
      * @throws NonUniqueResultException

@@ -18,6 +18,7 @@ class FilterEleveType extends AbstractType
         $builder
             ->add('nom', TextType::class, [
                 'label' => 'Rechercher un élève',
+                'help' => 'Saisie possible pour la barre de recherche : Nom, Prénom ou Classe',
                 'required' => false,
             ])
             ->add('classe', EntityType::class, [
