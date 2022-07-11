@@ -1,20 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ajouter une liste d'utilisateur{% endblock %}
+{% block title %}Ajouter une liste d'utilisateurs{% endblock %}
 {% block stylesheets %}
     <link rel="stylesheet" type="text/css" href="{{ asset('static/css/admin.css') }}">
 {% endblock %}
 {% block body %}
     <main class="container-fluid">
-        <h1>Ajouter une liste d'utilisateur</h1>
-
+        <h1>Ajouter une liste d'utilisateurs</h1>
         <p>Vous trouverez ci-dessous le fichier modèle à télécharger.</p>
         <a class="btn btn-info" id="btnAjout" href="{{ asset('/static/images/utilisateurTest.xlsx') }}">
             Télécharger modèle
         </a>
 
-        <h2>Veuillez sélectionner un fichier contenant une liste d'utilisateur !</h2>
-        <h2>Voici les champs obligatoires dans cette ordre :</h2>
+        <h2>Veuillez sélectionner un fichier contenant une liste d'utilisateurs !</h2>
+        <h2>Voici les champs obligatoires dans cette ordre et</h2>
+        <h2>les titres des champs doivent être nommés comme afficher ici :</h2>
         <img id="champObli" src="{{ asset('/static/images/champObligatoireUser.png') }}"
              alt="Champ obligatoire liste d'utlisateurq">
 

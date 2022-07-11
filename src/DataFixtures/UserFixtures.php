@@ -25,7 +25,7 @@ class UserFixtures extends Fixture
             ->setNomUser('Admin')
             ->setPrenomUser('Admin')
             ->setDateNaissanceUser(new \DateTime('08-11-2000'))
-            ->setEmail('Admin@gmail.com')
+            ->setEmail('admin@gmail.com')
             ->setRoles([User::ROLE_ADMIN])
             ->setPassword($password)
             ->setTokenHash('5nuixns798ytecHzu6JDH')
