@@ -342,7 +342,7 @@ class AdulteController extends AbstractController
             return $this->redirectToRoute('adulte_new', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('adulte/new.html.twig', [
+        return $this->render('adulte/new.html.twig', [
             'adulte' => $adulte,
             'form' => $form->createView(),
         ]);
@@ -372,7 +372,7 @@ class AdulteController extends AbstractController
             return $this->redirectToRoute('adulte_edit', ['id' => $adulte->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('adulte/edit.html.twig', [
+        return $this->render('adulte/edit.html.twig', [
             'adulte' => $adulte,
             'form' => $form->createView(),
         ]);

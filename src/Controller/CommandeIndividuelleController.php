@@ -947,7 +947,7 @@ class CommandeIndividuelleController extends AbstractController
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
-            return $this->renderForm('commande_individuelle/new.html.twig', [
+            return $this->render('commande_individuelle/new.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
                 'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
@@ -1266,7 +1266,7 @@ class CommandeIndividuelleController extends AbstractController
             return $this->redirectToRoute('deactivate_commande');
         } else {
             /*Sinon retourne le formulaire de modification de commande individuelle*/
-            return $this->renderForm('commande_individuelle/edit.html.twig', [
+            return $this->render('commande_individuelle/edit.html.twig', [
                 'commande_individuelle' => $commandeIndividuelle,
                 'form' => $form->createView(),
                 'sandwichs' => $sandwichs,

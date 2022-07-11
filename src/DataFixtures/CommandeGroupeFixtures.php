@@ -36,7 +36,7 @@ class CommandeGroupeFixtures extends Fixture implements DependentFixtureInterfac
             ->setBoissonChoisie($this->getReference('boisson_1'))
             ->setDessertChoisi($this->getReference('dessert_3'))
             ->setPrendreChips(true)
-            ->setMotifSortie('Sortie Musée de 1ère Guerre Mondiale, Verdun')
+            ->setMotifSortie('Sortie Musée de la 1ère Guerre Mondiale, Verdun')
             ->setCommentaireCommande('60 personnes');
         $this->addReference('comGr_2', $commandeGroupe2);
         $manager->persist($commandeGroupe2);

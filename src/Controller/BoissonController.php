@@ -133,7 +133,7 @@ class BoissonController extends AbstractController
             return $this->redirectToRoute('boisson_new');
         }
 
-        return $this->renderForm('boisson/new.html.twig', [
+        return $this->render('boisson/new.html.twig', [
             'boisson' => $boisson,
             'form' => $form->createView(),
         ]);
@@ -218,7 +218,7 @@ class BoissonController extends AbstractController
             return $this->redirectToRoute('boisson_edit', ['id' => $boisson->getId()]);
         }
 
-        return $this->renderForm('boisson/edit.html.twig', [
+        return $this->render('boisson/edit.html.twig', [
             'boisson' => $boisson,
             'form' => $form->createView(),
         ]);

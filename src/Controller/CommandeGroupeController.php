@@ -173,7 +173,7 @@ class CommandeGroupeController extends AbstractController
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
-            return $this->renderForm('commande_groupe/new.html.twig', [
+            return $this->render('commande_groupe/new.html.twig', [
                 'commande_groupe' => $commandeGroupe,
                 'form' => $form->createView(),
                 'sandwichs' => $sandwichs,
@@ -309,7 +309,7 @@ class CommandeGroupeController extends AbstractController
         if ($deactive->getIsDeactivated() === true) {
             return $this->redirectToRoute('deactivate_commande');
         } else {
-            return $this->renderForm('commande_groupe/edit.html.twig', [
+            return $this->render('commande_groupe/edit.html.twig', [
                 'commande_groupe' => $commandeGroupe,
                 'form' => $form->createView(),
                 'sandwichs' => $sandwichs,

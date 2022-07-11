@@ -104,7 +104,7 @@ class LieuLivraisonController extends AbstractController
             return $this->redirectToRoute('lieu_livraison_new', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('lieu_livraison/new.html.twig', [
+        return $this->render('lieu_livraison/new.html.twig', [
             'lieu_livraison' => $lieuLivraison,
             'form' => $form->createView(),
         ]);
@@ -164,7 +164,7 @@ class LieuLivraisonController extends AbstractController
             return $this->redirectToRoute('lieu_livraison_edit', ['id' => $lieuLivraison->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('lieu_livraison/edit.html.twig', [
+        return $this->render('lieu_livraison/edit.html.twig', [
             'lieu_livraison' => $lieuLivraison,
             'form' => $form->createView(),
         ]);

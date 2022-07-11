@@ -131,7 +131,7 @@ class DessertController extends AbstractController
             return $this->redirectToRoute('dessert_new');
         }
 
-        return $this->renderForm('dessert/new.html.twig', [
+        return $this->render('dessert/new.html.twig', [
             'dessert' => $dessert,
             'form' => $form->createView(),
         ]);
@@ -215,7 +215,7 @@ class DessertController extends AbstractController
             return $this->redirectToRoute('dessert_edit', ['id' => $dessert->getId()]);
         }
 
-        return $this->renderForm('dessert/edit.html.twig', [
+        return $this->render('dessert/edit.html.twig', [
             'dessert' => $dessert,
             'form' => $form->createView(),
         ]);

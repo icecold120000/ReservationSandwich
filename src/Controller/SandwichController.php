@@ -129,7 +129,7 @@ class SandwichController extends AbstractController
             return $this->redirectToRoute('sandwich_new');
         }
 
-        return $this->renderForm('sandwich/new.html.twig', [
+        return $this->render('sandwich/new.html.twig', [
             'sandwich' => $sandwich,
             'form' => $form->createView(),
         ]);
@@ -206,7 +206,7 @@ class SandwichController extends AbstractController
             return $this->redirectToRoute('sandwich_edit', ['id' => $sandwich->getId()]);
         }
 
-        return $this->renderForm('sandwich/edit.html.twig', [
+        return $this->render('sandwich/edit.html.twig', [
             'sandwich' => $sandwich,
             'form' => $form->createView(),
         ]);

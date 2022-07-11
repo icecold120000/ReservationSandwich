@@ -83,7 +83,7 @@ class LimiteController extends AbstractController
             return $this->redirectToRoute('limite_new', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('limite/new.html.twig', [
+        return $this->render('limite/new.html.twig', [
             'limitation_commande' => $limitationCommande,
             'form' => $form->createView(),
         ]);
@@ -137,7 +137,7 @@ class LimiteController extends AbstractController
             return $this->redirectToRoute('limite_edit', ['id' => $limitationCommande->getId()], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('limite/edit.html.twig', [
+        return $this->render('limite/edit.html.twig', [
             'limitation_commande' => $limitationCommande,
             'form' => $form->createView(),
         ]);
