@@ -650,7 +650,7 @@ class CommandeIndividuelleController extends AbstractController
                                  string $affichage): Response
     {
         /*Si l'affichage choisi est individuelle ou les deux*/
-        if ($affichage == "les deux" || $affichage == "individuelle") {
+        if ($affichage == "les deux" || $affichage == "individuelles") {
             /*Si oui, alors il y a récupèration des commandes individuelles*/
             $commandes = $this->comIndRepo
                 ->exportationCommande($dateChoisi->format('y-m-d'));
@@ -667,6 +667,7 @@ class CommandeIndividuelleController extends AbstractController
             /*Sinon les commandes groupées sont rendu null*/
             $commandeGroupe = null;
         }
+
         /*Affichage du rendu selon ce qui est demandé*/
         if ($modalite == "Séparées") {
             return $this->render('commande_individuelle/pdf/commande_pdf_separe.html.twig', [
@@ -748,18 +749,15 @@ class CommandeIndividuelleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
-            /*Récupère l'isncriptions à la cantine de l'élève*/
-            if (in_array("ROLE_ELEVE", $roles)) {
-                $eleve = $eleveRepository->findOneByCompte($user);
-                $cantine = $cantineRepository->findOneByEleve($eleve->getId());
-            }
+            $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
+            $error = false;
             /*Vérifie si l'utilisateur n'est pas un administrateur ou un personnel de cuisine
              et que la commande est faite avant la clôture des commandes pour le jour même
              sinon affiche un message d'erreur
             */
             if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
-                if (($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
+                if (($limiteJourMeme->getIsActive() && $limite->format('m-d-y H:i') < $dateNow->format('m-d-y H:i')) &&
                     ($dateLivraison > new DateTime('now 00:00:00',
                             new DateTimeZone('Europe/Paris')) &&
                         $dateLivraison < new DateTime('now 23:59:59',
@@ -768,6 +766,7 @@ class CommandeIndividuelleController extends AbstractController
                         'limiteCloture',
                         'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                     );
+                    $error = true;
                 } elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
                     /*Vérifie que la commande n'est pas faite le samedi ou le dimanche
                      sinon un message d'erreur
@@ -776,11 +775,20 @@ class CommandeIndividuelleController extends AbstractController
                         'limiteCloture',
                         'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
                     );
+                    $error = true;
                 }
-            } else {
-                $error = false;
+
                 /*Vérifie si l'utilisateur est un élève*/
                 if (in_array("ROLE_ELEVE", $roles)) {
+
+                    /*Récupère l'inscription à la cantine de l'élève
+                     si l'utilisateur qui commande est un élève
+                    */
+                    if (in_array("ROLE_ELEVE", $roles)) {
+                        $eleve = $eleveRepository->findOneByCompte($user);
+                        $cantine = $cantineRepository->findOneByEleve($eleve->getId());
+                    }
+
                     /*Vérifie si la commande est entre les heures de début et fin de service
                      sinon message d'erreur
                     */
@@ -902,7 +910,7 @@ class CommandeIndividuelleController extends AbstractController
                         }
                     }
                 }
-                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
+
                 if ($form->get('raisonCommande')->getData() == "Autre" && $raisonPrecis == "Ajouter text") {
                     $this->addFlash(
                         'precisionReason',
@@ -910,35 +918,35 @@ class CommandeIndividuelleController extends AbstractController
                     );
                     $error = true;
                 }
-                /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
-                if (!$error) {
-                    /*Vérifie si la raison choisie est autre
-                     et récupère le champ raison précisé*/
-                    if ($form->get('raisonCommande')->getData() == "Autre") {
-                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                    } else {
-                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
-                    }
-                    /*Vérifie si le champ commande est rempli
-                     et met le comandeur dans la base de donnée*/
-                    if ($form->get('commandeur')->getData() != null) {
-                        $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
-                    } else {
-                        $commandeIndividuelle->setCommandeur($user);
-                    }
+            }
 
-                    $commandeIndividuelle
-                        ->setDateCreation($dateNow)
-                        ->setEstValide(true);
-                    $entityManager->persist($commandeIndividuelle);
-                    $entityManager->flush();
-
-                    $this->addFlash(
-                        'SuccessComInd',
-                        'Votre commande a été sauvegardée !'
-                    );
-
+            /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
+            if (!$error) {
+                /*Vérifie si la raison choisie est autre
+                 et récupère le champ raison précisé*/
+                if ($form->get('raisonCommande')->getData() == "Autre") {
+                    $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                } else {
+                    $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                 }
+                /*Vérifie si le champ commande est rempli
+                 et met le comandeur dans la base de donnée*/
+                if ($form->get('commandeur')->getData() != null) {
+                    $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
+                } else {
+                    $commandeIndividuelle->setCommandeur($user);
+                }
+
+                $commandeIndividuelle
+                    ->setDateCreation($dateNow)
+                    ->setEstValide(true);
+                $entityManager->persist($commandeIndividuelle);
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'SuccessComInd',
+                    'Votre commande a été sauvegardée !'
+                );
             }
             return $this->redirectToRoute('commande_individuelle_new', [], Response::HTTP_SEE_OTHER);
         }
@@ -1071,13 +1079,15 @@ class CommandeIndividuelleController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $commandeur = $form->get('commandeur')->getData();
+            $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
             $dateLivraison = $form->get('dateHeureLivraison')->getData();
+            $error = false;
             /*Vérifie si l'utilisateur n'est pas un administrateur ou un personnel de cuisine
              et que la commande est faite avant la clôture des commandes pour le jour même
              sinon affiche un message d'erreur
             */
             if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
-                if (($limiteJourMeme->getIsActive() && $limite < $dateNow) &&
+                if (($limiteJourMeme->getIsActive() && $limite->format('m-d-y H:i') < $dateNow->format('m-d-y H:i')) &&
                     ($dateLivraison > new DateTime('now 00:00:00',
                             new DateTimeZone('Europe/Paris')) &&
                         $dateLivraison < new DateTime('now 23:59:59',
@@ -1086,6 +1096,7 @@ class CommandeIndividuelleController extends AbstractController
                         'limiteCloture',
                         'Vous avez dépassé l\'heure de clôture pour les commandes d\'aujourd\'hui !'
                     );
+                    $error = true;
                 } elseif ($dateLivraison->format('l') == "Saturday" or $dateLivraison->format('l') == "Sunday") {
                     /*Vérifie que la commande n'est pas faite le samedi ou le dimanche
                      sinon un message d'erreur
@@ -1094,9 +1105,9 @@ class CommandeIndividuelleController extends AbstractController
                         'limiteCloture',
                         'Vous ne pouvez pas faire une commande pour le samedi ou pour le dimanche !'
                     );
+                    $error = true;
                 }
-            } else {
-                $error = false;
+
                 /*Vérifie si l'utilisateur est un élève*/
                 if (in_array("ROLE_ELEVE", $roles)) {
                     /*Récupère les inscriptions à la cantine de l'élève*/
@@ -1200,7 +1211,6 @@ class CommandeIndividuelleController extends AbstractController
                             break;
                     }
                 }
-                $raisonPrecis = $form->get('raisonCommandeAutre')->getData();
                 /*Vérifie si l'utilisateur n'a pas commandé deux fois le même jour*/
                 if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
                     $nbCommande = $commandeRepo->limiteCommande($user, $dateLivraison);
@@ -1230,31 +1240,31 @@ class CommandeIndividuelleController extends AbstractController
                         }
                     }
                 }
-                /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
-                if (!$error) {
-                    /*Vérifie si la raison choisie est autre
-                     et récupère le champ raison précisé*/
-                    if ($form->get('raisonCommande')->getData() == "Autre") {
-                        $commandeIndividuelle->setRaisonCommande($raisonPrecis);
-                    } else {
-                        $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
-                    }
-                    /*Vérifie si le champ commande est rempli
-                     et met le comandeur dans la base de donnée*/
-                    if ($commandeur) {
-                        $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
-                    } else {
-                        $commandeIndividuelle->setCommandeur($commandeIndividuelle->getCommandeur());
-                    }
+            }
 
-                    $entityManager->flush();
-
-                    $this->addFlash(
-                        'SuccessComInd',
-                        'Votre commande a été sauvegardée !'
-                    );
-
+            /*Si aucune erreur est trouvée alors la commande est envoyé à la base de donnée*/
+            if (!$error) {
+                /*Vérifie si la raison choisie est autre
+                 et récupère le champ raison précisé*/
+                if ($form->get('raisonCommande')->getData() == "Autre") {
+                    $commandeIndividuelle->setRaisonCommande($raisonPrecis);
+                } else {
+                    $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                 }
+                /*Vérifie si le champ commande est rempli
+                 et met le comandeur dans la base de donnée*/
+                if ($commandeur) {
+                    $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
+                } else {
+                    $commandeIndividuelle->setCommandeur($commandeIndividuelle->getCommandeur());
+                }
+
+                $entityManager->flush();
+
+                $this->addFlash(
+                    'SuccessComInd',
+                    'Votre commande a été sauvegardée !'
+                );
             }
 
             return $this->redirectToRoute('commande_individuelle_edit',
@@ -1309,6 +1319,10 @@ class CommandeIndividuelleController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);
+        if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('commande_individuelle_admin', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }

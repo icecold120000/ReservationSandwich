@@ -70,7 +70,7 @@ class Sandwich
         return $this->nomSandwich;
     }
 
-    public function setNomSandwich(string $nomSandwich): self
+    public function setNomSandwich(?string $nomSandwich): self
     {
         $this->nomSandwich = $nomSandwich;
 
@@ -82,7 +82,7 @@ class Sandwich
         return $this->imageSandwich;
     }
 
-    public function setImageSandwich(string $imageSandwich): self
+    public function setImageSandwich(?string $imageSandwich): self
     {
         $this->imageSandwich = $imageSandwich;
 
@@ -94,7 +94,7 @@ class Sandwich
         return $this->ingredientSandwich;
     }
 
-    public function setIngredientSandwich(string $ingredientSandwich): self
+    public function setIngredientSandwich(?string $ingredientSandwich): self
     {
         $this->ingredientSandwich = $ingredientSandwich;
 
@@ -106,7 +106,7 @@ class Sandwich
         return $this->commentaireSandwich;
     }
 
-    public function setCommentaireSandwich(string $commentaireSandwich): self
+    public function setCommentaireSandwich(?string $commentaireSandwich): self
     {
         $this->commentaireSandwich = $commentaireSandwich;
 
@@ -118,7 +118,7 @@ class Sandwich
         return $this->dispoSandwich;
     }
 
-    public function setDispoSandwich(bool $dispoSandwich): self
+    public function setDispoSandwich(?bool $dispoSandwich): self
     {
         $this->dispoSandwich = $dispoSandwich;
 

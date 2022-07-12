@@ -138,12 +138,14 @@ class CommandeGroupeRepository extends ServiceEntityRepository
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      * @throws Exception
      */
-    public function filterAdmin(string $search = null, DateTime $date = null, ?bool $cloture = null): array
+    public function filterAdmin(?string   $search = null,
+                                ?DateTime $date = null,
+                                ?bool     $cloture = null): array
     {
         $query = $this->createQueryBuilder('ci');
         $query->orderBy('ci.dateHeureLivraison', 'ASC');
 
-        if ($search != null) {
+        if ($search !== null) {
             $query
                 ->leftJoin('ci.commandeur', 'u')
                 ->leftJoin('u.eleves', 'e')
@@ -154,7 +156,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        if ($date != null) {
+        if ($date !== null) {
             if (new DateTime($date->format('y-m-d') . ' 00:00:00') == new DateTime('now 00:00:00')) {
                 $query->andWhere('ci.dateHeureLivraison Like :date')
                     ->setParameter('date', '%' . $date->format('y-m-d') . '%');
@@ -163,17 +165,13 @@ class CommandeGroupeRepository extends ServiceEntityRepository
                     ->andWhere('ci.dateHeureLivraison > :dateNow')
                     ->andWhere('ci.dateHeureLivraison < :dateThen')
                     ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d H:i'),
-                        'dateThen' => $date->format('Y-m-d H:i'), 'search' => '%' . $search . '%'));
+                        'dateThen' => $date->format('Y-m-d H:i')));
             }
         }
 
         if ($cloture === true) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :dateNow')
-                ->setParameter('dateNow', new DateTime('now'));
-        } else {
-            $query
-                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 

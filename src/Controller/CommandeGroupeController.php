@@ -98,6 +98,7 @@ class CommandeGroupeController extends AbstractController
             */
             if ($sandwich1 != $sandwich2) {
                 $commandeur = $form->get('commandeur')->getData();
+                $error = false;
                 /*Si le champ personne qui a commandé ce sandwich n'est
                  pas null et affecte cette commande
                 */
@@ -111,51 +112,74 @@ class CommandeGroupeController extends AbstractController
                  et qu'un des champs non requis par cet utilisateur n'est pas rempli*/
                 if ((in_array("ROLE_ADMIN", $roles) || in_array("ROLE_CUISINE", $roles))
                     && ($form->get('motifSortie')->getData() === null
-                        || $form->get('commentaireCommande')->getData()) === null) {
-                    if ($form->get('motifSortie')->getData() != null) {
-                        $commandeGroupe->setMotifSortie($form->get('motifSortie')->getData());
+                        || $form->get('commentaireCommande')->getData() === null)) {
+                    if ($form->get('motifSortie')->getData() === null) {
+                        $commandeGroupe->setMotifSortie('Commande faite par un administrateur !');
                     }
-                    if ($form->get('commentaireCommande')->getData() != null) {
-                        $commandeGroupe->setCommentaireCommande($form->get('commentaireCommande')->getData());
+                    if ($form->get('commentaireCommande')->getData() === null) {
+                        $commandeGroupe->setCommentaireCommande('Commande faite par un administrateur !');
+                    }
+                } else {
+                    /*Vérifie si un des deux champs est null*/
+                    if ($form->get('motifSortie')->getData() === null || $form->get('commentaireCommande')->getData() === null) {
+                        /*Si oui, on renvoie un message d'erreur selon les cas suivants :*/
+                        if ($form->get('motifSortie')->getData() === null) {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un motif de sortie !'
+                            );
+                        } elseif ($form->get('commentaireCommande')->getData() === null) {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un commentaire sur la commande !'
+                            );
+                        } else {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un motif de sortie et un commentaire sur la commande !'
+                            );
+                        }
+                        $error = true;
                     }
                 }
 
-                $commandeGroupe
-                    ->setDateCreation($dateNow)
-                    ->setBoissonChoisie($boisson)
-                    ->setEstValide(true);
-                $entityManager->persist($commandeGroupe);
-                $entityManager->flush();
+                if (!$error) {
+                    $commandeGroupe
+                        ->setDateCreation($dateNow)
+                        ->setBoissonChoisie($boisson)
+                        ->setEstValide(true);
+                    $entityManager->persist($commandeGroupe);
 
-                /*Récupère les sandwichs choisis et
-                 leur nombre commandé sous forme de tableau*/
-                $sandwichsChoisi = [
-                    $sandwich1,
-                    $sandwich2
-                ];
-                $nbSandwich = [
-                    $form->get('nbSandwichChoisi1')->getData(),
-                    $form->get('nbSandwichChoisi2')->getData()
-                ];
+                    /*Récupère les sandwichs choisis et
+                     leur nombre commandé sous forme de tableau*/
+                    $sandwichsChoisi = [
+                        $sandwich1,
+                        $sandwich2
+                    ];
+                    $nbSandwich = [
+                        $form->get('nbSandwichChoisi1')->getData(),
+                        $form->get('nbSandwichChoisi2')->getData()
+                    ];
 
-                $i = 0;
-                /*Pour chaque sandwich choisi, il crée un sandwich commande groupe et
-                 affecte la commande groupée réalisée ci-dessus
-                */
-                foreach ($sandwichsChoisi as $sandwichChoisi) {
-                    $groupeSandwich = new SandwichCommandeGroupe();
-                    $groupeSandwich
-                        ->setCommandeAffecte($commandeGroupe)
-                        ->setSandwichChoisi($sandwichChoisi)
-                        ->setNombreSandwich($nbSandwich[$i]);
-                    $entityManager->persist($groupeSandwich);
-                    $entityManager->flush();
-                    $i++;
+                    $i = 0;
+                    /*Pour chaque sandwich choisi, il crée un sandwich commande groupe et
+                     affecte la commande groupée réalisée ci-dessus
+                    */
+                    foreach ($sandwichsChoisi as $sandwichChoisi) {
+                        $groupeSandwich = new SandwichCommandeGroupe();
+                        $groupeSandwich
+                            ->setCommandeAffecte($commandeGroupe)
+                            ->setSandwichChoisi($sandwichChoisi)
+                            ->setNombreSandwich($nbSandwich[$i]);
+                        $entityManager->persist($groupeSandwich);
+                        $entityManager->flush();
+                        $i++;
+                    }
+                    $this->addFlash(
+                        'SuccessComGr',
+                        'Votre commande groupé a été sauvegardée !'
+                    );
                 }
-                $this->addFlash(
-                    'SuccessComGr',
-                    'Votre commande groupé a été sauvegardée !'
-                );
             } else {
                 $this->addFlash(
                     'FailedComGr',
@@ -239,6 +263,9 @@ class CommandeGroupeController extends AbstractController
     {
         /*Récupération de la donnée qui désactive ou non le service de commande*/
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
+        /*Récupèration de l'utilisateur courant et son rôle*/
+        $user = $userRepository->find($this->getUser());
+        $roles = $user->getRoles();
 
         /*Récupère les sandwichs et desserts disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
@@ -246,8 +273,19 @@ class CommandeGroupeController extends AbstractController
 
         /*Récupère les sandwichs choisis et les affectent dans le formulaire de modfication*/
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
-        $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe, ['limiteDateSortie' => 0
-            , 'sandwichChoisi1' => $groupeSandwich[0], 'sandwichChoisi2' => $groupeSandwich[1]]);
+
+
+        if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
+            $form = $this->createForm(CommandeGroupeType::class,
+                $commandeGroupe, ['sandwichChoisi1' => $groupeSandwich[0],
+                    'sandwichChoisi2' => $groupeSandwich[1]]);
+        } else {
+            $form = $this->createForm(CommandeGroupeType::class, $commandeGroupe,
+                ['sandwichChoisi1' => $groupeSandwich[0],
+                    'sandwichChoisi2' => $groupeSandwich[1],
+                    'requiredNonAdmin' => false]);
+        }
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -259,6 +297,7 @@ class CommandeGroupeController extends AbstractController
             /*Vérifie si les sandwichs sont différents*/
             if ($sandwich1 != $sandwich2) {
                 $commandeur = $form->get('commandeur')->getData();
+                $error = false;
 
                 /*Vérifie si le champ commandeur est rempli*/
                 if ($commandeur) {
@@ -266,33 +305,74 @@ class CommandeGroupeController extends AbstractController
                 } else {
                     $commandeGroupe->setCommandeur($userRepository->find($this->getUser()));
                 }
-                $entityManager->flush();
 
-                /*Récupère les sandwichs choisis et leur nombre commandé */
-                $sandwichsChoisi = [
-                    $sandwich1,
-                    $sandwich2
-                ];
-                $nbSandwich = [
-                    $form->get('nbSandwichChoisi1')->getData(),
-                    $form->get('nbSandwichChoisi2')->getData()
-                ];
-                $i = 0;
+                /*Vérifie si l'utilisateur est un administrateur
+                 ou un personnel de cuisine et qu'un des champs non requis
+                 par cet utilisateur n'est pas rempli*/
+                if ((in_array("ROLE_ADMIN", $roles) || in_array("ROLE_CUISINE", $roles))
+                    && ($form->get('motifSortie')->getData() === null
+                        || $form->get('commentaireCommande')->getData() === null)) {
 
-                /*Modifie les sandwichs affectés à cette commande groupée*/
-                foreach ($sandwichsChoisi as $sandwichChoisi) {
-                    $groupeSandwich[$i]
-                        ->setCommandeAffecte($commandeGroupe)
-                        ->setSandwichChoisi($sandwichChoisi)
-                        ->setNombreSandwich($nbSandwich[$i]);
-                    $entityManager->flush();
-                    $i++;
+                    /*Si un de ces champs n'est pas rempli
+                     alors il est rempli par un message par défaut*/
+                    if ($form->get('motifSortie')->getData() === null) {
+                        $commandeGroupe->setMotifSortie('Commande faite par un administrateur !');
+                    }
+                    if ($form->get('commentaireCommande')->getData() === null) {
+                        $commandeGroupe->setCommentaireCommande('Commande faite par un administrateur !');
+                    }
+                } else {
+                    /*Vérifie si un des deux champs est null*/
+                    if ($form->get('motifSortie')->getData() === null || $form->get('commentaireCommande')->getData() === null) {
+                        /*Si oui, on renvoie un message d'erreur selon les cas suivants :*/
+                        if ($form->get('motifSortie')->getData() === null) {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un motif de sortie !'
+                            );
+                        } elseif ($form->get('commentaireCommande')->getData() === null) {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un commentaire sur la commande !'
+                            );
+                        } else {
+                            $this->addFlash(
+                                'FailedComGr',
+                                'Veuillez saisir un motif de sortie et un commentaire sur la commande !'
+                            );
+                        }
+                        $error = true;
+                    }
                 }
 
-                $this->addFlash(
-                    'SuccessComGr',
-                    'Votre commande groupée a été modifiée !'
-                );
+                if (!$error) {
+                    $entityManager->flush();
+                    /*Récupère les sandwichs choisis et leur nombre commandé */
+                    $sandwichsChoisi = [
+                        $sandwich1,
+                        $sandwich2
+                    ];
+                    $nbSandwich = [
+                        $form->get('nbSandwichChoisi1')->getData(),
+                        $form->get('nbSandwichChoisi2')->getData()
+                    ];
+                    $i = 0;
+
+                    /*Modifie les sandwichs affectés à cette commande groupée*/
+                    foreach ($sandwichsChoisi as $sandwichChoisi) {
+                        $groupeSandwich[$i]
+                            ->setCommandeAffecte($commandeGroupe)
+                            ->setSandwichChoisi($sandwichChoisi)
+                            ->setNombreSandwich($nbSandwich[$i]);
+                        $entityManager->flush();
+                        $i++;
+                    }
+
+                    $this->addFlash(
+                        'SuccessComGr',
+                        'Votre commande groupée a été modifiée !'
+                    );
+                }
             } else {
                 $this->addFlash(
                     'FailedComGr',
@@ -333,7 +413,6 @@ class CommandeGroupeController extends AbstractController
                            SandwichCommandeGroupeRepository $sandComRepo): Response
     {
         if ($this->isCsrfTokenValid('delete' . $commandeGroupe->getId(), $request->request->get('_token'))) {
-
             /*Récupère les sandwichs affectés à la commande groupée et les suppriment*/
             $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
             foreach ($groupeSandwich as $sandwich) {
@@ -349,6 +428,10 @@ class CommandeGroupeController extends AbstractController
             );
         }
 
-        return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);
+        if (in_array("ROLE_ADMIN", $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('commande_individuelle_admin', [], Response::HTTP_SEE_OTHER);
+        } else {
+            return $this->redirectToRoute('commande_individuelle_index', [], Response::HTTP_SEE_OTHER);
+        }
     }
 }

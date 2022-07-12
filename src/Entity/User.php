@@ -110,7 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -188,7 +188,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nomUser;
     }
 
-    public function setNomUser(string $nomUser): self
+    public function setNomUser(?string $nomUser): self
     {
         $this->nomUser = $nomUser;
 
@@ -200,7 +200,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->prenomUser;
     }
 
-    public function setPrenomUser(string $prenomUser): self
+    public function setPrenomUser(?string $prenomUser): self
     {
         $this->prenomUser = $prenomUser;
 
@@ -244,7 +244,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): self
+    public function setIsVerified(?bool $isVerified): self
     {
         $this->isVerified = $isVerified;
 

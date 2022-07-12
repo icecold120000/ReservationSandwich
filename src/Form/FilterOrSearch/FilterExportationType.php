@@ -33,8 +33,8 @@ class FilterExportationType extends AbstractType
                 'label' => 'Affichage de l\'exportation',
                 'choices' => [
                     'Les deux' => 'les deux',
-                    'Commandes individuelles seulement' => 'individuelle',
-                    'Commandes groupées seulement' => 'groupé',
+                    'Commandes individuelles seulement' => 'individuelles',
+                    'Commandes groupées seulement' => 'groupées',
                 ],
                 'required' => true,
                 'empty_data' => 'les deux',

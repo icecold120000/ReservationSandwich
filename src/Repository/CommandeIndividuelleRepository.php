@@ -54,7 +54,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('ci');
         $query
             ->andWhere('ci.dateHeureLivraison Like :date')
-            ->andWhere('ci.est_valide = 1')
+            ->andWhere('ci.estValide = 1')
             ->setParameter('date', '%' . $date . '%')
             ->orderBy('ci.dateHeureLivraison', 'ASC');
 
@@ -198,16 +198,12 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                     ->andWhere('ci.dateHeureLivraison > :dateNow')
                     ->andWhere('ci.dateHeureLivraison < :dateThen')
                     ->setParameters(array('dateNow' => (new DateTime('now 00:00:00'))->format('Y-m-d H:i'),
-                        'dateThen' => $date->format('Y-m-d H:i'), 'user' => $user->getId()));
+                        'dateThen' => $date->format('Y-m-d H:i')));
             }
         }
         if ($cloture === true) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :dateNow')
-                ->setParameter('dateNow', new DateTime('now'));
-        } else {
-            $query
-                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 
@@ -222,12 +218,12 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      * @throws Exception
      */
-    public function filterAdmin(string $search = null, DateTime $date = null, ?bool $cloture = null): array
+    public function filterAdmin(?string $search = null, ?DateTime $date = null, ?bool $cloture = null): array
     {
         $query = $this->createQueryBuilder('ci');
         $query->orderBy('ci.dateHeureLivraison', 'ASC');
 
-        if ($search != null) {
+        if ($search !== null) {
             $query
                 ->leftJoin('ci.commandeur', 'u')
                 ->leftJoin('u.eleves', 'e')
@@ -238,7 +234,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
                 ->setParameter('search', '%' . $search . '%');
         }
 
-        if ($date != null) {
+        if ($date !== null) {
             if (new DateTime($date->format('y-m-d') . ' 00:00:00') == new DateTime('now 00:00:00')) {
                 $query->andWhere('ci.dateHeureLivraison Like :date')
                     ->setParameter('date', '%' . $date->format('y-m-d') . '%');
@@ -254,10 +250,6 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
         if ($cloture === true) {
             $query
                 ->andWhere('ci.dateHeureLivraison < :dateNow')
-                ->setParameter('dateNow', new DateTime('now'));
-        } else {
-            $query
-                ->andWhere('ci.dateHeureLivraison >= :dateNow')
                 ->setParameter('dateNow', new DateTime('now'));
         }
 

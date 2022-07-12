@@ -53,7 +53,7 @@ class ProfileController extends AbstractController
                 'SuccessProfile',
                 'Votre profil a été modifié !'
             );
-            return $this->redirectToRoute('profile_edit', array('id' => $user->getId()));
+            return $this->redirectToRoute('profile_edit', array('userTokenHash' => $user->getTokenHash()));
         }
 
         return $this->render('profile/edit.html.twig', [

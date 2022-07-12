@@ -42,12 +42,12 @@ class Eleve
     /**
      * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="eleves", cascade={"persist"})
      */
-    private $classeEleve;
+    private ?Classe $classeEleve;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="eleves", cascade={"remove"})
      */
-    private $compteEleve;
+    private ?User $compteEleve;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -62,7 +62,7 @@ class Eleve
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $codeBarreEleve;
+    private ?string $codeBarreEleve;
 
 
     public function getId(): ?int
@@ -75,7 +75,7 @@ class Eleve
         return $this->nomEleve;
     }
 
-    public function setNomEleve(string $nomEleve): self
+    public function setNomEleve(?string $nomEleve): self
     {
         $this->nomEleve = $nomEleve;
 
@@ -87,7 +87,7 @@ class Eleve
         return $this->prenomEleve;
     }
 
-    public function setPrenomEleve(string $prenomEleve): self
+    public function setPrenomEleve(?string $prenomEleve): self
     {
         $this->prenomEleve = $prenomEleve;
 
@@ -99,7 +99,7 @@ class Eleve
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(DateTime $dateNaissance): self
+    public function setDateNaissance(?DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 
@@ -111,7 +111,7 @@ class Eleve
         return $this->archiveEleve;
     }
 
-    public function setArchiveEleve(bool $archiveEleve): self
+    public function setArchiveEleve(?bool $archiveEleve): self
     {
         $this->archiveEleve = $archiveEleve;
 

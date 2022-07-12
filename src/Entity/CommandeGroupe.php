@@ -40,12 +40,12 @@ class CommandeGroupe
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $commentaireCommande;
+    private ?string $commentaireCommande;
 
     /**
      * @ORM\Column(type="text")
      */
-    private string $motifSortie;
+    private ?string $motifSortie;
 
     /**
      * @ORM\Column(type="datetime")
@@ -67,7 +67,7 @@ class CommandeGroupe
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $commandeur;
+    private ?User $commandeur;
 
     /**
      * @ORM\Column(type="boolean")
@@ -78,7 +78,7 @@ class CommandeGroupe
      * @ORM\ManyToOne(targetEntity=LieuLivraison::class, inversedBy="commandeGroupe")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $lieuLivraison;
+    private ?LieuLivraison $lieuLivraison;
 
     public function __construct()
     {
@@ -119,7 +119,7 @@ class CommandeGroupe
         return $this->prendreChips;
     }
 
-    public function setPrendreChips(bool $prendreChips): self
+    public function setPrendreChips(?bool $prendreChips): self
     {
         $this->prendreChips = $prendreChips;
 
@@ -143,7 +143,7 @@ class CommandeGroupe
         return $this->motifSortie;
     }
 
-    public function setMotifSortie(string $motifSortie): self
+    public function setMotifSortie(?string $motifSortie): self
     {
         $this->motifSortie = $motifSortie;
 
@@ -221,7 +221,7 @@ class CommandeGroupe
         return $this->estValide;
     }
 
-    public function setEstValide(bool $estValide): self
+    public function setEstValide(?bool $estValide): self
     {
         $this->estValide = $estValide;
 

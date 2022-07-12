@@ -22,19 +22,19 @@ class CommandeIndividuelle
      * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sandwichChoisi;
+    private ?Sandwich $sandwichChoisi;
 
     /**
      * @ORM\ManyToOne(targetEntity=Boisson::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $boissonChoisie;
+    private ?Boisson $boissonChoisie;
 
     /**
      * @ORM\ManyToOne(targetEntity=Dessert::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $dessertChoisi;
+    private ?Dessert $dessertChoisi;
 
     /**
      * @ORM\Column(type="boolean")
@@ -44,7 +44,7 @@ class CommandeIndividuelle
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateHeureLivraison;
+    private ?DateTimeInterface $dateHeureLivraison;
 
     /**
      * @ORM\Column(type="text")
@@ -54,17 +54,17 @@ class CommandeIndividuelle
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="commandeIndividuelles", cascade={"persist"})
      */
-    private $commandeur;
+    private ?User $commandeur;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $dateCreation;
+    private ?DateTimeInterface $dateCreation;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $estValide;
+    private ?bool $estValide;
 
     public function getId(): ?int
     {
@@ -112,7 +112,7 @@ class CommandeIndividuelle
         return $this->prendreChips;
     }
 
-    public function setPrendreChips(bool $prendreChips): self
+    public function setPrendreChips(?bool $prendreChips): self
     {
         $this->prendreChips = $prendreChips;
 
@@ -136,7 +136,7 @@ class CommandeIndividuelle
         return $this->raisonCommande;
     }
 
-    public function setRaisonCommande(string $raisonCommande): self
+    public function setRaisonCommande(?string $raisonCommande): self
     {
         $this->raisonCommande = $raisonCommande;
 
@@ -160,7 +160,7 @@ class CommandeIndividuelle
         return $this->dateCreation;
     }
 
-    public function setDateCreation(DateTimeInterface $dateCreation): self
+    public function setDateCreation(?DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
 
@@ -172,7 +172,7 @@ class CommandeIndividuelle
         return $this->estValide;
     }
 
-    public function setEstValide(bool $estValide): self
+    public function setEstValide(?bool $estValide): self
     {
         $this->estValide = $estValide;
 

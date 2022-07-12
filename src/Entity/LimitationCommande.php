@@ -26,7 +26,7 @@ class LimitationCommande
     /**
      * @ORM\Column(type="boolean")
      */
-    private ?bool $is_active;
+    private ?bool $isActive;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -48,7 +48,7 @@ class LimitationCommande
         return $this->libelleLimite;
     }
 
-    public function setLibelleLimite(string $libelleLimite): self
+    public function setLibelleLimite(?string $libelleLimite): self
     {
         $this->libelleLimite = $libelleLimite;
 
@@ -57,12 +57,12 @@ class LimitationCommande
 
     public function getIsActive(): ?bool
     {
-        return $this->is_active;
+        return $this->isActive;
     }
 
-    public function setIsActive(bool $is_active): self
+    public function setIsActive(?bool $isActive): self
     {
-        $this->is_active = $is_active;
+        $this->isActive = $isActive;
 
         return $this;
     }

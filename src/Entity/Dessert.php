@@ -70,7 +70,7 @@ class Dessert
         return $this->nomDessert;
     }
 
-    public function setNomDessert(string $nomDessert): self
+    public function setNomDessert(?string $nomDessert): self
     {
         $this->nomDessert = $nomDessert;
 
@@ -82,7 +82,7 @@ class Dessert
         return $this->imageDessert;
     }
 
-    public function setImageDessert(string $imageDessert): self
+    public function setImageDessert(?string $imageDessert): self
     {
         $this->imageDessert = $imageDessert;
 
@@ -118,7 +118,7 @@ class Dessert
         return $this->dispoDessert;
     }
 
-    public function setDispoDessert(bool $dispoDessert): self
+    public function setDispoDessert(?bool $dispoDessert): self
     {
         $this->dispoDessert = $dispoDessert;
 

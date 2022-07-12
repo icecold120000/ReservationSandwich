@@ -22,7 +22,7 @@ class InscriptionCantine
     /**
      * @ORM\OneToOne(targetEntity=Eleve::class, cascade={"remove"})
      */
-    private $eleve;
+    private ?Eleve $eleve;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)

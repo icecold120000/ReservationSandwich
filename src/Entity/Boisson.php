@@ -60,7 +60,7 @@ class Boisson
         return $this->nomBoisson;
     }
 
-    public function setNomBoisson(string $nomBoisson): self
+    public function setNomBoisson(?string $nomBoisson): self
     {
         $this->nomBoisson = $nomBoisson;
 
@@ -72,7 +72,7 @@ class Boisson
         return $this->imageBoisson;
     }
 
-    public function setImageBoisson(string $imageBoisson): self
+    public function setImageBoisson(?string $imageBoisson): self
     {
         $this->imageBoisson = $imageBoisson;
 
@@ -84,7 +84,7 @@ class Boisson
         return $this->dispoBoisson;
     }
 
-    public function setDispoBoisson(bool $dispoBoisson): self
+    public function setDispoBoisson(?bool $dispoBoisson): self
     {
         $this->dispoBoisson = $dispoBoisson;
 

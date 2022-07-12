@@ -41,12 +41,12 @@ class Adulte
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="adultes", cascade={"remove"})
      */
-    private $compteAdulte;
+    private ?User $compteAdulte;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $codeBarreAdulte;
+    private ?string $codeBarreAdulte;
 
     public function getId(): ?int
     {
@@ -58,7 +58,7 @@ class Adulte
         return $this->nomAdulte;
     }
 
-    public function setNomAdulte(string $nomAdulte): self
+    public function setNomAdulte(?string $nomAdulte): self
     {
         $this->nomAdulte = $nomAdulte;
 
@@ -70,7 +70,7 @@ class Adulte
         return $this->prenomAdulte;
     }
 
-    public function setPrenomAdulte(string $prenomAdulte): self
+    public function setPrenomAdulte(?string $prenomAdulte): self
     {
         $this->prenomAdulte = $prenomAdulte;
 
@@ -82,7 +82,7 @@ class Adulte
         return $this->dateNaissance;
     }
 
-    public function setDateNaissance(DateTime $dateNaissance): self
+    public function setDateNaissance(?DateTime $dateNaissance): self
     {
         $this->dateNaissance = $dateNaissance;
 
@@ -94,7 +94,7 @@ class Adulte
         return $this->archiveAdulte;
     }
 
-    public function setArchiveAdulte(bool $archiveAdulte): self
+    public function setArchiveAdulte(?bool $archiveAdulte): self
     {
         $this->archiveAdulte = $archiveAdulte;
 

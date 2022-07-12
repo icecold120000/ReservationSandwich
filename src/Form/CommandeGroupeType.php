@@ -111,17 +111,11 @@ class CommandeGroupeType extends AbstractType
                 'label' => 'Commentaire sur la commande',
                 'help' => 'Ex : nombre d\'élève, allergies, d\'autres contraintes...',
                 'required' => $options['requiredNonAdmin'],
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un commentaire !'])
-                ],
             ])
             ->add('motifSortie', TextareaType::class, [
                 'label' => 'Motif de la sortie',
                 'help' => 'Ex : Description de la sortie, nombre de participant...',
                 'required' => $options['requiredNonAdmin'],
-                'constraints' => [
-                    new NotBlank(['message' => 'Veuillez saisir un motif de sortie !'])
-                ],
             ])
             ->add('dateHeureLivraison', DateTimeType::class, [
                 'label' => 'Date et Heure de livraison',

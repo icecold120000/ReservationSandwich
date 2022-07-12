@@ -21,19 +21,19 @@ class SandwichCommandeGroupe
      * @ORM\ManyToOne(targetEntity=Sandwich::class, inversedBy="sandwichCommandeGroupes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $sandwichChoisi;
+    private ?Sandwich $sandwichChoisi;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private int $nombreSandwich;
+    private ?int $nombreSandwich;
 
     /**
      * @ORM\ManyToOne(targetEntity=CommandeGroupe::class,
      *      inversedBy="sandwichCommandeGroupes", cascade={"remove"})
      * @ORM\JoinColumn(nullable=false)
      */
-    private $commandeAffecte;
+    private ?CommandeGroupe $commandeAffecte;
 
     public function getId(): ?int
     {
@@ -57,7 +57,7 @@ class SandwichCommandeGroupe
         return $this->nombreSandwich;
     }
 
-    public function setNombreSandwich(int $nombreSandwich): self
+    public function setNombreSandwich(?int $nombreSandwich): self
     {
         $this->nombreSandwich = $nombreSandwich;
 

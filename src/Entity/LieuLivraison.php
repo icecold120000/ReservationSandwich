@@ -49,7 +49,7 @@ class LieuLivraison
         return $this->libelleLieu;
     }
 
-    public function setLibelleLieu(string $libelleLieu): self
+    public function setLibelleLieu(?string $libelleLieu): self
     {
         $this->libelleLieu = $libelleLieu;
 
@@ -91,7 +91,7 @@ class LieuLivraison
         return $this->estActive;
     }
 
-    public function setEstActive(bool $estActive): self
+    public function setEstActive(?bool $estActive): self
     {
         $this->estActive = $estActive;
 

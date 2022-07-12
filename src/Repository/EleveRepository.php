@@ -40,7 +40,7 @@ class EleveRepository extends ServiceEntityRepository
     }
 
     /**
-     * Filtre de la page de détail d'un classe
+     * Filtre de la page de détail d'une classe
      * @param string|null $ordreNom
      * @param string|null $ordrePrenom
      * @param Classe|null $classe
