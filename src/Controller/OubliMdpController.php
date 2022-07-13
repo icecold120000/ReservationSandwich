@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\OubliMdpType;
 use App\Form\UserMdpType;
 use App\Repository\UserRepository;
+use App\Security\LoginAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -17,7 +18,9 @@ use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -84,6 +87,8 @@ class OubliMdpController extends AbstractController
      * @param UserRepository $userRepo
      * @param Request $request
      * @param UserPasswordHasherInterface $userPasswordHasher
+     * @param UserAuthenticatorInterface $userAuthenticator
+     * @param LoginAuthenticator $authenticator
      * @return Response|null
      * @throws NonUniqueResultException
      */
@@ -91,7 +96,9 @@ class OubliMdpController extends AbstractController
                                   User                        $user,
                                   UserRepository              $userRepo,
                                   Request                     $request,
-                                  UserPasswordHasherInterface $userPasswordHasher): ?Response
+                                  UserPasswordHasherInterface $userPasswordHasher,
+                                  UserAuthenticatorInterface  $userAuthenticator,
+                                  LoginAuthenticator          $authenticator): ?Response
     {
         $form = $this->createForm(UserMdpType::class);
         $form->handleRequest($request);
@@ -114,15 +121,11 @@ class OubliMdpController extends AbstractController
                 'Votre mot de passe a été modifié !'
             );
             /*Authentifie l'utilisateur*/
-            new Passport(
-                new UserBadge($userFound->getEmail()),
-                new PasswordCredentials($request->request->get('plainPassword', '')),
-                [
-                    new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
-                ]
+            return $userAuthenticator->authenticateUser(
+                $user,
+                $authenticator,
+                $request
             );
-
-            return $this->redirectToRoute('homepage');
         }
 
         return $this->render('oubli_mdp/form_mdp.html.twig', [
