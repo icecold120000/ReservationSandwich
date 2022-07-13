@@ -23,6 +23,8 @@
                                name="commande_groupe[sandwichChoisi1]" value="{{ sandwich.id }}">
                     </label>
                 </div>
+            {% else %}
+                <img src="{{ asset('/static/images/placeholder.png') }}" alt="placeholder">
             {% endfor %}
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#sandwich1Carousel" data-bs-slide="prev">
@@ -67,6 +69,8 @@
                                    id="input_commande_groupe_dessertChoisi_{{ dessert.id }}">
                         </label>
                     </div>
+                {% else %}
+                    <img src="{{ asset('/static/images/placeholder.png') }}" alt="placeholder">
                 {% endfor %}
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#dessertCarousel" data-bs-slide="prev">
@@ -114,6 +118,8 @@
                                name="commande_groupe[sandwichChoisi2]" value="{{ sandwich.id }}">
                     </label>
                 </div>
+            {% else %}
+                <img src="{{ asset('/static/images/placeholder.png') }}" alt="placeholder">
             {% endfor %}
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#sandwich2Carousel" data-bs-slide="prev">

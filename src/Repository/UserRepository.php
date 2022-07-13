@@ -81,7 +81,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Récupère le compte utlisateur selon l'email
+     * Récupère le compte utilisateur selon l'email
      * @param string $email
      * @return User|null
      * @throws NonUniqueResultException

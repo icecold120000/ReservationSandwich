@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Entity\Eleve;
 use App\Entity\InscriptionCantine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -22,7 +21,7 @@ class InscriptionCantineRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère toutes les incriptions selon si l'inscription est archivée ou non
+     * Récupère toutes les inscriptions selon si l'inscription est archivée ou non
      * @param bool $archive
      * @return InscriptionCantine[] Returns an array of InscriptionCantine objects
      */

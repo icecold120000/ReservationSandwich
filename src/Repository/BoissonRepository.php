@@ -37,7 +37,7 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère les boissons selon leur disponibilté
+     * Récupère les boissons selon leur disponibilité
      * @return Boisson[] Returns an array of Boisson objects
      */
     public function findByDispo(bool $dispo): array
@@ -50,7 +50,7 @@ class BoissonRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére une boisson selon son nom
+     * Récupère une boisson selon son nom
      * @param string $nom
      * @return Boisson|null
      * @throws NonUniqueResultException

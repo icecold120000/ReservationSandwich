@@ -74,7 +74,7 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére l'adulte selon son nom, prénom et date de naissance
+     * Récupère l'adulte selon son nom, prénom et date de naissance
      * @param string $nom
      * @param string $prenom
      * @param DateTime|null $birthday
@@ -97,7 +97,7 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére l'adulte selon son nom et prénom
+     * Récupère l'adulte selon son nom et prénom
      * @param string $nom
      * @param string $prenom
      * @return Adulte|null
@@ -114,7 +114,7 @@ class AdulteRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére l'adulte selon son compte utilisateur
+     * Récupère l'adulte selon son compte utilisateur
      * @param User $user
      * @return Adulte|null
      * @throws NonUniqueResultException

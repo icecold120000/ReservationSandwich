@@ -24,7 +24,7 @@ class EleveRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére les élèves selon s'ils sont archivés ou non
+     * Récupère les élèves selon s'ils sont archivés ou non
      * @param bool $archive
      * @return Eleve[] Returns an array of Eleve objects
      */

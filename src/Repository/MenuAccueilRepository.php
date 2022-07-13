@@ -21,7 +21,7 @@ class MenuAccueilRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère le menu d'accueil courrant
+     * Récupère le menu d'accueil courant
      * @param int $idMenu
      * @return MenuAccueil|null
      * @throws NonUniqueResultException

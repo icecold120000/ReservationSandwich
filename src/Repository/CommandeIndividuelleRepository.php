@@ -45,7 +45,7 @@ class CommandeIndividuelleRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére les commandes individuelles valides pour être exportées selon une date
+     * Récupère les commandes individuelles valides pour être exportées selon une date
      * @param string $date
      * @return CommandeIndividuelle[] Returns an array of CommandeIndividuelle objects
      */

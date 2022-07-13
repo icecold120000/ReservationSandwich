@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\CommandeGroupe;
-use App\Entity\Sandwich;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -24,7 +23,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére les commandes groupées non clôturées selon un utilisateur (Historique de commande)
+     * Récupère les commandes groupées non clôturées selon un utilisateur (Historique de commande)
      * @param User $user
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
@@ -40,7 +39,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére toutes les commandes groupées non clôturées (Administrateur)
+     * Récupère toutes les commandes groupées non clôturées (Administrateur)
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
     public function findAllAdminNonClotureGroupe(): array
@@ -54,7 +53,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére les commandes groupées valides pour être exportées selon une date
+     * Récupère les commandes groupées valides pour être exportées selon une date
      * @param string $date
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
@@ -71,7 +70,7 @@ class CommandeGroupeRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupére les commandes groupées selon le lieu de livraison
+     * Récupère les commandes groupées selon le lieu de livraison
      * @param string $lieu
      * @return CommandeGroupe[] Returns an array of CommandeGroupe objects
      */
