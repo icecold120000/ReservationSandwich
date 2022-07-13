@@ -67,7 +67,7 @@ class UserController extends AbstractController
                           PaginatorInterface $paginator,
                           int                $page = 1): Response
     {
-        /*Récupération des utlisateurs*/
+        /*Récupération des utilisateurs*/
         $users = $userRepository->findAll();
         $form = $this->createForm(UserFilterType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
@@ -83,7 +83,7 @@ class UserController extends AbstractController
             );
         }
 
-        /*Paginantion*/
+        /*Pagination*/
         $usersTotal = $users;
         $users = $paginator->paginate(
             $users,
@@ -131,7 +131,7 @@ class UserController extends AbstractController
                     $form->get('prenomUser')->getData());
             }
 
-            /*Si l'utilsateur n'existe pas alors */
+            /*Si l'utilisateur n'existe pas alors */
             if ($userRelated == null) {
                 /*Il est créé*/
                 $user->setPassword(
@@ -167,7 +167,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Formulaire d'ajout d'une liste d'utlisateur
+     * Formulaire d'ajout d'une liste d'utilisateur
      * @Route("/file", name="user_file", methods={"GET","POST"})
      * @param Request $request
      * @param SluggerInterface $slugger
@@ -223,7 +223,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Fonction permettant de traiter les utilisateurs dans l'excel
+     * Fonction permettant de traiter les utilisateurs dans le fichier excel
      * @param string $fileName
      * @throws NonUniqueResultException
      * @throws Exception
@@ -307,7 +307,7 @@ class UserController extends AbstractController
                                         $rowData['Mot de passe']
                                     )
                                 );
-                                /*Génére un token hash*/
+                                /*Génère un token hash*/
                                 $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
 
                                 $this->entityManager->persist($user);
@@ -340,7 +340,7 @@ class UserController extends AbstractController
 
     /**
      * Fonction permettant de récupérer les données du fichier excel et de retourner
-     * un tableau qui contient les utilisateurs dans l'excel
+     * un tableau qui contient les utilisateurs dans le fichier excel
      * @param string $fileName
      * @return array
      */
@@ -402,7 +402,7 @@ class UserController extends AbstractController
                     )
                 );
 
-                /*Récupére le champ fonction de l'utilisateur*/
+                /*Récupère le champ fonction de l'utilisateur*/
                 if ($form->get('roles')->getData()) {
                     $roles = $form->get('roles')->getData();
                     /*Attribue le rôle correspondant*/
@@ -426,7 +426,7 @@ class UserController extends AbstractController
                 }
             }
 
-            /*Regénére le token hash*/
+            /*Régénère le token hash*/
             $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $entityManager->flush();
 
@@ -446,7 +446,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * Formualire de supression d'un utilisateur
+     * Formulaire de suppression d'un utilisateur
      * @Route("/{id}", name="user_delete", methods={"POST"})
      * @param Request $request
      * @param User $user

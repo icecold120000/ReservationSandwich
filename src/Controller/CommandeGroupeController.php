@@ -52,11 +52,11 @@ class CommandeGroupeController extends AbstractController
                         LimitationCommandeRepository    $limiteRepo,
                         UserRepository                  $userRepository): Response
     {
-        /*Récupèration de l'utilisateur courant et son rôle*/
+        /*Récupération de l'utilisateur courant et son rôle*/
         $user = $userRepository->find($this->getUser());
         $roles = $user->getRoles();
 
-        /*Récupération de la date d'ajourd'hui*/
+        /*Récupération de la date d'aujourd'hui*/
         $dateNow = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
         /*Récupération de la donnée permettant de désactiver ou non le service de commandes*/
@@ -64,7 +64,7 @@ class CommandeGroupeController extends AbstractController
 
         /*Récupération des produits disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
-        $boisson = $boissonRepo->findOneByNom('Eau');
+        $boisson = $boissonRepo->findOneBy(['id' => 1]);
         $desserts = $dessertRepo->findByDispo(true);
 
         /*Récupération de la limite de 7 jours avant les commandes pour les sorties*/
@@ -263,7 +263,7 @@ class CommandeGroupeController extends AbstractController
     {
         /*Récupération de la donnée qui désactive ou non le service de commande*/
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
-        /*Récupèration de l'utilisateur courant et son rôle*/
+        /*Récupération de l'utilisateur courant et son rôle*/
         $user = $userRepository->find($this->getUser());
         $roles = $user->getRoles();
 
@@ -271,9 +271,8 @@ class CommandeGroupeController extends AbstractController
         $sandwichs = $sandwichRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
 
-        /*Récupère les sandwichs choisis et les affectent dans le formulaire de modfication*/
+        /*Récupère les sandwichs choisis et les affectent dans le formulaire de modification*/
         $groupeSandwich = $sandComRepo->findBy(['commandeAffecte' => $commandeGroupe->getId()]);
-
 
         if (!in_array("ROLE_ADMIN", $roles) && !in_array("ROLE_CUISINE", $roles)) {
             $form = $this->createForm(CommandeGroupeType::class,

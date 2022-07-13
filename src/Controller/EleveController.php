@@ -68,7 +68,7 @@ class EleveController extends AbstractController
                           PaginatorInterface $paginator,
                           int                $page = 1): Response
     {
-        /*Récupére les élèves non archivés*/
+        /*Récupère les élèves non archivés*/
         $eleves = $eleveRepo->findByArchive(false);
         $form = $this->createForm(FilterEleveType::class, null, ['method' => 'GET']);
         $search = $form->handleRequest($request);
@@ -164,7 +164,7 @@ class EleveController extends AbstractController
     }
 
     /**
-     * Fonction permettant de créer des élèves à aprtir d'un fichier excel
+     * Fonction permettant de créer des élèves à partir d'un fichier excel
      * @param string $fileName
      * @throws NonUniqueResultException
      * @throws Exception
@@ -295,7 +295,7 @@ class EleveController extends AbstractController
                                 ->setClasseEleve($classe)
                                 ->setNbRepas($nbRepas);
                         }
-                        /*Génération d'un code barre pour un éléve*/
+                        /*Génération d'un code barre pour un élève*/
                         $generator = new BarcodeGeneratorPNG();
 
                         /*Vérifie si l'élève a un numéro de badge*/
@@ -303,7 +303,7 @@ class EleveController extends AbstractController
                             /*Nom du fichier*/
                             $codeBar = 'code_' . $rowData['Nom'] . '_' . $rowData['Prénom'] . '.png';
 
-                            /*Créer le fichier à l'emplacement attribué et génére le code barre
+                            /*Créer le fichier à l'emplacement attribué et génère le code barre
                              avec le numéro de badge associé à l'élève */
                             file_put_contents($this->getParameter('codeBarEleveFile_directory') . $codeBar,
                                 $generator->getBarcode($rowData['Num Badge'],
@@ -340,7 +340,7 @@ class EleveController extends AbstractController
 
     /**
      * Fonction permettant de récupérer les données du fichier excel et de retourner
-     * un tableau qui contient les élèves dans l'excel
+     * un tableau qui contient les élèves dans le fichier excel
      * @param string $fileName
      * @return array
      */
@@ -389,7 +389,7 @@ class EleveController extends AbstractController
                     ];
                 } elseif (key($row) == "Nom") {
                     /*
-                      Deuxième cas de figure : l'excel a uniquement la légende
+                      Deuxième cas de figure : le fichier excel a uniquement la légende
                       et les données
                       et rempli les données dans un tableau
                      */
@@ -410,8 +410,8 @@ class EleveController extends AbstractController
                     ];
                 } else {
                     /*
-                      Troisième cas de figure : l'excel a des lignes avec des données
-                      écites avant la légende (exemple une date)
+                      Troisième cas de figure : le fichier excel a des lignes avec des données
+                      écrites avant la légende (exemple une date)
                       et rempli les données dans un tableau
                      */
                     $temp1 = [

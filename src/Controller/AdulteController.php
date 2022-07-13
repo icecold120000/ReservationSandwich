@@ -84,7 +84,7 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * Formulaire d'ajout une liste d'adultes à partir d'excel
+     * Formulaire d'ajout une liste d'adultes à partir d'un fichier excel
      * @Route("/file", name="adulte_file", methods={"GET","POST"})
      * @param Request $request
      * @param SluggerInterface $slugger
@@ -241,7 +241,7 @@ class AdulteController extends AbstractController
 
     /**
      * Fonction permettant de récupérer les données du fichier excel et de retourner
-     * un tableau qui contient les adultes dans l'excel
+     * un tableau qui contient les adultes dans le fichier excel
      * @param string $fileName
      * @return array
      */
@@ -262,10 +262,10 @@ class AdulteController extends AbstractController
         /** @var string $fileString */
         $fileString = file_get_contents($file);
 
-        /*Réfactorisation des colonnes du fichier Excel */
+        /*Factorisation des colonnes du fichier Excel */
         $dataRaw = $serializer->decode($fileString, $fileExtension);
         $data = [];
-        /*Pour chaque ligne de Feuil1 dans l'excel */
+        /*Pour chaque ligne de Feuil1 dans le fichier excel */
         foreach ($dataRaw['Feuil1'] as $row) {
             /*Vérifie si la clé de la ligne est different de null*/
             if (key($row) != null) {
@@ -286,7 +286,7 @@ class AdulteController extends AbstractController
                     ];
                 } elseif (key($row) == "Nom") {
                     /*
-                      Deuxième cas de figure : l'excel a uniquement la légende
+                      Deuxième cas de figure : le fichier excel a uniquement la légende
                       et les données et rempli les données dans un tableau
                      */
                     $temp1 = [
@@ -299,8 +299,8 @@ class AdulteController extends AbstractController
                     ];
                 } else {
                     /*
-                      Troisième cas de figure : l'excel a des lignes avec des données
-                      écites avant la légende (exemple une date)
+                      Troisième cas de figure : le fichier excel a des lignes avec des données
+                      écrites avant la légende (exemple une date)
                       et rempli les données dans un tableau
                      */
                     $temp1 = [
@@ -349,7 +349,7 @@ class AdulteController extends AbstractController
     }
 
     /**
-     * Formulaire de modificiation d'un adulte
+     * Formulaire de modification d'un adulte
      * @Route("/{id}/edit", name="adulte_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param Adulte $adulte
@@ -407,7 +407,7 @@ class AdulteController extends AbstractController
                            UserRepository         $userRepo): Response
     {
         if ($this->isCsrfTokenValid('delete' . $adulte->getId(), $request->request->get('_token'))) {
-            /*Récuperation du compte utilisateur de l'adulte et le supprime*/
+            /*Récupération du compte utilisateur de l'adulte et le supprime*/
             $user = $userRepo->findOneByAdulte($adulte->getId());
             /*Si l'adulte a un compte utilisateur alors le compte est supprimé*/
             if ($user) {

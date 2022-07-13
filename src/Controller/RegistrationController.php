@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     /**
-     * Formulaire d'insctiption
+     * Formulaire d'inscription
      * @Route("/register", name="app_register")
      * @param Request $request
      * @param UserPasswordHasherInterface $userPasswordHasher
@@ -38,7 +38,7 @@ class RegistrationController extends AbstractController
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /*Récupère si l'utilsateur est un élève ou adulte*/
+            /*Récupère si l'utilisateur est un élève ou adulte*/
             $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
                 $form->get('prenomUser')->getData(), $form->get('dateNaissanceUser')->getData());
             $adulteFound = $adulteRepository->findByNomPrenomDateNaissance($form->get('nomUser')->getData(),
@@ -53,7 +53,7 @@ class RegistrationController extends AbstractController
                         $form->get('plainPassword')->getData()
                     )
                 );
-                /*Génére un token hash de l'utilisateur*/
+                /*Génère un token hash de l'utilisateur*/
                 $user->setTokenHash(md5($user->getNomUser() . $user->getEmail()));
                 $user->setIsVerified(true);
                 /*Attribut le rôle de l'utilisateur*/

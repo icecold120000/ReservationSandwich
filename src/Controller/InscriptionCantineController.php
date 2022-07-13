@@ -63,7 +63,7 @@ class InscriptionCantineController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $fichierEleve */
             $fichierEleve = $form->get('fileSubmit')->getData();
-            /*Vérifie si le chmap a été rempli*/
+            /*Vérifie si le champ a été rempli*/
             if ($fichierEleve) {
                 $originalFilename = pathinfo($fichierEleve->getClientOriginalName(),
                     PATHINFO_FILENAME);
@@ -166,7 +166,7 @@ class InscriptionCantineController extends AbstractController
 
                             } /*S'il n'existe pas alors on le crée en tant qu'une nouvelle inscription à la cantine pour cette élève*/
                             else {
-                                /*Vérifie si le nombre de repas est suprieur à zéro */
+                                /*Vérifie si le nombre de repas est supérieur à zéro */
                                 if ($eleveExcel->getNbRepas() > 0) {
                                     $inscription = new InscriptionCantine();
                                     $inscription->setEleve($eleveExcel)
@@ -180,7 +180,7 @@ class InscriptionCantineController extends AbstractController
                                 }
                             }
                         } else {
-                            /*Récupére les èlèves manquants*/
+                            /*Récupère les élèves manquants*/
                             $eleveMissingBdd[$i] = ["prenom" => $rowData['Prénom'], "nom" => $rowData['Nom'], "dateDeNaissance" => $rowData['Date de naissance']];
                             $i++;
                         }
@@ -213,7 +213,7 @@ class InscriptionCantineController extends AbstractController
 
     /**
      * Fonction permettant de récupérer les données du fichier excel et de retourner
-     * un tableau qui contient les inscriptions à la cantine des élèves dans l'excel
+     * un tableau qui contient les inscriptions à la cantine des élèves dans le fichier excel
      * @param string $fileName
      * @return array
      */
@@ -260,7 +260,7 @@ class InscriptionCantineController extends AbstractController
                     ];
                 } elseif (key($row) == "Nom") {
                     /*
-                      Deuxième cas de figure : l'excel a uniquement la légende
+                      Deuxième cas de figure : le fichier excel a uniquement la légende
                       et les données
                       et rempli les données dans un tableau
                      */
@@ -279,8 +279,8 @@ class InscriptionCantineController extends AbstractController
                     ];
                 } else {
                     /*
-                      Troisième cas de figure : l'excel a des lignes avec des données
-                      écites avant la légende (exemple une date)
+                      Troisième cas de figure : le fichier excel a des lignes avec des données
+                      écrites avant la légende (exemple une date)
                       et rempli les données dans un tableau
                      */
                     $temp1 = [

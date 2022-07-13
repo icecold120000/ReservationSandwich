@@ -140,7 +140,7 @@ class BoissonController extends AbstractController
     }
 
     /**
-     * Formulaire de supression d'une boisson
+     * Formulaire de suppression d'une boisson
      * @Route("/{id}/edit", name="boisson_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param Boisson $boisson
@@ -156,7 +156,7 @@ class BoissonController extends AbstractController
                          SluggerInterface       $slugger,
                          BoissonRepository      $boissonRepo): Response
     {
-        /*Récupèration de l'ancienne image*/
+        /*Récupération de l'ancienne image*/
         $oldImgBoisson = $boisson->getImageBoisson();
         $form = $this->createForm(BoissonType::class, $boisson, ['fichierRequired' => false]);
         $form->handleRequest($request);
@@ -238,7 +238,7 @@ class BoissonController extends AbstractController
     }
 
     /**
-     * Formulaire de supression d'une boisson
+     * Formulaire de suppression d'une boisson
      * @Route("/{id}", name="boisson_delete", methods={"POST"})
      * @param Request $request
      * @param Boisson $boisson

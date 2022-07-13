@@ -89,10 +89,10 @@ class CommandeIndividuelleController extends AbstractController
         /*Récupère l'utilisateur courant*/
         $user = $userRepo->find($this->getUser());
 
-        /*Affichage par défault de la page*/
+        /*Affichage par défaut de la page*/
         $affichageTableau = "les deux";
 
-        /*Récupèration des limites mise en place sur les commandes*/
+        /*Récupération des limites mise en place sur les commandes*/
         $limiteGroupeCom = $limiteRepo->findOneById(5);
         $limiteJourMeme = $limiteRepo->findOneById(1);
         $limiteNbJour = $limiteRepo->findOneById(2);
@@ -217,7 +217,7 @@ class CommandeIndividuelleController extends AbstractController
                           int                            $comIndPage = 1,
                           int                            $comGrPage = 1): Response
     {
-        /*Récupération des commandes + affichage par défault de la page*/
+        /*Récupération des commandes + affichage par défaut de la page*/
         $affichageTableau = "les deux";
         $commandes = $comIndRepo->findAllNonCloture();
         $commandesGroupe = $comGrRepo->findAllAdminNonClotureGroupe();
@@ -651,7 +651,7 @@ class CommandeIndividuelleController extends AbstractController
     {
         /*Si l'affichage choisi est individuelle ou les deux*/
         if ($affichage == "les deux" || $affichage == "individuelles") {
-            /*Si oui, alors il y a récupèration des commandes individuelles*/
+            /*Si oui, alors il y a récupération des commandes individuelles*/
             $commandes = $this->comIndRepo
                 ->exportationCommande($dateChoisi->format('y-m-d'));
         } else {
@@ -661,7 +661,7 @@ class CommandeIndividuelleController extends AbstractController
 
         /*Si l'affichage choisi est groupées ou les deux*/
         if ($affichage == "les deux" || $affichage == "groupées") {
-            /*Si oui, alors il y a récupèration des commandes groupées*/
+            /*Si oui, alors il y a récupération des commandes groupées*/
             $commandeGroupe = $this->comGrRepo->exportationCommandeGroupe($dateChoisi->format('y-m-d'));
         } else {
             /*Sinon les commandes groupées sont rendu null*/
@@ -737,7 +737,7 @@ class CommandeIndividuelleController extends AbstractController
         $nbCommandeMois = count($this->comIndRepo->findBetweenDate($user, new DateTime('now 00:00:00', new DateTimezone('Europe/Paris')), new DateTime('+1 month 23:59:00', new DateTimezone('Europe/Paris'))));
         $deactive = $deactiveRepo->findOneBy(['id' => 1]);
 
-        /*Récupèration des produits disponibles*/
+        /*Récupération des produits disponibles*/
         $sandwichs = $sandwichRepo->findByDispo(true);
         $boissons = $boissonRepo->findByDispo(true);
         $desserts = $dessertRepo->findByDispo(true);
@@ -930,7 +930,7 @@ class CommandeIndividuelleController extends AbstractController
                     $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                 }
                 /*Vérifie si le champ commande est rempli
-                 et met le comandeur dans la base de donnée*/
+                 et met le commandeur dans la base de donnée*/
                 if ($form->get('commandeur')->getData() != null) {
                     $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
                 } else {
@@ -976,7 +976,7 @@ class CommandeIndividuelleController extends AbstractController
     }
 
     /**
-     * Affichage de la page de déactivation de service
+     * Affichage de la page de désactivation de service
      * @Route("/desactive", name="deactivate_commande",methods={"GET"})
      */
     public function deactivated(): Response
@@ -1125,7 +1125,7 @@ class CommandeIndividuelleController extends AbstractController
                             $error = true;
                         }
                     }
-                    /*Vérifie si l'élève qui a commandé son sandwich est incrit
+                    /*Vérifie si l'élève qui a commandé son sandwich est inscrit
                      le jour de la livraison à la cantine sinon message d'erreur
                     */
                     switch ($dateLivraison->format('l')) {
@@ -1252,7 +1252,7 @@ class CommandeIndividuelleController extends AbstractController
                     $commandeIndividuelle->setRaisonCommande($form->get('raisonCommande')->getData());
                 }
                 /*Vérifie si le champ commande est rempli
-                 et met le comandeur dans la base de donnée*/
+                 et met le commandeur dans la base de donnée*/
                 if ($commandeur) {
                     $commandeIndividuelle->setCommandeur($form->get('commandeur')->getData());
                 } else {

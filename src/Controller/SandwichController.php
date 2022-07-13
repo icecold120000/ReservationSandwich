@@ -152,7 +152,7 @@ class SandwichController extends AbstractController
                          SluggerInterface       $slugger,
                          SandwichRepository     $sandwichRepo): Response
     {
-        /*Récupèration de l'ancienne image*/
+        /*Récupération de l'ancienne image*/
         $oldSandwich = $sandwich->getImageSandwich();
         $form = $this->createForm(SandwichType::class, $sandwich, ['fichierRequired' => false]);
         $form->handleRequest($request);
@@ -226,7 +226,7 @@ class SandwichController extends AbstractController
     }
 
     /**
-     * Formulaire de supression d'un sandwich
+     * Formulaire de suppression d'un sandwich
      * @Route("/{id}", name="sandwich_delete", methods={"POST"})
      * @param Request $request
      * @param Sandwich $sandwich

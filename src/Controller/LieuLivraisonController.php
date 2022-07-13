@@ -124,7 +124,7 @@ class LieuLivraisonController extends AbstractController
     }
 
     /**
-     * Formululaire de modification d'un lieu de livraison
+     * Formulaire de modification d'un lieu de livraison
      * @Route("/{id}/edit", name="lieu_livraison_edit", methods={"GET","POST"})
      * @param Request $request
      * @param LieuLivraison $lieuLivraison
@@ -187,7 +187,7 @@ class LieuLivraisonController extends AbstractController
                            LieuLivraisonRepository  $lieuRepository): Response
     {
         if ($this->isCsrfTokenValid('delete' . $lieuLivraison->getId(), $request->request->get('_token'))) {
-            /*Modifie toutes les commmandes groupées qui utlisent le lieu de livraison
+            /*Modifie toutes les commandes groupées qui utilisent le lieu de livraison
               et les affectent au lieu de livraison aucun
              */
             $commandesGroupe = $comGroupeRepo->findByLieuLivraison($lieuLivraison->getId());

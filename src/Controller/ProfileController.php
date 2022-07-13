@@ -45,7 +45,7 @@ class ProfileController extends AbstractController
                     )
                 );
             }
-            /*Regénére un nouveau token hash*/
+            /*Régénère un nouveau token hash*/
             $user->setTokenHash(md5($user->getId() . $user->getEmail()));
             $em->flush();
 
@@ -86,7 +86,7 @@ class ProfileController extends AbstractController
                           User                         $user,
                           InscriptionCantineRepository $cantineRepository): Response
     {
-        /*Récupére l'élève et les inscriptions à la cantine de l'élève*/
+        /*Récupère l'élève et les inscriptions à la cantine de l'élève*/
         $eleveFound = $eleveRepository->findByNomPrenomDateNaissance($user->getNomUser(),
             $user->getPrenomUser(), $user->getDateNaissanceUser());
         $inscrit = $cantineRepository->findOneByEleve($eleveFound->getId());
