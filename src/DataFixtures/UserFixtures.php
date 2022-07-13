@@ -109,7 +109,7 @@ class UserFixtures extends Fixture
             ->setNomUser('Ribas')
             ->setPrenomUser('Stella')
             ->setDateNaissanceUser(new \DateTime('05-06-1981'))
-            ->setEmail('stelle.ribas@lyceestvincent.net')
+            ->setEmail('stella.ribas@lyceestvincent.net')
             ->setRoles([User::ROLE_ADULTES])
             ->setPassword($password7)
             ->setTokenHash('vy4c5d678yvyuibuTYTYvuiis68')
