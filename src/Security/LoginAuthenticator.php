@@ -65,7 +65,7 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         /*Vérifie si la fonctionnalité rememberMe est coché,
-         si oui le compte aura cette fonctionnalié
+         si oui le compte aura cette fonctionnalité
          sinon le compte n'aura pas la fonctionnalité
         */
         if ($request->request->get('_remember_me') == "on") {
